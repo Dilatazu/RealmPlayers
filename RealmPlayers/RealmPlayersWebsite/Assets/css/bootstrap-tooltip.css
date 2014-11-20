@@ -1,0 +1,87 @@
+.bootstraptooltip {
+  position: absolute;
+  z-index: 1030;
+  display: block;
+  font-size: 11px;
+  line-height: 1.4;
+  opacity: 0;
+  filter: alpha(opacity=0);
+  visibility: visible;
+}
+
+.bootstraptooltip.in {
+  opacity: 0.8;
+  filter: alpha(opacity=80);
+}
+
+.bootstraptooltip.top {
+  padding: 5px 0;
+  margin-top: -3px;
+}
+
+.bootstraptooltip.right {
+  padding: 0 5px;
+  margin-left: 3px;
+}
+
+.bootstraptooltip.bottom {
+  padding: 5px 0;
+  margin-top: 3px;
+}
+
+.bootstraptooltip.left {
+  padding: 0 5px;
+  margin-left: -3px;
+}
+
+.bootstraptooltip-inner {
+  max-width: 200px;
+  padding: 8px;
+  color: #ffffff;
+  text-align: center;
+  text-decoration: none;
+  background-color: #000000;
+  -webkit-border-radius: 4px;
+     -moz-border-radius: 4px;
+          border-radius: 4px;
+}
+
+.bootstraptooltip-arrow {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+}
+
+.bootstraptooltip.top .bootstraptooltip-arrow {
+  bottom: 0;
+  left: 50%;
+  margin-left: -5px;
+  border-top-color: #000000;
+  border-width: 5px 5px 0;
+}
+
+.bootstraptooltip.right .bootstraptooltip-arrow {
+  top: 50%;
+  left: 0;
+  margin-top: -5px;
+  border-right-color: #000000;
+  border-width: 5px 5px 5px 0;
+}
+
+.bootstraptooltip.left .bootstraptooltip-arrow {
+  top: 50%;
+  right: 0;
+  margin-top: -5px;
+  border-left-color: #000000;
+  border-width: 5px 0 5px 5px;
+}
+
+.bootstraptooltip.bottom .bootstraptooltip-arrow {
+  top: 0;
+  left: 50%;
+  margin-left: -5px;
+  border-bottom-color: #000000;
+  border-width: 0 5px 5px;
+}

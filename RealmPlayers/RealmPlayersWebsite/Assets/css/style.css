@@ -1,0 +1,635 @@
+/* Google Web Font Import*/
+@import url(http://fonts.googleapis.com/css?family=Scada:400,700);
+
+/* Responsive */
+@media (min-width:768px) {
+  .navbar-search .btn {
+    margin:-9px 0 0 0;
+  }
+}
+/* General CSS*/
+body {
+	padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+	font-family: 'Scada', sans-serif;
+}
+.container {}
+/* Input Style */
+button:focus, input[type="checkbox"], input[type="radio"] {
+	outline: none !important;
+}
+textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[type="datetime"]:focus, input[type="datetime-local"]:focus, input[type="date"]:focus, input[type="month"]:focus, input[type="time"]:focus, input[type="week"]:focus, input[type="number"]:focus, input[type="email"]:focus, input[type="url"]:focus, input[type="search"]:focus, input[type="tel"]:focus, input[type="color"]:focus, .uneditable-input:focus {   
+  	color: #ff8000 !important;
+	border-color: rgba(255,128,0, 0.8);
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(255,128,0, 0.4);
+	outline: 0 none;
+}
+/* Extra Magins */
+.index {
+	margin-top: 150px;
+}
+.index h1 {
+	margin-bottom: 50px;
+}
+.index {
+	margin-bottom: 150px;
+}
+/* Link Styles */
+a {
+  color: #c6c6c6;
+  text-decoration: underline;
+}
+.brand, .horde_row a, .alliance_row a ,.dead_row a, .nav a{
+  text-decoration: none;
+}
+a:hover {
+  color: #ff8000 !important;
+  text-shadow: 0px 0px 10px #ff8000, -1px -1px #000;
+}
+.disabled a:hover {
+  color: #999 !important;
+  text-shadow: none;
+}
+a:focus {
+  color: #c6c6c6;
+  outline: none;
+}
+/* Drowdown */
+.dropdown-menu {
+	padding: 15px;
+	padding-bottom: 0px;
+	background-color: #2f2f2f;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(0,0,0, 0.4);
+}
+.dropdown-menu:before, 
+.dropdown-menu:after {
+     border: none !important;
+     content: none !important;
+}
+.dropdown-menu a {
+  text-decoration: underline;
+}
+a.menu:after, .dropdown-toggle:after {
+  content: none;
+}
+ /* Pagination */
+.pagination ul{
+	/*box-shadow: 0 0 4px #666;*/
+}
+.pagination ul > .disabled > span,
+.pagination ul > .disabled > a,
+.pagination ul > .disabled > a:hover,
+.pagination ul > .disabled > a:focus {
+  color: #444;
+  cursor: default;
+  background-color: #202020;
+}
+#footer {
+	margin-top: 50px;
+}
+
+/* Footer Navigation */
+.nav > li > a:hover,
+.nav > li > a:focus {
+  text-decoration: none;
+  background-color: #2f2f2f;
+}
+.nav-tabs > li, .nav-pills > li {
+    float:none;
+    display:inline-block;
+    *display:inline; /* ie7 fix */
+     zoom:1; /* hasLayout ie7 trigger */
+}
+ul.nav li.dropdown:hover ul.dropdown-menu{
+    display: block;    
+}
+.nav-tabs, .nav-pills {
+    text-align:center;
+}
+.nav-pills > .disabled > a, .nav-pills > .disabled > a:hover, .nav-pills > .disabled > a:focus { 
+  -webkit-box-shadow: rgba(255, 255, 255, 0.1) 0 1px 0, rgba(0, 0, 0, 0.8) 0 1px 7px 0px inset;
+  -moz-box-shadow: rgba(255, 255, 255, 0.1) 0 1px 0, rgba(0, 0, 0, 0.8) 0 1px 7px 0px inset;
+  box-shadow: rgba(255, 255, 255, 0.1) 0 1px 0, rgba(0, 0, 0, 0.8) 0 1px 7px 0px inset;
+  background: #202020;
+  background-color: rgba(0, 0, 0, 0.3);
+  border: 0;
+}
+ul.nav li a:hover {
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: moz-none;
+	-ms-user-select: none;
+	user-select: none;
+}
+/* Table Rows */
+#standing {
+	width: 5px;
+}
+#rank {
+	width: 10px;
+}
+#progress_tooltip {
+	color: #f00;
+}
+.table_guild_name {
+	font-size: 40px;
+}
+/* Progress Row */
+#raid_name {
+	font-weight: bold;
+	color: #fff;
+}
+#optional {
+	color: #fff;
+}
+#boss_killed, .progress_clear {
+	color: #0f0;
+}
+.progress_in_work {
+	color: yellow;
+}
+img.boss_progress {
+	opacity:0.4;
+ 	filter:alpha(opacity=40); /* For IE8 and earlier */
+}
+div.raid_progress {
+	color: red;
+	margin-right: 5px;
+	text-align: center;
+	float:left;
+}
+div.guild_show_progress {
+	color: red;
+	cursor: none;
+	margin-bottom: 5px;
+}
+div.guild_show_progress img{
+	margin: 0 3px 0 -5px;
+}
+
+/* Table Horde Background */
+tr.horde_row {
+	background-color: #372727;
+}
+tr.horde_row:hover {
+	background-color: #463232;
+}
+	tr.horde_row a, .horde-color{
+	  color: #f70002  !important;
+	}
+	tr.horde_row a:hover, a.theme-horde:hover {
+	  color: #ff4546 !important;
+	  text-shadow: 0px 0px 10px #2c0000, -1px -1px #5f0001;
+	}
+
+tr.alliance_row {
+	background-color: #272f37;
+}
+tr.alliance_row:hover {
+	background-color: #323c46;
+}
+	tr.alliance_row a, .alliance-color {
+	  color: #007df7 !important;
+	}
+	tr.alliance_row a:hover, a.theme-alliance:hover {
+	  color: #45a3ff !important;
+	  text-shadow: 0px 0px 10px #00162c, -1px -1px #00305f;
+	}
+
+tr.dead_row {
+	background-color: #2c2c2c;
+}
+.ffa-color {
+  color: #f7f600 !important;
+}
+a.theme-ffa:hover {
+  color: #fffe45 !important;
+  text-shadow: 0px 0px 10px #2c2c00, -1px -1px #5f5f00;
+}
+table#guild-table td, table#characters-table td, table#recvitems-table td {
+	vertical-align: middle;
+	height: 50px;
+}
+/* Index Site */
+.welcome a{
+	margin: 10px;
+}
+.welcome a span{
+	margin-left: 5px;
+}
+.welcome {
+	margin-bottom: 30px;
+}
+/* Login */
+form.login {
+  border: 1px solid red;
+}
+form.login input {
+  height: 14px;
+  width: 140px;
+  background: #F5F5F5;
+  border-radius: 2px;
+}
+
+/* Badge for Counter */
+.badge {
+	vertical-align: top;
+	margin: 5px;
+}
+/* Side Boxes */
+.servers, .fame, .characterstats, .characterscreen, .changelogrightside, .guildprogressframe {
+	background: rgba(0, 0, 0, 0.298);
+	border: 0px none currentColor;
+	box-shadow: rgba(255, 255, 255, 0.102) 0px 1px 0px, rgba(0, 0, 0, 0.804) 0px 1px 7px 0px inset;
+	border-radius: 4px;
+	list-style: none outside none;
+	padding: 8px 15px;
+}
+.blackframe {
+    background: rgba(0, 0, 0, 0.298);
+	border: 0px none currentColor;
+	box-shadow: rgba(255, 255, 255, 0.102) 0px 1px 0px, rgba(0, 0, 0, 0.804) 0px 1px 7px 0px inset;
+	border-radius: 4px;
+	list-style: none outside none;
+	padding: 8px 15px;
+}
+.changelogentry {
+	background: rgba(0, 0, 0, 0.298);
+	border: 0px none currentColor;
+	box-shadow: rgba(255, 255, 255, 0.102) 0px 1px 0px, rgba(0, 0, 0, 0.804) 0px 1px 7px 0px inset;
+	border-radius: 4px;
+	list-style: none outside none;
+  margin-bottom: 20px;
+	padding: 8px 15px;
+}
+.changelogrightside {
+	margin: 0px 0px 20px;
+    /*margin-left: calc(70.2127659574468% + 10px);
+    *margin-left: calc(70.10638297872339% + 10px);*/
+    min-height: 600px;
+}
+.servers, .fame, .guildprogressframe {
+	margin: 0px 0px 20px;
+}
+.characterscreen {
+    min-width: 555px;
+    max-width: 585px;
+}
+/* Faction Background */
+#horde_bg {
+	background: url('../img/bg/sidebar-bg-horde.png') no-repeat 0 0;
+	min-height: 115px;
+	min-width: 115px;
+}
+#alliance_bg {
+	background: url('../img/bg/sidebar-bg-alliance.png') no-repeat 0 0;
+	min-height: 115px;
+	min-width: 115px;
+}
+/* Character Details */
+div.char-details {}
+
+	div.char-name, div.char-level {
+		margin: 10px;
+		font-size: 64px;
+		float: left;
+	}
+	div.char-guild {
+		margin-top: 5px;
+		margin-left: 36px;
+		font-size: 32px;
+		float: left;
+	}
+	div.char-details div.char-race, div.char-details div.char-class{
+		float: left;
+		width: 64px;
+		height: 64px;
+		margin-top: -12px;
+	}
+
+    /* WoW Class Icons */
+	div.char-details div.char-class{
+		background-image:url('../img/icons/ui-charactercreate-classes.png');
+		background-repeat:no-repeat;
+	}
+		#warrior {background-position:0 0;}
+		#mage {background-position:-64px 0;}
+		#rogue {background-position:-127px 0;}
+		#druid {background-position:-192px 0;}
+		#hunter {background-position:0 -64px;}
+		#shaman {background-position:-64px -64px;}
+		#priest {background-position:-127px -64px;}
+		#warlock {background-position:-192px -64px;}
+		#paladin {background-position:0 -128px;}
+
+    /* WoW Race Icons */
+	div.char-details div.char-race{
+		background-image:url('../img/icons/ui-charactercreate-races.png');
+		background-repeat:no-repeat;
+	}
+		#human-male {background-position:0 0;}
+		#dwarf-male {background-position:-64px 0;}
+		#gnome-male {background-position:-128px 0;}
+		#nightelf-male {background-position:-192px 0;}
+
+		#tauren-male {background-position:0 -64px;}
+		#undead-male {background-position:-64px -64px;}
+		#troll-male {background-position:-128px -64px;}
+		#orc-male {background-position:-192px -64px;}
+        
+		#bloodelf-male {background-position:-192px 0;}
+		#draenei-male {background-position:-192px -64px;}
+
+		#human-female {background-position:0 -128px;}
+		#dwarf-female {background-position:-64px -128px;}
+		#gnome-female {background-position:-128px -128px;}
+		#nightelf-female {background-position:-192px -128px;}
+
+		#tauren-female {background-position:0 -191px;}
+		#undead-female {background-position:-64px -191px;}
+		#troll-female {background-position:-128px -191px;}
+		#orc-female {background-position:-192px -191px;}
+        
+		#bloodelf-female {background-position:-192px -128px;}
+		#draenei-female {background-position:-192px -191px;}
+    /* WoW PvP Icons */
+	div.char-details div.char-rank, div.pvp-rank {
+		float:left;
+	    background: url('../img/icons/pvpranks.png') no-repeat top left;
+	    width: 32px;
+	    height: 32px; 
+	}
+    /*div.char-details div.char-rank {
+        transform:scale(2.0);
+    }*/
+		#pvprank00{ background-position: 42px 0;} 
+        #pvprank01{ background-position: 0 0;} 
+		#pvprank02{ background-position: -42px 0;} 
+		#pvprank03{ background-position: -84px 0;} 
+		#pvprank04{ background-position: -126px 0;} 
+		#pvprank05{ background-position: -168px 0;} 
+		#pvprank06{ background-position: -210px 0;} 
+		#pvprank07{ background-position: -252px 0;} 
+		#pvprank08{ background-position: -294px 0;} 
+		#pvprank09{ background-position: -336px 0;} 
+		#pvprank10{ background-position: -378px 0;} 
+		#pvprank11{ background-position: -420px 0;} 
+		#pvprank12{ background-position: -462px 0;} 
+		#pvprank13{ background-position: -504px 0;} 
+		#pvprank14{ background-position: -546px 0;} 
+
+/* WoW Inventory */
+.inventory {
+	z-index: 1;
+	/*margin-top: -150px;*/
+	/*background: url('../img/bg/CharacterBackgroundTransparent.png') no-repeat top left;*/
+	width: 555px;
+	height: 612px;
+}
+	.inventory div, .inventory div a.itemlink, .inventory div img.itemframe {
+		position: absolute;
+		margin: auto;
+		width: 58px;
+		height: 58px;
+	}
+    .inventory div {
+		z-index: 2;
+	}
+	.inventory img.characterimage {
+		z-index: -1;
+		position: absolute;
+		margin: 33px 77px;
+        width:385px; 
+        height:512px;
+	}
+	.inventory div img.itempic {
+		z-index: 3;
+		position: absolute;
+		margin: auto;
+		width: 54px;
+		height: 54px;
+        top: 2px;
+        left: 2px;
+	}
+	.inventory div a.itemlink {
+		z-index: 6;
+	}
+	.inventory div img.itemframe {
+		z-index: 4;
+	}
+	.inventory div a.itemplayersframe {
+		position: absolute;
+        top: 0px;
+        /*left: 29px;*/
+        right: 4px;
+		margin: auto;
+		z-index: 8;
+        text-align: right;
+        float: right;
+	}
+    .inventory div a.itemplayersframe:link, .inventory div a.itemplayersframe:visited {
+        color: white;
+        text-decoration:none;
+        font-weight: bold;
+        text-shadow:
+        -1px -1px 0 #000,
+        1px -1px 0 #000,
+        -1px 1px 0 #000,
+        1px 1px 0 #000;  
+    }
+		/* WoW Inventory Item Equipment Slots */
+		.inventory div#slot-head {margin: 33px 25px;}
+		.inventory div#slot-amu {margin: 95px 25px;}
+		.inventory div#slot-shoulder {margin: 161px 25px;}
+		.inventory div#slot-back {margin: 225px 25px;}
+		.inventory div#slot-chest {margin: 289px 25px;}
+		.inventory div#slot-shirt {margin: 353px 25px;}
+		.inventory div#slot-tabard {margin: 417px 25px;}
+		.inventory div#slot-wrist {margin: 480px 25px;}
+
+		.inventory div#slot-hands {margin: 33px 467px;}
+		.inventory div#slot-waist {margin: 97px 467px;}
+		.inventory div#slot-legs {margin: 161px 467px;}
+		.inventory div#slot-boots {margin: 225px 467px;}
+		.inventory div#slot-ring1 {margin: 289px 467px;}
+		.inventory div#slot-ring2 {margin: 353px 467px;}
+		.inventory div#slot-trinket1 {margin: 417px 467px;}
+		.inventory div#slot-trinket2 {margin: 480px 467px;}
+
+		.inventory div#slot-mainhand {margin: 516px 182px;}
+		.inventory div#slot-offhand {margin: 516px 247px;}
+		.inventory div#slot-ranged {margin: 516px 312px;}
+
+	/* WoW Inventory Item Quality */
+	.inventory div.quality {
+		z-index: 5;
+		-webkit-border-radius: 5px;
+		-moz-border-radius: 5px;
+		border-radius: 5px;
+	}
+		.inventory div#poor {box-shadow:inset 0 0 12px #9d9d9d;}
+		.inventory div#common {box-shadow:inset 0 0 12px #fff;}
+		.inventory div#uncommon {box-shadow:inset 0 0 12px #1eff00;}
+		.inventory div#rare {box-shadow:inset 0 0 12px #0070dd;}
+		.inventory div#epic {box-shadow:inset 0 0 12px #a335ee;}
+		.inventory div#legendary {box-shadow:inset 0 0 12px #ff8000;}
+/* Unused CSS */
+/* <div class="banner" id="alliance-banner"></div> */
+.banner {
+	background: url('../img/bg/ui-charactercreate-banners.png') no-repeat top left;
+}
+	#alliance-banner {background-position: -30px 0; width:94px; height: 360px}
+	#horde-banner {background-position: -130px 0; width:94px; height: 370px}
+
+
+
+
+/* Added by Dilatazu */
+.team-member {
+    font-weight: bold;
+    color: white;
+    text-decoration:none;
+}
+a.team-member:link, a.team-member:visited {
+    color: white;
+    text-decoration:none;
+    font-weight: bold;
+}
+.hnoextraline { 
+    margin-bottom: 0; 
+    padding-bottom: 0; 
+}
+
+div.vf-classimage, div.vf-raceimage {
+	z-index: 1;
+    float: left;
+    width: 32px;
+    height: 32px;
+    background-size:100%;
+}
+
+div.vf-largeclassimage, div.vf-largeraceimage {
+	z-index: 1;
+    float: left;
+    width: 64px;
+    height: 64px;
+    background-size:100%;
+}
+div.char-details div.vf-largeclassimage, div.char-details div.vf-largeraceimage {
+    margin-top: -12px;
+}
+
+#vf-ci_druid {background-image:url('http://images.wikia.com/wowwiki/images/6/6f/Ui-charactercreate-classes_druid.png');}
+#vf-ci_warrior {background-image:url('http://images.wikia.com/wowwiki/images/3/37/Ui-charactercreate-classes_warrior.png');}
+#vf-ci_shaman {background-image:url('http://images.wikia.com/wowwiki/images/3/3e/Ui-charactercreate-classes_shaman.png');}
+#vf-ci_priest {background-image:url('http://images.wikia.com/wowwiki/images/0/0f/Ui-charactercreate-classes_priest.png');}
+#vf-ci_mage {background-image:url('http://images.wikia.com/wowwiki/images/5/56/Ui-charactercreate-classes_mage.png');}
+#vf-ci_rogue {background-image:url('http://images.wikia.com/wowwiki/images/b/b1/Ui-charactercreate-classes_rogue.png');}
+#vf-ci_warlock {background-image:url('http://images.wikia.com/wowwiki/images/c/cf/Ui-charactercreate-classes_warlock.png');}
+#vf-ci_hunter {background-image:url('http://images.wikia.com/wowwiki/images/4/4e/Ui-charactercreate-classes_hunter.png');}
+#vf-ci_paladin {background-image:url('http://images.wikia.com/wowwiki/images/8/80/Ui-charactercreate-classes_paladin.png');}
+
+#vf-ri_male_undead {background-image:url('http://images2.wikia.nocookie.net/__cb20070124143003/wowwiki/images/b/b3/Ui-charactercreate-races_undead-male.png');}
+#vf-ri_male_orc {background-image:url('http://images2.wikia.nocookie.net/__cb20070124142837/wowwiki/images/3/35/Ui-charactercreate-races_orc-male.png');}
+#vf-ri_male_tauren {background-image:url('http://images4.wikia.nocookie.net/__cb20070124142903/wowwiki/images/7/78/Ui-charactercreate-races_tauren-male.png');}
+#vf-ri_male_troll {background-image:url('http://images4.wikia.nocookie.net/__cb20070124142933/wowwiki/images/d/d7/Ui-charactercreate-races_troll-male.png');}
+#vf-ri_male_bloodelf {background-image:url('http://img1.wikia.nocookie.net/__cb20070124142421/wowwiki/images/c/cc/Ui-charactercreate-races_bloodelf-male.png');}
+#vf-ri_male_human {background-image:url('http://images3.wikia.nocookie.net/__cb20070124142722/wowwiki/images/e/eb/Ui-charactercreate-races_human-male.png');}
+#vf-ri_male_dwarf {background-image:url('http://images2.wikia.nocookie.net/__cb20070124142516/wowwiki/images/f/f5/Ui-charactercreate-races_dwarf-male.png');}
+#vf-ri_male_gnome {background-image:url('http://images1.wikia.nocookie.net/__cb20070124142654/wowwiki/images/a/a9/Ui-charactercreate-races_gnome-male.png');}
+#vf-ri_male_nightelf {background-image:url('http://images4.wikia.nocookie.net/__cb20070124142757/wowwiki/images/1/12/Ui-charactercreate-races_nightelf-male.png');}
+#vf-ri_male_draenei {background-image:url('http://img2.wikia.nocookie.net/__cb20070124142450/wowwiki/images/0/04/Ui-charactercreate-races_draenei-male.png');}
+
+#vf-ri_female_undead {background-image:url('http://images4.wikia.nocookie.net/__cb20070124142948/wowwiki/images/4/4d/Ui-charactercreate-races_undead-female.png');}
+#vf-ri_female_orc {background-image:url('http://images2.wikia.nocookie.net/__cb20070124142826/wowwiki/images/3/38/Ui-charactercreate-races_orc-female.png');}
+#vf-ri_female_tauren {background-image:url('http://images1.wikia.nocookie.net/__cb20070124142854/wowwiki/images/4/48/Ui-charactercreate-races_tauren-female.png');}
+#vf-ri_female_troll {background-image:url('http://images2.wikia.nocookie.net/__cb20070124142916/wowwiki/images/b/b9/Ui-charactercreate-races_troll-female.png');}
+#vf-ri_female_bloodelf {background-image:url('http://img3.wikia.nocookie.net/__cb20070124142406/wowwiki/images/f/f6/Ui-charactercreate-races_bloodelf-female.png');}
+#vf-ri_female_human {background-image:url('http://images2.wikia.nocookie.net/__cb20070124142708/wowwiki/images/7/79/Ui-charactercreate-races_human-female.png');}
+#vf-ri_female_dwarf {background-image:url('http://images2.wikia.nocookie.net/__cb20070124142506/wowwiki/images/b/b1/Ui-charactercreate-races_dwarf-female.png');}
+#vf-ri_female_gnome {background-image:url('http://images3.wikia.nocookie.net/__cb20070124142633/wowwiki/images/7/7b/Ui-charactercreate-races_gnome-female.png');}
+#vf-ri_female_nightelf {background-image:url('http://images1.wikia.nocookie.net/__cb20070124142738/wowwiki/images/a/a7/Ui-charactercreate-races_nightelf-female.png');}
+#vf-ri_female_draenei {background-image:url('http://img3.wikia.nocookie.net/__cb20070124142432/wowwiki/images/b/b3/Ui-charactercreate-races_draenei-female.png');}
+
+/*div.vf-largepvprankimage {
+    float: left;
+    width: 64px;
+    height: 64px;
+	background: url('../img/icons/pvpranks.png') no-repeat top left;
+    background-size:1156px 64px;
+}*/
+
+div.vf-pvprankimage {
+    float: left;
+    width: 32px;
+    height: 32px;
+	background: url('../img/icons/pvpranks.png') no-repeat top left;
+}
+
+#vf-pri_00{ background-position: 42px 0;} 
+#vf-pri_01{ background-position: 0 0;} 
+#vf-pri_02{ background-position: -42px 0;} 
+#vf-pri_03{ background-position: -84px 0;} 
+#vf-pri_04{ background-position: -126px 0;} 
+#vf-pri_05{ background-position: -168px 0;} 
+#vf-pri_06{ background-position: -210px 0;} 
+#vf-pri_07{ background-position: -252px 0;} 
+#vf-pri_08{ background-position: -294px 0;} 
+#vf-pri_09{ background-position: -336px 0;} 
+#vf-pri_10{ background-position: -378px 0;} 
+#vf-pri_11{ background-position: -420px 0;} 
+#vf-pri_12{ background-position: -462px 0;} 
+#vf-pri_13{ background-position: -504px 0;} 
+#vf-pri_14{ background-position: -546px 0;} 
+
+.horde_col a, .alliance_col a{
+  text-decoration: none;
+}
+
+div.horde_col {
+	background-color: #372727;
+}
+div.horde_col:hover {
+	background-color: #463232;
+}
+	div.horde_col a, .horde-color{
+	  color: #f70002  !important;
+	}
+	div.horde_col a:hover, a.theme-horde:hover {
+	  color: #ff4546 !important;
+	  text-shadow: 0px 0px 10px #2c0000, -1px -1px #5f0001;
+	}
+
+div.alliance_col {
+	background-color: #272f37;
+}
+div.alliance_col:hover {
+	background-color: #323c46;
+}
+	div.alliance_col a, .alliance-color {
+	  color: #007df7 !important;
+	}
+	div.alliance_col a:hover, a.theme-alliance:hover {
+	  color: #45a3ff !important;
+	  text-shadow: 0px 0px 10px #00162c, -1px -1px #00305f;
+	}
+
+
+.noMultilineChb span label{
+    white-space: nowrap; 
+    display:inline;
+    margin-left: 5px;
+}
+.noMultilineChb span input{
+    margin-top: -5px;
+}
+
+
+/*Fixes background of select/dropdownlists*/
+/*select {
+    background: rgba(30,30,30,1);
+}*/
+select option {
+    background: rgba(30,30,30,1);
+}
+/* Added by Dilatazu */

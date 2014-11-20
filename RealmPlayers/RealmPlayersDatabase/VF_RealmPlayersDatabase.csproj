@@ -1,0 +1,201 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{AC235BCE-181B-4B49-8ABC-D1639D935373}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>VF_RealmPlayersDatabase</RootNamespace>
+    <AssemblyName>VF_RealmPlayersDatabase</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;VF_NoForms</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;VF_NoForms</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;VF_NoForms</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE;VF_NoForms</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="MongoDB.Bson, Version=1.9.2.235, Culture=neutral, PublicKeyToken=f686731cfb9cc103, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\MongoDB\MongoDB.Bson.dll</HintPath>
+    </Reference>
+    <Reference Include="MongoDB.Driver, Version=1.9.2.235, Culture=neutral, PublicKeyToken=f686731cfb9cc103, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\MongoDB\MongoDB.Driver.dll</HintPath>
+    </Reference>
+    <Reference Include="protobuf-net, Version=2.0.0.668, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>net30\protobuf-net.dll</HintPath>
+    </Reference>
+    <Reference Include="SavedVariablesParser, Version=1.1.3.2, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\SavedVariablesParser.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\VF_Library\VF_Library\VF_DictionaryExtensions.cs">
+      <Link>VF_Library\VF_DictionaryExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\VF_Library\VF_Library\VF_Extensions.cs">
+      <Link>VF_Library\VF_Extensions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\VF_Library\VF_Library\VF_MongoDB.cs">
+      <Link>VF_Library\VF_MongoDB.cs</Link>
+    </Compile>
+    <Compile Include="..\..\VF_Library\VF_Library\VF_StringExtensions.cs">
+      <Link>VF_Library\VF_StringExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\VF_Library\VF_Library\VF_Utility.cs">
+      <Link>VF_Library\VF_Utility.cs</Link>
+    </Compile>
+    <Compile Include="Achievments\AchievmentBase.cs" />
+    <Compile Include="Achievments\AchievmentType.cs" />
+    <Compile Include="Achievments\ItemAchievment.cs" />
+    <Compile Include="Achievments\ItemsetAchievment.cs" />
+    <Compile Include="Achievments\PVPStatAchievment.cs" />
+    <Compile Include="Contributor.cs" />
+    <Compile Include="ContributorDB.cs" />
+    <Compile Include="ContributorHandler.cs" />
+    <Compile Include="ContributorUtility.cs" />
+    <Compile Include="Database.cs" />
+    <Compile Include="GeneratedData\Guild.cs" />
+    <Compile Include="GeneratedData\RealmCacheDatabase.cs" />
+    <Compile Include="ItemDatabase\ItemDatabase.cs" />
+    <Compile Include="ItemDatabase\ItemInfo.cs" />
+    <Compile Include="ItemDatabase\ItemInfoDownloader.cs" />
+    <Compile Include="PlayerData\ArenaData.cs" />
+    <Compile Include="RealmPlayersDB.cs" />
+    <Compile Include="SummaryDatabases\GuildSummary\GuildSummaryDatabase.cs" />
+    <Compile Include="SummaryDatabases\GuildSummary\GuildSummary.cs" />
+    <Compile Include="SummaryDatabases\PlayerSummary\PlayerSummaryDatabase.cs" />
+    <Compile Include="ItemDropDatabase.cs" />
+    <Compile Include="SummaryDatabases\ItemSummary\ItemSummaryDatabase.cs" />
+    <Compile Include="Logger.cs" />
+    <Compile Include="PlayerData\AchievementData.cs" />
+    <Compile Include="PlayerData\CharacterData.cs" />
+    <Compile Include="PlayerData\DataParser.cs" />
+    <Compile Include="PlayerData\ExtraData.cs" />
+    <Compile Include="PlayerData\GuildData.cs" />
+    <Compile Include="PlayerData\HistoryItems.cs" />
+    <Compile Include="PlayerData\HonorData.cs" />
+    <Compile Include="PlayerData\GearData.cs" />
+    <Compile Include="PlayerData\Player.cs" />
+    <Compile Include="PlayerData\PlayerHistory.cs" />
+    <Compile Include="PlayerData\PlayerHistoryUtility\AddToHistory.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RealmDatabase.cs" />
+    <Compile Include="RealmDatabaseHistory.cs" />
+    <Compile Include="RPPContribution.cs" />
+    <Compile Include="SerializableDictionary.cs" />
+    <Compile Include="StaticValues.cs" />
+    <Compile Include="UploaderCommunication\AddonHandler.cs" />
+    <Compile Include="UploaderCommunication\RPPCommunicator.cs" />
+    <Compile Include="UploaderCommunication\RPPConnection.cs" />
+    <Compile Include="UploadID.cs" />
+    <Compile Include="Utility.cs" />
+    <Compile Include="XMLUtility.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ICSharpCode.SharpZipLib.dll" />
+    <Content Include="net30\protobuf-net.dll" />
+    <Content Include="net30\protobuf-net.pdb" />
+    <Content Include="net30\protobuf-net.xml" />
+    <Content Include="SavedVariablesParser.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.4.5">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 4.5</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

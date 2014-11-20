@@ -1,0 +1,556 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{0DAF0727-AF2A-4D71-A0D4-7769442222DD}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RealmPlayersServer</RootNamespace>
+    <AssemblyName>RealmPlayersServer</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <TargetFrameworkProfile />
+    <WcfConfigValidationEnabled>True</WcfConfigValidationEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="MongoDB.Bson, Version=1.9.2.235, Culture=neutral, PublicKeyToken=f686731cfb9cc103, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\MongoDB\MongoDB.Bson.dll</HintPath>
+    </Reference>
+    <Reference Include="MongoDB.Driver, Version=1.9.2.235, Culture=neutral, PublicKeyToken=f686731cfb9cc103, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\MongoDB\MongoDB.Driver.dll</HintPath>
+    </Reference>
+    <Reference Include="protobuf-net, Version=2.0.0.668, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\QinarwTFS\CppProjects\RealmPlayersParser\VF_RealmPlayersDatabase\net30\protobuf-net.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Mvc, Version=3.0.0.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="About.aspx" />
+    <Content Include="AdminInfo.aspx" />
+    <Content Include="Assets\CoinWidget\coin.css" />
+    <Content Include="Assets\CoinWidget\coin.js" />
+    <Content Include="Assets\CoinWidget\icon_bitcoin.png" />
+    <Content Include="Assets\CoinWidget\icon_litecoin.png" />
+    <Content Include="Assets\CoinWidget\icon_loading.gif" />
+    <Content Include="Assets\CoinWidget\icon_qrcode.png" />
+    <Content Include="Assets\CoinWidget\icon_wallet.png" />
+    <Content Include="Assets\css\bootstrap-responsive.css" />
+    <Content Include="Assets\css\bootstrap-responsive.min.css" />
+    <Content Include="Assets\css\bootstrap-tooltip.css" />
+    <Content Include="Assets\css\bootstrap.css" />
+    <Content Include="Assets\css\bootstrap.min.css" />
+    <Content Include="Assets\css\darkstrap.css" />
+    <Content Include="Assets\css\style.css" />
+    <Content Include="Assets\img\bg\CharacterBackgroundTransparent.png" />
+    <Content Include="Assets\img\bg\sidebar-bg-alliance.png" />
+    <Content Include="Assets\img\bg\sidebar-bg-horde.png" />
+    <Content Include="Assets\img\bg\ui-charactercreate-banners.png" />
+    <Content Include="Assets\img\CharacterBackgroundItemSlotTransparent.png" />
+    <Content Include="Assets\img\free-vector-birthday-icon_101836_Birthday_Icon.png" />
+    <Content Include="Assets\img\free-vector-birthday-icon_102051_Birthday_Icon.png" />
+    <Content Include="Assets\img\glyphicons-halflings-white.png" />
+    <Content Include="Assets\img\glyphicons-halflings.png" />
+    <Content Include="Assets\img\icons\allianceicon.png" />
+    <Content Include="Assets\img\icons\Alliance_32.png" />
+    <Content Include="Assets\img\icons\Both_15.png" />
+    <Content Include="Assets\img\icons\CharacterBackgroundItemSlotTransparent.png" />
+    <Content Include="Assets\img\icons\hordeicon.png" />
+    <Content Include="Assets\img\icons\Horde_32.png" />
+    <Content Include="Assets\img\icons\IconSmall_Druid.gif" />
+    <Content Include="Assets\img\icons\IconSmall_Dwarf_Female.gif" />
+    <Content Include="Assets\img\icons\IconSmall_Dwarf_Male.gif" />
+    <Content Include="Assets\img\icons\IconSmall_Gnome_Female.gif" />
+    <Content Include="Assets\img\icons\IconSmall_Gnome_Male.gif" />
+    <Content Include="Assets\img\icons\IconSmall_Human_Female.gif" />
+    <Content Include="Assets\img\icons\IconSmall_Human_Male.gif" />
+    <Content Include="Assets\img\icons\IconSmall_Hunter.gif" />
+    <Content Include="Assets\img\icons\IconSmall_Mage.gif" />
+    <Content Include="Assets\img\icons\IconSmall_NightElf_Female.gif" />
+    <Content Include="Assets\img\icons\IconSmall_NightElf_Male.gif" />
+    <Content Include="Assets\img\icons\IconSmall_Orc_Female.gif" />
+    <Content Include="Assets\img\icons\IconSmall_Orc_Male.gif" />
+    <Content Include="Assets\img\icons\IconSmall_Paladin.gif" />
+    <Content Include="Assets\img\icons\IconSmall_Priest.gif" />
+    <Content Include="Assets\img\icons\IconSmall_Rogue.gif" />
+    <Content Include="Assets\img\icons\IconSmall_Shaman.gif" />
+    <Content Include="Assets\img\icons\IconSmall_Tauren_Female.gif" />
+    <Content Include="Assets\img\icons\IconSmall_Tauren_Male.gif" />
+    <Content Include="Assets\img\icons\IconSmall_Troll_Female.gif" />
+    <Content Include="Assets\img\icons\IconSmall_Troll_Male.gif" />
+    <Content Include="Assets\img\icons\IconSmall_Undead_Female.gif" />
+    <Content Include="Assets\img\icons\IconSmall_Undead_Male.gif" />
+    <Content Include="Assets\img\icons\IconSmall_Warlock.gif" />
+    <Content Include="Assets\img\icons\IconSmall_Warrior.gif" />
+    <Content Include="Assets\img\icons\inv_misc_questionmark.png" />
+    <Content Include="Assets\img\icons\ItemNormalFrame.png" />
+    <Content Include="Assets\img\icons\mini_cal_icon_right_arrow.gif" />
+    <Content Include="Assets\img\icons\pvpranks.png" />
+    <Content Include="Assets\img\icons\ui-charactercreate-classes.png" />
+    <Content Include="Assets\img\icons\ui-charactercreate-factions.png" />
+    <Content Include="Assets\img\icons\ui-charactercreate-races.png" />
+    <Content Include="Assets\img\icons\ui-gearmanager-button-pushed.png" />
+    <Content Include="Assets\img\icons\ui-gearmanager-button.png" />
+    <Content Include="Assets\img\icons\ui-pvp-alliance.png" />
+    <Content Include="Assets\img\icons\ui-pvp-ffa.png" />
+    <Content Include="Assets\img\icons\ui-pvp-horde.png" />
+    <Content Include="Assets\img\icons\WoW_Icon_16x16.gif" />
+    <Content Include="Assets\img\itemtooltip\icon_border_large.png" />
+    <Content Include="Assets\img\itemtooltip\icon_border_medium.png" />
+    <Content Include="Assets\img\itemtooltip\icon_border_small.png" />
+    <Content Include="Assets\img\itemtooltip\icon_hilite_medium_new.png" />
+    <Content Include="Assets\img\itemtooltip\icon_hilite_small.png" />
+    <Content Include="Assets\img\itemtooltip\socket_blue.gif" />
+    <Content Include="Assets\img\itemtooltip\socket_meta.gif" />
+    <Content Include="Assets\img\itemtooltip\socket_red.gif" />
+    <Content Include="Assets\img\itemtooltip\socket_yellow.gif" />
+    <Content Include="Assets\img\PaypalPay_Clicked_Smaller.png" />
+    <Content Include="Assets\img\PaypalPay_NotClicked.png" />
+    <Content Include="Assets\img\PaypalPay_NotClicked_Smaller.png" />
+    <Content Include="Assets\img\raid\lfgicon-aqruins.png" />
+    <Content Include="Assets\img\raid\lfgicon-aqtemple.png" />
+    <Content Include="Assets\img\raid\lfgicon-blackwinglair.png" />
+    <Content Include="Assets\img\raid\lfgicon-moltencore.png" />
+    <Content Include="Assets\img\raid\lfgicon-naxxramas.png" />
+    <Content Include="Assets\img\raid\lfgicon-raid.png" />
+    <Content Include="Assets\img\raid\lfgicon-zone.png" />
+    <Content Include="Assets\img\raid\lfgicon-zulgurub.png" />
+    <Content Include="Assets\img\raid\old\lfgicon-aqruins.png" />
+    <Content Include="Assets\img\raid\old\lfgicon-aqtemple.png" />
+    <Content Include="Assets\img\raid\old\lfgicon-blackwinglair.png" />
+    <Content Include="Assets\img\raid\old\lfgicon-moltencore.png" />
+    <Content Include="Assets\img\raid\old\lfgicon-naxxramas.png" />
+    <Content Include="Assets\img\raid\old\lfgicon-raid.png" />
+    <Content Include="Assets\img\raid\old\lfgicon-zone.png" />
+    <Content Include="Assets\img\raid\old\lfgicon-zulgurub.png" />
+    <Content Include="Assets\img\raid\old\raid-aqruins.png" />
+    <Content Include="Assets\img\raid\old\raid-aqtemple.png" />
+    <Content Include="Assets\img\raid\old\raid-blackwinglair.png" />
+    <Content Include="Assets\img\raid\old\raid-moltencore.png" />
+    <Content Include="Assets\img\raid\old\raid-naxxramas.png" />
+    <Content Include="Assets\img\raid\old\raid-onyxia.png" />
+    <Content Include="Assets\img\raid\old\raid-open.png" />
+    <Content Include="Assets\img\raid\old\raid-zulgurub.png" />
+    <Content Include="Assets\img\raid\raid-aqruins.png" />
+    <Content Include="Assets\img\raid\raid-aqtemple.png" />
+    <Content Include="Assets\img\raid\raid-blackwinglair.png" />
+    <Content Include="Assets\img\raid\raid-moltencore.png" />
+    <Content Include="Assets\img\raid\raid-naxxramas.png" />
+    <Content Include="Assets\img\raid\raid-onyxia.png" />
+    <Content Include="Assets\img\raid\raid-open.png" />
+    <Content Include="Assets\img\raid\raid-zulgurub.png" />
+    <Content Include="Assets\img\itemtooltip\tooltip.png" />
+    <Content Include="Assets\img\VF_RealmPlayersIcon64.png" />
+    <Content Include="Assets\img\VF_WoWLauncher.PNG" />
+    <Content Include="Assets\js\charts\chart.js" />
+    <Content Include="Assets\js\charts\popup.js" />
+    <Content Include="Assets\js\charts\raphael-min.js" />
+    <Content Include="Assets\js\itemtooltip.js" />
+    <Content Include="Assets\js\bootstrap.js" />
+    <Content Include="Assets\js\bootstrap.min.js" />
+    <Content Include="Assets\js\default.js" />
+    <Content Include="Assets\js\extras.js" />
+    <Content Include="Assets\js\guildprogress.js" />
+    <Content Include="Assets\js\jquery-1.10.2.min.js" />
+    <Content Include="Assets\js\jquery-cookie.js" />
+    <Content Include="Assets\locale_enus.js" />
+    <Content Include="Assets\power.css" />
+    <Content Include="Changelog.aspx" />
+    <Content Include="CharacterDesigner.aspx" />
+    <Content Include="CharacterList.aspx" />
+    <Content Include="CharacterViewer.aspx" />
+    <Content Include="Contact.aspx" />
+    <Content Include="Assets\img\DilatazuCharacter385x512.png" />
+    <Content Include="Contributors.aspx" />
+    <Content Include="CreateUserID.aspx" />
+    <Content Include="Disclaimer.aspx" />
+    <Content Include="Donate.aspx" />
+    <Content Include="Donators.aspx" />
+    <Content Include="Forgot_Password.aspx" />
+    <Content Include="Global.asax" />
+    <Content Include="GuildList.aspx" />
+    <Content Include="GuildViewer.aspx" />
+    <Content Include="Index.aspx" />
+    <Content Include="Assets\img\purpleBG.jpg" />
+    <Content Include="ItemTooltip.aspx" />
+    <Content Include="ItemUsageInfo.aspx" />
+    <Content Include="Error.aspx" />
+    <Content Include="Log.aspx" />
+    <Content Include="ModelViewerOptions.ascx" />
+    <Content Include="PVPList.aspx" />
+    <Content Include="RareItemsList.aspx" />
+    <Content Include="RealmControl.ascx" />
+    <Content Include="Sign_Up.aspx" />
+    <Content Include="UserSection.aspx" />
+    <Content Include="VF_RealmPlayersIcon32.ico" />
+    <Content Include="VF_WoWLauncher.aspx" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\VF_Library\VF_Library\VF_ThreadSafeCache.cs">
+      <Link>Code\VF_Library\VF_ThreadSafeCache.cs</Link>
+    </Compile>
+    <Compile Include="..\..\VF_Library\VF_Library\VF_URLShortener.cs">
+      <Link>Code\VF_Library\VF_URLShortener.cs</Link>
+    </Compile>
+    <Compile Include="About.aspx.cs">
+      <DependentUpon>About.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="About.aspx.designer.cs">
+      <DependentUpon>About.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="AdminInfo.aspx.cs">
+      <DependentUpon>AdminInfo.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="AdminInfo.aspx.designer.cs">
+      <DependentUpon>AdminInfo.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Changelog.aspx.cs">
+      <DependentUpon>Changelog.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Changelog.aspx.designer.cs">
+      <DependentUpon>Changelog.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CharacterDesigner.aspx.cs">
+      <DependentUpon>CharacterDesigner.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CharacterDesigner.aspx.designer.cs">
+      <DependentUpon>CharacterDesigner.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Code\DynamicReloader.cs" />
+    <Compile Include="Code\PerformanceStatistics.cs" />
+    <Compile Include="Code\ApplicationInstance.cs" />
+    <Compile Include="Code\Constants.cs" />
+    <Compile Include="Code\ContributorStatistics.cs" />
+    <Compile Include="Code\DatabaseAccess.cs" />
+    <Compile Include="Code\DynamicFileData.cs" />
+    <Compile Include="Code\Extensions.cs" />
+    <Compile Include="Code\Logger.cs" />
+    <Compile Include="Code\PlayerAnalyze.cs" />
+    <Compile Include="Code\Resources\EnchantIDs.cs" />
+    <Compile Include="Code\GearAnalyze.cs" />
+    <Compile Include="Code\HistoryGenerator.cs" />
+    <Compile Include="Code\ItemStats.cs" />
+    <Compile Include="Code\PageUtility.cs" />
+    <Compile Include="Code\Resources\DatatypeConverters.cs" />
+    <Compile Include="Code\Resources\GemIDs.cs" />
+    <Compile Include="Code\Resources\ItemAnalyzer.cs" />
+    <Compile Include="Code\Resources\RawData.cs" />
+    <Compile Include="Code\Resources\VisualResources.cs" />
+    <Compile Include="CharacterList.aspx.cs">
+      <DependentUpon>CharacterList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CharacterList.aspx.designer.cs">
+      <DependentUpon>CharacterList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CharacterViewer.aspx.cs">
+      <DependentUpon>CharacterViewer.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CharacterViewer.aspx.designer.cs">
+      <DependentUpon>CharacterViewer.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Code\Resources\SuffixIDs.cs" />
+    <Compile Include="Code\UserActivityDB.cs" />
+    <Compile Include="Contact.aspx.cs">
+      <DependentUpon>Contact.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Contact.aspx.designer.cs">
+      <DependentUpon>Contact.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Code\DatabaseLoader.cs" />
+    <Compile Include="Contributors.aspx.cs">
+      <DependentUpon>Contributors.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Contributors.aspx.designer.cs">
+      <DependentUpon>Contributors.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CreateUserID.aspx.cs">
+      <DependentUpon>CreateUserID.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CreateUserID.aspx.designer.cs">
+      <DependentUpon>CreateUserID.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Disclaimer.aspx.cs">
+      <DependentUpon>Disclaimer.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Disclaimer.aspx.designer.cs">
+      <DependentUpon>Disclaimer.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Donate.aspx.cs">
+      <DependentUpon>Donate.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Donate.aspx.designer.cs">
+      <DependentUpon>Donate.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Donators.aspx.cs">
+      <DependentUpon>Donators.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Donators.aspx.designer.cs">
+      <DependentUpon>Donators.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Forgot_Password.aspx.cs">
+      <DependentUpon>Forgot_Password.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Forgot_Password.aspx.designer.cs">
+      <DependentUpon>Forgot_Password.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="GuildList.aspx.cs">
+      <DependentUpon>GuildList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="GuildList.aspx.designer.cs">
+      <DependentUpon>GuildList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="GuildViewer.aspx.cs">
+      <DependentUpon>GuildViewer.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="GuildViewer.aspx.designer.cs">
+      <DependentUpon>GuildViewer.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Index.aspx.cs">
+      <DependentUpon>Index.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Index.aspx.designer.cs">
+      <DependentUpon>Index.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Code\ItemInfo.cs" />
+    <Compile Include="ItemTooltip.aspx.cs">
+      <DependentUpon>ItemTooltip.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ItemTooltip.aspx.designer.cs">
+      <DependentUpon>ItemTooltip.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ItemUsageInfo.aspx.cs">
+      <DependentUpon>ItemUsageInfo.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ItemUsageInfo.aspx.designer.cs">
+      <DependentUpon>ItemUsageInfo.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Error.aspx.cs">
+      <DependentUpon>Error.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Error.aspx.designer.cs">
+      <DependentUpon>Error.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Log.aspx.cs">
+      <DependentUpon>Log.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Log.aspx.designer.cs">
+      <DependentUpon>Log.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="MasterFrame.Master.cs">
+      <DependentUpon>MasterFrame.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="MasterFrame.Master.designer.cs">
+      <DependentUpon>MasterFrame.Master</DependentUpon>
+    </Compile>
+    <Compile Include="ModelViewerOptions.ascx.cs">
+      <DependentUpon>ModelViewerOptions.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ModelViewerOptions.ascx.designer.cs">
+      <DependentUpon>ModelViewerOptions.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PVPList.aspx.cs">
+      <DependentUpon>PVPList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="PVPList.aspx.designer.cs">
+      <DependentUpon>PVPList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Code\StaticValues.cs" />
+    <Compile Include="RareItemsList.aspx.cs">
+      <DependentUpon>RareItemsList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="RareItemsList.aspx.designer.cs">
+      <DependentUpon>RareItemsList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="RealmControl.ascx.cs">
+      <DependentUpon>RealmControl.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="RealmControl.ascx.designer.cs">
+      <DependentUpon>RealmControl.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Sign_Up.aspx.cs">
+      <DependentUpon>Sign_Up.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Sign_Up.aspx.designer.cs">
+      <DependentUpon>Sign_Up.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UserSection.aspx.cs">
+      <DependentUpon>UserSection.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UserSection.aspx.designer.cs">
+      <DependentUpon>UserSection.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="VF_WoWLauncher.aspx.cs">
+      <DependentUpon>VF_WoWLauncher.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="VF_WoWLauncher.aspx.designer.cs">
+      <DependentUpon>VF_WoWLauncher.aspx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="MasterFrame.Master" />
+    <None Include="Properties\PublishProfiles\Qinarw-Server.pubxml" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Assets\img\icons\class\" />
+    <Folder Include="Assets\img\icons\races\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RealmPlayersDatabase\VF_RealmPlayersDatabase.csproj">
+      <Project>{ac235bce-181b-4b49-8abc-d1639d935373}</Project>
+      <Name>VF_RealmPlayersDatabase</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>VF_RealmPlayersIcon32.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>7301</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:4633/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
