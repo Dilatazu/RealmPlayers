@@ -36,8 +36,8 @@ namespace VF_RaidDamageWebsite
         {
             if (System.IO.Directory.Exists(g_RDDBDir) == false)
             {
-                g_RPPDBDir = g_RPPDBDir.Replace("C:", "E:");
-                g_RDDBDir = g_RDDBDir.Replace("C:", "E:");
+                g_RPPDBDir = g_RPPDBDir.Replace("C:", "M:");
+                g_RDDBDir = g_RDDBDir.Replace("C:", "M:");
             }
             string rppDBDir = g_RPPDBDir + "Database\\";
             var timeSinceWrite = DateTime.UtcNow - System.IO.File.GetLastWriteTime(rppDBDir + "Emerald_Dream\\PlayersData.dat");

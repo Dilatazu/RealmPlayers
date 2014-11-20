@@ -26,11 +26,11 @@ namespace VF_WoWLauncherServer
 
             if (System.IO.Directory.Exists(g_RPPDBFolder) == false)
             {
-                g_RPPDBFolder = g_RPPDBFolder.Replace("C:", "E:");
-                g_RDDBFolder = g_RDDBFolder.Replace("C:", "E:");
-                AddonDatabaseService.g_AddonUploadDataFolder = AddonDatabaseService.g_AddonUploadDataFolder.Replace("C:", "E:");
-                AddonDatabaseService.g_AddonUploadStatsFolder = AddonDatabaseService.g_AddonUploadStatsFolder.Replace("C:", "E:");
-                RPPDatabaseHandler.g_AddonContributionsBackupFolder = RPPDatabaseHandler.g_AddonContributionsBackupFolder.Replace("C:", "E:");
+                g_RPPDBFolder = g_RPPDBFolder.Replace("C:", "M:");
+                g_RDDBFolder = g_RDDBFolder.Replace("C:", "M:");
+                AddonDatabaseService.g_AddonUploadDataFolder = AddonDatabaseService.g_AddonUploadDataFolder.Replace("C:", "M:");
+                AddonDatabaseService.g_AddonUploadStatsFolder = AddonDatabaseService.g_AddonUploadStatsFolder.Replace("C:", "M:");
+                RPPDatabaseHandler.g_AddonContributionsBackupFolder = RPPDatabaseHandler.g_AddonContributionsBackupFolder.Replace("C:", "M:");
             }
             AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
 

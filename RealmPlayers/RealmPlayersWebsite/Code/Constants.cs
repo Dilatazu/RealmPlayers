@@ -22,8 +22,8 @@ namespace RealmPlayersServer
                 }
                 if (System.IO.Directory.Exists(RPPDbDir) == false)
                 {
-                    RPPDbDir = RPPDbDir.Replace("C:", "E:");
-                    RPPDbWriteDir = RPPDbWriteDir.Replace("C:", "E:");
+                    RPPDbDir = RPPDbDir.Replace("C:", "M:");
+                    RPPDbWriteDir = RPPDbWriteDir.Replace("C:", "M:");
                 }
                 m_Initialized = true;
             }
