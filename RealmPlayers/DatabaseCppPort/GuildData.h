@@ -13,7 +13,7 @@ namespace RP
 		std::string m_GuildRank = "None";
 		int m_GuildRankNr = 0;
 	public:
-		void Serialize(std::ofstream* _ResultOutputStream)
+		void Serialize(std::ofstream* _ResultOutputStream) const
 		{
 			WriteBinary<std::string>(*_ResultOutputStream, m_GuildName);
 			WriteBinary<std::string>(*_ResultOutputStream, m_GuildRank);

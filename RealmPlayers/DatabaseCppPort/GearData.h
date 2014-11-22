@@ -18,7 +18,7 @@ namespace RP
 		VF::TinyArray<int> m_GemIDs;
 
 	public:
-		void Serialize(std::ofstream* _ResultOutputStream)
+		void Serialize(std::ofstream* _ResultOutputStream) const
 		{
 			WriteBinary<int>(*_ResultOutputStream, (int)m_Slot);
 			WriteBinary<int>(*_ResultOutputStream, (int)m_ItemID);
@@ -43,7 +43,7 @@ namespace RP
 	public:
 		std::map<ItemSlot, GearItem> m_Items;
 	public:
-		void Serialize(std::ofstream* _ResultOutputStream)
+		void Serialize(std::ofstream* _ResultOutputStream) const
 		{
 			WriteBinary<int>(*_ResultOutputStream, (int)m_Items.size());
 			for (auto& item : m_Items)

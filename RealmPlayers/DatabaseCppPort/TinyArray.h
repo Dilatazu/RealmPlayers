@@ -70,7 +70,7 @@ namespace VF
 			return *(((int*)m_Data) - 1);
 		}
 	public:
-		void Serialize(std::ofstream* _ResultOutputStream)
+		void Serialize(std::ofstream* _ResultOutputStream) const
 		{
 			int size = GetSize();
 			WriteBinary<int>(*_ResultOutputStream, size);

@@ -12,7 +12,7 @@ namespace RP
 		std::map<float, DateTime> m_HighestRank;
 		int m_ActivePVPWeeks = 0;
 	public:
-		void Serialize(std::ofstream* _ResultOutputStream)
+		void Serialize(std::ofstream* _ResultOutputStream) const
 		{
 			WriteBinary<int>(*_ResultOutputStream, m_ActivePVPWeeks);
 			WriteBinary<int>(*_ResultOutputStream, m_HighestRank.size());
@@ -43,7 +43,7 @@ namespace RP
 	private:
 		std::map<std::string, PVPSummary> m_PVPSummaries;
 	public:
-		void Serialize(std::ofstream* _ResultOutputStream)
+		void Serialize(std::ofstream* _ResultOutputStream) const
 		{
 			WriteBinary<int>(*_ResultOutputStream, m_PVPSummaries.size());
 			for (auto& pvpSummary : m_PVPSummaries)

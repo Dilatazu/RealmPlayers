@@ -28,7 +28,7 @@ namespace RP
 			{
 				std::pair<std::string, PlayerDataHistory> dataPair;
 				ReadBinary<std::string>(_InputStream, &dataPair.first);
-				dataPair.second = PlayerDataHistory::Deserialize(_InputStream);
+				PlayerDataHistory::Deserialize(_InputStream, &dataPair.second);
 				_OutputData->m_PlayersHistory.insert(dataPair);
 			}
 		}
@@ -65,7 +65,7 @@ namespace RP
 			{
 				std::pair<std::string, PlayerData> dataPair;
 				ReadBinary<std::string>(_InputStream, &dataPair.first);
-				dataPair.second = PlayerData::Deserialize(_InputStream);
+				PlayerData::Deserialize(_InputStream, &dataPair.second);
 				_OutputData->m_Players.insert(dataPair);
 			}
 			RealmDatabaseHistory::Deserialize(_InputStream, &_OutputData->m_History);

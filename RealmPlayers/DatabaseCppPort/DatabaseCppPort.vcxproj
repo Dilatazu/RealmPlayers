@@ -69,6 +69,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ArenaData.h" />
     <ClInclude Include="ArenaDataHistoryItem.h" />
     <ClInclude Include="CharacterData.h" />
     <ClInclude Include="CharacterDataHistoryItem.h" />

@@ -8,17 +8,18 @@ namespace RP
 	class GuildDataHistoryItem
 	{
 	public:
-
+		GuildData m_Data;
+		UploadID m_Uploader;
 	public:
-		void Serialize(std::ofstream* _ResultOutputStream)
+		void Serialize(std::ofstream* _ResultOutputStream) const
 		{
-			static_assert(false, "Not implemented");
+			m_Data.Serialize(_ResultOutputStream);
+			m_Uploader.Serialize(_ResultOutputStream);
 		}
 		static void Deserialize(std::ifstream& _InputStream, GuildDataHistoryItem* _OutputData)
 		{
-			*_OutputData = GuildDataHistoryItem();
-
-			static_assert(false, "Not implemented");
+			GuildData::Deserialize(_InputStream, &_OutputData->m_Data);
+			UploadID::Deserialize(_InputStream, &_OutputData->m_Uploader);
 		}
 	};
 }

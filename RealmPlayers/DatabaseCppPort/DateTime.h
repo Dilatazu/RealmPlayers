@@ -9,7 +9,7 @@ namespace RP
 	public:
 		unsigned __int64 Value;
 	public:
-		void Serialize(std::ofstream* _ResultOutputStream)
+		void Serialize(std::ofstream* _ResultOutputStream) const
 		{
 			WriteBinary<unsigned __int64>(*_ResultOutputStream, Value);
 		}

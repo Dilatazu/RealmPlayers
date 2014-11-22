@@ -13,7 +13,7 @@ namespace RP
 		PlayerSex m_Sex = PlayerSex::Male;
 		int m_Level = 0;
 	public:
-		void Serialize(std::ofstream* _ResultOutputStream)
+		void Serialize(std::ofstream* _ResultOutputStream) const
 		{
 			WriteBinary<int>(*_ResultOutputStream, (int)m_Race);
 			WriteBinary<int>(*_ResultOutputStream, (int)m_Class);

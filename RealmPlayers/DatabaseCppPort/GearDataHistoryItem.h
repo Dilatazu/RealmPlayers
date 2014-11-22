@@ -8,17 +8,18 @@ namespace RP
 	class GearDataHistoryItem
 	{
 	public:
-
+		GearData m_Data;
+		UploadID m_Uploader;
 	public:
-		void Serialize(std::ofstream* _ResultOutputStream)
+		void Serialize(std::ofstream* _ResultOutputStream) const
 		{
-			static_assert(false, "Not implemented");
+			m_Data.Serialize(_ResultOutputStream);
+			m_Uploader.Serialize(_ResultOutputStream);
 		}
 		static void Deserialize(std::ifstream& _InputStream, GearDataHistoryItem* _OutputData)
 		{
-			*_OutputData = GearDataHistoryItem();
-
-			static_assert(false, "Not implemented");
+			GearData::Deserialize(_InputStream, &_OutputData->m_Data);
+			UploadID::Deserialize(_InputStream, &_OutputData->m_Uploader);
 		}
 	};
 }

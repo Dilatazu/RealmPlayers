@@ -17,7 +17,7 @@ namespace RP
 		std::vector<std::pair<unsigned __int64, DateTime>> m_ItemOwners;
 	public:
 
-		void Serialize(std::ofstream* _ResultOutputStream)
+		void Serialize(std::ofstream* _ResultOutputStream) const
 		{
 			WriteBinary<int>(*_ResultOutputStream, m_ItemID);
 			WriteBinary<int>(*_ResultOutputStream, m_SuffixID);
@@ -97,7 +97,7 @@ namespace RP
 			std::cout << "\n------------------------------\n";
 		}
 #pragma optimize("", on)
-		void Serialize(std::ofstream* _ResultOutputStream)
+		void Serialize(std::ofstream* _ResultOutputStream) const
 		{
 			WriteBinary<int>(*_ResultOutputStream, m_Items.size());
 			for (auto& item : m_Items)

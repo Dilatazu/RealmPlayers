@@ -21,7 +21,7 @@ namespace RP
 		int m_LifetimeDK = 0;
 		int m_LifetimeHighestRank = 0;
 	public:
-		void Serialize(std::ofstream* _ResultOutputStream)
+		void Serialize(std::ofstream* _ResultOutputStream) const
 		{
 #			define _HONORDATA_MEMBER_INTS_COUNT ((&((HonorData*)0)->m_LifetimeHighestRank - &((HonorData*)0)->m_CurrentRank) + 1)
 			//Since everything is just int and floats we just treat it as a POD

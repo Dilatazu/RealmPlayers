@@ -11,14 +11,13 @@ namespace RP
 		CharacterData m_Data;
 		UploadID m_Uploader;
 	public:
-		void Serialize(std::ofstream* _ResultOutputStream)
+		void Serialize(std::ofstream* _ResultOutputStream) const
 		{
 			m_Data.Serialize(_ResultOutputStream);
 			m_Uploader.Serialize(_ResultOutputStream);
 		}
 		static void Deserialize(std::ifstream& _InputStream, CharacterDataHistoryItem* _OutputData)
 		{
-			*_OutputData = CharacterDataHistoryItem();
 			CharacterData::Deserialize(_InputStream, &_OutputData->m_Data);
 			UploadID::Deserialize(_InputStream, &_OutputData->m_Uploader);
 		}

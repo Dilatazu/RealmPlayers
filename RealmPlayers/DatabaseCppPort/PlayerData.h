@@ -3,6 +3,7 @@
 #include "GuildData.h"
 #include "HonorData.h"
 #include "GearData.h"
+#include "ArenaData.h"
 #include "DateTime.h"
 #include "UploadID.h"
 
@@ -17,11 +18,12 @@ namespace RP
 		GuildData m_Guild;
 		HonorData m_Honor;
 		GearData m_Gear;
+		ArenaData m_Arena;
 		DateTime m_LastSeen;
 		UploadID m_Uploader;
 	public:
 
-		void Serialize(std::ofstream* _ResultOutputStream)
+		void Serialize(std::ofstream* _ResultOutputStream) const
 		{
 			WriteBinary<std::string>(*_ResultOutputStream, m_Name);
 			WriteBinary<int>(*_ResultOutputStream, (int)m_Realm);
@@ -29,6 +31,7 @@ namespace RP
 			m_Guild.Serialize(_ResultOutputStream);
 			m_Honor.Serialize(_ResultOutputStream);
 			m_Gear.Serialize(_ResultOutputStream);
+			m_Arena.Serialize(_ResultOutputStream);
 			m_LastSeen.Serialize(_ResultOutputStream);
 			m_Uploader.Serialize(_ResultOutputStream);
 		}
@@ -40,6 +43,7 @@ namespace RP
 			GuildData::Deserialize(_InputStream, &_OutputData->m_Guild);
 			HonorData::Deserialize(_InputStream, &_OutputData->m_Honor);
 			GearData::Deserialize(_InputStream, &_OutputData->m_Gear);
+			ArenaData::Deserialize(_InputStream, &_OutputData->m_Arena);
 			DateTime::Deserialize(_InputStream, &_OutputData->m_LastSeen);
 			UploadID::Deserialize(_InputStream, &_OutputData->m_Uploader);
 		}

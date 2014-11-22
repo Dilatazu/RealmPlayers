@@ -11,7 +11,7 @@ namespace RP
 		DateTime m_Time;
 
 	public:
-		void Serialize(std::ofstream* _ResultOutputStream)
+		void Serialize(std::ofstream* _ResultOutputStream) const
 		{
 			WriteBinary<int>(*_ResultOutputStream, m_ContributorID);
 			m_Time.Serialize(_ResultOutputStream);
