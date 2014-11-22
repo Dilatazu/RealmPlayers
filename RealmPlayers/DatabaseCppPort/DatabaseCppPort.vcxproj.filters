@@ -13,6 +13,15 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Resource Files\PlayerData">
+      <UniqueIdentifier>{f4864d9e-99f1-44fc-a931-6e0d8724bf48}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Contributor">
+      <UniqueIdentifier>{17d26dc8-0e40-43df-92a2-6f03857b15d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\PlayerDataHistory">
+      <UniqueIdentifier>{de6df00b-b98e-47c5-b0c2-bca79e83b1f1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -40,6 +49,27 @@
     </ClInclude>
     <ClInclude Include="TinyArray.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerData.h">
+      <Filter>Resource Files\PlayerData</Filter>
+    </ClInclude>
+    <ClInclude Include="GuildData.h">
+      <Filter>Resource Files\PlayerData</Filter>
+    </ClInclude>
+    <ClInclude Include="CharacterData.h">
+      <Filter>Resource Files\PlayerData</Filter>
+    </ClInclude>
+    <ClInclude Include="HonorData.h">
+      <Filter>Resource Files\PlayerData</Filter>
+    </ClInclude>
+    <ClInclude Include="GearData.h">
+      <Filter>Resource Files\PlayerData</Filter>
+    </ClInclude>
+    <ClInclude Include="UploadID.h">
+      <Filter>Resource Files\Contributor</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerDataHistory.h">
+      <Filter>Resource Files\PlayerDataHistory</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

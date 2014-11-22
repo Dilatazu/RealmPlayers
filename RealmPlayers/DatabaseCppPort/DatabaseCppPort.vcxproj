@@ -69,12 +69,19 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CharacterData.h" />
     <ClInclude Include="DateTime.h" />
+    <ClInclude Include="GearData.h" />
+    <ClInclude Include="GuildData.h" />
+    <ClInclude Include="HonorData.h" />
     <ClInclude Include="ItemSummaryDatabase.h" />
+    <ClInclude Include="PlayerData.h" />
+    <ClInclude Include="PlayerDataHistory.h" />
     <ClInclude Include="PlayerSummaryDatabase.h" />
     <ClInclude Include="RealmDatabase.h" />
     <ClInclude Include="SerializeHelpers.h" />
     <ClInclude Include="TinyArray.h" />
+    <ClInclude Include="UploadID.h" />
     <ClInclude Include="WowEnums.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
