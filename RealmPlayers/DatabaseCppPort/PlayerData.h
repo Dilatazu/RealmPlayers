@@ -32,11 +32,16 @@ namespace RP
 			m_LastSeen.Serialize(_ResultOutputStream);
 			m_Uploader.Serialize(_ResultOutputStream);
 		}
-		static PlayerData Deserialize(std::ifstream& _InputStream)
+		static void Deserialize(std::ifstream& _InputStream, PlayerData* _OutputData)
 		{
-			PlayerData result;
-
-			return result;
+			ReadBinary<std::string>(_InputStream, &_OutputData->m_Name);
+			ReadBinary_As<int>(_InputStream, &_OutputData->m_Realm);
+			CharacterData::Deserialize(_InputStream, &_OutputData->m_Character);
+			GuildData::Deserialize(_InputStream, &_OutputData->m_Guild);
+			HonorData::Deserialize(_InputStream, &_OutputData->m_Honor);
+			GearData::Deserialize(_InputStream, &_OutputData->m_Gear);
+			DateTime::Deserialize(_InputStream, &_OutputData->m_LastSeen);
+			UploadID::Deserialize(_InputStream, &_OutputData->m_Uploader);
 		}
 	};
 }

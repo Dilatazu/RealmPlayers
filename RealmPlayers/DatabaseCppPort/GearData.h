@@ -27,16 +27,15 @@ namespace RP
 			WriteBinary<int>(*_ResultOutputStream, (int)m_UniqueID);
 			m_GemIDs.Serialize(_ResultOutputStream);
 		}
-		static GearItem Deserialize(std::ifstream& _InputStream)
+		static void Deserialize(std::ifstream& _InputStream, GearItem* _OutputData)
 		{
-			GearItem result;
-			ReadBinary_As<int>(_InputStream, &result.m_Slot);
-			ReadBinary<int>(_InputStream, &result.m_ItemID);
-			ReadBinary<int>(_InputStream, &result.m_EnchantID);
-			ReadBinary<int>(_InputStream, &result.m_SuffixID);
-			ReadBinary<int>(_InputStream, &result.m_UniqueID);
-			result.m_GemIDs = VF::TinyArray<int>::Deserialize(_InputStream);
-			return result;
+			*_OutputData = GearItem();
+			ReadBinary_As<int>(_InputStream, &_OutputData->m_Slot);
+			ReadBinary<int>(_InputStream, &_OutputData->m_ItemID);
+			ReadBinary<int>(_InputStream, &_OutputData->m_EnchantID);
+			ReadBinary<int>(_InputStream, &_OutputData->m_SuffixID);
+			ReadBinary<int>(_InputStream, &_OutputData->m_UniqueID);
+			_OutputData->m_GemIDs = VF::TinyArray<int>::Deserialize(_InputStream);
 		}
 	};
 	class GearData
@@ -53,19 +52,17 @@ namespace RP
 				item.second.Serialize(_ResultOutputStream);
 			}
 		}
-		static GearData Deserialize(std::ifstream& _InputStream)
+		static void Deserialize(std::ifstream& _InputStream, GearData* _OutputData)
 		{
-			GearData result;
 			int itemCount = 0;
 			ReadBinary<int>(_InputStream, &itemCount);
 			for (int i = 0; i < itemCount; ++i)
 			{
 				std::pair<ItemSlot, GearItem> dataPair;
 				ReadBinary_As<int>(_InputStream, &dataPair.first);
-				dataPair.second = GearItem::Deserialize(_InputStream);
-				result.m_Items.insert(dataPair);
+				GearItem::Deserialize(_InputStream, &dataPair.second);
+				_OutputData->m_Items.insert(dataPair);
 			}
-			return result;
 		}
 	};
 }

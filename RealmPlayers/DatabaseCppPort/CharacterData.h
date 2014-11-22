@@ -20,14 +20,12 @@ namespace RP
 			WriteBinary<int>(*_ResultOutputStream, (int)m_Sex);
 			WriteBinary<int>(*_ResultOutputStream, (int)m_Level);
 		}
-		static CharacterData Deserialize(std::ifstream& _InputStream)
+		static void Deserialize(std::ifstream& _InputStream, CharacterData* _OutputData)
 		{
-			CharacterData result;
-			ReadBinary_As<int>(_InputStream, &result.m_Race);
-			ReadBinary_As<int>(_InputStream, &result.m_Class);
-			ReadBinary_As<int>(_InputStream, &result.m_Sex);
-			ReadBinary<int>(_InputStream, &result.m_Level);
-			return result;
+			ReadBinary_As<int>(_InputStream, &_OutputData->m_Race);
+			ReadBinary_As<int>(_InputStream, &_OutputData->m_Class);
+			ReadBinary_As<int>(_InputStream, &_OutputData->m_Sex);
+			ReadBinary<int>(_InputStream, &_OutputData->m_Level);
 		}
 	};
 }

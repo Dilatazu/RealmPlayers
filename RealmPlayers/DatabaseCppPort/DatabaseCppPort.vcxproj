@@ -69,11 +69,16 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ArenaDataHistoryItem.h" />
     <ClInclude Include="CharacterData.h" />
+    <ClInclude Include="CharacterDataHistoryItem.h" />
     <ClInclude Include="DateTime.h" />
     <ClInclude Include="GearData.h" />
+    <ClInclude Include="GearDataHistoryItem.h" />
     <ClInclude Include="GuildData.h" />
+    <ClInclude Include="GuildDataHistoryItem.h" />
     <ClInclude Include="HonorData.h" />
+    <ClInclude Include="HonorDataHistoryItem.h" />
     <ClInclude Include="ItemSummaryDatabase.h" />
     <ClInclude Include="PlayerData.h" />
     <ClInclude Include="PlayerDataHistory.h" />

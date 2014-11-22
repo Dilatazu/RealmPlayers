@@ -19,5 +19,9 @@ namespace RP
 			ReadBinary<unsigned __int64>(_InputStream, &result.Value);
 			return result;
 		}
+		static void Deserialize(std::ifstream& _InputStream, DateTime* _OutputData)
+		{
+			ReadBinary<unsigned __int64>(_InputStream, &_OutputData->Value);
+		}
 	};
 }

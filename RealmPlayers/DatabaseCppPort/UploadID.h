@@ -23,5 +23,10 @@ namespace RP
 			result.m_Time = DateTime::Deserialize(_InputStream);
 			return result;
 		}
+		static void Deserialize(std::ifstream& _InputStream, UploadID* _OutputData)
+		{
+			ReadBinary<int>(_InputStream, &_OutputData->m_ContributorID);
+			DateTime::Deserialize(_InputStream, &_OutputData->m_Time);
+		}
 	};
 }

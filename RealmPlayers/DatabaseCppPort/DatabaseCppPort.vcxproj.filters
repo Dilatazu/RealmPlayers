@@ -71,5 +71,20 @@
     <ClInclude Include="PlayerDataHistory.h">
       <Filter>Resource Files\PlayerDataHistory</Filter>
     </ClInclude>
+    <ClInclude Include="CharacterDataHistoryItem.h">
+      <Filter>Resource Files\PlayerDataHistory</Filter>
+    </ClInclude>
+    <ClInclude Include="GuildDataHistoryItem.h">
+      <Filter>Resource Files\PlayerDataHistory</Filter>
+    </ClInclude>
+    <ClInclude Include="HonorDataHistoryItem.h">
+      <Filter>Resource Files\PlayerDataHistory</Filter>
+    </ClInclude>
+    <ClInclude Include="GearDataHistoryItem.h">
+      <Filter>Resource Files\PlayerDataHistory</Filter>
+    </ClInclude>
+    <ClInclude Include="ArenaDataHistoryItem.h">
+      <Filter>Resource Files\PlayerDataHistory</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -19,13 +19,11 @@ namespace RP
 			WriteBinary<std::string>(*_ResultOutputStream, m_GuildRank);
 			WriteBinary<int>(*_ResultOutputStream, m_GuildRankNr);
 		}
-		static GuildData Deserialize(std::ifstream& _InputStream)
+		static void Deserialize(std::ifstream& _InputStream, GuildData* _OutputData)
 		{
-			GuildData result;
-			ReadBinary<std::string>(_InputStream, &result.m_GuildName);
-			ReadBinary<std::string>(_InputStream, &result.m_GuildRank);
-			ReadBinary<int>(_InputStream, &result.m_GuildRankNr);
-			return result;
+			ReadBinary<std::string>(_InputStream, &_OutputData->m_GuildName);
+			ReadBinary<std::string>(_InputStream, &_OutputData->m_GuildRank);
+			ReadBinary<int>(_InputStream, &_OutputData->m_GuildRankNr);
 		}
 	};
 }

@@ -30,11 +30,9 @@ namespace RP
 
 			WriteBinaryArray<int>(*_ResultOutputStream, (int*)this, _HONORDATA_MEMBER_INTS_COUNT);
 		}
-		static HonorData Deserialize(std::ifstream& _InputStream)
+		static void Deserialize(std::ifstream& _InputStream, HonorData* _OutputData)
 		{
-			HonorData result;
-			ReadBinaryArray<int>(_InputStream, (int*)&result, _HONORDATA_MEMBER_INTS_COUNT);
-			return result;
+			ReadBinaryArray<int>(_InputStream, (int*)_OutputData, _HONORDATA_MEMBER_INTS_COUNT);
 		}
 	};
 }
