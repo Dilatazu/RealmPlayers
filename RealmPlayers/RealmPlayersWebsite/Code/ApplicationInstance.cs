@@ -128,6 +128,8 @@ namespace RealmPlayersServer
             public DateTime m_LastUserActivitySave = DateTime.Now;
             public void AddUserActivity(string _IP, string _Url, string _UrlReferrer)
             {
+                //TODO: This code below is freezing the entire webservice. FIX THE PROBLEM IN THE FUTURE
+                return;
                 UserActivityDB.AddUserActivity(_IP, _Url, _UrlReferrer);
                 return;
                 //Monitor.Enter(m_RealmPlayersMutex);
