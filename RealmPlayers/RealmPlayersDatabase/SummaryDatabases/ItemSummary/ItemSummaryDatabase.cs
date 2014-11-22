@@ -15,11 +15,11 @@ namespace VF_RPDatabase
     public class ItemSummary
     {
         [ProtoMember(1)]
-        private int m_ItemID;
+        public int m_ItemID;
         [ProtoMember(2)]
-        private int m_SuffixID;
+        public int m_SuffixID;
         [ProtoMember(3)]
-        private List<Tuple<UInt64, DateTime>> m_ItemOwners = new List<Tuple<UInt64, DateTime>>();
+        public List<Tuple<UInt64, DateTime>> m_ItemOwners = new List<Tuple<UInt64, DateTime>>();
 
         public ItemSummary() { }
         public ItemSummary(ItemInfo _Item)
@@ -54,24 +54,24 @@ namespace VF_RPDatabase
     public class ItemSummaryDatabase
     {
         [ProtoMember(1)]
-        private Dictionary<UInt64, ItemSummary> m_Items = new Dictionary<UInt64, ItemSummary>();
+        public Dictionary<UInt64, ItemSummary> m_Items = new Dictionary<UInt64, ItemSummary>();
         [ProtoMember(2)]
-        private Dictionary<string, UInt64> m_PlayerIDs = new Dictionary<string, UInt64>();
+        public Dictionary<string, UInt64> m_PlayerIDs = new Dictionary<string, UInt64>();
 
         [ProtoMember(3)]
-        private UInt64 m_EntityCounter_Emerald_Dream = 0L;
+        public UInt64 m_EntityCounter_Emerald_Dream = 0L;
         [ProtoMember(4)]
-        private UInt64 m_EntityCounter_Warsong = 0L;
+        public UInt64 m_EntityCounter_Warsong = 0L;
         [ProtoMember(5)]
-        private UInt64 m_EntityCounter_Al_Akir = 0L;
+        public UInt64 m_EntityCounter_Al_Akir = 0L;
         [ProtoMember(6)]
-        private UInt64 m_EntityCounter_Valkyrie = 0L;
+        public UInt64 m_EntityCounter_Valkyrie = 0L;
         [ProtoMember(7)]
-        private UInt64 m_EntityCounter_VanillaGaming = 0L;
+        public UInt64 m_EntityCounter_VanillaGaming = 0L;
         [ProtoMember(8)]
-        private UInt64 m_EntityCounter_Rebirth = 0L;
+        public UInt64 m_EntityCounter_Rebirth = 0L;
         [ProtoMember(9)]
-        private UInt64 m_EntityCounter_Archangel = 0L;
+        public UInt64 m_EntityCounter_Archangel = 0L;
 
         private void CalcRealmBits(WowRealm _Realm, out UInt64 _BitMask, out UInt64 _RealmValue)
         {

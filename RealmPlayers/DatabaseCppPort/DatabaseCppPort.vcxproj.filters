@@ -23,5 +23,23 @@
     <ClInclude Include="PlayerSummaryDatabase.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="ItemSummaryDatabase.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SerializeHelpers.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DateTime.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RealmDatabase.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WowEnums.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TinyArray.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
