@@ -73,6 +73,8 @@ namespace RealmPlayersServer
             {
                 var startTime = DateTime.Now;
                 UserActivityStats userActivity = new UserActivityStats();
+                return userActivity;
+                //TODO: This code below took 20 seconds etc freezing the entire webservice. FIX THE PROBLEM IN THE FUTURE
                 try
                 {
                     foreach (var interval in g_DefinedIntervals)
