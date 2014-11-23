@@ -22,6 +22,7 @@ namespace RP
 		}
 		static void Deserialize(std::ifstream& _InputStream, CharacterData* _OutputData)
 		{
+			//std::cout << "CharacterData::Deserialize\n";
 			ReadBinary_As<int>(_InputStream, &_OutputData->m_Race);
 			ReadBinary_As<int>(_InputStream, &_OutputData->m_Class);
 			ReadBinary_As<int>(_InputStream, &_OutputData->m_Sex);

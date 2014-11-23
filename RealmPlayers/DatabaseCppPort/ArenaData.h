@@ -26,6 +26,7 @@ namespace RP
 		}
 		static void Deserialize(std::ifstream& _InputStream, ArenaPlayerData* _OutputData)
 		{
+			//std::cout << "ArenaPlayerData::HonorData\n";
 			ReadBinary<std::string>(_InputStream, &_OutputData->m_TeamName);
 			ReadBinary<int>(_InputStream, &_OutputData->m_TeamRating);
 			ReadBinary<int>(_InputStream, &_OutputData->m_GamesPlayed);
@@ -126,6 +127,7 @@ namespace RP
 		}
 		static void Deserialize(std::ifstream& _InputStream, ArenaData* _OutputData)
 		{
+			//std::cout << "ArenaData::HonorData\n";
 			*_OutputData = ArenaData(); //IMPORTANT IN THIS CASE so that if any old data it gets destructed properly!!!
 			int teamFlags = 0;
 			ReadBinary<int>(_InputStream, &teamFlags);

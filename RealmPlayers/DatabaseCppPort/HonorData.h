@@ -32,6 +32,7 @@ namespace RP
 		}
 		static void Deserialize(std::ifstream& _InputStream, HonorData* _OutputData)
 		{
+			//std::cout << "GuildData::HonorData\n";
 			ReadBinaryArray<int>(_InputStream, (int*)_OutputData, _HONORDATA_MEMBER_INTS_COUNT);
 		}
 	};

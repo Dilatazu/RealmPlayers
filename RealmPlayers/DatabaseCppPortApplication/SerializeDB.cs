@@ -14,6 +14,8 @@ namespace DatabaseCppPortApplication
         [DllImport("DatabaseCppPort.dll")]
         public static extern void Serialize_Int32([MarshalAs(UnmanagedType.I4)]int _Value);
         [DllImport("DatabaseCppPort.dll")]
+        public static extern void Serialize_Float([MarshalAs(UnmanagedType.R4)]float _Value);
+        [DllImport("DatabaseCppPort.dll")]
         public static extern void Serialize_UInt64([MarshalAs(UnmanagedType.U8)]UInt64 _Value);
         [DllImport("DatabaseCppPort.dll")]
         public static extern void Serialize_String([MarshalAs(UnmanagedType.LPStr)]string _Value);
@@ -22,6 +24,9 @@ namespace DatabaseCppPortApplication
 
         [DllImport("DatabaseCppPort.dll")]
         public static extern void Validate_ItemSummaryDatabase([MarshalAs(UnmanagedType.LPStr)]string _Filename);
+
+        [DllImport("DatabaseCppPort.dll")]
+        public static extern void Validate_RealmDatabase([MarshalAs(UnmanagedType.LPStr)]string _Filename);
 
     }
     partial class SerializeDB

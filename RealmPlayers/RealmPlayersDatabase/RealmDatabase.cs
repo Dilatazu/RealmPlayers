@@ -31,7 +31,7 @@ namespace VF_RealmPlayersDatabase
         private volatile LoadStatus m_LoadStatus = LoadStatus.EverythingLoaded;
         private object m_LockObj = new object();
 
-        private bool WaitForLoad(LoadStatus _LoadStatus)
+        public bool WaitForLoad(LoadStatus _LoadStatus)
         {
             var loadStatus = m_LoadStatus;
             if (loadStatus < _LoadStatus)
@@ -41,7 +41,7 @@ namespace VF_RealmPlayersDatabase
                 while (loadStatus < _LoadStatus)
                 {
                     Monitor.Exit(m_LockObj);
-                    System.Threading.Thread.Sleep(100);
+                    System.Threading.Thread.Sleep(1000);
                     Monitor.Enter(m_LockObj);
                     loadStatus = m_LoadStatus;
                 }

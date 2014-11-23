@@ -21,6 +21,7 @@ namespace RP
 		}
 		static void Deserialize(std::ifstream& _InputStream, GuildData* _OutputData)
 		{
+			//std::cout << "GuildData::Deserialize\n";
 			ReadBinary<std::string>(_InputStream, &_OutputData->m_GuildName);
 			ReadBinary<std::string>(_InputStream, &_OutputData->m_GuildRank);
 			ReadBinary<int>(_InputStream, &_OutputData->m_GuildRankNr);

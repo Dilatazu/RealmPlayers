@@ -42,7 +42,7 @@ namespace VF
 		}
 		void SetSize(int _Size)
 		{
-			TinyArray oldArray = *this;
+			TinyArray oldArray = std::move(*this);
 
 			void* dataPointer = malloc(sizeof(T_Data) * _Size + 4);
 			((int*)dataPointer)[0] = _Size;

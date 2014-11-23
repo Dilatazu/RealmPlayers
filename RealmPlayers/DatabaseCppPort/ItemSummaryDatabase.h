@@ -61,7 +61,6 @@ namespace RP
 		unsigned __int64 m_EntityCounter_Rebirth = 0;
 		unsigned __int64 m_EntityCounter_Archangel = 0;
 	public:
-#pragma optimize("", off)
 		void PrintSomeContent()
 		{
 			std::cout << "\nPrintSomeContent()\n------------------------------";
@@ -96,7 +95,6 @@ namespace RP
 			}
 			std::cout << "\n------------------------------\n";
 		}
-#pragma optimize("", on)
 		void Serialize(std::ofstream* _ResultOutputStream) const
 		{
 			WriteBinary<int>(*_ResultOutputStream, m_Items.size());

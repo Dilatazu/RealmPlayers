@@ -29,6 +29,7 @@ namespace RP
 		}
 		static void Deserialize(std::ifstream& _InputStream, GearItem* _OutputData)
 		{
+			//std::cout << "GearItem::Deserialize\n";
 			*_OutputData = GearItem();
 			ReadBinary_As<int>(_InputStream, &_OutputData->m_Slot);
 			ReadBinary<int>(_InputStream, &_OutputData->m_ItemID);
@@ -54,6 +55,7 @@ namespace RP
 		}
 		static void Deserialize(std::ifstream& _InputStream, GearData* _OutputData)
 		{
+			//std::cout << "GearData::Deserialize\n";
 			int itemCount = 0;
 			ReadBinary<int>(_InputStream, &itemCount);
 			for (int i = 0; i < itemCount; ++i)
