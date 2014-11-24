@@ -144,12 +144,11 @@ namespace DatabaseCppPortApplication
             SerializeUploadID(_Player.Uploader);
             /*Serialize PlayerData.UploadID*/
         }
-        public static void Cpp_RealmDatabase(string _Filename)
+        public static void Cpp_RealmDatabase(VF_RealmPlayersDatabase.WowRealm _Realm, string _Filename)
         {
             Console.WriteLine("Started Loading RealmDatabase");
-            var realm = VF_RealmPlayersDatabase.WowRealm.Emerald_Dream;
-            VF_RealmPlayersDatabase.RealmDatabase db = new VF_RealmPlayersDatabase.RealmDatabase(realm);
-            db.LoadDatabase("Database\\" + realm.ToString() + "\\");
+            VF_RealmPlayersDatabase.RealmDatabase db = new VF_RealmPlayersDatabase.RealmDatabase(_Realm);
+            db.LoadDatabase("Database\\" + _Realm.ToString() + "\\");
             Console.WriteLine("Loading Players for RealmDatabase");
             db.WaitForLoad(VF_RealmPlayersDatabase.RealmDatabase.LoadStatus.PlayersLoaded);
             Console.WriteLine("Loading PlayersHistory for RealmDatabase");

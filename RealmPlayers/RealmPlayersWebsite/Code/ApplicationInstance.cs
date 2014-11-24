@@ -241,7 +241,9 @@ namespace RealmPlayersServer
             {
                 if (m_ItemInfoUpdated == true && (m_ItemInfoCacheVanilla != null || m_ItemInfoCacheTBC != null))
                 {
-                    Logger.ConsoleWriteLine("BackupItemInfos(): Saving ItemInfos due to being updated", ConsoleColor.Yellow);
+                    m_ItemInfoUpdated = false;
+                    Logger.ConsoleWriteLine("BackupItemInfos(): \"Saving\" ItemInfos due to being updated (SAVING IS DISABLED ATM)", ConsoleColor.Yellow);
+                    return;
                     lock(m_ItemInfoLock)
                     {
                         if (m_ItemInfoCacheVanilla != null)
@@ -331,8 +333,10 @@ namespace RealmPlayersServer
                                     m_ItemDropDatabase = new ItemDropDatabase(Constants.RPPDbDir + "Database\\");
                             }
                         }
-                        catch (Exception)
-                        { }
+                        catch (Exception ex)
+                        {
+                            Logger.LogException(ex);
+                        }
                         if (m_ItemInfoCacheVanilla == null)
                             m_ItemInfoCacheVanilla = new Dictionary<int, ItemInfo>();
                         Monitor.Exit(m_ItemInfoLock);
@@ -370,8 +374,10 @@ namespace RealmPlayersServer
                                     m_ItemDropDatabase = new ItemDropDatabase(Constants.RPPDbDir + "Database\\");
                             }
                         }
-                        catch (Exception)
-                        { }
+                        catch (Exception ex)
+                        {
+                            Logger.LogException(ex);
+                        }
                         if (m_ItemInfoCacheTBC == null)
                             m_ItemInfoCacheTBC = new Dictionary<int, ItemInfo>();
                         Monitor.Exit(m_ItemInfoLock);
@@ -388,97 +394,107 @@ namespace RealmPlayersServer
             }
             public ItemInfo GetItemInfo(int _ItemID, WowVersionEnum _WowVersion)
             {
-                var itemInfoCache = GetItemInfoCache(_WowVersion);
-                ItemInfo itemInfo = null;
-                //m_ItemInfoLock.AcquireReaderLock(1000);
-                Monitor.Enter(m_ItemInfoLock);
-                if (itemInfoCache.ContainsKey(_ItemID) == true)
-                {
-                    itemInfo = itemInfoCache[_ItemID];
-                    Monitor.Exit(m_ItemInfoLock);
-                }
-                else
-                {
-                    Monitor.Exit(m_ItemInfoLock);
-                    foreach (string itemDatabaseAddress in m_CurrentItemDatabaseOrder)
+                try
+                { 
+                    var itemInfoCache = GetItemInfoCache(_WowVersion, true);
+                    if (itemInfoCache == null)
+                        return null;
+                    ItemInfo itemInfo = null;
+                    //m_ItemInfoLock.AcquireReaderLock(1000);
+                    Monitor.Enter(m_ItemInfoLock);
+                    if (itemInfoCache.ContainsKey(_ItemID) == true)
                     {
-                        try
+                        itemInfo = itemInfoCache[_ItemID];
+                        Monitor.Exit(m_ItemInfoLock);
+                    }
+                    else
+                    {
+                        Monitor.Exit(m_ItemInfoLock);
+                        foreach (string itemDatabaseAddress in m_CurrentItemDatabaseOrder)
                         {
-                            //System.Net.WebClient webClient = new System.Net.WebClient();
-                            //var cook = new System.Collections.Specialized.NameValueCollection();
-                            //cook.Add("dbVersion", "0");
-                            System.Net.CookieContainer cookieContainer = new System.Net.CookieContainer();
-                            //cookieContainer.Add(new Uri(itemDatabaseAddress), new System.Net.Cookie("PHPSESSID", "d617cebcf593d37bde6c9c8caa01ef18"));
-                            var webRequest = (System.Net.HttpWebRequest)System.Net.HttpWebRequest.Create(itemDatabaseAddress + "ajax.php?item=" + _ItemID);
-                            webRequest.Timeout = 5000;
-                            webRequest.ReadWriteTimeout = 5000;
-                            if (itemDatabaseAddress.Contains("database.feenixserver.com"))
+                            try
                             {
-                                if (_WowVersion == WowVersionEnum.Vanilla)
+                                //System.Net.WebClient webClient = new System.Net.WebClient();
+                                //var cook = new System.Collections.Specialized.NameValueCollection();
+                                //cook.Add("dbVersion", "0");
+                                System.Net.CookieContainer cookieContainer = new System.Net.CookieContainer();
+                                //cookieContainer.Add(new Uri(itemDatabaseAddress), new System.Net.Cookie("PHPSESSID", "d617cebcf593d37bde6c9c8caa01ef18"));
+                                var webRequest = (System.Net.HttpWebRequest)System.Net.HttpWebRequest.Create(itemDatabaseAddress + "ajax.php?item=" + _ItemID);
+                                webRequest.Timeout = 5000;
+                                webRequest.ReadWriteTimeout = 5000;
+                                if (itemDatabaseAddress.Contains("database.feenixserver.com"))
                                 {
-                                    cookieContainer = DatabaseWowOneCookies_Get();//Hämta rätt cookies när det är vanilla
-                                    //cookieContainer.SetCookies(new Uri("http://database.feenixserver.com"), "dbVersion=0");
-                                }
-                            }
-                            else
-                            {
-                                if (_WowVersion == WowVersionEnum.TBC)
-                                    continue;//Bara stöd för database.feenixserver.com när det är TBC
-                            }
-                            webRequest.CookieContainer = cookieContainer;
-                            using (var webResponse = (System.Net.HttpWebResponse)webRequest.GetResponse())
-                            {
-                                using (System.IO.StreamReader reader = new System.IO.StreamReader(webResponse.GetResponseStream()))
-                                {
-                                    string ajaxItemData = reader.ReadToEnd();
-                                    if (ajaxItemData.StartsWith("$WowheadPower.registerItem"))//Success?
+                                    if (_WowVersion == WowVersionEnum.Vanilla)
                                     {
-                                        string[] itemData = ajaxItemData.Split('{', '}');
-                                        if (itemData.Length == 3)//Success!(?)
+                                        cookieContainer = DatabaseWowOneCookies_Get();//Hämta rätt cookies när det är vanilla
+                                        //cookieContainer.SetCookies(new Uri("http://database.feenixserver.com"), "dbVersion=0");
+                                    }
+                                }
+                                else
+                                {
+                                    if (_WowVersion == WowVersionEnum.TBC)
+                                        continue;//Bara stöd för database.feenixserver.com när det är TBC
+                                }
+                                webRequest.CookieContainer = cookieContainer;
+                                using (var webResponse = (System.Net.HttpWebResponse)webRequest.GetResponse())
+                                {
+                                    using (System.IO.StreamReader reader = new System.IO.StreamReader(webResponse.GetResponseStream()))
+                                    {
+                                        string ajaxItemData = reader.ReadToEnd();
+                                        if (ajaxItemData.StartsWith("$WowheadPower.registerItem"))//Success?
                                         {
-                                            itemInfo = new ItemInfo(_ItemID, ajaxItemData, itemDatabaseAddress);
-                                            if (
-                                                (
-                                                    itemDatabaseAddress.Contains("database.feenixserver.com") && (
-                                                        (_WowVersion == WowVersionEnum.Vanilla && webResponse.Headers.Get("Set-Cookie").Contains("dbVersion=0"))
-                                                        || (_WowVersion == WowVersionEnum.TBC && webResponse.Headers.Get("Set-Cookie").Contains("dbVersion=1"))
-                                                    )
-                                                )
-                                            || itemDatabaseAddress.Contains("db.vanillagaming.org")
-                                            || itemDatabaseAddress.Contains("db.valkyrie-wow.com"))
+                                            string[] itemData = ajaxItemData.Split('{', '}');
+                                            if (itemData.Length == 3)//Success!(?)
                                             {
-                                                Monitor.Enter(m_ItemInfoLock);
-                                                if (itemInfoCache.ContainsKey(_ItemID) == false)
-                                                    itemInfoCache.Add(_ItemID, itemInfo);
-                                                else
-                                                    itemInfoCache[_ItemID] = itemInfo;
-                                                m_ItemInfoUpdated = true;
-                                                Monitor.Exit(m_ItemInfoLock);
-                                                if (itemDatabaseAddress != m_CurrentItemDatabaseOrder.First())
+                                                itemInfo = new ItemInfo(_ItemID, ajaxItemData, itemDatabaseAddress);
+                                                if (
+                                                    (
+                                                        itemDatabaseAddress.Contains("database.feenixserver.com") && (
+                                                            (_WowVersion == WowVersionEnum.Vanilla && webResponse.Headers.Get("Set-Cookie").Contains("dbVersion=0"))
+                                                            || (_WowVersion == WowVersionEnum.TBC && webResponse.Headers.Get("Set-Cookie").Contains("dbVersion=1"))
+                                                        )
+                                                    )
+                                                || itemDatabaseAddress.Contains("db.vanillagaming.org")
+                                                || itemDatabaseAddress.Contains("db.valkyrie-wow.com"))
                                                 {
-                                                    var newItemDatabaseOrder = new List<string>(StaticValues.ItemDatabaseAddresses);
-                                                    newItemDatabaseOrder.Remove(itemDatabaseAddress);
-                                                    newItemDatabaseOrder.Insert(0, itemDatabaseAddress);
-                                                    m_CurrentItemDatabaseOrder = newItemDatabaseOrder;
+                                                    Monitor.Enter(m_ItemInfoLock);
+                                                    if (itemInfoCache.ContainsKey(_ItemID) == false)
+                                                        itemInfoCache.Add(_ItemID, itemInfo);
+                                                    else
+                                                        itemInfoCache[_ItemID] = itemInfo;
+                                                    m_ItemInfoUpdated = true;
+                                                    Monitor.Exit(m_ItemInfoLock);
+                                                    if (itemDatabaseAddress != m_CurrentItemDatabaseOrder.First())
+                                                    {
+                                                        var newItemDatabaseOrder = new List<string>(StaticValues.ItemDatabaseAddresses);
+                                                        newItemDatabaseOrder.Remove(itemDatabaseAddress);
+                                                        newItemDatabaseOrder.Insert(0, itemDatabaseAddress);
+                                                        m_CurrentItemDatabaseOrder = newItemDatabaseOrder;
+                                                    }
                                                 }
+                                                else
+                                                    DatabaseWowOneCookies_Clear();
+                                                break;
                                             }
-                                            else
-                                                DatabaseWowOneCookies_Clear();
-                                            break;
                                         }
                                     }
                                 }
                             }
+                            catch (Exception)
+                            { }
                         }
-                        catch (Exception)
-                        { }
-                    }
-                    //http://db.vanillagaming.org/ajax.php?item=19146
+                        //http://db.vanillagaming.org/ajax.php?item=19146
 
-                    //http://db.vanillagaming.org/ajax.php?item=19146
-                    //http://db.vanillagaming.org/images/icons/large/inv_bracer_04.jpg
+                        //http://db.vanillagaming.org/ajax.php?item=19146
+                        //http://db.vanillagaming.org/images/icons/large/inv_bracer_04.jpg
+                    }
+                    return itemInfo;
                 }
-                return itemInfo;
+                catch(Exception ex)
+                {
+                    Logger.LogException(ex);
+                    return null;
+                }
             }
             public RPPDatabase GetRPPDatabase(bool _WaitUntilLoaded = true)
             {
@@ -513,12 +529,12 @@ namespace RealmPlayersServer
                         rppDatabase = m_RPPDatabase;
                     }
                 }
-                else if ((DateTime.UtcNow - m_LastLoadedDateTime).TotalMinutes > 15)
+                else if ((DateTime.UtcNow - m_LastLoadedDateTime).TotalMinutes > 45)
                 {
                     if (m_LoadRealmPlayersThread == null)
                     {
                         DateTime lastDatabaseUpdateTime = DatabaseLoader.GetLastDatabaseUpdateTimeUTC();
-                        if (lastDatabaseUpdateTime != m_LastDatabaseUpdateTime && (DateTime.UtcNow - lastDatabaseUpdateTime).TotalMinutes > 5)
+                        if (lastDatabaseUpdateTime != m_LastDatabaseUpdateTime && (DateTime.UtcNow - lastDatabaseUpdateTime).TotalMinutes > 35)
                         {
                             m_LastDatabaseUpdateTime = lastDatabaseUpdateTime;
                             m_LoadRealmPlayersThread = new System.Threading.Thread(ReloadRealmPlayers);
@@ -526,7 +542,7 @@ namespace RealmPlayersServer
                         }
                         else
                         {
-                            m_LastLoadedDateTime = DateTime.UtcNow.AddMinutes(-9);
+                            m_LastLoadedDateTime = DateTime.UtcNow.AddMinutes(-39);
                         }
                     }
                 }
@@ -570,7 +586,7 @@ namespace RealmPlayersServer
                     VF_RPDatabase.GuildSummaryDatabase summaryDB = null;
                     summaryDB = VF_RPDatabase.GuildSummaryDatabase.LoadSummaryDatabase(Constants.RPPDbDir);
                     return summaryDB;
-                }, (_RaidCollection, _LastLoadTime) => { return (DateTime.UtcNow - _LastLoadTime).TotalMinutes > 20; });
+                }, (_RaidCollection, _LastLoadTime) => { return (DateTime.UtcNow - _LastLoadTime).TotalMinutes > 40; });
             }
             public VF_RPDatabase.ItemSummaryDatabase GetItemSummaryDatabase()
             {
@@ -579,7 +595,7 @@ namespace RealmPlayersServer
                     VF_RPDatabase.ItemSummaryDatabase summaryDB = null;
                     summaryDB = VF_RPDatabase.ItemSummaryDatabase.LoadSummaryDatabase(Constants.RPPDbDir);
                     return summaryDB;
-                }, (_RaidCollection, _LastLoadTime) => { return (DateTime.UtcNow - _LastLoadTime).TotalMinutes > 20; });
+                }, (_RaidCollection, _LastLoadTime) => { return (DateTime.UtcNow - _LastLoadTime).TotalMinutes > 120; });
             }
             public VF_RPDatabase.PlayerSummaryDatabase GetPlayerSummaryDatabase()
             {

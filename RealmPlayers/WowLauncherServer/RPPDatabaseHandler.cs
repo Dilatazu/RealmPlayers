@@ -158,8 +158,9 @@ namespace VF_WoWLauncherServer
         {
             lock (m_LockObject)
             {
-                if ((DateTime.UtcNow - m_LastSummaryDatabaseUpdateTime).TotalMinutes > 30)
+                if ((DateTime.UtcNow - m_LastSummaryDatabaseUpdateTime).TotalMinutes > 113)
                 {
+                    GC.Collect();
                     var timer = System.Diagnostics.Stopwatch.StartNew();
                     Database tempDatabase = new Database(m_RPPDBFolder + "Database\\");
                     tempDatabase.PurgeRealmDBs(true, true);
