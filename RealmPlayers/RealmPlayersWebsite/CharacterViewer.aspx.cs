@@ -263,6 +263,9 @@ namespace RealmPlayersServer
         }
         public static string GenerateItemLink(string _ItemDatabase, PlayerData.ItemInfo _ItemInfo, WowVersionEnum _WowVersion, string _PiecesStr = "")
         {
+            if(_ItemInfo == null)
+                return GenerateItemLink(_ItemDatabase, 1217, 0, _WowVersion, _PiecesStr);
+
             string itemLink = "<a class='itemlink' href='"
                 + _ItemDatabase + "?item=" + _ItemInfo.ItemID + (_WowVersion == WowVersionEnum.TBC ? "-1" : "-0")
                 + "' rel='rand=" + _ItemInfo.SuffixID + (_ItemInfo.SuffixID < 0 ? ";uniq=" + _ItemInfo.UniqueID : "")

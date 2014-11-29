@@ -1115,7 +1115,7 @@ var Icon = {
 		if (b.indexOf("?") != -1) {
 			a.backgroundImage = "url(" + b + ")"
 		} else {
-		    a.backgroundImage = "url(http://database.feenixserver.com/" + Icon.sizes[c] + "/" + b.toLowerCase() + ".jpg)"
+		    a.backgroundImage = "url(http://database.wow-one.com/" + Icon.sizes[c] + "/" + b.toLowerCase() + ".jpg)"
 		}
 		Icon.moveTexture(d, c, 0, 0)
 	},

@@ -162,7 +162,7 @@ namespace RealmPlayersServer
                             var gemStats = Code.EnchantIDs.GetValueTBC(_GemIDs[i]);
                             if (gemStats == "")
                                 gemStats = "Unknown Gem";
-                            specifiedAjaxResult = specifiedAjaxResult.Substring(0, gemStrStart) + "<span class=\\\"socket-" + socketType + "\\\" style=\\\"background: url(http://database.feenixserver.com/" + gemItemInfo.GetIconImageAddress("small") + ") no-repeat left center\\\">" + gemStats + specifiedAjaxResult.Substring(gemStrEnd);
+                            specifiedAjaxResult = specifiedAjaxResult.Substring(0, gemStrStart) + "<span class=\\\"socket-" + socketType + "\\\" style=\\\"background: url(http://database.wow-one.com/" + gemItemInfo.GetIconImageAddress("small") + ") no-repeat left center\\\">" + gemStats + specifiedAjaxResult.Substring(gemStrEnd);
                         }
                     }
                     else

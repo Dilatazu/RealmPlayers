@@ -230,7 +230,7 @@ namespace VF_WoWLauncher
                 }
             }
         }
-        public static void GetLatestPosts(string[] _ForumAddresses, Action<ForumPost> _RetPosts, bool _OnlyNewest = false) //"http://www.feenixserver.com/forum/117-server-updates/"
+        public static void GetLatestPosts(string[] _ForumAddresses, Action<ForumPost> _RetPosts, bool _OnlyNewest = false) //"http://www.wow-one.com/forum/117-server-updates/"
         {
             if (_OnlyNewest == false)
             {
@@ -264,7 +264,7 @@ namespace VF_WoWLauncher
             }
             SaveForumSections();
         }
-        public static void GetLatestPosts(string _ForumAddress, Action<ForumPost> _RetPosts, bool _OnlyNewest = false) //"http://www.feenixserver.com/forum/117-server-updates/"
+        public static void GetLatestPosts(string _ForumAddress, Action<ForumPost> _RetPosts, bool _OnlyNewest = false) //"http://www.wow-one.com/forum/117-server-updates/"
         {
             ForumSection forumSection = GetForumSection(_ForumAddress);
 
@@ -291,10 +291,10 @@ namespace VF_WoWLauncher
                 for (int i = 1; i < websitePart.Length; ++i)
                 {
                     string currContent = websitePart[i].SplitVF("</td>", 2).First();
-                    //<h4><a id="tid-link-66240" href="http://www.feenixserver.com/forum/topic/66240-maintenance-notification-ed/" title='View topic, started  18 December 2013 - 08:27 AM' class='topic_title'>Maintenance Notification - ED</a></h4>
+                    //<h4><a id="tid-link-66240" href="http://www.wow-one.com/forum/topic/66240-maintenance-notification-ed/" title='View topic, started  18 December 2013 - 08:27 AM' class='topic_title'>Maintenance Notification - ED</a></h4>
                     //<br />
                     //<span class='desc lighter blend_links'>
-                    //Started by <a hovercard-ref="member" hovercard-id="36033" class="_hovertrigger url fn " href='http://www.feenixserver.com/forum/user/36033-danut/'>Danut</a>, 18 Dec 2013
+                    //Started by <a hovercard-ref="member" hovercard-id="36033" class="_hovertrigger url fn " href='http://www.wow-one.com/forum/user/36033-danut/'>Danut</a>, 18 Dec 2013
                     //</span>
 
                     string topicName = currContent.SplitVF("class='topic_title'>", 2).Last().SplitVF("</a>").First();
@@ -323,9 +323,9 @@ namespace VF_WoWLauncher
                     }
 
                     string threadLink = currContent.SplitVF("href=\"", 2).Last().SplitVF("\"").First();
-                    //http://www.feenixserver.com/forum/topic/66240-maintenance-notification-ed/
+                    //http://www.wow-one.com/forum/topic/66240-maintenance-notification-ed/
 
-                    if (threadLink.StartsWith("http://www.feenixserver.com/forum/topic") == false)
+                    if (threadLink.StartsWith("http://www.wow-one.com/forum/topic") == false)
                         continue;
 
                     if((DateTime.Now - latestPostDate).TotalDays < 14)

@@ -480,10 +480,10 @@ namespace VF_RaidDamageWebsite
 
                         int xPos = (recvItemIndex % 4) * 58;
                         int yPos = (int)(recvItemIndex / 4) * 58;
-                        string itemLink = "http://database.feenixserver.com/" + "?item=" + itemID + "' rel='rand=0;ench=0";
+                        string itemLink = "http://database.wow-one.com/" + "?item=" + itemID + "' rel='rand=0;ench=0";
 
                         itemLinks += "<div style='background: none; width: 58px; height: 58px;margin: " + yPos + "px " + xPos + "px;'>"
-                            + "<img class='itempic' src='" + "http://database.feenixserver.com/" + itemInfo.GetIconImageAddress() + "'/>"
+                            + "<img class='itempic' src='" + "http://database.wow-one.com/" + itemInfo.GetIconImageAddress() + "'/>"
                             + "<div class='quality' id='" + RealmPlayersServer.CharacterViewer.ItemQualityConversion[itemInfo.ItemQuality] + "'></div>"
                             + "<img class='itemframe' src='assets/img/icons/ItemNormalFrame.png'/>"
                             + "<a class='itemlink' href='" + itemLink + "'></a>"

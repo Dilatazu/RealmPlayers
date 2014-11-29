@@ -267,7 +267,7 @@ namespace RealmPlayersServer.Code
             //Binds when picked up<table width="100%"><tr>
             //<td>Legs</td><th>Plate</th></tr></table>
             //1597 Armor<br />+24 Agility<br />
-            //+78 Stamina<br /><span class="socket-meta" style="background: url(http://database.feenixserver.com/images/icons/small/inv_jewelcrafting_nightseye_03.jpg) no-repeat left center">
+            //+78 Stamina<br /><span class="socket-meta" style="background: url(http://database.wow-one.com/images/icons/small/inv_jewelcrafting_nightseye_03.jpg) no-repeat left center">
             //Dodge Rating +5 and Stamina +6</span><br />
             //Socket Bonus:<span class="q2"> +3 Stamina</span><br />
             //<span class="q2">+35 Stamina and +12 Agility</Span><br />

@@ -66,15 +66,15 @@ namespace VF_WoWLauncher
                     var feenixLinks = new MenuItem("Feenix Links");
                     feenixLinks.MenuItems.Add(new MenuItem("Goto forum", new EventHandler((o, ea) =>
                     {
-                        System.Diagnostics.Process.Start("http://www.feenixserver.com/forum");
+                        System.Diagnostics.Process.Start("http://www.wow-one.com/forum");
                     })));
                     feenixLinks.MenuItems.Add(new MenuItem("Goto server updates", new EventHandler((o, ea) =>
                     {
-                        System.Diagnostics.Process.Start("http://www.feenixserver.com/forum/117-server-updates/");
+                        System.Diagnostics.Process.Start("http://www.wow-one.com/forum/117-server-updates/");
                     })));
                     feenixLinks.MenuItems.Add(new MenuItem("Goto changelogs", new EventHandler((o, ea) =>
                     {
-                        System.Diagnostics.Process.Start("http://www.feenixserver.com/forum/32-1121-changelogs/");
+                        System.Diagnostics.Process.Start("http://www.wow-one.com/forum/32-1121-changelogs/");
                     })));
                     feenixLinks.MenuItems.Add(new MenuItem("Goto issue tracker", new EventHandler((o, ea) =>
                     {
@@ -82,7 +82,7 @@ namespace VF_WoWLauncher
                     })));
                     feenixLinks.MenuItems.Add(new MenuItem("Goto database", new EventHandler((o, ea) =>
                     {
-                        System.Diagnostics.Process.Start("http://database.feenixserver.com/");
+                        System.Diagnostics.Process.Start("http://database.wow-one.com/");
                     })));
                     linksMenu.MenuItems.Add(feenixLinks);
                 }
@@ -164,10 +164,10 @@ namespace VF_WoWLauncher
                 try
                 {
                     DateTime minDate = DateTime.Now.AddDays(-14);
-                    ForumReader.GetLatestPosts(new string[]{"http://www.feenixserver.com/forum/117-server-updates/"
-                        , "http://www.feenixserver.com/forum/192-information-and-releases/"
-                        , "http://www.feenixserver.com/forum/3-news-and-announcements/"
-                        , "http://www.feenixserver.com/forum/32-1121-changelogs/"}
+                    ForumReader.GetLatestPosts(new string[]{"http://www.wow-one.com/forum/117-server-updates/"
+                        , "http://www.wow-one.com/forum/192-information-and-releases/"
+                        , "http://www.wow-one.com/forum/3-news-and-announcements/"
+                        , "http://www.wow-one.com/forum/32-1121-changelogs/"}
                         , (ForumReader.ForumPost _NewPost) =>
                         {
                             string threadNameLower = _NewPost.m_ThreadName.ToLower();

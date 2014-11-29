@@ -39,7 +39,7 @@ namespace RealmPlayersServer
             return value + extension + (value > 1 ? "s" : "");
         }
 
-        public static string[] ItemDatabaseAddresses = { "http://database.feenixserver.com/", "http://db.vanillagaming.org/", "http://db.valkyrie-wow.com/" };
+        public static string[] ItemDatabaseAddresses = { "http://database.wow-one.com/", "http://db.vanillagaming.org/", "http://db.valkyrie-wow.com/" };
 
         public static string GetFactionIMG(PlayerFaction _Faction)
         {
