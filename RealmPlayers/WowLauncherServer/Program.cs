@@ -10,8 +10,8 @@ namespace VF_WoWLauncherServer
 {
     static class Program
     {
-        public static string g_RPPDBFolder = "C:\\VF_RealmPlayersData\\RPPDatabase\\";
-        public static string g_RDDBFolder = "C:\\VF_RealmPlayersData\\RDDatabase\\";
+        public static string g_RPPDBFolder = "R:\\VF_RealmPlayersData\\RPPDatabase\\";
+        public static string g_RDDBFolder = "R:\\VF_RealmPlayersData\\RDDatabase\\";
 
         public static RPPDatabaseHandler g_RPPDatabaseHandler;
         public static RDDatabaseHandler g_RDDatabaseHandler;
@@ -26,11 +26,11 @@ namespace VF_WoWLauncherServer
 
             if (System.IO.Directory.Exists(g_RPPDBFolder) == false)
             {
-                g_RPPDBFolder = g_RPPDBFolder.Replace("C:", "M:");
-                g_RDDBFolder = g_RDDBFolder.Replace("C:", "M:");
-                AddonDatabaseService.g_AddonUploadDataFolder = AddonDatabaseService.g_AddonUploadDataFolder.Replace("C:", "M:");
-                AddonDatabaseService.g_AddonUploadStatsFolder = AddonDatabaseService.g_AddonUploadStatsFolder.Replace("C:", "M:");
-                RPPDatabaseHandler.g_AddonContributionsBackupFolder = RPPDatabaseHandler.g_AddonContributionsBackupFolder.Replace("C:", "M:");
+                g_RPPDBFolder = g_RPPDBFolder.Replace("R:", "M:");
+                g_RDDBFolder = g_RDDBFolder.Replace("R:", "M:");
+                AddonDatabaseService.g_AddonUploadDataFolder = AddonDatabaseService.g_AddonUploadDataFolder.Replace("R:", "M:");
+                AddonDatabaseService.g_AddonUploadStatsFolder = AddonDatabaseService.g_AddonUploadStatsFolder.Replace("R:", "M:");
+                RPPDatabaseHandler.g_AddonContributionsBackupFolder = RPPDatabaseHandler.g_AddonContributionsBackupFolder.Replace("R:", "M:");
             }
             AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
 

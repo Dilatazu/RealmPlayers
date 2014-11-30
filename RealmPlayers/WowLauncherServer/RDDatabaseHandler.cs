@@ -114,9 +114,9 @@ namespace VF_WoWLauncherServer
 
         private FightDataCollection _LoadRaidFightCollectionFile(string _FightFile)
         {
-            if (_FightFile.StartsWith("C:\\VF_RealmPlayersData\\RDDatabase\\"))
+            if (_FightFile.StartsWith("R:\\VF_RealmPlayersData\\RDDatabase\\"))
             {
-                _FightFile = _FightFile.Substring("C:\\VF_RealmPlayersData\\RDDatabase\\".Length);
+                _FightFile = _FightFile.Substring("R:\\VF_RealmPlayersData\\RDDatabase\\".Length);
             }
             VF_RaidDamageDatabase.FightDataCollection fightDataCollection = null;
             if (VF.Utility.LoadSerialize(m_RDDBFolder + _FightFile, out fightDataCollection) == false)
@@ -303,7 +303,7 @@ namespace VF_WoWLauncherServer
             GC.Collect();
         }
 
-        static string g_AddonContributionsBackupFolder = "C:\\VF_DataServer\\AddonContributionsBackup\\";
+        static string g_AddonContributionsBackupFolder = "R:\\VF_DataServer\\AddonContributionsBackup\\";
         enum RDContributionType
         {
             Empty,

@@ -8,8 +8,8 @@ namespace RealmPlayersServer
     public class Constants
     {
         public static bool DebugMode = false;
-        public static string RPPDbDir = "C:\\VF_RealmPlayersData\\RPPDatabase\\";
-        public static string RPPDbWriteDir = "C:\\VF_RealmPlayersData\\RPPDatabase\\";
+        public static string RPPDbDir = "R:\\VF_RealmPlayersData\\RPPDatabase\\";
+        public static string RPPDbWriteDir = "R:\\VF_RealmPlayersData\\RPPDatabase\\";
 
         private static bool m_Initialized = false;
         public static void AssertInitialize()
@@ -18,12 +18,12 @@ namespace RealmPlayersServer
             {
                 if (DebugMode == true)
                 {
-                    RPPDbWriteDir = "C:\\VF_RealmPlayersData\\RPPDatabaseDebug\\";
+                    RPPDbWriteDir = "R:\\VF_RealmPlayersData\\RPPDatabaseDebug\\";
                 }
                 if (System.IO.Directory.Exists(RPPDbDir) == false)
                 {
-                    RPPDbDir = RPPDbDir.Replace("C:", "M:");
-                    RPPDbWriteDir = RPPDbWriteDir.Replace("C:", "M:");
+                    RPPDbDir = RPPDbDir.Replace("R:", "M:");
+                    RPPDbWriteDir = RPPDbWriteDir.Replace("R:", "M:");
                 }
                 m_Initialized = true;
             }

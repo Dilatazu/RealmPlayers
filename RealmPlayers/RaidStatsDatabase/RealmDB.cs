@@ -128,7 +128,7 @@ namespace VF_RaidDamageDatabase
             rppDatabase.PurgeRealmDBs(true, false);
             return rppDatabase;
         }
-        private static VF_RealmPlayersDatabase.Database GetDatabase(string _DatabaseDirectory)// = "C:\\VF_RealmPlayersData\\RPPDatabase\\Database\\")
+        private static VF_RealmPlayersDatabase.Database GetDatabase(string _DatabaseDirectory)// = "R:\\VF_RealmPlayersData\\RPPDatabase\\Database\\")
         {
             return sm_RealmDBCache.Get("GetDatabase", _NotCached_GetDatabase, _DatabaseDirectory);
         }

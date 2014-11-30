@@ -16,8 +16,8 @@ namespace VF_WoWLauncherServer
     class AddonDatabaseService
     {
         private static long g_FileCounter = 0;
-        public static string g_AddonUploadDataFolder = "C:\\VF_DataServer\\AddonUploadedData\\";
-        public static string g_AddonUploadStatsFolder = "C:\\VF_DataServer\\AddonUploadedDataStats\\";
+        public static string g_AddonUploadDataFolder = "R:\\VF_DataServer\\AddonUploadedData\\";
+        public static string g_AddonUploadStatsFolder = "R:\\VF_DataServer\\AddonUploadedDataStats\\";
         public static void UploadData(System.Net.IPAddress _UploaderIP, WLN_UploadPacket_AddonData _Data)
         {
             var currContributor = ContributorDB.GetContributor(_Data.UserID, _UploaderIP, false);
