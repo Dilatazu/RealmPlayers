@@ -529,12 +529,13 @@ namespace RealmPlayersServer
                         rppDatabase = m_RPPDatabase;
                     }
                 }
-                else if ((DateTime.UtcNow - m_LastLoadedDateTime).TotalMinutes > 45)
+                else if ((DateTime.UtcNow - m_LastLoadedDateTime).TotalMinutes > 30)
                 {
                     if (m_LoadRealmPlayersThread == null)
                     {
                         DateTime lastDatabaseUpdateTime = DatabaseLoader.GetLastDatabaseUpdateTimeUTC();
-                        if (lastDatabaseUpdateTime != m_LastDatabaseUpdateTime && (DateTime.UtcNow - lastDatabaseUpdateTime).TotalMinutes > 35)
+                        if (lastDatabaseUpdateTime != m_LastDatabaseUpdateTime 
+                            && (DateTime.UtcNow - lastDatabaseUpdateTime).TotalMinutes > 5) //Wait atleast 5 minutes after last database save
                         {
                             m_LastDatabaseUpdateTime = lastDatabaseUpdateTime;
                             m_LoadRealmPlayersThread = new System.Threading.Thread(ReloadRealmPlayers);
@@ -542,7 +543,7 @@ namespace RealmPlayersServer
                         }
                         else
                         {
-                            m_LastLoadedDateTime = DateTime.UtcNow.AddMinutes(-39);
+                            m_LastLoadedDateTime = DateTime.UtcNow.AddMinutes(-24);
                         }
                     }
                 }
