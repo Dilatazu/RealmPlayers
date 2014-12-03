@@ -29,7 +29,7 @@ namespace RealmPlayersServer
         public static RPPDatabase LoadRPPDatabase(bool _FirstTimeLoading = false)
         {
             GC.Collect();
-            RPPDatabase database = new RPPDatabase(Constants.RPPDbDir + "Database\\", new DateTime(2014, 7, 1, 0, 0, 0));
+            RPPDatabase database = new RPPDatabase(Constants.RPPDbDir + "Database\\", new DateTime(2012, 5, 1, 0, 0, 0));
 
             database.PurgeRealmDBs(true, true, (_FirstTimeLoading == false));
             GC.Collect();
