@@ -68,6 +68,8 @@ namespace VF_RaidDamageWebsite
             string tableBody = "";
             foreach (var raid in orderedRaids)
             {
+                if (raid.Value.Realm == VF_RealmPlayersDatabase.WowRealm.Test_Server)
+                    continue;//Skip Test_Server
                 if ((realm == VF_RealmPlayersDatabase.WowRealm.All || realm == raid.Value.Realm) 
                     && (guildStr == null || guildStr == raid.Value.RaidOwnerName) 
                     && InstanceControl.IsFiltered(raid.Value.RaidInstance) == true)

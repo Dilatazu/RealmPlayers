@@ -440,6 +440,8 @@ namespace VF_RealmPlayersDatabase
             {"ArA", WowRealm.Archangel},
             {"REB", WowRealm.Rebirth},
             {"Rebirth", WowRealm.Rebirth},
+            {"Test_Server", WowRealm.Test_Server},
+            {"TestServer", WowRealm.Test_Server},
         };
         public static WowRealm ConvertRealm(string _Realm)
         {
@@ -450,7 +452,7 @@ namespace VF_RealmPlayersDatabase
         public static WowVersionEnum GetWowVersion(WowRealm _Realm)
         {
             if (_Realm == WowRealm.Emerald_Dream || _Realm == WowRealm.Warsong || _Realm == WowRealm.Al_Akir
-                || _Realm == WowRealm.Rebirth || _Realm == WowRealm.Valkyrie || _Realm == WowRealm.VanillaGaming)
+                || _Realm == WowRealm.Rebirth || _Realm == WowRealm.Valkyrie || _Realm == WowRealm.VanillaGaming || _Realm == WowRealm.Test_Server)
             {
                 return WowVersionEnum.Vanilla;
             }

@@ -99,6 +99,8 @@ namespace VF_RaidDamageWebsite
             this.Title = "Raid " + uniqueRaidID + " | RaidStats";
 
             var currRaid = orderedFights.First().GetRaid();
+            if (currRaid.Realm == VF_RealmPlayersDatabase.WowRealm.Test_Server && PageUtility.GetQueryString(Request, "Debug") == "null")
+                Response.Redirect("RaidList.aspx");
             m_BreadCrumbHTML = new MvcHtmlString(PageUtility.BreadCrumb_AddHome()
                 + PageUtility.BreadCrumb_AddRaidList()
                 + PageUtility.BreadCrumb_AddLink("RaidList.aspx?Guild=" + currRaid.RaidOwnerName, currRaid.RaidOwnerName)
@@ -178,13 +180,21 @@ namespace VF_RaidDamageWebsite
             }
             string playersAttendingStr = "<h3>Players attending(" + playersAttending.Count + "):</h3>";
             var orderedPlayersAttending = playersAttending.OrderBy((_Value) => { return "" + (int)_Value.Item2 + _Value.Item1; });
-            var lastClass = orderedPlayersAttending.First().Item2;
-            foreach (var player in orderedPlayersAttending)
+
+            try
             {
-                if (lastClass != player.Item2)
-                    playersAttendingStr += "<br />";
-                playersAttendingStr += PageUtility.CreateColorCodedName(player.Item1, player.Item2) + " ";
-                lastClass = player.Item2;
+                var lastClass = orderedPlayersAttending.First().Item2;
+                foreach (var player in orderedPlayersAttending)
+                {
+                    if (lastClass != player.Item2)
+                        playersAttendingStr += "<br />";
+                    playersAttendingStr += PageUtility.CreateColorCodedName(player.Item1, player.Item2) + " ";
+                    lastClass = player.Item2;
+                }
+            }
+            catch(Exception ex)
+            {
+                
             }
             /////////////////////
 
