@@ -11,6 +11,9 @@ namespace VF_RealmPlayersDatabase
 {
     public class Utility
     {
+        public static string DefaultServerLocation = "R:\\";
+        public static string DefaultDebugLocation = "D:\\";
+
         public static string ConvertToUniqueFilename(string _Filename, char _PadCharacter = '_')
         {
             string extension = _Filename.Substring(_Filename.LastIndexOf('.'));

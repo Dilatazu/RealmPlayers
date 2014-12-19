@@ -22,8 +22,8 @@ namespace VF_RaidDamageWebsite
 {
     public class ApplicationInstance
     {
-        public static string g_RPPDBDir = "R:\\VF_RealmPlayersData\\RPPDatabase\\";
-        public static string g_RDDBDir = "R:\\VF_RealmPlayersData\\RDDatabase\\";
+        public static string g_RPPDBDir = VF_RealmPlayersDatabase.Utility.DefaultServerLocation + "VF_RealmPlayersData\\RPPDatabase\\";
+        public static string g_RDDBDir = VF_RealmPlayersDatabase.Utility.DefaultServerLocation + "VF_RealmPlayersData\\RDDatabase\\";
 
         static readonly ApplicationInstance m_Instance = new ApplicationInstance();
 
@@ -36,8 +36,8 @@ namespace VF_RaidDamageWebsite
         {
             if (System.IO.Directory.Exists(g_RDDBDir) == false)
             {
-                g_RPPDBDir = g_RPPDBDir.Replace("R:", "M:");
-                g_RDDBDir = g_RDDBDir.Replace("R:", "M:");
+                g_RPPDBDir = g_RPPDBDir.Replace(VF_RealmPlayersDatabase.Utility.DefaultServerLocation, VF_RealmPlayersDatabase.Utility.DefaultDebugLocation);
+                g_RDDBDir = g_RDDBDir.Replace(VF_RealmPlayersDatabase.Utility.DefaultServerLocation, VF_RealmPlayersDatabase.Utility.DefaultDebugLocation);
             }
             string rppDBDir = g_RPPDBDir + "Database\\";
             var timeSinceWrite = DateTime.UtcNow - System.IO.File.GetLastWriteTime(rppDBDir + "Emerald_Dream\\PlayersData.dat");

@@ -114,9 +114,9 @@ namespace VF_WoWLauncherServer
 
         private FightDataCollection _LoadRaidFightCollectionFile(string _FightFile)
         {
-            if (_FightFile.StartsWith("R:\\VF_RealmPlayersData\\RDDatabase\\"))
+            if (_FightFile.StartsWith(VF_RealmPlayersDatabase.Utility.DefaultServerLocation + "VF_RealmPlayersData\\RDDatabase\\"))
             {
-                _FightFile = _FightFile.Substring("R:\\VF_RealmPlayersData\\RDDatabase\\".Length);
+                _FightFile = _FightFile.Substring((VF_RealmPlayersDatabase.Utility.DefaultServerLocation + "VF_RealmPlayersData\\RDDatabase\\").Length);
             }
             VF_RaidDamageDatabase.FightDataCollection fightDataCollection = null;
             if (VF.Utility.LoadSerialize(m_RDDBFolder + _FightFile, out fightDataCollection) == false)
@@ -289,21 +289,23 @@ namespace VF_WoWLauncherServer
         {
             lock (m_LockObject)
             {
-                int[] buggedRaidIDs = { 3021, 2886 };//2353, 2168, 1840, 2234, 1489, 2106 };
+                int[] buggedRaidIDs = { 6436 };//2353, 2168, 1840, 2234, 1489, 2106 };
                 List<RaidCollection.Raid> buggedRaids = new List<RaidCollection.Raid>();
                 foreach (var raid in m_RaidCollection.m_Raids)
                 {
                     if (buggedRaidIDs.Contains(raid.Value.UniqueRaidID))
                     {
+                        raid.Value.Realm = VF_RealmPlayersDatabase.WowRealm.Test_Server;
                         buggedRaids.Add(raid.Value);
                     }
                 }
+                VF.Utility.SaveSerialize(m_RDDBFolder + "RaidCollection.dat", m_RaidCollection, false);
                 UpdateSummaryDatabase(null, buggedRaids, true);
             }
             GC.Collect();
         }
 
-        static string g_AddonContributionsBackupFolder = "R:\\VF_DataServer\\AddonContributionsBackup\\";
+        static string g_AddonContributionsBackupFolder = VF_RealmPlayersDatabase.Utility.DefaultServerLocation + "VF_DataServer\\AddonContributionsBackup\\";
         enum RDContributionType
         {
             Empty,

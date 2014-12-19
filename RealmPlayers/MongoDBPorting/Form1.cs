@@ -32,7 +32,7 @@ namespace MongoDBPorting
             throw new Exception("Not implemented fully yet!");
 
             var timer = System.Diagnostics.Stopwatch.StartNew();
-            Database tempDatabase = new Database("R:\\VF_RealmPlayersData\\RPPDatabase\\Database\\");
+            Database tempDatabase = new Database(VF_RealmPlayersDatabase.Utility.DefaultServerLocation + "VF_RealmPlayersData\\RPPDatabase\\Database\\");
             //tempDatabase.PurgeRealmDBs(true, true);
             foreach (var realm in tempDatabase.GetRealms())
             {
@@ -76,7 +76,7 @@ namespace MongoDBPorting
         {
             try
             {
-                VF_RealmPlayersDatabase.Deprecated.ContributorHandler.Initialize("R:\\VF_RealmPlayersData\\RPPDatabase\\Database\\");
+                VF_RealmPlayersDatabase.Deprecated.ContributorHandler.Initialize(VF_RealmPlayersDatabase.Utility.DefaultServerLocation + "VF_RealmPlayersData\\RPPDatabase\\Database\\");
                 var contributors = VF_RealmPlayersDatabase.Deprecated.ContributorHandler.GetContributorsCopy();
                 ContributorDB.MigrateFromProtobufDB(VF_RealmPlayersDatabase.Deprecated.ContributorHandler.Getsm_CH(), contributors);
             }

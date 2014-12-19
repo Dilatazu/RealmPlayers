@@ -114,7 +114,7 @@ namespace VF_WoWLauncherServer
                 return;
             UpdateSummaryDatabases();
         }
-        public static string g_AddonContributionsBackupFolder = "R:\\VF_DataServer\\AddonContributionsBackup\\";
+        public static string g_AddonContributionsBackupFolder = VF_RealmPlayersDatabase.Utility.DefaultServerLocation + "VF_DataServer\\AddonContributionsBackup\\";
         void BackupRPPContribution(string _Filename)
         {
             if (System.IO.File.Exists(_Filename) == false)

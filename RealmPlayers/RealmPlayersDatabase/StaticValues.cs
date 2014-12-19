@@ -16,6 +16,7 @@ namespace VF_RealmPlayersDatabase
         VanillaGaming,
         Valkyrie,
         Rebirth,
+        Test_Server,
     }
     public enum WowVersionEnum
     {

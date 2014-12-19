@@ -90,7 +90,7 @@ namespace VF_RaidDamageDatabase
                                 {
                                     if (rppDatabase == null)
                                     {
-                                        string rppDBDir = "R:\\VF_RealmPlayersData\\RPPDatabase\\Database\\";
+                                        string rppDBDir = VF_RealmPlayersDatabase.Utility.DefaultServerLocation + "VF_RealmPlayersData\\RPPDatabase\\Database\\";
                                         var timeSinceWrite = DateTime.UtcNow - System.IO.File.GetLastWriteTime(rppDBDir + "Emerald_Dream\\PlayersData.dat");
                                         if (timeSinceWrite.TotalHours > 5)
                                         {
@@ -131,8 +131,8 @@ namespace VF_RaidDamageDatabase
                                 }
                             }
                             Logger.ConsoleWriteLine("--------------------", ConsoleColor.White);
-                            VF.Utility.BackupFile(/*"R:\\VF_RealmPlayersData\\RDDatabase\\" + */fightCollectionDatName);
-                            VF.Utility.SaveSerialize(/*"R:\\VF_RealmPlayersData\\RDDatabase\\" + */fightCollectionDatName, fights);
+                            VF.Utility.BackupFile(/*VF_RealmPlayersDatabase.Utility.DefaultServerLocation + "VF_RealmPlayersData\\RDDatabase\\" + */fightCollectionDatName);
+                            VF.Utility.SaveSerialize(/*VF_RealmPlayersDatabase.Utility.DefaultServerLocation + "VF_RealmPlayersData\\RDDatabase\\" + */fightCollectionDatName, fights);
                             string luaCopyFile = VF.Utility.ConvertToUniqueFilename("Lua\\" + file);
                             VF.Utility.AssertFilePath(luaCopyFile);
                             System.IO.File.Move(file, luaCopyFile);
@@ -150,8 +150,8 @@ namespace VF_RaidDamageDatabase
                             Logger.ConsoleWriteLine(file + " already exists in RaidCollection, skipping", ConsoleColor.Green);
                         }
                     }
-                    //Utility.BackupFile("R:\\VF_RealmPlayersData\\RDDatabase\\DamageDataSessions\\" + file.Replace(".lua", ".DamageDataSessions.dat"));
-                    //Utility.SaveSerialize("R:\\VF_RealmPlayersData\\RDDatabase\\DamageDataSessions\\" + file.Replace(".lua", ".DamageDataSessions.dat"), dataSessions);
+                    //Utility.BackupFile(VF_RealmPlayersDatabase.Utility.DefaultServerLocation + "VF_RealmPlayersData\\RDDatabase\\DamageDataSessions\\" + file.Replace(".lua", ".DamageDataSessions.dat"));
+                    //Utility.SaveSerialize(VF_RealmPlayersDatabase.Utility.DefaultServerLocation + "VF_RealmPlayersData\\RDDatabase\\DamageDataSessions\\" + file.Replace(".lua", ".DamageDataSessions.dat"), dataSessions);
                 }
             }
             Logger.ConsoleWriteLine("Done with all lua parsing", ConsoleColor.Green);

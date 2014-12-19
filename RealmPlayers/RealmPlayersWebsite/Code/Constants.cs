@@ -8,8 +8,8 @@ namespace RealmPlayersServer
     public class Constants
     {
         public static bool DebugMode = false;
-        public static string RPPDbDir = "R:\\VF_RealmPlayersData\\RPPDatabase\\";
-        public static string RPPDbWriteDir = "R:\\VF_RealmPlayersData\\RPPDatabase\\";
+        public static string RPPDbDir = VF_RealmPlayersDatabase.Utility.DefaultServerLocation + "VF_RealmPlayersData\\RPPDatabase\\";
+        public static string RPPDbWriteDir = VF_RealmPlayersDatabase.Utility.DefaultServerLocation + "VF_RealmPlayersData\\RPPDatabase\\";
 
         private static bool m_Initialized = false;
         public static void AssertInitialize()
@@ -18,12 +18,12 @@ namespace RealmPlayersServer
             {
                 if (DebugMode == true)
                 {
-                    RPPDbWriteDir = "R:\\VF_RealmPlayersData\\RPPDatabaseDebug\\";
+                    RPPDbWriteDir = VF_RealmPlayersDatabase.Utility.DefaultServerLocation + "VF_RealmPlayersData\\RPPDatabaseDebug\\";
                 }
                 if (System.IO.Directory.Exists(RPPDbDir) == false)
                 {
-                    RPPDbDir = RPPDbDir.Replace("R:", "M:");
-                    RPPDbWriteDir = RPPDbWriteDir.Replace("R:", "M:");
+                    RPPDbDir = RPPDbDir.Replace(VF_RealmPlayersDatabase.Utility.DefaultServerLocation, VF_RealmPlayersDatabase.Utility.DefaultDebugLocation);
+                    RPPDbWriteDir = RPPDbWriteDir.Replace(VF_RealmPlayersDatabase.Utility.DefaultServerLocation, VF_RealmPlayersDatabase.Utility.DefaultDebugLocation);
                 }
                 m_Initialized = true;
             }
