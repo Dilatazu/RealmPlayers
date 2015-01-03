@@ -69,8 +69,6 @@
                 <h4>Donate</h4>
                 If you like the projects i would be very happy for any donations.<br />
                 Donations will go towards supporting and improving RealmPlayers, RaidStats and future interesting public projects. For more details you can <a class="team-member" href="Donate.aspx">visit the Donation page</a><br />
-                Below are some buttons that enables you to donate using either Bitcoin, Litecoin or PayPal.<br />
-
             <div style='margin-top: 5px; height: 30px;'>
             <%--<script src="/Assets/CoinWidget/coin.js?version=1"></script>
             <script>
@@ -112,7 +110,7 @@
             background-image: url('/assets/img/PaypalPay_Clicked_Smaller.png');
             }
             </style>
-            <div class='PayPalButton' style='margin-top: -25px; margin-left: 242px; height: 30px;'>
+            <div class='PayPalButton' style='242px; height: 30px;'>
             <a href='https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=6BGRWFLQ2VBFQ' target='_blank'></a>
             </div>
             </div>
