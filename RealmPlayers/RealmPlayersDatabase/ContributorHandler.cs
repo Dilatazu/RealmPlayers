@@ -279,16 +279,6 @@ namespace VF_RealmPlayersDatabase.Deprecated
         }
         public static void LoadContributors()
         {
-            //AddVIPContributor("***REMOVED***");
-            //AddVIPContributor("***REMOVED***");
-            //AddVIPContributor("***REMOVED***");
-            //AddVIPContributor("***REMOVED***");
-            //AddVIPContributor("***REMOVED***");
-            //AddVIPContributor("***REMOVED***");
-            //AddVIPContributor("***REMOVED***");
-            //AddVIPContributor("***REMOVED***");
-            //AddVIPContributor("***REMOVED***");
-            //AddVIPContributor("***REMOVED***");
             try
             {
                 if (System.IO.File.Exists("NewContributors.txt") == true)

@@ -399,7 +399,24 @@ div.char-details {}
         text-align: right;
         float: right;
 	}
-    .inventory div a.itemplayersframe:link, .inventory div a.itemplayersframe:visited {
+	.inventory div a.itemreceiveframe {
+		position: absolute;
+        bottom: 0px; top: inherit; right: inherit; left: 4px;
+		margin: auto;
+		z-index: 8;
+	}
+    .inventory div a.itemreceiveframe:link {
+        width: 55px;
+        overflow:hidden; 
+        white-space:nowrap; 
+        text-overflow: ellipsis;
+    }
+    .inventory div a.itemreceiveframe:hover {
+        overflow:inherit; 
+        white-space:inherit; 
+        text-overflow: inherit;
+    }
+    .inventory div a.itemplayersframe:link, .inventory div a.itemplayersframe:visited, .inventory div a.itemreceiveframe:link, .inventory div a.itemreceiveframe:visited {
         color: white;
         text-decoration:none;
         font-weight: bold;

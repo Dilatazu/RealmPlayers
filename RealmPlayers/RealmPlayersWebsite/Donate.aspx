@@ -17,7 +17,7 @@
                 <p>Please consider donating if you like the projects i develop and want to support and help make them even better. Leave a comment as either anonymous or with your ingame name to be listed on <a href="Donators.aspx">the Donators page</a></p>
                 
                 <div style='margin-top: 5px; height: 30px;'>
-                    <script src="/Assets/CoinWidget/coin.js?version=1"></script>
+                    <%--<script src="/Assets/CoinWidget/coin.js?version=1"></script>
                     <script>
                         CoinWidgetCom.go({
                             wallet_address: "1EdLMCosekTQqwgmhJkj3fFCNP42YhubJw"
@@ -45,7 +45,7 @@
                             , lbl_count: "donations"
                             , lbl_amount: "LTC"
                         });
-                    </script>
+                    </script>--%>
                     <style>
                     .PayPalButton a {
                         width:  166px;
@@ -64,14 +64,14 @@
                 <h4>Donations will go towards the following:</h4>
                 <ul>
                 <li><b><font color='#fff'>Server costs</font></b><br />
-                    I host the server myself but the electricity and good internet connection is costing approximately 70 euro every month. Donations help me being able to continue hosting the website with as good, reliable and stable service as possible.</li>
+                    I host the server myself but the electricity and good internet connection is costing approximately 60 euro every month. Donations help me being able to continue hosting the website with as good, reliable and stable service as possible.</li>
                 <li><b><font color='#fff'>Working</font></b><br />
                     There is always a lot of work to do and time is money. I have spent the majority of my free time working on these projects since i started back in august 2013. <br />
                     There are a lot of features that i want to implement and i will continue to work as hard as i can on these projects.<br />
                     Donations are a big motivator for me to continueing improving the service with new features, solving stability issues, adding contributors and other things related to the projects.
                 </li>
                 </ul>
-                <h4>Here are some of the main things that i currently work on(last updated 2014-03-15):</h4>
+                <%--<h4>Here are some of the main things that i currently work on(last updated 2014-03-15):</h4>
                 <ul>
                 <li><b><font color='#fff'>Improving backend for RealmPlayers(Website/Database)</font></b><br />
                     The database for RealmPlayers is really fast, but more things need to be saved into the database, such as item usage information. <br />
@@ -105,8 +105,8 @@
                 <li><b><font color='#fff'>Possibly future work/new project for RealmPlayers</font></b><br />
                     Armory for WoW 2.4.3
                 </li>
-                </ul>
-                <h4>For more updated information on what i work on you can take a look at the <a href="http://forum.realmplayers.com">forum</a></h4>
+                </ul>--%>
+                <h4>For more information on what i work on you can take a look at the <a href="http://forum.realmplayers.com">forum</a></h4>
                 Project changelogs can be found here: <a class="team-member" href="http://forum.realmplayers.com/viewtopic.php?f=14&t=10">RealmPlayers</a>, <a class="team-member" href="http://forum.realmplayers.com/viewtopic.php?f=15&t=8">RaidStats</a>, <a class="team-member" href="http://forum.realmplayers.com/viewtopic.php?f=16&t=7">VF_WoWLauncher</a>
             </div></div></div>
           </div>

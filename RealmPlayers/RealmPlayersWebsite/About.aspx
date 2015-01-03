@@ -72,7 +72,7 @@
                 Below are some buttons that enables you to donate using either Bitcoin, Litecoin or PayPal.<br />
 
             <div style='margin-top: 5px; height: 30px;'>
-            <script src="/Assets/CoinWidget/coin.js?version=1"></script>
+            <%--<script src="/Assets/CoinWidget/coin.js?version=1"></script>
             <script>
                 CoinWidgetCom.go({
                     wallet_address: "1EdLMCosekTQqwgmhJkj3fFCNP42YhubJw"
@@ -100,7 +100,7 @@
                     , lbl_count: "donations"
                     , lbl_amount: "LTC"
                 });
-            </script>
+            </script>--%>
             <style>
             .PayPalButton a {
                 width:  166px;

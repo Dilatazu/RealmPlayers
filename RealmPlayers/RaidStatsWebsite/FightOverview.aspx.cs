@@ -290,7 +290,7 @@ namespace VF_RaidDamageWebsite
                 if (attemptType == VF_RaidDamageDatabase.FightData.AttemptType.KillAttempt)
                 {
                     lootDropped = "<h3>Boss Loot:</h3>";
-                    lootDropped += RaidOverview.CreateLootDroppedData(interestingFight.GetItemDrops(), realm);
+                    lootDropped += RaidOverview.CreateLootDroppedData(interestingFight.GetItemDrops(), realmDB);
                 }
                 ///////////////////////
 

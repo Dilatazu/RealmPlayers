@@ -68,7 +68,7 @@ namespace VF_RaidDamageDatabase
             var unitData = GetUnitsData(true);
             return GetFightCacheData().GetAttendingUnits(unitData, _Predicate);
         }
-        public List<int> GetItemDrops()
+        public List<Tuple<string, int>> GetItemDrops()
         {
             try
             {
@@ -140,13 +140,32 @@ namespace VF_RaidDamageDatabase
                         }
                     }
                 }
+                List<Tuple<string, int>> result = new List<Tuple<string,int>>();
+                foreach(var item in itemDrops)
+                {
+                    bool anonymousReceiver = true;
+                    foreach (var recvItem in receiveItems)
+                    {
+                        if (recvItem.Item2 == item)
+                        {
+                            result.Add(Tuple.Create(recvItem.Item1, recvItem.Item2));
+                            receiveItems.Remove(recvItem);
+                            anonymousReceiver = false;
+                            break;
+                        }
+                    }
+                    if (anonymousReceiver == true)
+                    {
+                        result.Add(Tuple.Create("Unknown", item));
+                    }
+                }
 
-                return itemDrops;
+                return result;
             }
 	        catch (Exception ex)
 	        {
 		        Logger.LogException(ex);
-                return new List<int>();
+                return new List<Tuple<string, int>>();
 	        }
         }
         public class FightDetail

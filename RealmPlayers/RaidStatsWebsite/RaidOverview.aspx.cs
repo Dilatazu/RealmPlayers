@@ -152,7 +152,7 @@ namespace VF_RaidDamageWebsite
                 string lootDropped = "";
                 if (attemptType == VF_RaidDamageDatabase.FightData.AttemptType.KillAttempt)
                 {
-                    lootDropped = CreateLootDroppedData(fight.GetItemDrops(), realm);
+                    lootDropped = CreateLootDroppedData(fight.GetItemDrops(), realmDB);
                 }
                 ///////////////////////
 
@@ -470,7 +470,7 @@ namespace VF_RaidDamageWebsite
 
         }
 
-        public static string CreateLootDroppedData(List<int> _ItemDrops, VF_RealmPlayersDatabase.WowRealm _Realm)
+        public static string CreateLootDroppedData(List<Tuple<string, int>> _ItemDrops, VF_RaidDamageDatabase.RealmDB _RealmDB)
         {
             var itemSummaryDB = ApplicationInstance.Instance.GetItemSummaryDatabase();
             string lootDropped = "";
@@ -481,12 +481,14 @@ namespace VF_RaidDamageWebsite
                 int yMax = 58;
 
                 string itemLinks = "";
-                foreach (var itemID in _ItemDrops)
+                foreach (var itemDrop in _ItemDrops)
                 {
+                    VF_RealmPlayersDatabase.PlayerData.Player itemReceiver = _RealmDB.m_RealmDB.FindPlayer(itemDrop.Item1);
+                    int itemID = itemDrop.Item2;
                     var itemInfo = ApplicationInstance.Instance.GetItemInfo(itemID, VF_RealmPlayersDatabase.WowVersionEnum.Vanilla);
                     if (itemInfo != null && itemInfo.ItemQuality >= 4)
                     {
-                        var usageCount = itemSummaryDB.GetItemUsageCount(_Realm, itemID, 0);
+                        var usageCount = itemSummaryDB.GetItemUsageCount(_RealmDB.Realm, itemID, 0);
 
                         int xPos = (recvItemIndex % 4) * 58;
                         int yPos = (int)(recvItemIndex / 4) * 58;
@@ -497,7 +499,11 @@ namespace VF_RaidDamageWebsite
                             + "<div class='quality' id='" + RealmPlayersServer.CharacterViewer.ItemQualityConversion[itemInfo.ItemQuality] + "'></div>"
                             + "<img class='itemframe' src='assets/img/icons/ItemNormalFrame.png'/>"
                             + "<a class='itemlink' href='" + itemLink + "'></a>"
-                            + (usageCount > 0 ? "<a class='itemplayersframe' href='http://realmplayers.com/ItemUsageInfo.aspx?realm=" + StaticValues.ConvertRealmParam(_Realm) + "&item=" + itemID + "'>" + usageCount + "</a>" : "")
+                            + (usageCount > 0 ? "<a class='itemplayersframe' href='http://realmplayers.com/ItemUsageInfo.aspx?realm=" + StaticValues.ConvertRealmParam(_RealmDB.Realm) + "&item=" + itemID + "'>" + usageCount + "</a>" : "")
+                            + (/*Reliable Received*/true ? "<a class='itemreceiveframe' style='" + (itemReceiver == null ? "color: #CCC !important' href='" + itemLink + "'>???" : "color: " + PageUtility.GetClassColor(itemReceiver) + " !important' href='"
+                            //+ "http://realmplayers.com/CharacterViewer.aspx?realm=" + StaticValues.ConvertRealmParam(_RealmDB.Realm) + "&player=" + itemReceiver.Name 
+                            + itemLink
+                            + "'>" + itemReceiver.Name) + "</a>" : "")
                             + "</div>";
 
                         if (xPos + 58 > xMax)
