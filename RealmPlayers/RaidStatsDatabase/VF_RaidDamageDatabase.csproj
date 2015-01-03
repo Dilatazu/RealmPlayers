@@ -65,6 +65,7 @@
     <Compile Include="NewFormat\BossFight.cs" />
     <Compile Include="NewFormat\BossSummary.cs" />
     <Compile Include="NewFormat\GlobalInitializationData.cs" />
+    <Compile Include="NewFormat\GroupSummary\GroupInfo.cs" />
     <Compile Include="NewFormat\GroupSummary\GroupSummaryDatabase.cs" />
     <Compile Include="NewFormat\SummaryDatabase.cs" />
     <Compile Include="NewFormat\GroupRaidCollection.cs" />

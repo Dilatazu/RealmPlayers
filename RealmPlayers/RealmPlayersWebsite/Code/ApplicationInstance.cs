@@ -607,6 +607,15 @@ namespace RealmPlayersServer
                     return summaryDB;
                 }, (_RaidCollection, _LastLoadTime) => { return (DateTime.UtcNow - _LastLoadTime).TotalMinutes > 60; });
             }
+            public VF_RDDatabase.GroupSummaryDatabase GetGroupSummaryDatabase()
+            {
+                return DynamicReloader.GetData<VF_RDDatabase.GroupSummaryDatabase>(() =>
+                {
+                    VF_RDDatabase.GroupSummaryDatabase summaryDB = null;
+                    summaryDB = VF_RDDatabase.GroupSummaryDatabase.LoadSummaryDatabase(Constants.RDDbDir);
+                    return summaryDB;
+                }, (_RaidCollection, _LastLoadTime) => { return (DateTime.UtcNow - _LastLoadTime).TotalMinutes > 60; });
+            }
         }
     }
 }

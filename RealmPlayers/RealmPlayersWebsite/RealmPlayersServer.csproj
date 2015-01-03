@@ -515,6 +515,10 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\RaidStatsDatabase\VF_RaidDamageDatabase.csproj">
+      <Project>{ad95f54b-59ab-4176-b513-6dc81e723ff7}</Project>
+      <Name>VF_RaidDamageDatabase</Name>
+    </ProjectReference>
     <ProjectReference Include="..\RealmPlayersDatabase\VF_RealmPlayersDatabase.csproj">
       <Project>{ac235bce-181b-4b49-8abc-d1639d935373}</Project>
       <Name>VF_RealmPlayersDatabase</Name>

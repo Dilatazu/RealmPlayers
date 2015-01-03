@@ -189,7 +189,7 @@ namespace VF_RDDatabase
             }
             return database;
         }
-        public static void UpdateSummaryDatabase(string _RootDirectory, Old_RaidCollection _FullRaidCollection, List<Old_RaidCollection.Raid> _RecentChangedRaids, Func<string, Old_FightDataCollection> _CachedGetFightDataCollectionFunc, Func<WowRealm, VF_RaidDamageDatabase.RealmDB> _GetRealmDB)
+        public static SummaryDatabase UpdateSummaryDatabase(string _RootDirectory, Old_RaidCollection _FullRaidCollection, List<Old_RaidCollection.Raid> _RecentChangedRaids, Func<string, Old_FightDataCollection> _CachedGetFightDataCollectionFunc, Func<WowRealm, VF_RaidDamageDatabase.RealmDB> _GetRealmDB)
         {
             SummaryDatabase database = null;
             string databaseFile = _RootDirectory + "\\SummaryDatabase\\FullSummaryDatabase.dat";
@@ -207,6 +207,7 @@ namespace VF_RDDatabase
                 database.UpdateDatabase(_RecentChangedRaids, _CachedGetFightDataCollectionFunc, _GetRealmDB);
             }
             VF.Utility.SaveSerialize(databaseFile, database);
+            return database;
         }
         public static void FixBuggedSummaryDatabase(string _RootDirectory, Old_RaidCollection _FullRaidCollection, List<Old_RaidCollection.Raid> _BuggedRaids, Func<string, Old_FightDataCollection> _CachedGetFightDataCollectionFunc, Func<WowRealm, VF_RaidDamageDatabase.RealmDB> _GetRealmDB)
         {

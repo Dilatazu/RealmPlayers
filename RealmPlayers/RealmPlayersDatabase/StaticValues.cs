@@ -135,7 +135,7 @@ namespace VF_RealmPlayersDatabase
         High_Priest_Thekal,
         High_Priestess_Mar_Li,
         Hakkar_The_Soulflayer,
-        Broodlord_Mandokir,
+        Broodlord_Mandokir, //TODO: change to Bloodlord_Mandokir make sure there is no bug being introduced if changed!
         Jin_Do_The_Hexxer,
         Gahz_Ranka,
         Edge_Of_Madness,
@@ -359,6 +359,58 @@ namespace VF_RealmPlayersDatabase
     }
     public class StaticValues
     {
+        public static Dictionary<string, WowBoss> _WowBossConvert = new Dictionary<string, WowBoss>
+        {
+            //Molten Core
+            {"Golemagg the Incinerator", WowBoss.Golemagg_The_Incinerator},
+        
+            //BWL
+            {"Razorgore the Untamed", WowBoss.Razorgore_The_Untamed},
+            {"Vaelstrasz the Corrupt", WowBoss.Vaelstrasz_The_Corrupt},
+
+            //ZG
+            {"High Priestess Mar'li", WowBoss.High_Priestess_Mar_Li},
+            {"Hakkar", WowBoss.Hakkar_The_Soulflayer},
+            {"Bloodlord Mandokir", WowBoss.Broodlord_Mandokir},
+            {"Jin'do the Hexxer", WowBoss.Jin_Do_The_Hexxer},
+            {"Gahz'ranka", WowBoss.Gahz_Ranka},
+            {"Renataki", WowBoss.Renataki_Of_The_Thousand_Blades},
+            {"Wushoolay", WowBoss.Wushoolay_the_Storm_Witch},
+            {"Gri'lek", WowBoss.Gri_Lek_Of_The_Iron_Blood},
+            {"Hazza'rah", WowBoss.Hazzarah_The_Dreamweaver},
+
+            //AQ20
+            {"Ossirian the Unscarred", WowBoss.Ossirian_The_Unscarred},
+            {"Buru the Gorger", WowBoss.Buru_The_Gorger},
+            {"Ayamiss the Hunter", WowBoss.Ayamiss_The_Hunter},
+
+            //AQ40
+            {"Fankriss the Unyielding", WowBoss.Fankriss_The_Unyielding},
+            {"Princess Huhuran", WowBoss.Huhuran},
+            {"Twin Emperors", WowBoss.The_Twin_Emperors},
+            {"C'Thun", WowBoss.C_Thun},
+
+            //Naxxramas
+            {"Anub'Rekhan", WowBoss.Anub_Rekhan},
+            {"Noth the Plaguebringer", WowBoss.Noth_The_Plaguebringer},
+            {"Heigan the Unclean", WowBoss.Heigan_The_Unclean},
+            {"Gothik the Harvester", WowBoss.Gothik_The_Harvester},
+            {"Kel'Thuzad", WowBoss.Kel_Thuzad},
+
+            //World Bosses
+        };
+        public static WowBoss ConvertWowBoss(string _BossName)
+        {
+            if (_WowBossConvert.ContainsKey(_BossName) == true)
+                return _WowBossConvert[_BossName];
+            else
+            {
+                WowBoss parseResult;
+                if (Enum.TryParse<WowBoss>(_BossName.Replace(' ', '_'), out parseResult) == true)
+                    return parseResult;
+            }
+            return WowBoss.Legendary;
+        }
         public static Dictionary<string, PlayerClass> _ClassConvert = new Dictionary<string, PlayerClass>
         {
             {"DRUID", PlayerClass.Druid},
