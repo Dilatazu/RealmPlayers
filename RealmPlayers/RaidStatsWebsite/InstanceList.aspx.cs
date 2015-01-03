@@ -12,81 +12,6 @@ namespace VF_RaidDamageWebsite
 {
     public partial class InstanceList : System.Web.UI.Page
     {
-        public static Dictionary<string, Dictionary<string, string[]>> InstanceRuns = new Dictionary<string, Dictionary<string, string[]>>
-        {
-            {"Onyxia's Lair", new Dictionary<string, string[]>{{"Onyxia", new string[]{"Onyxia"}}}},
-            {"Molten Core", new Dictionary<string, string[]>{{"Molten Core", new string[]{
-                "Lucifron","Magmadar", "Gehennas", 
-                "Garr", "Baron Geddon", "Shazzrah", 
-                "Sulfuron Harbinger", "Golemagg the Incinerator", 
-                "Majordomo Executus", "Ragnaros",
-            }}}},
-            {"Blackwing Lair", new Dictionary<string, string[]>{{"Blackwing Lair", new string[]{
-                "Razorgore the Untamed","Vaelastrasz the Corrupt", "Broodlord Lashlayer", 
-                "Firemaw", "Ebonroc", "Flamegor", 
-                "Chromaggus", "Nefarian",
-            }}}},
-            {"Zul'Gurub", new Dictionary<string, string[]>{{"Zul'Gurub", new string[]{
-                "High Priestess Jeklik","High Priest Venoxis", "High Priestess Mar'li", 
-                "High Priest Thekal", "High Priestess Arlokk", "Hakkar",
-                
-                "Bloodlord Mandokir", "Jin'do the Hexxer", //"Optional"
-            }}}},
-            {"Ruins of Ahn'Qiraj", new Dictionary<string, string[]>{{"Ruins of Ahn'Qiraj", new string[]{
-                "Kurinnaxx", "General Rajaxx",
-	            "Moam", "Buru the Gorger",
-	            "Ayamiss the Hunter", "Ossirian the Unscarred",
-            }}}},
-            {"Ahn'Qiraj Temple", new Dictionary<string, string[]>{{"Temple of Ahn'Qiraj", new string[]{
-                "The Prophet Skeram", "Battleguard Sartura", 
-                "Fankriss the Unyielding", "Princess Huhuran", 
-                "Twin Emperors", "C'Thun"
-            }}}},
-            {"Naxxramas", new Dictionary<string, string[]>{{"Naxxramas", new string[]{"Anub'Rekhan", "Grand Widow Faerlina",
-                "Maexxna", "Patchwerk",
-                "Grobbulus", "Gluth",
-                "Thaddius", "Noth the Plaguebringer",
-                "Heigan the Unclean", "Loatheb",
-                "Instructor Razuvious", "Gothik the Harvester",
-                "The Four Horsemen", "Sapphiron",
-                "Kel'Thuzad",
-            }},
-            {"Naxxramas - Arachnid Quarter", new string[]{
-                "Anub'Rekhan", "Grand Widow Faerlina", "Maexxna",
-            }},
-            {"Naxxramas - Construct Quarter", new string[]{
-                "Patchwerk", "Grobbulus", "Gluth", "Thaddius",
-            }},
-            {"Naxxramas - Plague Quarter", new string[]{
-                "Noth the Plaguebringer",
-                "Heigan the Unclean", "Loatheb",
-            }},
-            {"Naxxramas - Military Quarter", new string[]{
-                "Instructor Razuvious", "Gothik the Harvester",
-                "The Four Horsemen",
-            }},
-            {"Naxxramas - All Quarters", new string[]{
-                "Anub'Rekhan", "Grand Widow Faerlina", "Maexxna",
-                "Patchwerk", "Grobbulus", "Gluth", "Thaddius",
-                "Noth the Plaguebringer",
-                "Heigan the Unclean", "Loatheb",
-                "Instructor Razuvious", "Gothik the Harvester",
-                "The Four Horsemen",
-            }}}},
-        };
-
-        class RaidInstanceClearData
-        {
-            public VF_RDDatabase.Raid m_Raid;
-            public DateTime m_RaidStartClearTime;
-            public DateTime m_RaidEndClearTime;
-
-            public TimeSpan GetTimeSpan()
-            {
-                return (m_RaidEndClearTime - m_RaidStartClearTime);
-            }
-        }
-
         public MvcHtmlString m_PageInfoHTML = null;
         public MvcHtmlString m_BreadCrumbHTML = null;
         public MvcHtmlString m_GraphsHTML = null;
@@ -172,84 +97,13 @@ namespace VF_RaidDamageWebsite
 
                 foreach (var raid in groupRC.Value.Raids)
                 {
-                    var instanceRuns = InstanceRuns[raid.Value.RaidInstance];
+                    var instanceRuns = BossInformation.InstanceRuns[raid.Value.RaidInstance];
                     foreach (var instanceRun in instanceRuns)
                     {
-                        DateTime earliestTime = DateTime.MaxValue;
-                        DateTime latestTime = DateTime.MinValue;
-
-                        int bossKills = 0;
-                        List<string> prevAddedBosses = new List<string>();
-                        foreach (var existingFight in raid.Value.BossFights)
+                        var instanceClearData = RaidInstanceClearData.Generate(raid, instanceRun.Value);
+                        if(instanceClearData != null)
                         {
-                            if (instanceRun.Value.Contains(existingFight.BossName) == true)
-                            {
-                                if (existingFight.StartDateTime < earliestTime)
-                                    earliestTime = existingFight.StartDateTime;
-
-                                if (existingFight.EndDateTime > latestTime)
-                                    latestTime = existingFight.EndDateTime;
-
-                                if (prevAddedBosses.Contains(existingFight.BossName))
-                                    continue;
-
-                                if (existingFight.AttemptType == VF_RDDatabase.AttemptType.KillAttempt)
-                                {
-                                    //if (BossInformation.LastInstanceBoss.ContainsKey(raid.Value.RaidInstance) == true)
-                                    //{
-                                    //    if (BossInformation.LastInstanceBoss[raid.Value.RaidInstance] == existingFight.FightName)
-                                    //    {
-                                    //        bossKills = BossInformation.BossCountInInstance[raid.Value.RaidInstance];
-                                    //        break;
-                                    //    }
-                                    //}
-                                    ++bossKills;
-                                    prevAddedBosses.Add(existingFight.BossName);
-                                }
-                                else if (existingFight.AttemptType == VF_RDDatabase.AttemptType.UnknownAttempt)
-                                {//If unknown attempt we have to fetch bossfights and check manually
-                                    var bossFights = raid.Value.BossFights;
-
-                                    bool wasBossKill = false;
-                                    foreach (var bossFight in bossFights)
-                                    {
-                                        if (bossFight.StartDateTime == existingFight.StartDateTime)
-                                        {
-                                            if (bossFight.AttemptType == VF_RDDatabase.AttemptType.KillAttempt)
-                                            {
-                                                wasBossKill = true;
-                                            }
-                                            break;
-                                        }
-                                    }
-                                    if (wasBossKill == true)
-                                    {
-                                        //if (BossInformation.LastInstanceBoss.ContainsKey(raid.Value.RaidInstance) == true)
-                                        //{
-                                        //    if (BossInformation.LastInstanceBoss[raid.Value.RaidInstance] == existingFight.FightName)
-                                        //    {
-                                        //        bossKills = BossInformation.BossCountInInstance[raid.Value.RaidInstance];
-                                        //        break;
-                                        //    }
-                                        //}
-                                        ++bossKills;
-                                        prevAddedBosses.Add(existingFight.BossName);
-                                    }
-                                }
-                            }
-                        }
-                        if (bossKills == instanceRun.Value.Length)
-                        {
-                            //There was an instance clear!
-                            if (bossKills > 1)//Onyxia is not interesting
-                            {
-                                raidInstanceClears.AddToList(instanceRun.Key, new RaidInstanceClearData
-                                {
-                                    m_Raid = raid.Value,
-                                    m_RaidStartClearTime = earliestTime,
-                                    m_RaidEndClearTime = latestTime,
-                                });
-                            }
+                            raidInstanceClears.AddToList(instanceRun.Key, instanceClearData);
                         }
                     }
                 }
@@ -352,5 +206,6 @@ namespace VF_RaidDamageWebsite
 
             m_GraphsHTML = new MvcHtmlString(graphSection);
         }
+
     }
 }
