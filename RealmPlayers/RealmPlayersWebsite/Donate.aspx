@@ -15,7 +15,6 @@
                 <h2>Donate for stability and improvement</h2>
                 <h3>for RealmPlayers, RaidStats and VF_WoWLauncher</h3>
                 <p>Please consider donating if you like the projects i develop and want to support and help make them even better. Leave a comment as either anonymous or with your ingame name to be listed on <a href="Donators.aspx">the Donators page</a></p>
-                
                 <div style='margin-top: 5px; height: 30px;'>
                     <%--<script src="/Assets/CoinWidget/coin.js?version=1"></script>
                     <script>
@@ -57,7 +56,7 @@
                     background-image: url('/assets/img/PaypalPay_Clicked_Smaller.png');
                     }
                     </style>
-                    <div class='PayPalButton' style='margin-top: -25px; margin-left: 242px; height: 30px;'>
+                    <div class='PayPalButton' style='height: 30px;'>
                     <a href='https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=6BGRWFLQ2VBFQ' target='_blank'></a>
                     </div>
                 </div>
