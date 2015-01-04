@@ -10,6 +10,7 @@ using Player = VF_RealmPlayersDatabase.PlayerData.Player;
 using WowRealm = VF_RealmPlayersDatabase.WowRealm;
 using Guild = VF_RealmPlayersDatabase.GeneratedData.Guild;
 
+
 using WowBoss = VF_RealmPlayersDatabase.WowBoss;
 namespace RealmPlayersServer
 {
@@ -267,6 +268,7 @@ namespace RealmPlayersServer
             string naxxString = "";
             string wbString = "";
 
+#if USE_RAIDSTATS_FOR_PROGRESS_STR
             _RetProgressComparisonValue = 0;
 
             VF_RDDatabase.GroupInfo guildRaidProgressInfo = null;
@@ -333,8 +335,8 @@ namespace RealmPlayersServer
 	            }
             }
             else
+#endif
             {
-                return "";
                 var wowVersion = StaticValues.GetWowVersion(_Realm);
                 Dictionary<WowBoss, int> m_MembersWithBossItems = new Dictionary<WowBoss, int>();
                 for (int i = (int)WowBoss.MCFirst; i <= (int)WowBoss.MCLast; ++i) m_MembersWithBossItems.Add((WowBoss)i, 0);
