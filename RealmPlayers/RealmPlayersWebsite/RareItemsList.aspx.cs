@@ -48,35 +48,37 @@ namespace RealmPlayersServer
 
             string tableBody = "";
             int nr = 1;
-            Func<KeyValuePair<int, List<Tuple<DateTime, string>>>, int> lambdaComparison = (_Tuple) => { return _Tuple.Value.Count; };
-                Func<Tuple<DateTime, string>, DateTime> lambdaDateTimeComparison = (_Tuple) => { return _Tuple.Item1; };
-            var rareItemsList = new Dictionary<int, List<Tuple<DateTime, string>>>();//itemSummaryDB.OrderBy(lambdaComparison);
+            Func<KeyValuePair<ulong, VF_RPDatabase.ItemSummary>, int> lambdaComparison = (_Tuple) => { return _Tuple.Value.m_ItemOwners.Count((_Value) => (itemSummaryDB.GetPlayerRealm(_Value.Item1) == realm)); };
+                Func<Tuple<ulong, DateTime>, DateTime> lambdaDateTimeComparison = (_Tuple) => { return _Tuple.Item2; };
+            var rareItemsList = itemSummaryDB.m_Items.OrderBy(lambdaComparison);
             foreach (var rareItem in rareItemsList)
             {
                 if (nr >= count)
                     break;
-                if(rareItem.Value.Count > 0 && Code.Resources.ItemAnalyzer.IsRareItem(rareItem.Key) == true)
+                int rareItemCount = rareItem.Value.m_ItemOwners.Count((_Value) => (itemSummaryDB.GetPlayerRealm(_Value.Item1) == realm));
+                if (rareItemCount > 0 && Code.Resources.ItemAnalyzer.IsRareItem(rareItem.Value.m_ItemID) == true)
                 {
-                    var itemInfo = DatabaseAccess.GetItemInfo(rareItem.Key, wowVersion);
+                    var itemInfo = DatabaseAccess.GetItemInfo(rareItem.Value.m_ItemID, wowVersion);
                     if (itemInfo.ItemQuality < 4)
                         continue;
                     //rareItem.
                     Player player = null;
-                    var orderedAquires = rareItem.Value.OrderBy(lambdaDateTimeComparison);
-                    DateTime dateTimeCutoff = orderedAquires.First().Item1;
+                    var orderedAquires = rareItem.Value.m_ItemOwners.OrderBy(lambdaDateTimeComparison);
+                    DateTime dateTimeCutoff = orderedAquires.First((_Value) => (itemSummaryDB.GetPlayerRealm(_Value.Item1) == realm)).Item2;
                     if (dateTimeCutoff < new DateTime(2013, 8, 1, 0, 0, 0))
                         dateTimeCutoff = new DateTime(2013, 8, 1, 0, 0, 0);
                     else
                         dateTimeCutoff = dateTimeCutoff.AddDays(3);
 
                     string firstPlayers = "<div style='overflow: hidden; display: table; height: 58px;'>";
-                    if (orderedAquires.Count((_Tuple) => { return _Tuple.Item1 < dateTimeCutoff; }) < 5)
+                    var interestingItems = orderedAquires.Where((_Tuple) => { return _Tuple.Item2 < dateTimeCutoff && (itemSummaryDB.GetPlayerRealm(_Tuple.Item1) == realm); });
+                    if (interestingItems.Count() < 5)
                     {
-                        foreach (var playerAquire in orderedAquires)
+                        foreach (var playerAquire in interestingItems)
                         {
-                            if (playerAquire.Item1 < dateTimeCutoff)
+                            if (playerAquire.Item2 < dateTimeCutoff)
                             {
-                                player = DatabaseAccess.FindRealmPlayer(this, realm, playerAquire.Item2);
+                                player = DatabaseAccess.FindRealmPlayer(this, realm, itemSummaryDB.GetPlayerName(playerAquire.Item1));
                                 if (player != null)
                                 {
                                     var playerFaction = StaticValues.GetFaction(player.Character.Race);
@@ -104,10 +106,11 @@ namespace RealmPlayersServer
                                 + "<img class='itempic' src='" + currentItemDatabase + itemInfo.GetIconImageAddress() + "'/>"
                                 + "<div class='quality' id='" + CharacterViewer.ItemQualityConversion[itemInfo.ItemQuality] + "'></div>"
                                 + "<img class='itemframe' src='assets/img/icons/ItemNormalFrame.png'/>"
-                                + "<a class='itemlink' href='" + currentItemDatabase + "?item=" + rareItem.Key + "'></a>"
+                                + CharacterViewer.GenerateItemLink(currentItemDatabase, rareItem.Value.m_ItemID, rareItem.Value.m_SuffixID, wowVersion)
+                                + "<a class='itemplayersframe' href='ItemUsageInfo.aspx?realm=" + StaticValues.ConvertRealmParam(realm) + "&item=" + rareItem.Value.m_ItemID + (rareItem.Value.m_SuffixID != 0 ? "&suffix=" + rareItem.Value.m_SuffixID : "") + "'>" + rareItemCount.ToString() + "</a>"
                                 + "</div></div>"
-                            , rareItem.Value.Count.ToString()
-                            , " &gt; " + orderedAquires.First().Item1.ToString("yyyy-MM-dd") + "<br> &lt; " + dateTimeCutoff.ToString("yyyy-MM-dd")
+                            , rareItemCount.ToString()
+                            , " &gt; " + interestingItems.First().Item2.ToString("yyyy-MM-dd") + "<br> &lt; " + dateTimeCutoff.ToString("yyyy-MM-dd")
                             , firstPlayers
                         };
                     tableBody += PageUtility.CreateTableRow("",
