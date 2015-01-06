@@ -9,6 +9,7 @@ namespace RealmPlayersServer
     {
         public static bool DebugMode = false;
         public static string RPPDbDir = VF_RealmPlayersDatabase.Utility.DefaultServerLocation + "VF_RealmPlayersData\\RPPDatabase\\";
+        public static string RDDbDir = VF_RealmPlayersDatabase.Utility.DefaultServerLocation + "VF_RealmPlayersData\\RDDatabase\\";
         public static string RPPDbWriteDir = VF_RealmPlayersDatabase.Utility.DefaultServerLocation + "VF_RealmPlayersData\\RPPDatabase\\";
 
         private static bool m_Initialized = false;
@@ -24,6 +25,8 @@ namespace RealmPlayersServer
                 {
                     RPPDbDir = RPPDbDir.Replace(VF_RealmPlayersDatabase.Utility.DefaultServerLocation, VF_RealmPlayersDatabase.Utility.DefaultDebugLocation);
                     RPPDbWriteDir = RPPDbWriteDir.Replace(VF_RealmPlayersDatabase.Utility.DefaultServerLocation, VF_RealmPlayersDatabase.Utility.DefaultDebugLocation);
+
+                    RDDbDir = RDDbDir.Replace(VF_RealmPlayersDatabase.Utility.DefaultServerLocation, VF_RealmPlayersDatabase.Utility.DefaultDebugLocation);
                 }
                 m_Initialized = true;
             }

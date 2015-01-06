@@ -7,6 +7,69 @@ namespace VF_RaidDamageDatabase
 {
     public class BossInformation
     {
+        public static Dictionary<string, Dictionary<string, string[]>> InstanceRuns = new Dictionary<string, Dictionary<string, string[]>>
+        {
+            {"Onyxia's Lair", new Dictionary<string, string[]>{{"Onyxia", new string[]{"Onyxia"}}}},
+            {"Molten Core", new Dictionary<string, string[]>{{"Molten Core", new string[]{
+                "Lucifron","Magmadar", "Gehennas", 
+                "Garr", "Baron Geddon", "Shazzrah", 
+                "Sulfuron Harbinger", "Golemagg the Incinerator", 
+                "Majordomo Executus", "Ragnaros",
+            }}}},
+            {"Blackwing Lair", new Dictionary<string, string[]>{{"Blackwing Lair", new string[]{
+                "Razorgore the Untamed","Vaelastrasz the Corrupt", "Broodlord Lashlayer", 
+                "Firemaw", "Ebonroc", "Flamegor", 
+                "Chromaggus", "Nefarian",
+            }}}},
+            {"Zul'Gurub", new Dictionary<string, string[]>{{"Zul'Gurub", new string[]{
+                "High Priestess Jeklik","High Priest Venoxis", "High Priestess Mar'li", 
+                "High Priest Thekal", "High Priestess Arlokk", "Hakkar",
+                
+                "Bloodlord Mandokir", "Jin'do the Hexxer", //"Optional"
+            }}}},
+            {"Ruins of Ahn'Qiraj", new Dictionary<string, string[]>{{"Ruins of Ahn'Qiraj", new string[]{
+                "Kurinnaxx", "General Rajaxx",
+	            "Moam", "Buru the Gorger",
+	            "Ayamiss the Hunter", "Ossirian the Unscarred",
+            }}}},
+            {"Ahn'Qiraj Temple", new Dictionary<string, string[]>{{"Temple of Ahn'Qiraj", new string[]{
+                "The Prophet Skeram", "Battleguard Sartura", 
+                "Fankriss the Unyielding", "Princess Huhuran", 
+                "Twin Emperors", "C'Thun"
+            }}}},
+            {"Naxxramas", new Dictionary<string, string[]>{{"Naxxramas", new string[]{"Anub'Rekhan", "Grand Widow Faerlina",
+                "Maexxna", "Patchwerk",
+                "Grobbulus", "Gluth",
+                "Thaddius", "Noth the Plaguebringer",
+                "Heigan the Unclean", "Loatheb",
+                "Instructor Razuvious", "Gothik the Harvester",
+                "The Four Horsemen", "Sapphiron",
+                "Kel'Thuzad",
+            }},
+            {"Naxxramas - Arachnid Quarter", new string[]{
+                "Anub'Rekhan", "Grand Widow Faerlina", "Maexxna",
+            }},
+            {"Naxxramas - Construct Quarter", new string[]{
+                "Patchwerk", "Grobbulus", "Gluth", "Thaddius",
+            }},
+            {"Naxxramas - Plague Quarter", new string[]{
+                "Noth the Plaguebringer",
+                "Heigan the Unclean", "Loatheb",
+            }},
+            {"Naxxramas - Military Quarter", new string[]{
+                "Instructor Razuvious", "Gothik the Harvester",
+                "The Four Horsemen",
+            }},
+            {"Naxxramas - All Quarters", new string[]{
+                "Anub'Rekhan", "Grand Widow Faerlina", "Maexxna",
+                "Patchwerk", "Grobbulus", "Gluth", "Thaddius",
+                "Noth the Plaguebringer",
+                "Heigan the Unclean", "Loatheb",
+                "Instructor Razuvious", "Gothik the Harvester",
+                "The Four Horsemen",
+            }}}},
+        };
+
         public static Dictionary<string, int> BossCountInInstance = new Dictionary<string, int>
         {
             {"Onyxia's Lair", 1},

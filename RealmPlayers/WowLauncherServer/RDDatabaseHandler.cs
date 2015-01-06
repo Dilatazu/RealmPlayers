@@ -263,10 +263,13 @@ namespace VF_WoWLauncherServer
             if (_ReplaceRaidsModified == false)
             {
                 //Default
-                VF_RDDatabase.SummaryDatabase.UpdateSummaryDatabase(m_RDDBFolder, m_RaidCollection, raidsModified
+                var summaryDB = VF_RDDatabase.SummaryDatabase.UpdateSummaryDatabase(m_RDDBFolder, m_RaidCollection, raidsModified
                     , cachedGetFightDataCollectionFunc
                     , (_WowRealm) => { return new RealmDB(m_RPPDatabaseHandler.GetRealmDB(_WowRealm)); });
                 Logger.ConsoleWriteLine("Done Updating Summary Database, it took " + (timer.ElapsedMilliseconds / 1000) + " seconds", ConsoleColor.Green);
+                timer = System.Diagnostics.Stopwatch.StartNew();
+                VF_RDDatabase.GroupSummaryDatabase.UpdateSummaryDatabase(m_RDDBFolder, summaryDB);
+                Logger.ConsoleWriteLine("Done Updating Group Summary Database, it took " + (timer.ElapsedMilliseconds / 1000) + " seconds", ConsoleColor.Green);
             }
             else
             {

@@ -200,6 +200,41 @@ namespace VF_RPDatabase
             }
             return entityID;
         }
+        public void GetEntityInfo(UInt64 _EntityID, out string _PlayerName, out WowRealm _Realm)
+        {
+            _Realm = GetPlayerRealm(_EntityID);
+            _PlayerName = GetPlayerName(_EntityID);
+        }
+        public WowRealm GetPlayerRealm(UInt64 _EntityID)
+        {
+            UInt64 realm = _EntityID >> 56;
+            switch (realm)
+            {
+                case 0UL:
+                    return WowRealm.Unknown;
+                case 1UL:
+                    return WowRealm.Emerald_Dream;
+                case 2UL:
+                    return WowRealm.Warsong;
+                case 3UL:
+                    return WowRealm.Al_Akir;
+                case 4UL:
+                    return WowRealm.Valkyrie;
+                case 5UL:
+                    return WowRealm.VanillaGaming;
+                case 6UL:
+                    return WowRealm.Rebirth;
+                case 7UL:
+                    return WowRealm.Archangel;
+                default:
+                    VF_RealmPlayersDatabase.Logger.ConsoleWriteLine("Error GetPlayerRealm failed. Realm(" + realm + ") was not valid!!!");
+                    return WowRealm.Unknown;
+            }
+        }
+        public string GetPlayerName(UInt64 _EntityID)
+        {
+            return m_PlayerIDs.First((_Value) => _Value.Value == _EntityID).Key.Substring(1);
+        }
         public void UpdateDatabase(RPPDatabase _Database)
         {
             UpdateDatabase(_Database, DateTime.MinValue);

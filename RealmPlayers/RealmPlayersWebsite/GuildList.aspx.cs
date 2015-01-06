@@ -10,6 +10,7 @@ using Player = VF_RealmPlayersDatabase.PlayerData.Player;
 using WowRealm = VF_RealmPlayersDatabase.WowRealm;
 using Guild = VF_RealmPlayersDatabase.GeneratedData.Guild;
 
+
 using WowBoss = VF_RealmPlayersDatabase.WowBoss;
 namespace RealmPlayersServer
 {
@@ -160,8 +161,15 @@ namespace RealmPlayersServer
                     int progressComparisonValue = guild.Value.m_GuildProgressData.Item2;
                     if (thisGuildProgressData == "" && guild.Value.Stats_GetTotalMaxLevels() >= 25)
                     {
-                        thisGuildProgressData = CreateProgressStr(this, guild.Value, realm, out progressComparisonValue);
-                        guild.Value.m_GuildProgressData = Tuple.Create(thisGuildProgressData, progressComparisonValue);
+                        try
+                        {
+                            thisGuildProgressData = CreateProgressStr(this, guild.Value, realm, out progressComparisonValue);
+                            guild.Value.m_GuildProgressData = Tuple.Create(thisGuildProgressData, progressComparisonValue);
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.LogException(ex);
+                        }
                     }
                     progressGuilds.Add(Tuple.Create(progressComparisonValue, Tuple.Create(guild.Value, thisGuildProgressData)));
                 }
@@ -251,87 +259,6 @@ namespace RealmPlayersServer
 
         public static string CreateProgressStr(System.Web.UI.Page _Page, VF_RPDatabase.GuildSummary _Guild, WowRealm _Realm, out int _RetProgressComparisonValue)
         {
-            var wowVersion = StaticValues.GetWowVersion(_Realm);
-            Dictionary<WowBoss, int> m_MembersWithBossItems = new Dictionary<WowBoss, int>();
-            for (int i = (int)WowBoss.MCFirst; i <= (int)WowBoss.MCLast; ++i) m_MembersWithBossItems.Add((WowBoss)i, 0);
-            for (int i = (int)WowBoss.OnyFirst; i <= (int)WowBoss.OnyLast; ++i) m_MembersWithBossItems.Add((WowBoss)i, 0);
-            for (int i = (int)WowBoss.BWLFirst; i <= (int)WowBoss.BWLLast; ++i) m_MembersWithBossItems.Add((WowBoss)i, 0);
-            for (int i = (int)WowBoss.ZGFirst; i <= (int)WowBoss.ZGLast; ++i) m_MembersWithBossItems.Add((WowBoss)i, 0);
-            for (int i = (int)WowBoss.AQ20First; i <= (int)WowBoss.AQ20Last; ++i) m_MembersWithBossItems.Add((WowBoss)i, 0);
-            for (int i = (int)WowBoss.AQ40First; i <= (int)WowBoss.AQ40Last; ++i) m_MembersWithBossItems.Add((WowBoss)i, 0);
-            for (int i = (int)WowBoss.NaxxFirst; i <= (int)WowBoss.NaxxLast; ++i) m_MembersWithBossItems.Add((WowBoss)i, 0);
-            for (int i = (int)WowBoss.WBFirst; i <= (int)WowBoss.WBLast; ++i) m_MembersWithBossItems.Add((WowBoss)i, 0);
-
-            var itemDropdatabase = DatabaseAccess.GetItemDropDatabase(_Page, wowVersion, NotLoadedDecision.RedirectAndWait).GetDatabase();
-            var playersHistory = DatabaseAccess.GetRealmPlayersHistory(_Page, _Realm, NotLoadedDecision.RedirectAndWait);
-            foreach (var guildPlayer in _Guild.Players)
-            {
-                if (guildPlayer.Value.IsInGuild == false)
-                    continue;
-                List<int> ignoredItems = new List<int>();
-                VF_RealmPlayersDatabase.PlayerData.PlayerHistory playerHistory = null;
-                if (playersHistory.TryGetValue(guildPlayer.Value.PlayerName, out playerHistory) == true)
-                {
-                    try
-                    {
-                        if (playerHistory.HaveValidHistory() == false)
-                            continue;
-                        foreach (var gear in playerHistory.GearHistory)
-                        {
-                            bool isInGuild = (playerHistory.GetGuildItemAtTime(gear.Uploader.GetTime()).Data.GuildName == _Guild.GuildName);
-                            foreach (var item in gear.Data.Items)
-                            {
-                                if (ignoredItems.Contains(item.Value.ItemID))
-                                    continue;
-
-                                if (isInGuild == false)
-                                {
-                                    ignoredItems.Add(item.Value.ItemID);
-                                    continue;
-                                }
-
-                                List<VF_RealmPlayersDatabase.ItemDropDataItem> itemDropDataList = null;
-                                if (itemDropdatabase.TryGetValue(item.Value.ItemID, out itemDropDataList) == true)
-                                {
-                                    foreach (var itemDropData in itemDropDataList)
-                                    {
-                                        WowBoss itemBoss = itemDropData.m_Boss;
-                                        if (itemBoss == WowBoss.Renataki_Of_The_Thousand_Blades
-                                        || itemBoss == WowBoss.Wushoolay_the_Storm_Witch
-                                        || itemBoss == WowBoss.Gri_Lek_Of_The_Iron_Blood
-                                        || itemBoss == WowBoss.Hazzarah_The_Dreamweaver)
-                                            itemBoss = WowBoss.Edge_Of_Madness;
-                                        if (m_MembersWithBossItems.ContainsKey(itemBoss))
-                                        {
-                                            m_MembersWithBossItems[itemBoss] = m_MembersWithBossItems[itemBoss] + 1;
-                                            ignoredItems.Add(item.Value.ItemID);
-                                        }
-                                        /*if (itemBoss >= WowBoss.MCFirst && itemBoss <= WowBoss.MCLast)
-                                        {}
-                                        else if (itemBoss >= WowBoss.OnyFirst && itemBoss <= WowBoss.OnyLast)
-                                        {}
-                                        else if (itemBoss >= WowBoss.BWLFirst && itemBoss <= WowBoss.BWLLast)
-                                        {}
-                                        else if (itemBoss >= WowBoss.ZGFirst && itemBoss <= WowBoss.ZGLast)
-                                        {}
-                                        else if (itemBoss >= WowBoss.AQ20First && itemBoss <= WowBoss.AQ20Last)
-                                        {}
-                                        else if (itemBoss >= WowBoss.AQ40First && itemBoss <= WowBoss.AQ40Last)
-                                        {}
-                                        else if (itemBoss >= WowBoss.NaxxFirst && itemBoss <= WowBoss.NaxxLast)
-                                        {}*/
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.ConsoleWriteLine("GuildList.aspx could not look through gear for player \"" + guildPlayer.Value.PlayerName + "\" Exception:" + ex.ToString(), ConsoleColor.Red);
-                    }
-                }
-            }
-
             string mcString = "";
             string onyString = "";
             string bwlString = "";
@@ -340,15 +267,165 @@ namespace RealmPlayersServer
             string aq40String = "";
             string naxxString = "";
             string wbString = "";
-            for (int i = (int)WowBoss.MCFirst; i <= (int)WowBoss.MCLast; ++i) mcString += ((m_MembersWithBossItems[(WowBoss)i] >= 2) ? "1" : "0");
-            for (int i = (int)WowBoss.OnyFirst; i <= (int)WowBoss.OnyLast; ++i) onyString += ((m_MembersWithBossItems[(WowBoss)i] >= 2) ? "1" : "0");
-            for (int i = (int)WowBoss.BWLFirst; i <= (int)WowBoss.BWLLast; ++i) bwlString += ((m_MembersWithBossItems[(WowBoss)i] >= 2) ? "1" : "0");
-            for (int i = (int)WowBoss.ZGFirst; i <= (int)WowBoss.ZGLast; ++i) zgString += ((m_MembersWithBossItems[(WowBoss)i] >= 2) ? "1" : "0");
-            for (int i = (int)WowBoss.AQ20First; i <= (int)WowBoss.AQ20Last; ++i) aq20String += ((m_MembersWithBossItems[(WowBoss)i] >= 2) ? "1" : "0");
-            for (int i = (int)WowBoss.AQ40First; i <= (int)WowBoss.AQ40Last; ++i) aq40String += ((m_MembersWithBossItems[(WowBoss)i] >= 2) ? "1" : "0");
-            for (int i = (int)WowBoss.NaxxFirst; i <= (int)WowBoss.NaxxLast; ++i) naxxString += ((m_MembersWithBossItems[(WowBoss)i] >= 2) ? "1" : "0");
-            for (int i = (int)WowBoss.WBFirst; i <= (int)WowBoss.WBLast; ++i) wbString += ((m_MembersWithBossItems[(WowBoss)i] >= 2) ? "1" : "0");
 
+#if USE_RAIDSTATS_FOR_PROGRESS_STR
+            _RetProgressComparisonValue = 0;
+
+            VF_RDDatabase.GroupInfo guildRaidProgressInfo = null;
+            var groupSummaryDB = Hidden.ApplicationInstance.Instance.GetGroupSummaryDatabase();
+            if (groupSummaryDB != null)
+            {
+                guildRaidProgressInfo = groupSummaryDB.GetGroupInfo(_Realm, _Guild.GuildName);
+            }
+            if(guildRaidProgressInfo != null)
+            {
+                try 
+	            {
+                    Dictionary<WowBoss, int> m_BestBossKillTimes = new Dictionary<WowBoss, int>();
+                    for (int i = (int)WowBoss.MCFirst; i <= (int)WowBoss.MCLast; ++i) m_BestBossKillTimes.Add((WowBoss)i, int.MaxValue);
+                    for (int i = (int)WowBoss.OnyFirst; i <= (int)WowBoss.OnyLast; ++i) m_BestBossKillTimes.Add((WowBoss)i, int.MaxValue);
+                    for (int i = (int)WowBoss.BWLFirst; i <= (int)WowBoss.BWLLast; ++i) m_BestBossKillTimes.Add((WowBoss)i, int.MaxValue);
+                    for (int i = (int)WowBoss.ZGFirst; i <= (int)WowBoss.ZGLast; ++i) m_BestBossKillTimes.Add((WowBoss)i, int.MaxValue);
+                    for (int i = (int)WowBoss.AQ20First; i <= (int)WowBoss.AQ20Last; ++i) m_BestBossKillTimes.Add((WowBoss)i, int.MaxValue);
+                    for (int i = (int)WowBoss.AQ40First; i <= (int)WowBoss.AQ40Last; ++i) m_BestBossKillTimes.Add((WowBoss)i, int.MaxValue);
+                    for (int i = (int)WowBoss.NaxxFirst; i <= (int)WowBoss.NaxxLast; ++i) m_BestBossKillTimes.Add((WowBoss)i, int.MaxValue);
+                    for (int i = (int)WowBoss.WBFirst; i <= (int)WowBoss.WBLast; ++i) m_BestBossKillTimes.Add((WowBoss)i, int.MaxValue);
+
+                    foreach(var bossKill in guildRaidProgressInfo.FastestBossKills)
+                    {
+                        if(bossKill.Value.Count > 0)
+                        {
+                            var wowBoss = StaticValues.ConvertWowBoss(bossKill.Key);
+                            int fastestKillTime = int.MaxValue;
+                            foreach(var killInfo in bossKill.Value)
+                            {
+                                int currKillTime = killInfo.GetKillTimeSeconds();
+                                if(currKillTime < fastestKillTime)
+                                    fastestKillTime = currKillTime;
+                            }
+                            if (wowBoss == WowBoss.Renataki_Of_The_Thousand_Blades
+                                || wowBoss == WowBoss.Wushoolay_the_Storm_Witch
+                                || wowBoss == WowBoss.Gri_Lek_Of_The_Iron_Blood
+                                || wowBoss == WowBoss.Hazzarah_The_Dreamweaver)
+                                wowBoss = WowBoss.Edge_Of_Madness;
+                            if (m_BestBossKillTimes.ContainsKey(wowBoss) == true)
+                            {
+                                if (fastestKillTime < m_BestBossKillTimes[wowBoss])
+                                    m_BestBossKillTimes[wowBoss] = fastestKillTime;
+                            }
+                            else
+                            {
+                                m_BestBossKillTimes.Add(wowBoss, fastestKillTime);
+                            }
+                        }
+                    }
+
+                    for (int i = (int)WowBoss.MCFirst; i <= (int)WowBoss.MCLast; ++i) mcString += ((m_BestBossKillTimes[(WowBoss)i] < int.MaxValue) ? "1" : "0");
+                    for (int i = (int)WowBoss.OnyFirst; i <= (int)WowBoss.OnyLast; ++i) onyString += ((m_BestBossKillTimes[(WowBoss)i] < int.MaxValue) ? "1" : "0");
+                    for (int i = (int)WowBoss.BWLFirst; i <= (int)WowBoss.BWLLast; ++i) bwlString += ((m_BestBossKillTimes[(WowBoss)i] < int.MaxValue) ? "1" : "0");
+                    for (int i = (int)WowBoss.ZGFirst; i <= (int)WowBoss.ZGLast; ++i) zgString += ((m_BestBossKillTimes[(WowBoss)i] < int.MaxValue) ? "1" : "0");
+                    for (int i = (int)WowBoss.AQ20First; i <= (int)WowBoss.AQ20Last; ++i) aq20String += ((m_BestBossKillTimes[(WowBoss)i] < int.MaxValue) ? "1" : "0");
+                    for (int i = (int)WowBoss.AQ40First; i <= (int)WowBoss.AQ40Last; ++i) aq40String += ((m_BestBossKillTimes[(WowBoss)i] < int.MaxValue) ? "1" : "0");
+                    for (int i = (int)WowBoss.NaxxFirst; i <= (int)WowBoss.NaxxLast; ++i) naxxString += ((m_BestBossKillTimes[(WowBoss)i] < int.MaxValue) ? "1" : "0");
+                    for (int i = (int)WowBoss.WBFirst; i <= (int)WowBoss.WBLast; ++i) wbString += ((m_BestBossKillTimes[(WowBoss)i] < int.MaxValue) ? "1" : "0");
+	            }
+	            catch (Exception ex)
+	            {
+		            Logger.LogException(ex);
+	            }
+            }
+            else
+#endif
+            {
+                var wowVersion = StaticValues.GetWowVersion(_Realm);
+                Dictionary<WowBoss, int> m_MembersWithBossItems = new Dictionary<WowBoss, int>();
+                for (int i = (int)WowBoss.MCFirst; i <= (int)WowBoss.MCLast; ++i) m_MembersWithBossItems.Add((WowBoss)i, 0);
+                for (int i = (int)WowBoss.OnyFirst; i <= (int)WowBoss.OnyLast; ++i) m_MembersWithBossItems.Add((WowBoss)i, 0);
+                for (int i = (int)WowBoss.BWLFirst; i <= (int)WowBoss.BWLLast; ++i) m_MembersWithBossItems.Add((WowBoss)i, 0);
+                for (int i = (int)WowBoss.ZGFirst; i <= (int)WowBoss.ZGLast; ++i) m_MembersWithBossItems.Add((WowBoss)i, 0);
+                for (int i = (int)WowBoss.AQ20First; i <= (int)WowBoss.AQ20Last; ++i) m_MembersWithBossItems.Add((WowBoss)i, 0);
+                for (int i = (int)WowBoss.AQ40First; i <= (int)WowBoss.AQ40Last; ++i) m_MembersWithBossItems.Add((WowBoss)i, 0);
+                for (int i = (int)WowBoss.NaxxFirst; i <= (int)WowBoss.NaxxLast; ++i) m_MembersWithBossItems.Add((WowBoss)i, 0);
+                for (int i = (int)WowBoss.WBFirst; i <= (int)WowBoss.WBLast; ++i) m_MembersWithBossItems.Add((WowBoss)i, 0);
+
+                var itemDropdatabase = DatabaseAccess.GetItemDropDatabase(_Page, wowVersion, NotLoadedDecision.RedirectAndWait).GetDatabase();
+                var playersHistory = DatabaseAccess.GetRealmPlayersHistory(_Page, _Realm, NotLoadedDecision.RedirectAndWait);
+                foreach (var guildPlayer in _Guild.Players)
+                {
+                    if (guildPlayer.Value.IsInGuild == false)
+                        continue;
+                    List<int> ignoredItems = new List<int>();
+                    VF_RealmPlayersDatabase.PlayerData.PlayerHistory playerHistory = null;
+                    if (playersHistory.TryGetValue(guildPlayer.Value.PlayerName, out playerHistory) == true)
+                    {
+                        try
+                        {
+                            if (playerHistory.HaveValidHistory() == false)
+                                continue;
+                            foreach (var gear in playerHistory.GearHistory)
+                            {
+                                bool isInGuild = (playerHistory.GetGuildItemAtTime(gear.Uploader.GetTime()).Data.GuildName == _Guild.GuildName);
+                                foreach (var item in gear.Data.Items)
+                                {
+                                    if (ignoredItems.Contains(item.Value.ItemID))
+                                        continue;
+
+                                    if (isInGuild == false)
+                                    {
+                                        ignoredItems.Add(item.Value.ItemID);
+                                        continue;
+                                    }
+
+                                    List<VF_RealmPlayersDatabase.ItemDropDataItem> itemDropDataList = null;
+                                    if (itemDropdatabase.TryGetValue(item.Value.ItemID, out itemDropDataList) == true)
+                                    {
+                                        foreach (var itemDropData in itemDropDataList)
+                                        {
+                                            WowBoss itemBoss = itemDropData.m_Boss;
+                                            if (itemBoss == WowBoss.Renataki_Of_The_Thousand_Blades
+                                            || itemBoss == WowBoss.Wushoolay_the_Storm_Witch
+                                            || itemBoss == WowBoss.Gri_Lek_Of_The_Iron_Blood
+                                            || itemBoss == WowBoss.Hazzarah_The_Dreamweaver)
+                                                itemBoss = WowBoss.Edge_Of_Madness;
+                                            if (m_MembersWithBossItems.ContainsKey(itemBoss))
+                                            {
+                                                m_MembersWithBossItems[itemBoss] = m_MembersWithBossItems[itemBoss] + 1;
+                                                ignoredItems.Add(item.Value.ItemID);
+                                            }
+                                            /*if (itemBoss >= WowBoss.MCFirst && itemBoss <= WowBoss.MCLast)
+                                            {}
+                                            else if (itemBoss >= WowBoss.OnyFirst && itemBoss <= WowBoss.OnyLast)
+                                            {}
+                                            else if (itemBoss >= WowBoss.BWLFirst && itemBoss <= WowBoss.BWLLast)
+                                            {}
+                                            else if (itemBoss >= WowBoss.ZGFirst && itemBoss <= WowBoss.ZGLast)
+                                            {}
+                                            else if (itemBoss >= WowBoss.AQ20First && itemBoss <= WowBoss.AQ20Last)
+                                            {}
+                                            else if (itemBoss >= WowBoss.AQ40First && itemBoss <= WowBoss.AQ40Last)
+                                            {}
+                                            else if (itemBoss >= WowBoss.NaxxFirst && itemBoss <= WowBoss.NaxxLast)
+                                            {}*/
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.ConsoleWriteLine("GuildList.aspx could not look through gear for player \"" + guildPlayer.Value.PlayerName + "\" Exception:" + ex.ToString(), ConsoleColor.Red);
+                        }
+                    }
+                }
+                for (int i = (int)WowBoss.MCFirst; i <= (int)WowBoss.MCLast; ++i) mcString += ((m_MembersWithBossItems[(WowBoss)i] >= 2) ? "1" : "0");
+                for (int i = (int)WowBoss.OnyFirst; i <= (int)WowBoss.OnyLast; ++i) onyString += ((m_MembersWithBossItems[(WowBoss)i] >= 2) ? "1" : "0");
+                for (int i = (int)WowBoss.BWLFirst; i <= (int)WowBoss.BWLLast; ++i) bwlString += ((m_MembersWithBossItems[(WowBoss)i] >= 2) ? "1" : "0");
+                for (int i = (int)WowBoss.ZGFirst; i <= (int)WowBoss.ZGLast; ++i) zgString += ((m_MembersWithBossItems[(WowBoss)i] >= 2) ? "1" : "0");
+                for (int i = (int)WowBoss.AQ20First; i <= (int)WowBoss.AQ20Last; ++i) aq20String += ((m_MembersWithBossItems[(WowBoss)i] >= 2) ? "1" : "0");
+                for (int i = (int)WowBoss.AQ40First; i <= (int)WowBoss.AQ40Last; ++i) aq40String += ((m_MembersWithBossItems[(WowBoss)i] >= 2) ? "1" : "0");
+                for (int i = (int)WowBoss.NaxxFirst; i <= (int)WowBoss.NaxxLast; ++i) naxxString += ((m_MembersWithBossItems[(WowBoss)i] >= 2) ? "1" : "0");
+                for (int i = (int)WowBoss.WBFirst; i <= (int)WowBoss.WBLast; ++i) wbString += ((m_MembersWithBossItems[(WowBoss)i] >= 2) ? "1" : "0");
+            }
             string oldMCstring = mcString;
             string oldBWLstring = bwlString;
             string oldZGstring = zgString;
