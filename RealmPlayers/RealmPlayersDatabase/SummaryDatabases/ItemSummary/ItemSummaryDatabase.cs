@@ -210,6 +210,8 @@ namespace VF_RPDatabase
             UInt64 realm = _EntityID >> 56;
             switch (realm)
             {
+                case 0UL:
+                    return WowRealm.Unknown;
                 case 1UL:
                     return WowRealm.Emerald_Dream;
                 case 2UL:
@@ -225,7 +227,7 @@ namespace VF_RPDatabase
                 case 7UL:
                     return WowRealm.Archangel;
                 default:
-                    VF_RealmPlayersDatabase.Logger.ConsoleWriteLine("Error GetPlayerName failed. Realm was not valid!!!");
+                    VF_RealmPlayersDatabase.Logger.ConsoleWriteLine("Error GetPlayerRealm failed. Realm(" + realm + ") was not valid!!!");
                     return WowRealm.Unknown;
             }
         }
