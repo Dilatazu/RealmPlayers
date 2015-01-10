@@ -17,7 +17,10 @@ namespace VF_RaidDamageWebsite
             {"Zul'Gurub", "assets/img/raid/raid-zulgurub.png"}, 
             {"Ruins of Ahn'Qiraj", "assets/img/raid/raid-aqruins.png"}, 
             {"Naxxramas", "assets/img/raid/raid-naxxramas.png"}, 
-            {"Ahn'Qiraj Temple", "assets/img/raid/raid-aqtemple.png"}
+            {"Ahn'Qiraj Temple", "assets/img/raid/raid-aqtemple.png"},
+
+            //Temp
+            {"Serpentshrine Cavern", "assets/img/raid/raid-aqtemple.png"}
         };
 
         public static ConcurrentDictionary<string, int> g_MeasuredStrings = new ConcurrentDictionary<string, int>();

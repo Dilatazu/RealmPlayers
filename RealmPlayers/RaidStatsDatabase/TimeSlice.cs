@@ -64,7 +64,7 @@ namespace VF_RaidDamageDatabase
         }
         public bool IsResetEvent()
         {
-            return IsEvent("SWReset");
+            return IsEvent("SWReset") || IsEvent("RCReset");
         }
         public bool GetEventBoss(out string _BossName)
         {

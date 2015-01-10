@@ -37,7 +37,8 @@ namespace VF_RaidDamageDatabase
                 "Fankriss the Unyielding", "Princess Huhuran", 
                 "Twin Emperors", "C'Thun"
             }}}},
-            {"Naxxramas", new Dictionary<string, string[]>{{"Naxxramas", new string[]{"Anub'Rekhan", "Grand Widow Faerlina",
+            {"Naxxramas", new Dictionary<string, string[]>{
+            {"Naxxramas", new string[]{"Anub'Rekhan", "Grand Widow Faerlina",
                 "Maexxna", "Patchwerk",
                 "Grobbulus", "Gluth",
                 "Thaddius", "Noth the Plaguebringer",
@@ -79,6 +80,17 @@ namespace VF_RaidDamageDatabase
             {"Ruins of Ahn'Qiraj", 6},
             {"Ahn'Qiraj Temple", 9},
             {"Naxxramas", 15},
+            
+            ///////////////////////TBC///////////////////////
+            {"Karazhan", 8},//Not counting chess event and some other minor ones
+            {"Zul'Aman", 6},
+            {"Magtheridon's Lair", 1},
+            {"Gruul's Lair", 2},
+            {"Serpentshrine Cavern", 6},
+            {"The Eye", 4},
+            {"Black Temple", 9},
+            {"Hyjal Summit", 5},
+            {"Sunwell Plateau", 7},
         };
         public static Dictionary<string, string> InstanceAcronym = new Dictionary<string, string>
         {
@@ -89,6 +101,17 @@ namespace VF_RaidDamageDatabase
             {"Ruins of Ahn'Qiraj", "AQ20"},
             {"Ahn'Qiraj Temple", "AQ40"},
             {"Naxxramas", "Naxx"},
+            
+            ///////////////////////TBC///////////////////////
+            {"Karazhan", "KZ"},
+            {"Zul'Aman", "ZA"},
+            {"Magtheridon's Lair", "ML"},
+            {"Gruul's Lair", "GL"},
+            {"Serpentshrine Cavern", "SSC"},
+            {"The Eye", "TK"},
+            {"Black Temple", "BT"},
+            {"Hyjal Summit", "MH"},
+            {"Sunwell Plateau", "SWP"},
         };
         public static Dictionary<string, string[]> BossesInInstanceNoOptional = new Dictionary<string, string[]>
         {
@@ -385,17 +408,17 @@ namespace VF_RaidDamageDatabase
 	
 	        //Tempest Keep
 	        //Al'ar
-	        {"Al'ar", "Tempest Keep"},
+	        {"Al'ar", "The Eye"},
 	        //{"Ember of Al'ar", "Tempest Keep"}, //ADD
 	        //Al'ar
-	        {"Void Reaver", "Tempest Keep"},
+	        {"Void Reaver", "The Eye"},
 	        //High Astromancer Solarian
-	        {"High Astromancer Solarian", "Tempest Keep"}, 
+	        {"High Astromancer Solarian", "The Eye"}, 
 	        //{"Solarium Agent", "VF_RS_MobType_Boss"}, //ADD
 	        //{"Solarium Priest", "VF_RS_MobType_Boss"}, //ADD
 	        //High Astromancer Solarian
 	        //Kael'thas Sunstrider
-	        {"Kael'thas Sunstrider", "Tempest Keep"},
+	        {"Kael'thas Sunstrider", "The Eye"},
             //{"Thaladred the Darkener", "Tempest Keep"}, //ADD
             //{"Lord Sanguinar", "Tempest Keep"}, //ADD
             //{"Grand Astromancer Capernian", "Tempest Keep"}, //ADD
@@ -565,7 +588,6 @@ namespace VF_RaidDamageDatabase
             //Mount Hyjal
             {"Anetheron", new string[]{"Towering Infernal"}},
             {"Azgalor", new string[]{"Lesser Doomguard"}},
-
         };
 
         public static List<string> GetAllEntitiesForFight(string _FightName)

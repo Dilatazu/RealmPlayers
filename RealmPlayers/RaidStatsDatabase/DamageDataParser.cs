@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using WowVersionEnum = VF_RealmPlayersDatabase.WowVersionEnum;
+
 namespace VF_RaidDamageDatabase
 {
     public class DamageDataParser
@@ -22,12 +24,16 @@ namespace VF_RaidDamageDatabase
                 fixedData = fixedData.Substring(0, fixedData.LastIndexOf("\r\n}"));
                 if (data[i].StartsWith("RaidDamageData"))
                 {
-                    return _ParseData(fixedData, ref _SessionsDebugData);
+                    return _ParseData(fixedData, ref _SessionsDebugData, WowVersionEnum.Vanilla);
+                }
+                else if (data[i].StartsWith("RaidStatsData"))
+                {
+                    return _ParseData(fixedData, ref _SessionsDebugData, WowVersionEnum.TBC);
                 }
             }
             return new List<DamageDataSession>();
         }
-        public static List<DamageDataSession> _ParseData(string _Data, ref List<string> _SessionDebugData)
+        public static List<DamageDataSession> _ParseData(string _Data, ref List<string> _SessionDebugData, WowVersionEnum _WowVersion)
         {
             List<DamageDataSession> damageDataSessions = new List<DamageDataSession>();
             if (_SessionDebugData == null)
@@ -44,13 +50,28 @@ namespace VF_RaidDamageDatabase
                 _Data = _Data.Replace("Dead_S=The Four Horsemen", "");
                 //Assume there was no deaths
             }*/
-            string[] dataSessions = _Data.Split(new string[] { "= {" }, StringSplitOptions.None);
+
+            string sessionSplitStr = null;
+            string dataSplitStr = null;
+            if(_WowVersion == WowVersionEnum.TBC)
+            {
+                sessionSplitStr = "\r\n\t{";
+                dataSplitStr = "\r\n\t\t\"";
+            }
+            else
+            {
+                sessionSplitStr = "= {";
+                dataSplitStr = "= \"";
+            }
+
+
+            string[] dataSessions = _Data.Split(new string[] { sessionSplitStr }, StringSplitOptions.None);
             for (int i = dataSessions.Length - 1; i >= 0; --i)
             {
                 if (dataSessions[i].Length > 100)
                 {
                     bool TimeSynch_UseServerTime = false;
-                    string[] currSessionData = dataSessions[i].Split(new string[] { "= \"" }, StringSplitOptions.None);
+                    string[] currSessionData = dataSessions[i].Split(new string[] { dataSplitStr }, StringSplitOptions.None);
                     //Logger.ConsoleWriteLine("Started session with " + currSessionData.Length + " timeSlices", ConsoleColor.Green);
 
                     DamageDataSession newSession = new DamageDataSession();
