@@ -35,16 +35,16 @@ namespace VF_RDDatabase
         public PlayerFightData() { }
         public PlayerFightData(Old_UnitData _UnitData)
         {
-            m_Damage = _UnitData.Dmg;
-            m_EffectiveHeal = _UnitData.EffHeal;
-            m_OverHeal = _UnitData.OverHeal;
+            m_Damage = _UnitData.I.Dmg;
+            m_EffectiveHeal = _UnitData.I.EffHeal;
+            m_OverHeal = _UnitData.I.OverHeal;
 
-            m_DamageTaken = _UnitData.DmgTaken;
-            m_EffectiveHealRecv = _UnitData.EffHealRecv;
-            m_OverHealRecv = _UnitData.OverHealRecv;
+            m_DamageTaken = _UnitData.I.DmgTaken;
+            m_EffectiveHealRecv = _UnitData.I.EffHealRecv;
+            m_OverHealRecv = _UnitData.I.OverHealRecv;
 
-            m_Deaths = _UnitData.Death;
-            m_Decurses = _UnitData.Decurse;
+            m_Deaths = _UnitData.I.Death;
+            m_Decurses = _UnitData.I.Decurse;
         }
 
 

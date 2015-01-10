@@ -341,14 +341,14 @@ namespace VF_RaidDamageDatabase
                         try
                         {
                             UnitData newUnitData = new UnitData(unitData, previousUnitDatas);
-                            if (_UnitIDsToName.ContainsKey(newUnitData.UnitID) == true)
+                            if (_UnitIDsToName.ContainsKey(newUnitData.I.UnitID) == true)
                             {
-                                UnitDatas.Add(newUnitData.UnitID, newUnitData);
-                                ChangedUnitDatas.Add(newUnitData.UnitID);
+                                UnitDatas.Add(newUnitData.I.UnitID, newUnitData);
+                                ChangedUnitDatas.Add(newUnitData.I.UnitID);
                             }
                             else
                             {
-                                Logger.ConsoleWriteLine("UnitID(" + newUnitData.UnitID + ") was never introduced, this UnitID is automatically discarded completely", ConsoleColor.Red);
+                                Logger.ConsoleWriteLine("UnitID(" + newUnitData.I.UnitID + ") was never introduced, this UnitID is automatically discarded completely", ConsoleColor.Red);
                             }
                         }
                         catch (Exception)

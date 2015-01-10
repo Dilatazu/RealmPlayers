@@ -33,14 +33,14 @@ namespace VF_RaidDamageWebsite
         }
 
         public static List<DataPresentTypeInfo> sm_DataPresentTypeInfoList = new List<DataPresentTypeInfo>{
-            new DataPresentTypeInfo((VF_RaidDamageDatabase.UnitData _UnitData) => { return (double)_UnitData.Dmg; }, "Damage", 25),
+            new DataPresentTypeInfo((VF_RaidDamageDatabase.UnitData _UnitData) => { return (double)_UnitData.I.Dmg; }, "Damage", 25),
             //new DataPresentTypeInfo((VF_RaidDamageDatabase.UnitData _UnitData) => { return (double)_UnitData.DPS; }, "DPS", 10, (VF_RaidDamageDatabase.UnitData _UnitData) => { return _UnitData.Dmg > 0; }),
-            new DataPresentTypeInfo((VF_RaidDamageDatabase.UnitData _UnitData) => { return (double)_UnitData.EffHeal; }, "Efficient Heal"),
+            new DataPresentTypeInfo((VF_RaidDamageDatabase.UnitData _UnitData) => { return (double)_UnitData.I.EffHeal; }, "Efficient Heal"),
             //new DataPresentTypeInfo((VF_RaidDamageDatabase.UnitData _UnitData) => { return (double)_UnitData.HPS; }, "HPS", 10, (VF_RaidDamageDatabase.UnitData _UnitData) => { return _UnitData.EffHeal > 0; }),
-            new DataPresentTypeInfo((VF_RaidDamageDatabase.UnitData _UnitData) => { return (double)_UnitData.OverHeal; }, "Overheal"),
-            new DataPresentTypeInfo((VF_RaidDamageDatabase.UnitData _UnitData) => { return (double)_UnitData.RawHeal; }, "Raw Heal"),
+            new DataPresentTypeInfo((VF_RaidDamageDatabase.UnitData _UnitData) => { return (double)_UnitData.I.OverHeal; }, "Overheal"),
+            new DataPresentTypeInfo((VF_RaidDamageDatabase.UnitData _UnitData) => { return (double)_UnitData.I.RawHeal; }, "Raw Heal"),
             //new DataPresentTypeInfo((VF_RaidDamageDatabase.UnitData _UnitData) => { return (double)_UnitData.ThreatValue; }, "Threat", 25),
-            new DataPresentTypeInfo((VF_RaidDamageDatabase.UnitData _UnitData) => { return (double)_UnitData.DmgTaken; }, "Damage Taken", 25),
+            new DataPresentTypeInfo((VF_RaidDamageDatabase.UnitData _UnitData) => { return (double)_UnitData.I.DmgTaken; }, "Damage Taken", 25),
             //new DataPresentTypeInfo((VF_RaidDamageDatabase.UnitData _UnitData) => { return (double)_UnitData.Dmg; }, "Damage"),
             //new DataPresentTypeInfo((VF_RaidDamageDatabase.UnitData _UnitData) => { return (double)_UnitData.Dmg; }, "Damage"),
         };
@@ -167,7 +167,7 @@ namespace VF_RaidDamageWebsite
                     List<Tuple<string, int>> dmgTakenList = new List<Tuple<string, int>>();
                     int bossPlusAddsDmgTaken = interestingFight.GetBossPlusAddsDmgTaken(dmgTakenList);
 
-                    double totalValue = interestingFight.GetTotal((_Value) => { return _Value.Dmg; }, (_Value) => { return realmDB.RD_IsPlayer(_Value.Item1, interestingFight) && _Value.Item2.Dmg > 0; });
+                    double totalValue = interestingFight.GetTotal((_Value) => { return _Value.I.Dmg; }, (_Value) => { return realmDB.RD_IsPlayer(_Value.Item1, interestingFight) && _Value.Item2.I.Dmg > 0; });
                     if (totalValue < bossPlusAddsDmgTaken)
                         totalValue = bossPlusAddsDmgTaken;
                     var dumgTakenSorted = dmgTakenList.OrderByDescending((_Value) => { if (_Value.Item1 == interestingFight.GetFightData().FightName) return int.MaxValue; return _Value.Item2; });
@@ -399,20 +399,20 @@ namespace VF_RaidDamageWebsite
                             var unitPlayer = realmDB.RD_FindPlayer(unitData.Key, interestingFight);
                             if (unitPlayer != null)
                             {
-                                totalDmg += unitData.Value.Dmg;
-                                totalHeal += unitData.Value.EffHeal;
-                                if (unitData.Value.Death > 0)
+                                totalDmg += unitData.Value.I.Dmg;
+                                totalHeal += unitData.Value.I.EffHeal;
+                                if (unitData.Value.I.Death > 0)
                                 {
                                     deathEvents += PageUtility.CreateColorCodedName(unitData.Key, unitPlayer.Character.Class) + ",";
                                 }
-                                if (unitData.Value.Dmg > topDPSDmg)
+                                if (unitData.Value.I.Dmg > topDPSDmg)
                                 {
-                                    topDPSDmg = unitData.Value.Dmg;
+                                    topDPSDmg = unitData.Value.I.Dmg;
                                     topDPSer = PageUtility.CreateColorCodedName(unitData.Key, unitPlayer.Character.Class);
                                 }
-                                if (unitData.Value.EffHeal > topHPSHeal)
+                                if (unitData.Value.I.EffHeal > topHPSHeal)
                                 {
-                                    topHPSHeal = unitData.Value.EffHeal;
+                                    topHPSHeal = unitData.Value.I.EffHeal;
                                     topHPSer = PageUtility.CreateColorCodedName(unitData.Key, unitPlayer.Character.Class);
                                 }
                             }
@@ -541,7 +541,7 @@ namespace VF_RaidDamageWebsite
                             {
                                 if (unit.Item1 == interestingFight.GetBossName())
                                 {
-                                    bossDmgTaken = unit.Item2.DmgTaken;
+                                    bossDmgTaken = unit.Item2.I.DmgTaken;
                                 }
                                 var playerData = realmDB.RD_FindPlayer(unit.Item1, interestingFight);
                                 double currValue = dataPresentTypeInfo.m_GetValue(unit.Item2);

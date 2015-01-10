@@ -76,9 +76,9 @@ namespace VF_RaidDamageDatabase
                     else
                     {
                         //Both are not null
-                        if (thisFightUnitData.Dmg - lastFightUnitData.Dmg != 0
-                        || thisFightUnitData.DmgTaken - lastFightUnitData.DmgTaken != 0
-                        || thisFightUnitData.Death - lastFightUnitData.Death != 0)
+                        if (thisFightUnitData.I.Dmg - lastFightUnitData.I.Dmg != 0
+                        || thisFightUnitData.I.DmgTaken - lastFightUnitData.I.DmgTaken != 0
+                        || thisFightUnitData.I.Death - lastFightUnitData.I.Death != 0)
                         {
                             return true;
                         }
@@ -202,8 +202,8 @@ namespace VF_RaidDamageDatabase
                                     break;
                                 if (TimeSlices[i].UnitDatas.ContainsKey(unitID) == true)
                                 {
-                                    if (TimeSlices[i].UnitDatas[unitID].ThreatValue > highestThreat)
-                                        highestThreat = TimeSlices[i].UnitDatas[unitID].ThreatValue;
+                                    if (TimeSlices[i].UnitDatas[unitID].I.ThreatValue > highestThreat)
+                                        highestThreat = TimeSlices[i].UnitDatas[unitID].I.ThreatValue;
                                 }
                             }
                         }
@@ -213,7 +213,7 @@ namespace VF_RaidDamageDatabase
                             {
                                 UnitData totalUnitData = UnitData.CreateDifference(startUnitData, endUnitData);
                                 if (highestThreat > 0)
-                                    totalUnitData.ThreatValue = highestThreat;
+                                    totalUnitData.I.SetNewThreatValue(highestThreat);
                                 //string unitName = m_DataSession.UnitIDToNames[unitID];
                                 unitsData.Add(new Tuple<string, UnitData>(unitName, totalUnitData));
                             }

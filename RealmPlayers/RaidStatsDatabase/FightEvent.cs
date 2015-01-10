@@ -65,7 +65,7 @@ namespace VF_RaidDamageDatabase
                 }
                 foreach (var unitData in fightDetail.UnitDatas)
                 {
-                    if (unitData.Value.Death > 0)
+                    if (unitData.Value.I.Death > 0)
                     {
                         fightEvents.Add(new FightEvent
                         {

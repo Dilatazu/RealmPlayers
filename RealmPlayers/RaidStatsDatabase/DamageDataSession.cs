@@ -125,7 +125,7 @@ namespace VF_RaidDamageDatabase
                                     if (currTrash.FightDuration > 120 && currTrash.TimeSlices.Count((_Value) => _Value.ChangedUnitDatas.Count > 10) > 10)
                                     {
                                         var trashUnitDatas = currTrash.TimeSlices.Last().GetDeltaUnitDatas(currTrash.TimeSlices.First());
-                                        if (trashUnitDatas.Sum((_Value) => _Value.Value.Dmg) > 100000)
+                                        if (trashUnitDatas.Sum((_Value) => _Value.Value.I.Dmg) > 100000)
                                         {
                                             //Save only if enough data in it
                                             fights.Add(currTrash);
@@ -297,7 +297,7 @@ namespace VF_RaidDamageDatabase
                                         currFight.PerfectSync = true;
                                         break;
                                     }
-                                    int deltaChangedUnitsCount = TimeSlices[u + 1].GetDeltaUnitDatas(TimeSlices[u], true).Count((_Value) => { return _Value.Value.Dmg > 1000 || _Value.Value.EffHeal > 1000; });
+                                    int deltaChangedUnitsCount = TimeSlices[u + 1].GetDeltaUnitDatas(TimeSlices[u], true).Count((_Value) => { return _Value.Value.I.Dmg > 1000 || _Value.Value.I.EffHeal > 1000; });
                                     if (deltaChangedUnitsCount < 3 && TimeSlices[u].Time - currTimeSlice.Time > 5)
                                     {
                                         currFight.PerfectSync = true;
@@ -401,9 +401,9 @@ namespace VF_RaidDamageDatabase
                                     UnitData bossAddUnitData = null;
                                     if (TimeSlices[u].UnitDatas.TryGetValue(bossAdd.Item1, out bossAddUnitData) == true)
                                     {
-                                        if (bossAdd.Item2.Dmg - bossAddUnitData.Dmg != 0
-                                        || bossAdd.Item2.DmgTaken - bossAddUnitData.DmgTaken != 0
-                                        || bossAdd.Item2.Death - bossAddUnitData.Death != 0)
+                                        if (bossAdd.Item2.I.Dmg - bossAddUnitData.I.Dmg != 0
+                                        || bossAdd.Item2.I.DmgTaken - bossAddUnitData.I.DmgTaken != 0
+                                        || bossAdd.Item2.I.Death - bossAddUnitData.I.Death != 0)
                                         {
                                             lastFightTime = TimeSlices[u].Time;
                                             foundAction = true;
