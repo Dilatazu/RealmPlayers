@@ -303,7 +303,7 @@ namespace VF_RDDatabase
                 }
                 foreach (var unitData in unitsData)
                 {
-                    if (unitData.Item2.Death > 0 || unitData.Item2.Dmg > 0 || unitData.Item2.RawHeal > 0)
+                    if (unitData.Item2.I.Death > 0 || unitData.Item2.I.Dmg > 0 || unitData.Item2.I.RawHeal > 0)
                     {
                         if (unitData.Item1 == "Unknown")
                             continue;

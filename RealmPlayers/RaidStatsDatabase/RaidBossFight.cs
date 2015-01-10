@@ -212,7 +212,7 @@ namespace VF_RaidDamageDatabase
                 {
                     foreach (var unitData in unitDatas)
                     {
-                        if (unitData.Key.StartsWith("VF_PET_") && unitData.Key.Contains("VFUnknown") == false && unitData.Value.Dmg >= 0 && unitData.Value.RawHeal >= 0)
+                        if (unitData.Key.StartsWith("VF_PET_") && unitData.Key.Contains("VFUnknown") == false && unitData.Value.I.Dmg >= 0 && unitData.Value.I.RawHeal >= 0)
                         {
                             string owner = unitData.Key.Split('_').Last();
                             UnitData ownerUnitData = null;
@@ -289,7 +289,7 @@ namespace VF_RaidDamageDatabase
 
                 if (fightDetail.UnitDatas.Count > 0 && deltaTime > 0)
                 {
-                    double dps = fightDetail.UnitDatas.OrderByDescending((_Value) => (_PlayerIdentifier(_Value.Key) ? _Value.Value.Dmg : 0)).First().Value.Dmg / deltaTime;
+                    double dps = fightDetail.UnitDatas.OrderByDescending((_Value) => (_PlayerIdentifier(_Value.Key) ? _Value.Value.I.Dmg : 0)).First().Value.I.Dmg / deltaTime;
                     if (dps > 6000)
                         return true;
                     lastTime = fightDetail.Time;
@@ -324,11 +324,11 @@ namespace VF_RaidDamageDatabase
 
             public int DmgValue
             {
-                get { return UnitFrameData.Dmg; }
+                get { return UnitFrameData.I.Dmg; }
             }
             public int HealValue
             {
-                get { return UnitFrameData.EffHeal; }
+                get { return UnitFrameData.I.EffHeal; }
             }
         }
         public enum PlayerIdentifier
@@ -398,15 +398,15 @@ namespace VF_RaidDamageDatabase
                                 lastUnitDataTime = Tuple.Create(unitData.Value, fightDetails[0].Time);
                                 lastUnitDataTimes.AddOrSet(unitData.Key, lastUnitDataTime);
                             }
-                            else if (lastUnitDataTime.Item1.Dmg != unitData.Value.Dmg || lastUnitDataTime.Item1.RawHeal != unitData.Value.RawHeal)
+                            else if (lastUnitDataTime.Item1.I.Dmg != unitData.Value.I.Dmg || lastUnitDataTime.Item1.I.RawHeal != unitData.Value.I.RawHeal)
                             {
                                 lastUnitDataTimes.AddOrSet(unitData.Key, Tuple.Create(unitData.Value, fightDetail.Time));
                             }
 
                             int playerDeltaTime = fightDetail.Time - lastUnitDataTime.Item2;
 
-                            int frameDmg = unitData.Value.Dmg;
-                            int frameHeal = unitData.Value.EffHeal;
+                            int frameDmg = unitData.Value.I.Dmg;
+                            int frameHeal = unitData.Value.I.EffHeal;
 
                             int dmgMultiplier = 1;
                             int healMultiplier = 1;
@@ -454,7 +454,7 @@ namespace VF_RaidDamageDatabase
                                     });
                                     continue;// throw new Exception("Player: \"" + unitData.Key + "\" was not found in unitDatas");
                                 }
-                                var approxTotalDPS = totalUnitData.Dmg / fightDuration;
+                                var approxTotalDPS = totalUnitData.I.Dmg / fightDuration;
 
                                 double fightDeltaCompareTimes_Dmg = fightDeltaCompareTimes_10 * dmgMultiplier;
                                 double fightDeltaCompareTimes_Heal = fightDeltaCompareTimes_10 * healMultiplier;
@@ -468,8 +468,8 @@ namespace VF_RaidDamageDatabase
                                 else if (approxTotalDPS < 500)
                                     fightDeltaCompareTimes_Dmg = fightDeltaCompareTimes_Dmg * 1.5;
 
-                                if (frameDmg > (totalUnitData.Dmg - frameDmg) * fightDeltaCompareTimes_Dmg
-                                || frameHeal > (totalUnitData.EffHeal - frameHeal) * fightDeltaCompareTimes_Heal)
+                                if (frameDmg > (totalUnitData.I.Dmg - frameDmg) * fightDeltaCompareTimes_Dmg
+                                || frameHeal > (totalUnitData.I.EffHeal - frameHeal) * fightDeltaCompareTimes_Heal)
                                 {
                                     //Spike
                                     retList.Add(new PlayerSpike
@@ -477,8 +477,8 @@ namespace VF_RaidDamageDatabase
                                         Player = unitData.Key,
                                         Time = fightDetail.Time,
                                         DeltaTime = deltaTime,
-                                        SpikeDmgFactor = frameDmg / (fightDeltaTimePercentage * (totalUnitData.Dmg - frameDmg)),
-                                        SpikeHealFactor = frameHeal / (fightDeltaTimePercentage * (totalUnitData.EffHeal - frameHeal)),
+                                        SpikeDmgFactor = frameDmg / (fightDeltaTimePercentage * (totalUnitData.I.Dmg - frameDmg)),
+                                        SpikeHealFactor = frameHeal / (fightDeltaTimePercentage * (totalUnitData.I.EffHeal - frameHeal)),
                                         UnitFrameData = unitData.Value.CreateCopy()
                                     });//Tuple.Create(unitData.Key, fightDetail.Time));
                                 }
@@ -602,7 +602,7 @@ namespace VF_RaidDamageDatabase
                 List<Tuple<string, UnitData>> petDatas = new List<Tuple<string,UnitData>>();
                 foreach (var unitData in unitsData)
                 {
-                    if (unitData.Item1.StartsWith("VF_PET_") && unitData.Item1.Contains("VFUnknown") == false && unitData.Item2.Dmg >= 0)
+                    if (unitData.Item1.StartsWith("VF_PET_") && unitData.Item1.Contains("VFUnknown") == false && unitData.Item2.I.Dmg >= 0)
                     {
                         string[] splitData = unitData.Item1.Split('_');
                         string owner = splitData.Last();
@@ -701,7 +701,7 @@ namespace VF_RaidDamageDatabase
 
             foreach (var unitData in unitsData)
             {
-                retList.Add(Tuple.Create(unitData.Item1, unitData.Item2.Dmg / fightDuration));
+                retList.Add(Tuple.Create(unitData.Item1, unitData.Item2.I.Dmg / fightDuration));
             }
             return retList;
         }
@@ -733,9 +733,9 @@ namespace VF_RaidDamageDatabase
             int bossPlusAddsDmgTaken = 0;
             if (bossUnitData != null)
             {
-                bossPlusAddsDmgTaken = bossUnitData.DmgTaken;
+                bossPlusAddsDmgTaken = bossUnitData.I.DmgTaken;
                 if (_RetDmgTakenList != null)
-                    _RetDmgTakenList.Add(new Tuple<string, int>(m_FightData.m_Fight.FightName, bossUnitData.DmgTaken));
+                    _RetDmgTakenList.Add(new Tuple<string, int>(m_FightData.m_Fight.FightName, bossUnitData.I.DmgTaken));
             }
 
             string[] bossAdds = null;
@@ -746,9 +746,9 @@ namespace VF_RaidDamageDatabase
                     var bossAddUnitData = GetUnitData(bossAdd, _StartTimeSlice, _EndTimeSlice);
                     if (bossAddUnitData != null)
                     {
-                        bossPlusAddsDmgTaken += bossAddUnitData.DmgTaken;
+                        bossPlusAddsDmgTaken += bossAddUnitData.I.DmgTaken;
                         if (_RetDmgTakenList != null)
-                            _RetDmgTakenList.Add(new Tuple<string, int>(bossAdd, bossAddUnitData.DmgTaken));
+                            _RetDmgTakenList.Add(new Tuple<string, int>(bossAdd, bossAddUnitData.I.DmgTaken));
                     }
                 }
             }
@@ -773,7 +773,7 @@ namespace VF_RaidDamageDatabase
             int bossPlusAddsDmgTaken = GetBossPlusAddsDmgTaken(_StartTimeSlice, m_FightData.m_Fight.TimeSlices.Count - 1);
             double maxValue = 0;
             double totalValue = 0;
-            UnitData.CalculateTotalAndMax(unitsData, (_Value) => { return _Value.Dmg; }, (_Value) => { return _PlayerIdentifier(_Value.Item1) && _Value.Item2.Dmg > 0; }, out totalValue, out maxValue);
+            UnitData.CalculateTotalAndMax(unitsData, (_Value) => { return _Value.I.Dmg; }, (_Value) => { return _PlayerIdentifier(_Value.Item1) && _Value.Item2.I.Dmg > 0; }, out totalValue, out maxValue);
             double precision = ((double)bossPlusAddsDmgTaken / (double)totalValue);
             _BossPlusAddsDmgTaken = bossPlusAddsDmgTaken;
             _TotalValue = (int)totalValue;
@@ -788,7 +788,7 @@ namespace VF_RaidDamageDatabase
 
             double dmgTakenMaxValue = 0;
             double dmgTakenTotalValue = 0;
-            UnitData.CalculateTotalAndMax(unitsData, (_Value) => { return _Value.EffHealRecv; }, (_Value) => { return _PlayerIdentifier(_Value.Item1) && _Value.Item2.EffHealRecv > 0; }, out dmgTakenTotalValue, out dmgTakenMaxValue);
+            UnitData.CalculateTotalAndMax(unitsData, (_Value) => { return _Value.I.EffHealRecv; }, (_Value) => { return _PlayerIdentifier(_Value.Item1) && _Value.Item2.I.EffHealRecv > 0; }, out dmgTakenTotalValue, out dmgTakenMaxValue);
 
             /*if (GetBossName() == "Instructor Razuvious")
             {
@@ -800,7 +800,7 @@ namespace VF_RaidDamageDatabase
             }*/
             double healMaxValue = 0;
             double healTotalValue = 0;
-            UnitData.CalculateTotalAndMax(unitsData, (_Value) => { return _Value.EffHeal; }, (_Value) => { return _PlayerIdentifier(_Value.Item1) && _Value.Item2.EffHeal > 0; }, out healTotalValue, out healMaxValue);
+            UnitData.CalculateTotalAndMax(unitsData, (_Value) => { return _Value.I.EffHeal; }, (_Value) => { return _PlayerIdentifier(_Value.Item1) && _Value.Item2.I.EffHeal > 0; }, out healTotalValue, out healMaxValue);
             double precision = ((double)dmgTakenTotalValue / (double)healTotalValue);
             _TotalValue = (int)healTotalValue;
             if (precision > 1.0 || GetBossName() == "Instructor Razuvious")
@@ -907,7 +907,7 @@ namespace VF_RaidDamageDatabase
                     var deltaUnitDatas = thisTimeSlice.GetDeltaUnitDatas(prevTimeSlice, true);
                     foreach (var unitData in deltaUnitDatas)
                     {
-                        if (unitData.Value.Death > 0)
+                        if (unitData.Value.I.Death > 0)
                         {
                             string unitName = m_FightData.GetUnitName(unitData.Value);
                             while (output.DeathTimeSlices.AddIfKeyNotExist(unitName, i) == false)

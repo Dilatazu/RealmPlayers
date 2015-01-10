@@ -7,62 +7,165 @@ using System.Runtime.Serialization.Formatters.Binary;
 using ProtoBuf;
 using System.Collections.ObjectModel;
 
+using WowVersionEnum = VF_RealmPlayersDatabase.WowVersionEnum;
+
 namespace VF_RaidDamageDatabase
 {
     [ProtoContract]
-    [Serializable]
-    public class UnitData : ISerializable
+    public partial class UnitData
     {
         public static char UnitData_VERSION = (char)1;
         [ProtoMember(1)]
-        public int UnitID;
+        private int m_UnitID;
         [ProtoMember(2)]
-        public int Dmg;
+        private int m_Dmg;
         [ProtoMember(3)]
-        public int EffHeal;
+        private int m_EffHeal;
         [ProtoMember(4)]
-        public int DmgTaken;
+        private int m_DmgTaken;
         [ProtoMember(5)]
-        public int OverHeal;
+        private int m_OverHeal;
         [ProtoMember(6)]
-        public float DPS;
+        private int m_PM6;//not important
         [ProtoMember(7)]
-        public float HPS;
+        private int m_PM7;//not important
         [ProtoMember(8)]
-        public int Death;
+        private int m_Death;
         [ProtoMember(9)]
-        public int Decurse;
+        private int m_Decurse;
         [ProtoMember(10)]
-        public float DmgCrit;
+        private int m_PM10;//not important
         [ProtoMember(11)]
-        public float HealCrit;
+        private int m_PM11;//not important
         [ProtoMember(12)]
-        public int EffHealRecv;
+        private int m_EffHealRecv;
         [ProtoMember(13)]
-        public int OverHealRecv;
+        private int m_OverHealRecv;
         [ProtoMember(14)]
-        public int RawHeal;
+        private int m_RawHeal;//not important
         [ProtoMember(15)]
-        public int RawHealRecv;
+        private int m_RawHealRecv;//not important
         [ProtoMember(16)]
-        public int ThreatValue;
+        private int m_ThreatValue;
 
-        //public int GetData(string _DataName)
-        //{
-        //    if (_DataName == "Dmg") return Dmg;
-        //    else if (_DataName == "EffHeal") return EffHeal;
-        //    else if (_DataName == "DmgTaken") return DmgTaken;
-        //    else if (_DataName == "OverHeal") return OverHeal;
-        //    else if (_DataName == "Death") return Death;
-        //    else if (_DataName == "Decurse") return Decurse;
-        //    else if (_DataName == "EffHealRecv") return EffHealRecv;
-        //    else if (_DataName == "OverHealRecv") return OverHealRecv;
-        //    else if (_DataName == "RawHeal") return RawHeal;
-        //    else if (_DataName == "RawHealRecv") return RawHealRecv;
-        //    else if (_DataName == "ThreatValue") return ThreatValue;
-        //    else
-        //        throw new Exception("Error");
-        //}
+        private struct DataArray
+        {
+            public static DataArray Create(UnitData _UnitData)
+            {
+                DataArray newDataArray;
+                newDataArray.m_Data = _UnitData;
+                return newDataArray;
+            }
+            private UnitData m_Data;
+
+            public int this[int i]
+            {
+                get
+                {
+                    switch (i)
+                    {
+                        case 1: return m_Data.m_Dmg;
+                        case 2: return m_Data.m_EffHeal;
+                        case 3: return m_Data.m_DmgTaken;
+                        case 4: return m_Data.m_OverHeal;
+                        case 5: return m_Data.m_PM6;
+                        case 6: return m_Data.m_PM7;
+                        case 7: return m_Data.m_Death;
+                        case 8: return m_Data.m_Decurse;
+                        case 9: return m_Data.m_PM10;
+                        case 10: return m_Data.m_PM11;
+                        case 11: return m_Data.m_EffHealRecv;
+                        case 12: return m_Data.m_OverHealRecv;
+                        case 13: return m_Data.m_RawHeal;
+                        case 14: return m_Data.m_RawHealRecv;
+                        case 15: return m_Data.m_ThreatValue;
+                        default: return 0;
+                    }
+                }
+            }
+            public void Set(int i, int _Value)
+            {
+                switch (i)
+                {
+                    case 1: m_Data.m_Dmg = _Value; return;
+                    case 2: m_Data.m_EffHeal = _Value; return;
+                    case 3: m_Data.m_DmgTaken = _Value; return;
+                    case 4: m_Data.m_OverHeal = _Value; return;
+                    case 5: m_Data.m_PM6 = _Value; return;
+                    case 6: m_Data.m_PM7 = _Value; return;
+                    case 7: m_Data.m_Death = _Value; return;
+                    case 8: m_Data.m_Decurse = _Value; return;
+                    case 9: m_Data.m_PM10 = _Value; return;
+                    case 10: m_Data.m_PM11 = _Value; return;
+                    case 11: m_Data.m_EffHealRecv = _Value; return;
+                    case 12: m_Data.m_OverHealRecv = _Value; return;
+                    case 13: m_Data.m_RawHeal = _Value; return;
+                    case 14: m_Data.m_RawHealRecv = _Value; return;
+                    case 15: m_Data.m_ThreatValue = _Value; return;
+                    default: return;
+                }
+            }
+            public const int Count = 16;
+            public const int Count_Accum = 15;
+
+            public const int Index_Dmg = 1;
+            public const int Index_EffHeal = 2;
+            public const int Index_DmgTaken = 3;
+            public const int Index_OverHeal = 4;
+            public const int Index_FriendlyDmg_TBC = 5;
+            public const int Index_CCBReaks_TBC = 6;
+            public const int Index_Death = 7;
+            public const int Index_Decurse = 8;
+            public const int Index_Interrupts_TBC = 9;
+            public const int Index_Dispelled_TBC = 10;
+            public const int Index_EffHealRecv = 11;
+            public const int Index_OverHealRecv = 12;
+            public const int Index_Threat = 15;
+        }
+        private DataArray m_Data
+        {
+            get { return DataArray.Create(this); }
+        }
+
+        public static UnitData Create(string _DataString, Dictionary<int, UnitData> _UnitDatas, WowVersionEnum _WowVersion)
+        {
+            UnitData newData = new UnitData();
+            if(_WowVersion == WowVersionEnum.Vanilla)
+            {
+                C_InterfaceVanilla.SetAccumParseData(newData, _DataString, _UnitDatas);
+                return newData;
+            }
+            else //if (_WowVersion == WowVersionEnum.TBC)
+            {
+                C_InterfaceTBC.SetAccumParseData(newData, _DataString, _UnitDatas);
+                return newData;
+            }
+        }
+        public C_Interface Interface
+        {
+            get { return C_Interface.Create(this); }
+        }
+        public C_Interface I
+        {
+            get { return C_Interface.Create(this); }
+        }
+        public C_InterfaceVanilla InterfaceVanilla
+        {
+            get { return C_InterfaceVanilla.Create(this); }
+        }
+        public C_InterfaceVanilla I1
+        {
+            get { return C_InterfaceVanilla.Create(this); }
+        }
+        public C_InterfaceTBC InterfaceTBC
+        {
+            get { return C_InterfaceTBC.Create(this); }
+        }
+        public C_InterfaceTBC I2
+        {
+            get { return C_InterfaceTBC.Create(this); }
+        }
+        
         public static bool CalculateTotalAndMax(ReadOnlyCollection<Tuple<string, UnitData>> _UnitData, Func<VF_RaidDamageDatabase.UnitData, double> _GetValue
             , Func<Tuple<string, UnitData>, bool> _ValidCheck
             , out double _TotalValue, out double _MaxValue)
@@ -102,191 +205,60 @@ namespace VF_RaidDamageDatabase
         public static UnitData CreateDifference(UnitData _StartUnitData, UnitData _EndUnitData)
         {
             UnitData newUnitData = new UnitData();
-            newUnitData.UnitID = _StartUnitData.UnitID;
+            newUnitData.m_UnitID = _StartUnitData.m_UnitID;
 
-            newUnitData.Dmg = _EndUnitData.Dmg - _StartUnitData.Dmg;
-            newUnitData.EffHeal = _EndUnitData.EffHeal - _StartUnitData.EffHeal;
-            newUnitData.DmgTaken = _EndUnitData.DmgTaken - _StartUnitData.DmgTaken;
-            newUnitData.OverHeal = _EndUnitData.OverHeal - _StartUnitData.OverHeal;
-            newUnitData.DPS = _EndUnitData.DPS;// -_StartUnitData.DPS;
-            newUnitData.HPS = _EndUnitData.HPS;// -_StartUnitData.HPS;
-            newUnitData.Death = _EndUnitData.Death - _StartUnitData.Death;
-            newUnitData.Decurse = _EndUnitData.Decurse - _StartUnitData.Decurse;
-            newUnitData.DmgCrit = _EndUnitData.DmgCrit;// -_StartUnitData.DmgCrit;
-            newUnitData.HealCrit = _EndUnitData.HealCrit;// -_StartUnitData.HealCrit;
-            newUnitData.EffHealRecv = _EndUnitData.EffHealRecv - _StartUnitData.EffHealRecv;
-            newUnitData.OverHealRecv = _EndUnitData.OverHealRecv - _StartUnitData.OverHealRecv;
-            newUnitData.RawHeal = _EndUnitData.RawHeal - _StartUnitData.RawHeal;
-            newUnitData.RawHealRecv = _EndUnitData.RawHealRecv - _StartUnitData.RawHealRecv;
-            newUnitData.ThreatValue = _EndUnitData.ThreatValue;// -_StartUnitData.ThreatValue;
+            for (int i = 1; i < DataArray.Count_Accum; ++i)
+            {
+                newUnitData.m_Data.Set(i, _EndUnitData.m_Data[i] - _StartUnitData.m_Data[i]);
+            }
+            newUnitData.I.SetThreatValue(_EndUnitData.m_ThreatValue);
 
             return newUnitData;
         }
         public void _AddPetDataNoClearPet(UnitData _UnitData)
         {//Adds pet data and clears the pets data
-            Dmg += _UnitData.Dmg; 
-            EffHeal += _UnitData.EffHeal;
-            DmgTaken += _UnitData.DmgTaken;
-            OverHeal += _UnitData.OverHeal;
-            DPS += _UnitData.DPS;
-            HPS += _UnitData.HPS;
-            //Death += _UnitData.Death;
-            Decurse += _UnitData.Decurse;
-            //DmgCrit += _UnitData.DmgCrit;
-            //HealCrit += _UnitData.HealCrit;
-            EffHealRecv += _UnitData.EffHealRecv;
-            OverHealRecv += _UnitData.OverHealRecv;
-            RawHeal += _UnitData.RawHeal;
-            RawHealRecv += _UnitData.RawHealRecv;
-            ThreatValue += _UnitData.ThreatValue;
+            for (int i = 1; i < DataArray.Count; ++i)
+            {
+                if (i == DataArray.Index_Death)
+                    continue;//Skip Death
+                m_Data.Set(i, m_Data[i] + _UnitData.m_Data[i]);
+            }
         }
         public void AddPetDataAndClearPet(UnitData _UnitData)
         {//Adds pet data and clears the pets data
-            Dmg += _UnitData.Dmg; _UnitData.Dmg = 0;
-            EffHeal += _UnitData.EffHeal; _UnitData.EffHeal = 0;
-            DmgTaken += _UnitData.DmgTaken; _UnitData.DmgTaken = 0;
-            OverHeal += _UnitData.OverHeal; _UnitData.OverHeal = 0;
-            DPS += _UnitData.DPS; _UnitData.DPS = 0;
-            HPS += _UnitData.HPS; _UnitData.HPS = 0;
-            //Death += _UnitData.Death;
-            Decurse += _UnitData.Decurse; _UnitData.Decurse = 0;
-            //DmgCrit += _UnitData.DmgCrit;
-            //HealCrit += _UnitData.HealCrit;
-            EffHealRecv += _UnitData.EffHealRecv; _UnitData.EffHealRecv = 0;
-            OverHealRecv += _UnitData.OverHealRecv; _UnitData.OverHealRecv = 0;
-            RawHeal += _UnitData.RawHeal; _UnitData.RawHeal = 0;
-            RawHealRecv += _UnitData.RawHealRecv; _UnitData.RawHealRecv = 0;
-            ThreatValue += _UnitData.ThreatValue; _UnitData.ThreatValue = 0;
+            for (int i = 1; i < DataArray.Count; ++i)
+            {
+                if (i == DataArray.Index_Death)
+                    continue;//Skip Death
+                m_Data.Set(i, m_Data[i] + _UnitData.m_Data[i]);
+                _UnitData.m_Data.Set(i, 0);
+            }
         }
         public void AddUnitData(UnitData _UnitData)
         {
-            Dmg += _UnitData.Dmg;
-            EffHeal += _UnitData.EffHeal;
-            DmgTaken += _UnitData.DmgTaken;
-            OverHeal += _UnitData.OverHeal;
-            //DPS += _UnitData.DPS; _UnitData.DPS = 0;
-            //HPS += _UnitData.HPS; _UnitData.HPS = 0;
-            Death += _UnitData.Death;
-            Decurse += _UnitData.Decurse;
-            //DmgCrit += _UnitData.DmgCrit;
-            //HealCrit += _UnitData.HealCrit;
-            EffHealRecv += _UnitData.EffHealRecv;
-            OverHealRecv += _UnitData.OverHealRecv;
-            RawHeal += _UnitData.RawHeal;
-            RawHealRecv += _UnitData.RawHealRecv;
-            ThreatValue += _UnitData.ThreatValue;
+            for (int i = 1; i < DataArray.Count; ++i)
+            {
+                m_Data.Set(i, m_Data[i] + _UnitData.m_Data[i]);
+            }
         }
         public void SubtractUnitData(UnitData _UnitData)
         {
-            Dmg -= _UnitData.Dmg;
-            EffHeal -= _UnitData.EffHeal;
-            DmgTaken -= _UnitData.DmgTaken;
-            OverHeal -= _UnitData.OverHeal;
-            //DPS += _UnitData.DPS; _UnitData.DPS = 0;
-            //HPS += _UnitData.HPS; _UnitData.HPS = 0;
-            Death -= _UnitData.Death;
-            Decurse -= _UnitData.Decurse;
-            //DmgCrit += _UnitData.DmgCrit;
-            //HealCrit += _UnitData.HealCrit;
-            EffHealRecv -= _UnitData.EffHealRecv;
-            OverHealRecv -= _UnitData.OverHealRecv;
-            RawHeal -= _UnitData.RawHeal;
-            RawHealRecv -= _UnitData.RawHealRecv;
-            ThreatValue -= _UnitData.ThreatValue;
+            for (int i = 1; i < DataArray.Count; ++i)
+            {
+                m_Data.Set(i, m_Data[i] - _UnitData.m_Data[i]);
+            }
         }
         private UnitData()
         { }
         public UnitData CreateCopy()
         {
             UnitData newUnitData = new UnitData();
-            newUnitData.UnitID = UnitID;
-            newUnitData.Dmg = Dmg;
-            newUnitData.EffHeal = EffHeal;
-            newUnitData.DmgTaken = DmgTaken;
-            newUnitData.OverHeal = OverHeal;
-            newUnitData.DPS = DPS;
-            newUnitData.HPS = HPS;
-            newUnitData.Death = Death;
-            newUnitData.Decurse = Decurse;
-            newUnitData.DmgCrit = DmgCrit;
-            newUnitData.HealCrit = HealCrit;
-            newUnitData.EffHealRecv = EffHealRecv;
-            newUnitData.OverHealRecv = OverHealRecv;
-            newUnitData.RawHeal = RawHeal;
-            newUnitData.RawHealRecv = RawHealRecv;
-            newUnitData.ThreatValue = ThreatValue;
+            newUnitData.m_UnitID = m_UnitID;
+            for (int i = 1; i < DataArray.Count; ++i)
+            {
+                newUnitData.m_Data.Set(i, m_Data[i]);
+            }
             return newUnitData;
-        }
-        public UnitData(string _DataString, Dictionary<int, UnitData> _UnitDatas)
-        {
-            _InitData(_DataString, _UnitDatas);   
-        }
-        private void _InitData(string _DataString, Dictionary<int, UnitData> _UnitDatas)
-        {
-            string[] splitData = _DataString.Split(new char[] { ' ' }, StringSplitOptions.None);
-            try
-            {
-                UnitID = int.Parse(splitData[0]);
-                UnitData oldData;
-                if (_UnitDatas != null && _UnitDatas.TryGetValue(UnitID, out oldData) == true)
-                {
-                    Dmg = MergeDataInt(splitData[1], oldData.Dmg);
-                    EffHeal = MergeDataInt(splitData[2], oldData.EffHeal);
-                    DmgTaken = MergeDataInt(splitData[3], oldData.DmgTaken);
-                    OverHeal = MergeDataInt(splitData[4], oldData.OverHeal);
-                    DPS = MergeDataFloat(splitData[5], 0);
-                    HPS = MergeDataFloat(splitData[6], 0);
-                    Death = MergeDataInt(splitData[7], oldData.Death);
-                    Decurse = MergeDataInt(splitData[8], oldData.Decurse);
-                    DmgCrit = MergeDataFloat(splitData[9], 0);
-                    HealCrit = MergeDataFloat(splitData[10], 0);
-                    EffHealRecv = MergeDataInt(splitData[11], oldData.EffHealRecv);
-                    OverHealRecv = MergeDataInt(splitData[12], oldData.OverHealRecv);
-                    RawHeal = MergeDataInt(splitData[13], oldData.RawHeal);
-                    RawHealRecv = MergeDataInt(splitData[14], oldData.RawHealRecv);
-                    ThreatValue = MergeDataInt(splitData[15], 0);
-                }
-                else
-                {
-                    Dmg = MergeDataInt(splitData[1], 0);
-                    EffHeal = MergeDataInt(splitData[2], 0);
-                    DmgTaken = MergeDataInt(splitData[3], 0);
-                    OverHeal = MergeDataInt(splitData[4], 0);
-                    DPS = MergeDataFloat(splitData[5], 0);
-                    HPS = MergeDataFloat(splitData[6], 0);
-                    Death = MergeDataInt(splitData[7], 0);
-                    Decurse = MergeDataInt(splitData[8], 0);
-                    DmgCrit = MergeDataFloat(splitData[9], 0);
-                    HealCrit = MergeDataFloat(splitData[10], 0);
-                    EffHealRecv = MergeDataInt(splitData[11], 0);
-                    OverHealRecv = MergeDataInt(splitData[12], 0);
-                    RawHeal = MergeDataInt(splitData[13], 0);
-                    RawHealRecv = MergeDataInt(splitData[14], 0);
-                    ThreatValue = MergeDataInt(splitData[15], 0);
-                }
-            }
-            catch (Exception)
-            {
-                //throw;
-            }
-        }
-        public string CreateDataString()
-        {
-            return UnitID + " " + (Dmg == 0 ? "" : Dmg.ToString())
-                + " " + (EffHeal == 0 ? "" : EffHeal.ToString())
-                + " " + (DmgTaken == 0 ? "" : DmgTaken.ToString())
-                + " " + (OverHeal == 0 ? "" : OverHeal.ToString())
-                + " " + (DPS == 0 ? "" : DPS.ToString())
-                + " " + (HPS == 0 ? "" : HPS.ToString())
-                + " " + (Death == 0 ? "" : Death.ToString())
-                + " " + (Decurse == 0 ? "" : Decurse.ToString())
-                + " " + (DmgCrit == 0 ? "" : DmgCrit.ToString())
-                + " " + (HealCrit == 0 ? "" : HealCrit.ToString())
-                + " " + (EffHealRecv == 0 ? "" : EffHealRecv.ToString())
-                + " " + (OverHealRecv == 0 ? "" : OverHealRecv.ToString())
-                + " " + (RawHeal == 0 ? "" : RawHeal.ToString())
-                + " " + (RawHealRecv == 0 ? "" : RawHealRecv.ToString())
-                + " " + (ThreatValue == 0 ? "" : ThreatValue.ToString());
         }
         public static int MergeDataInt(string _DataStr, int _OldData)
         {
@@ -302,69 +274,5 @@ namespace VF_RaidDamageDatabase
                 return _OldData;
             return _OldData + result;
         }
-
-        #region Serializing
-        public UnitData(SerializationInfo _Info, StreamingContext _Context)
-        {
-            //_InitData(_Info.GetString("DataString"), null);
-            UnitID = _Info.GetInt32("UnitID");
-            Dmg = _Info.GetInt32("Dmg");
-            EffHeal = _Info.GetInt32("EffHeal");
-            DmgTaken = _Info.GetInt32("DmgTaken");
-            OverHeal = _Info.GetInt32("OverHeal");
-            DPS = _Info.GetSingle("DPS");
-            HPS = _Info.GetSingle("HPS");
-            Death = _Info.GetInt32("Death");
-            Decurse = _Info.GetInt32("Decurse");
-            DmgCrit = _Info.GetSingle("DmgCrit");
-            HealCrit = _Info.GetSingle("HealCrit");
-            EffHealRecv = _Info.GetInt32("EffHealRecv");
-            OverHealRecv = _Info.GetInt32("OverHealRecv");
-            RawHeal = _Info.GetInt32("RawHeal");
-            RawHealRecv = _Info.GetInt32("RawHealRecv");
-            ThreatValue = _Info.GetInt32("ThreatValue");
-        }
-        public void GetObjectData(SerializationInfo _Info, StreamingContext _Context)
-        {
-            //_Info.AddValue("DataString", CreateDataString());
-            _Info.AddValue("Version", UnitData_VERSION);
-            _Info.AddValue("UnitID", UnitID);
-            _Info.AddValue("Dmg", Dmg);
-            _Info.AddValue("EffHeal", EffHeal);
-            _Info.AddValue("DmgTaken", DmgTaken);
-            _Info.AddValue("OverHeal", OverHeal);
-            _Info.AddValue("DPS", DPS);
-            _Info.AddValue("HPS", HPS);
-            _Info.AddValue("Death", Death);
-            _Info.AddValue("Decurse", Decurse);
-            _Info.AddValue("DmgCrit", DmgCrit);
-            _Info.AddValue("HealCrit", HealCrit);
-            _Info.AddValue("EffHealRecv", EffHealRecv);
-            _Info.AddValue("OverHealRecv", OverHealRecv);
-            _Info.AddValue("RawHeal", RawHeal);
-            _Info.AddValue("RawHealRecv", RawHealRecv);
-            _Info.AddValue("ThreatValue", ThreatValue);
-        }
-        #endregion
-
-        //public bool IsSame(UnitData _UnitData)
-        //{
-        //    if (UnitID != _UnitData.UnitID || Dmg != _UnitData.Dmg 
-        //    || EffHeal != _UnitData.EffHeal || OverHeal != _UnitData.OverHeal || RawHeal != _UnitData.RawHeal)
-        //        return false;
-
-        //    if(DmgTaken != _UnitData.DmgTaken || 
-        //    newUnitData.DmgTaken = DmgTaken;
-        //    newUnitData.DPS = DPS;
-        //    newUnitData.HPS = HPS;
-        //    newUnitData.Death = Death;
-        //    newUnitData.Decurse = Decurse;
-        //    newUnitData.DmgCrit = DmgCrit;
-        //    newUnitData.HealCrit = HealCrit;
-        //    newUnitData.EffHealRecv = EffHealRecv;
-        //    newUnitData.OverHealRecv = OverHealRecv;
-        //    newUnitData.RawHealRecv = RawHealRecv;
-        //    newUnitData.ThreatValue = ThreatValue;
-        //}
     }
 }

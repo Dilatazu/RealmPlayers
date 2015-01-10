@@ -75,7 +75,7 @@ namespace VF_RaidDamageDatabase
                 List<string> attendingUnits = new List<string>();
                 foreach (var unit in _UnitData)
                 {
-                    if (unit.Item2.Death > 0 || unit.Item2.Dmg > 0 || unit.Item2.RawHeal > 0)
+                    if (unit.Item2.I.Death > 0 || unit.Item2.I.Dmg > 0 || unit.Item2.I.RawHeal > 0)
                     {
                         if (unit.Item1 == "Unknown")
                             continue;
@@ -88,14 +88,14 @@ namespace VF_RaidDamageDatabase
             public string GetUnitName(UnitData _Unit)
             {
                 string unitName = "";
-                if (m_FightDataCollection.m_UnitIDToNames.TryGetValue(_Unit.UnitID, out unitName) == true)
+                if (m_FightDataCollection.m_UnitIDToNames.TryGetValue(_Unit.I.UnitID, out unitName) == true)
                     return unitName;
                 else
                     return "Unknown";
             }
             public bool GetUnitName(UnitData _Unit, out string _UnitName)
             {
-                return m_FightDataCollection.m_UnitIDToNames.TryGetValue(_Unit.UnitID, out _UnitName);
+                return m_FightDataCollection.m_UnitIDToNames.TryGetValue(_Unit.I.UnitID, out _UnitName);
             }
             public UnitData GetUnitData(string _Unit)
             {
@@ -116,9 +116,9 @@ namespace VF_RaidDamageDatabase
                 int bossPlusAddsDmgTaken = 0;
                 if (bossUnitData != null)
                 {
-                    bossPlusAddsDmgTaken = bossUnitData.DmgTaken;
+                    bossPlusAddsDmgTaken = bossUnitData.I.DmgTaken;
                     if (_RetDmgTakenList != null)
-                        _RetDmgTakenList.Add(new Tuple<string, int>(m_Fight.FightName, bossUnitData.DmgTaken));
+                        _RetDmgTakenList.Add(new Tuple<string, int>(m_Fight.FightName, bossUnitData.I.DmgTaken));
                 }
 
                 string[] bossAdds = null;
@@ -129,9 +129,9 @@ namespace VF_RaidDamageDatabase
                         var bossAddUnitData = GetUnitData(bossAdd);
                         if (bossAddUnitData != null)
                         {
-                            bossPlusAddsDmgTaken += bossAddUnitData.DmgTaken;
+                            bossPlusAddsDmgTaken += bossAddUnitData.I.DmgTaken;
                             if (_RetDmgTakenList != null)
-                                _RetDmgTakenList.Add(new Tuple<string, int>(bossAdd, bossAddUnitData.DmgTaken));
+                                _RetDmgTakenList.Add(new Tuple<string, int>(bossAdd, bossAddUnitData.I.DmgTaken));
                         }
                     }
                 }
@@ -472,7 +472,7 @@ namespace VF_RaidDamageDatabase
                                 {
                                     timeSlice.UnitDatas.Add(replacingUnitID.Value, timeSlice.UnitDatas[replacingUnitID.Key]);
                                     timeSlice.UnitDatas.Remove(replacingUnitID.Key);
-                                    timeSlice.UnitDatas[replacingUnitID.Value].UnitID = replacingUnitID.Value;
+                                    timeSlice.UnitDatas[replacingUnitID.Value].I.SetNewUnitID(replacingUnitID.Value);
                                     int changedUnitIDIndex = timeSlice.ChangedUnitDatas.FindIndex((_Val) => _Val == replacingUnitID.Key);
                                     if (changedUnitIDIndex != -1)
                                     {
@@ -492,9 +492,9 @@ namespace VF_RaidDamageDatabase
                                             //Swap time!
                                             var temp = timeSlice.UnitDatas[replacingUnitID.Key];
                                             timeSlice.UnitDatas[replacingUnitID.Key] = timeSlice.UnitDatas[replacingUnitID.Value];
-                                            timeSlice.UnitDatas[replacingUnitID.Key].UnitID = replacingUnitID.Key;
+                                            timeSlice.UnitDatas[replacingUnitID.Key].I.SetNewUnitID(replacingUnitID.Key);
                                             timeSlice.UnitDatas[replacingUnitID.Value] = temp;
-                                            timeSlice.UnitDatas[replacingUnitID.Value].UnitID = replacingUnitID.Value;
+                                            timeSlice.UnitDatas[replacingUnitID.Value].I.SetNewUnitID(replacingUnitID.Value);
 
                                             int changedUnitIDIndex1 = timeSlice.ChangedUnitDatas.FindIndex((_Val) => _Val == replacingUnitID.Key);
                                             if (changedUnitIDIndex1 != -1)

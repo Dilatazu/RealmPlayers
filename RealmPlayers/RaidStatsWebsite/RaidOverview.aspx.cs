@@ -30,16 +30,16 @@ namespace VF_RaidDamageWebsite
         }
 
         static List<DataPresentTypeInfo> m_DataPresentTypeInfoList = new List<DataPresentTypeInfo>{
-            new DataPresentTypeInfo((VF_RaidDamageDatabase.UnitData _UnitData) => { return (double)_UnitData.Dmg; }, "Damage", 25),
+            new DataPresentTypeInfo((VF_RaidDamageDatabase.UnitData _UnitData) => { return (double)_UnitData.I.Dmg; }, "Damage", 25),
             //new DataPresentTypeInfo((VF_RaidDamageDatabase.UnitData _UnitData) => { return (double)_UnitData.DPS; }, "DPS", 10, (VF_RaidDamageDatabase.UnitData _UnitData) => { return _UnitData.Dmg > 0; }),
-            new DataPresentTypeInfo((VF_RaidDamageDatabase.UnitData _UnitData) => { return (double)_UnitData.EffHeal; }, "Efficient Heal"),
+            new DataPresentTypeInfo((VF_RaidDamageDatabase.UnitData _UnitData) => { return (double)_UnitData.I.EffHeal; }, "Efficient Heal"),
             //new DataPresentTypeInfo((VF_RaidDamageDatabase.UnitData _UnitData) => { return (double)_UnitData.HPS; }, "HPS", 10, (VF_RaidDamageDatabase.UnitData _UnitData) => { return _UnitData.EffHeal > 0; }),
             //new DataPresentTypeInfo((VF_RaidDamageDatabase.UnitData _UnitData) => { return (double)_UnitData.OverHeal; }, "Overheal"),
             //new DataPresentTypeInfo((VF_RaidDamageDatabase.UnitData _UnitData) => { return (double)_UnitData.RawHeal; }, "Raw Heal"),
-            new DataPresentTypeInfo((VF_RaidDamageDatabase.UnitData _UnitData) => { return (double)_UnitData.OverHeal; }, "Overheal"),
-            new DataPresentTypeInfo((VF_RaidDamageDatabase.UnitData _UnitData) => { return (double)_UnitData.RawHeal; }, "Raw Heal"),
+            new DataPresentTypeInfo((VF_RaidDamageDatabase.UnitData _UnitData) => { return (double)_UnitData.I.OverHeal; }, "Overheal"),
+            new DataPresentTypeInfo((VF_RaidDamageDatabase.UnitData _UnitData) => { return (double)_UnitData.I.RawHeal; }, "Raw Heal"),
             //new DataPresentTypeInfo((VF_RaidDamageDatabase.UnitData _UnitData) => { return (double)_UnitData.ThreatValue; }, "Threat", 25),
-            new DataPresentTypeInfo((VF_RaidDamageDatabase.UnitData _UnitData) => { return (double)_UnitData.DmgTaken; }, "Damage Taken", 25),
+            new DataPresentTypeInfo((VF_RaidDamageDatabase.UnitData _UnitData) => { return (double)_UnitData.I.DmgTaken; }, "Damage Taken", 25),
             //new DataPresentTypeInfo((VF_RaidDamageDatabase.UnitData _UnitData) => { return (double)_UnitData.Dmg; }, "Damage"),
             //new DataPresentTypeInfo((VF_RaidDamageDatabase.UnitData _UnitData) => { return (double)_UnitData.Death; }, "Deaths", 999),
         };
@@ -161,8 +161,8 @@ namespace VF_RaidDamageWebsite
                     PageUtility.CreateTableColumn(attendingFightPlayers.Count.ToString()) +
                     (displayLoot == true ? PageUtility.CreateTableColumn(lootDropped) : "") +
                     //PageUtility.CreateTableColumn(((int)(totalValue / 1000)).ToString() + "k") +
-                    PageUtility.CreateTableColumn(((int)fight.GetTotal((_Value) => { return _Value.Death; }
-                            , (_Value) => { return realmDB.RD_IsPlayer(_Value.Item1, fight) && _Value.Item2.Death > 0; })).ToString()) +
+                    PageUtility.CreateTableColumn(((int)fight.GetTotal((_Value) => { return _Value.I.Death; }
+                            , (_Value) => { return realmDB.RD_IsPlayer(_Value.Item1, fight) && _Value.Item2.I.Death > 0; })).ToString()) +
                     PageUtility.CreateTableColumn(fight.GetFightDuration().ToString() + " sec") +
                     PageUtility.CreateTableColumn(fight.GetFightData().StartDateTime.AddSeconds(fight.GetFightData().GetFightRecordDuration()).ToLocalTime().ToString("yyy-MM-dd HH:mm:ss")) +
                     PageUtility.CreateTableColumn(trashPercentageStr));//PageUtility.CreateTooltipText(trashPercentageStr, (bossPlusAddsDmgTaken != 0 ? bossPlusAddsDmgTaken.ToString() : "???") + "/" + totalValue.ToString())));
@@ -456,8 +456,8 @@ namespace VF_RaidDamageWebsite
                         trashSection.Append(PageUtility.CreateTableRow("",
                                 PageUtility.CreateTableColumn(PageUtility.CreateLink("FightOverview.aspx?Raid=" + uniqueRaidID + "&Trash=" + fight.GetRaidBossFightIndex(), "<font color='#f70002'>" + fight.GetStartDateTime().ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss") + " to " + endTime.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss") + "</font>")) +
                                 PageUtility.CreateTableColumn(attendingFightPlayers.Count.ToString()) +
-                                PageUtility.CreateTableColumn(((int)fight.GetTotal((_Value) => { return _Value.Death; }
-                                        , (_Value) => { return realmDB.RD_IsPlayer(_Value.Item1, attendingRaidPlayers) && _Value.Item2.Death > 0; })).ToString()) +
+                                PageUtility.CreateTableColumn(((int)fight.GetTotal((_Value) => { return _Value.I.Death; }
+                                        , (_Value) => { return realmDB.RD_IsPlayer(_Value.Item1, attendingRaidPlayers) && _Value.Item2.I.Death > 0; })).ToString()) +
                                 PageUtility.CreateTableColumn((int)(endTime - fight.GetStartDateTime()).TotalMinutes + " min")
                             ));
                     }
@@ -531,9 +531,9 @@ namespace VF_RaidDamageWebsite
             var playerDeaths = new List<Tuple<int, string>>();
             foreach (var data in fullUnitDatas)
             {
-                if (data.Item2.Death > 0 || data.Item2.Dmg > 0 || data.Item2.RawHeal > 0)
+                if (data.Item2.I.Death > 0 || data.Item2.I.Dmg > 0 || data.Item2.I.RawHeal > 0)
                 {
-                    playerDeaths.Add(Tuple.Create(data.Item2.Death, data.Item1));
+                    playerDeaths.Add(Tuple.Create(data.Item2.I.Death, data.Item1));
                 }
             }
             playerDeathsStr += "<h3>Player deaths(total " + playerDeaths.Sum((_Value) => _Value.Item1) + ")</h3>";
