@@ -293,6 +293,164 @@ namespace VF_RaidDamageDatabase
 	        {"Warchief Rend Blackhand", "UBRS"},
 	        {"The Beast", "UBRS"},
 	        {"General Drakkisath", "UBRS"},
+
+
+            ///////////////////////TBC///////////////////////
+
+            //Karazhan
+	        //Attumen the Huntsman
+	        {"Attumen the Huntsman", "Karazhan"},
+	        //{"Midnight", "Karazhan"}, //ATTUMEN ADD
+	        //Attumen the Huntsman
+	        //Moroes
+	        {"Moroes", "Karazhan"},
+	        //{"Baroness Dorothea Millstipe", "Karazhan"}, //MOROES ADD
+	        //{"Lady Catriona Von'Indi", "Karazhan"}, //MOROES ADD
+	        //{"Lady Keira Berrybuck", "Karazhan"}, //MOROES ADD
+	        //{"Baron Rafe Dreuger", "Karazhan"}, //MOROES ADD
+	        //{"Lord Robin Daris", "Karazhan"}, //MOROES ADD
+	        //{"Lord Crispin Ference", "Karazhan"}, //MOROES ADD
+	        //Moroes
+	        {"Maiden of Virtue", "Karazhan"},
+	        //The Opera Event
+	        {"The Big Bad Wolf", "Karazhan"},
+	        //Romulo+Julianne
+	        {"Romulo and Julianne", "Karazhan"},
+	        //{"Romulo", "Karazhan"},
+	        //{"Julianne", "Karazhan"},
+	        //Romulo+Julianne
+	        //The Crone
+	        {"Wizard of Oz", "Karazhan"},
+            //{"The Crone", "Karazhan"},
+            //{"Dorothee", "Karazhan"},
+            //{"Tito", "Karazhan"},
+            //{"Roar", "Karazhan"},
+            //{"Strawman", "Karazhan"},
+            //{"Tinhead", "Karazhan"},
+	        //The Crone
+	        //The Opera Event
+	        //The Curator
+	        {"The Curator", "Karazhan"},
+	        //{"Astral Flare", "VF_RS_MobType_Boss"}, //CURATOR ADD
+	        //The Curator
+	        {"Shade of Aran", "Karazhan"},
+	        //Terestian Illhoof
+	        {"Terestian Illhoof", "Karazhan"},
+	        //{"Kil'rek", "Karazhan"}, //Illhoof ADD
+	        //{"Demon Chains", "VF_RS_MobType_Boss"}, //Illhoof ADD
+	        //Terestian Illhoof
+	        {"Netherspite", "Karazhan"},
+	        //Nightbane
+	        {"Nightbane", "Karazhan"},
+	        //{"Restless Skeleton", "VF_RS_MobType_Boss"}, //NIGHTBANE ADD
+	        //Nightbane
+	        {"Prince Malchezaar", "Karazhan"},
+	
+	        //Gruul's Lair
+	        //High King Maulgar
+	        {"High King Maulgar", "Gruul's Lair"},
+	        //{"Krosh Firehand", "VF_RS_MobType_Boss"}, //High King Maulgar ADD
+	        //{"Olm the Summoner", "VF_RS_MobType_Boss"}, //High King Maulgar ADD
+	        //{"Kiggler the Crazed", "VF_RS_MobType_Boss"}, //High King Maulgar ADD
+	        //{"Blindeye the Seer", "VF_RS_MobType_Boss"}, //High King Maulgar ADD
+	        //High King Maulgar
+	        {"Gruul", "Gruul's Lair"},
+	
+	        //Magtheridon's Lair
+	        {"Magtheridon", "Magtheridon's Lair"},
+	        //{"Hellfire Channeler", "VF_RS_MobType_Boss"}, //MAGTHERIDON ADD
+	
+	        //Serpentshrine Cavern
+	        {"Hydross the Unstable", "Serpentshrine Cavern"},
+	        {"The Lurker Below", "Serpentshrine Cavern"},
+	        //Leotheras the Blind
+	        {"Leotheras the Blind", "Serpentshrine Cavern"},
+	        //{"Shadow of Leotheras", "VF_RS_MobType_Boss"},
+	        //Leotheras the Blind
+	        //Fathom-Lord Karathress
+	        {"Fathom-Lord Karathress", "Serpentshrine Cavern"},
+            //{"Fathom-Guard Sharkkis", "Serpentshrine Cavern"}, //ADD
+            //{"Fathom-Guard Tidalvess", "Serpentshrine Cavern"}, //ADD
+            //{"Fathom-Guard Caribdis", "Serpentshrine Cavern"}, //ADD
+	        //Fathom-Lord Karathress
+	        {"Morogrim Tidewalker", "Serpentshrine Cavern"},
+	        //Lady Vashj
+	        {"Lady Vashj", "Serpentshrine Cavern"},
+	        //{"Enchanted Elemental", "VF_RS_MobType_Boss"}, //ADD
+	        //{"Tainted Elemental", "VF_RS_MobType_Boss"}, //ADD
+	        //{"Coilfang Elite", "VF_RS_MobType_Boss"}, //ADD
+	        //{"Coilfang Strider", "VF_RS_MobType_Boss"}, //ADD
+	        //{"Toxic Spore Bat", "VF_RS_MobType_Boss"}, //ADD
+	        //Lady Vashj
+	
+	        //Tempest Keep
+	        //Al'ar
+	        {"Al'ar", "Tempest Keep"},
+	        //{"Ember of Al'ar", "Tempest Keep"}, //ADD
+	        //Al'ar
+	        {"Void Reaver", "Tempest Keep"},
+	        //High Astromancer Solarian
+	        {"High Astromancer Solarian", "Tempest Keep"}, 
+	        //{"Solarium Agent", "VF_RS_MobType_Boss"}, //ADD
+	        //{"Solarium Priest", "VF_RS_MobType_Boss"}, //ADD
+	        //High Astromancer Solarian
+	        //Kael'thas Sunstrider
+	        {"Kael'thas Sunstrider", "Tempest Keep"},
+            //{"Thaladred the Darkener", "Tempest Keep"}, //ADD
+            //{"Lord Sanguinar", "Tempest Keep"}, //ADD
+            //{"Grand Astromancer Capernian", "Tempest Keep"}, //ADD
+            //{"Master Engineer Telonicus", "Tempest Keep"}, //ADD
+            //{"Netherstrand Longbow", "Tempest Keep"}, //WEAPON ADD
+            //{"Staff of Disintegration", "Tempest Keep"}, //WEAPON ADD
+            //{"Cosmic Infuser", "Tempest Keep"}, //WEAPON ADD
+            //{"Infinity Blade", "Tempest Keep"}, //WEAPON ADD
+            //{"Warp Slicer", "Tempest Keep"}, //WEAPON ADD
+            //{"Devastation", "Tempest Keep"}, //WEAPON ADD
+            //{"Phaseshift Bulwark", "Tempest Keep"}, //WEAPON ADD
+            //{"Phoenix", "Tempest Keep"}, //ADD
+            //{"Phoenix Egg", "Tempest Keep"}, //ADD
+	        //Kael'thas Sunstrider
+	
+	        //Black Temple
+	        {"High Warlord Naj'entus", "Black Temple"},
+	        {"Supremus", "Black Temple"},
+	        //Shade of Akama
+	        {"Shade of Akama", "Black Temple"},
+	        //{"Ashtongue Defender", "VF_RS_MobType_Boss"}, //ADD
+	        //{"Ashtongue Elementalist", "VF_RS_MobType_Boss"}, //ADD
+	        //{"Ashtongue Rogue", "VF_RS_MobType_Boss"}, //ADD
+	        //{"Ashtongue Spiritbinder", "VF_RS_MobType_Boss"}, //ADD
+	        //{"Ashtongue Channeler", "VF_RS_MobType_Boss"}, //ADD
+	        //{"Ashtongue Sorcerer", "VF_RS_MobType_Boss"}, //ADD
+	        //Shade of Akama
+	        //Teron Gorefiend
+	        {"Teron Gorefiend", "Black Temple"},
+	        //{"Shadowy Construct", "VF_RS_MobType_Boss"}, //ADD
+	        //Teron Gorefiend
+	        {"Gurtogg Bloodboil", "Black Temple"},
+	        //Reliquary of Souls
+	        {"Reliquary of Souls", "Black Temple"},
+            //{"Essence of Anger", "Black Temple"}, //BOSSPART
+            //{"Essence of Desire", "Black Temple"}, //BOSSPART
+            //{"Essence of Suffering", "Black Temple"}, //BOSSPART
+	        //{"Enslaved Soul", "VF_RS_MobType_Boss"}, //ADD
+	        //Reliquary of Souls
+	        {"Mother Shahraz", "Black Temple"},
+	        //Illidari Council
+	        {"Illidari Council", "Black Temple"},
+            //{"Gathios the Shatterer", "Black Temple"}, //BOSSPART
+            //{"High Nethermancer Zerevor", "Black Temple"}, //BOSSPART
+            //{"Lady Malande", "Black Temple"}, //BOSSPART
+            //{"Veras Darkshadow", "Black Temple"}, //BOSSPART
+	        //Illidari Council
+	        {"Illidan Stormrage", "Black Temple"},
+
+	        //Mount Hyjal
+	        {"Rage Winterchill", "Hyjal Summit"},
+	        {"Anetheron", "Hyjal Summit"},
+	        {"Kaz'rogal", "Hyjal Summit"},
+	        {"Azgalor", "Hyjal Summit"},
+	        {"Archimonde", "Hyjal Summit"},
         };
         public static Dictionary<string, string[]> BossParts = new Dictionary<string, string[]>
         { 
@@ -308,6 +466,13 @@ namespace VF_RaidDamageDatabase
             
             //{"Razorgore the Untamed", new string[]{"Grethok the Controller", "Blackwing Guardsman", "Death Talon Dragonspawn", "Blackwing Legionnaire", "Blackwing Mage", "Razorgore the Untamed"}},
             //{"Nefarian", new string[]{"Lord Victor Nefarius", "Red Drakonid", "Blue Drakonid", "Green Drakonid", "Black Drakonid", "Bronze Drakonid", "Chromatic Drakonid", "Nefarian"}},
+        
+            ///////////////////////TBC///////////////////////
+            {"Romulo and Julianne", new string[]{"Romulo", "Julianne"}},
+	        {"Wizard of Oz", new string[]{"Dorothee", "Tito", "Roar", "Strawman", "Tinhead", "The Crone"}},
+	
+	        {"Reliquary of Souls", new string[]{"Essence of Anger", "Essence of Desire", "Essence of Suffering"}},
+	        {"Illidari Council", new string[]{"Gathios the Shatterer", "High Nethermancer Zerevor", "Lady Malande", "Veras Darkshadow"}},
         };
         public static Dictionary<string, string[]> BossAdds = new Dictionary<string, string[]>
         {
@@ -357,6 +522,50 @@ namespace VF_RaidDamageDatabase
 
             {"Grand Widow Faerlina", new string[]{"Naxxramas Follower", "Naxxramas Worshipper"}},
             {"Gothik the Harvester", new string[]{"Unrelenting Deathknight", "Unrelenting Death Knight", "Unrelenting Rider", "Spectral Trainee", "Spectral Deathknight", "Spectral Death Knight", "Spectral Rider", "Spectral Horse"}},
+        
+            ///////////////////////TBC///////////////////////
+            
+            //Karazhan
+            {"Attumen the Huntsman", new string[]{"Midnight"}},
+            {"Moroes", new string[]{"Baroness Dorothea Millstipe", "Lady Catriona Von'Indi", "Lady Keira Berrybuck", "Baron Rafe Dreuger", "Lord Robin Daris", "Lord Crispin Ference"}},
+            {"Romulo and Julianne", new string[]{"Romulo", "Julianne"}},
+	        {"Wizard of Oz", new string[]{"Dorothee", "Tito", "Roar", "Strawman", "Tinhead", "The Crone"}},
+            {"The Curator", new string[]{"Astral Flare"}},
+            {"Terestian Illhoof", new string[]{"Kil'rek", "Demon Chains"}},
+            {"Nightbane", new string[]{"Restless Skeleton"}},
+            
+            //Gruul's Lair
+	        {"High King Maulgar", new string[]{"Krosh Firehand", "Olm the Summoner", "Kiggler the Crazed", "Blindeye the Seer"}},
+            
+            //Magtheridon's Lair
+            {"Magtheridon", new string[]{"Hellfire Channeler"}},
+
+            //Serpentshrine Cavern
+            {"The Lurker Below", new string[]{"Coilfang Guardian", "Coilfang Ambusher"}},
+            {"Leotheras the Blind", new string[]{"Shadow of Leotheras"}},
+            {"Fathom-Lord Karathress", new string[]{"Fathom-Guard Sharkkis", "Fathom-Guard Tidalvess", "Fathom-Guard Caribdis"}},
+            {"Lady Vashj", new string[]{"Enchanted Elemental", "Tainted Elemental", "Coilfang Elite", "Coilfang Strider", "Toxic Spore Bat"}},
+
+            //Tempest Keep
+            {"Al'ar", new string[]{"Ember of Al'ar"}},
+            {"High Astromancer Solarian", new string[]{"Solarium Agent", "Solarium Priest"}},
+            {"Kael'thas Sunstrider", new string[]{"Thaladred the Darkener", "Lord Sanguinar"
+                , "Grand Astromancer Capernian", "Master Engineer Telonicus", "Netherstrand Longbow"
+                , "Staff of Disintegration", "Cosmic Infuser", "Infinity Blade"
+                , "Warp Slicer", "Devastation", "Phaseshift Bulwark", "Phoenix", "Phoenix Egg"}},
+
+            //Black Temple
+            {"Shade of Akama", new string[]{"Ashtongue Defender" , "Ashtongue Elementalist", "Ashtongue Rogue"
+                , "Ashtongue Spiritbinder", "Ashtongue Channeler", "Ashtongue Sorcerer"}},
+            {"Teron Gorefiend", new string[]{"Shadowy Construct"}},
+
+            {"Reliquary of Souls", new string[]{"Essence of Anger", "Essence of Desire", "Essence of Suffering", "Enslaved Soul"}},
+	        {"Illidari Council", new string[]{"Gathios the Shatterer", "High Nethermancer Zerevor", "Lady Malande", "Veras Darkshadow"}},
+        
+            //Mount Hyjal
+            {"Anetheron", new string[]{"Towering Infernal"}},
+            {"Azgalor", new string[]{"Lesser Doomguard"}},
+
         };
 
         public static List<string> GetAllEntitiesForFight(string _FightName)
