@@ -340,7 +340,7 @@ namespace VF_RaidDamageDatabase
                     {
                         try
                         {
-                            UnitData newUnitData = new UnitData(unitData, previousUnitDatas);
+                            UnitData newUnitData = UnitData.Create(unitData, previousUnitDatas, VF_RealmPlayersDatabase.WowVersionEnum.Vanilla);
                             if (_UnitIDsToName.ContainsKey(newUnitData.I.UnitID) == true)
                             {
                                 UnitDatas.Add(newUnitData.I.UnitID, newUnitData);

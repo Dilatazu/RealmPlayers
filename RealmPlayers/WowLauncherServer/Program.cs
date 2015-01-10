@@ -36,6 +36,15 @@ namespace VF_WoWLauncherServer
 
             VF_WoWLauncher.ConsoleUtility.CreateConsole();
 
+            Console.WriteLine("Waiting for ContributorDB to load");
+            while (ContributorDB.GetMongoDB() == null)
+            {
+                ContributorDB.Initialize();
+                System.Threading.Thread.Sleep(100);
+                Console.Write(".");
+            }
+            Console.WriteLine("ContributorDB loaded!");
+
             //VF_RealmPlayersDatabase.Deprecated.ContributorHandler.Initialize(g_RPPDBFolder + "Database\\");
             g_RPPDatabaseHandler = new RPPDatabaseHandler(g_RPPDBFolder);
             g_RDDatabaseHandler = new RDDatabaseHandler(g_RDDBFolder, g_RPPDatabaseHandler);

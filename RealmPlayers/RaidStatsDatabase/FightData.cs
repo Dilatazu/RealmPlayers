@@ -213,7 +213,7 @@ namespace VF_RaidDamageDatabase
                             {
                                 UnitData totalUnitData = UnitData.CreateDifference(startUnitData, endUnitData);
                                 if (highestThreat > 0)
-                                    totalUnitData.I.SetNewThreatValue(highestThreat);
+                                    totalUnitData.I.SetThreatValue(highestThreat);
                                 //string unitName = m_DataSession.UnitIDToNames[unitID];
                                 unitsData.Add(new Tuple<string, UnitData>(unitName, totalUnitData));
                             }
