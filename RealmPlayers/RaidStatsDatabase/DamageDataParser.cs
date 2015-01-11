@@ -9,7 +9,7 @@ namespace VF_RaidDamageDatabase
 {
     public class DamageDataParser
     {
-        public static List<DamageDataSession> ParseFile(string _Filename, ref List<string> _SessionsDebugData)
+        public static List<DamageDataSession> ParseFile(string _Filename, ref List<string> _SessionsDebugData, WowVersionEnum _WowVersion = WowVersionEnum.Unknown)
         {
             if (_SessionsDebugData == null)
                 _SessionsDebugData = new List<string>();
@@ -22,11 +22,11 @@ namespace VF_RaidDamageDatabase
                 string fixedData = data[i];
                 fixedData = fixedData.Substring(fixedData.IndexOf('{') + 1);
                 fixedData = fixedData.Substring(0, fixedData.LastIndexOf("\r\n}"));
-                if (data[i].StartsWith("RaidDamageData"))
+                if (data[i].StartsWith("RaidDamageData") && (_WowVersion == WowVersionEnum.Unknown || _WowVersion == WowVersionEnum.Vanilla))
                 {
                     return _ParseData(fixedData, ref _SessionsDebugData, WowVersionEnum.Vanilla);
                 }
-                else if (data[i].StartsWith("RaidStatsData"))
+                else if (data[i].StartsWith("RaidStatsData") && (_WowVersion == WowVersionEnum.Unknown || _WowVersion == WowVersionEnum.TBC))
                 {
                     return _ParseData(fixedData, ref _SessionsDebugData, WowVersionEnum.TBC);
                 }
@@ -311,7 +311,7 @@ namespace VF_RaidDamageDatabase
                             }
                             else if(timeSlice.StartsWith("Session:") == false)
                             {//Timeslice data
-                                TimeSlice newTimeSlice = new TimeSlice(lastTimeSlice, timeSlice, newSession.UnitIDToNames, raidMemberIDs, currZone);
+                                TimeSlice newTimeSlice = new TimeSlice(lastTimeSlice, timeSlice, newSession.UnitIDToNames, raidMemberIDs, currZone, _WowVersion);
                                 newSession.TimeSlices.Add(newTimeSlice);
                                 lastTimeSlice = newTimeSlice;
                             }

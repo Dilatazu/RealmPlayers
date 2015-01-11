@@ -108,7 +108,7 @@ namespace VF_RaidDamageDatabase
             {"Magtheridon's Lair", "ML"},
             {"Gruul's Lair", "GL"},
             {"Serpentshrine Cavern", "SSC"},
-            {"The Eye", "TK"},
+            {"Tempest Keep", "TK"},
             {"Black Temple", "BT"},
             {"Hyjal Summit", "MH"},
             {"Sunwell Plateau", "SWP"},
@@ -408,17 +408,17 @@ namespace VF_RaidDamageDatabase
 	
 	        //Tempest Keep
 	        //Al'ar
-	        {"Al'ar", "The Eye"},
+	        {"Al'ar", "Tempest Keep"},
 	        //{"Ember of Al'ar", "Tempest Keep"}, //ADD
 	        //Al'ar
-	        {"Void Reaver", "The Eye"},
+	        {"Void Reaver", "Tempest Keep"},
 	        //High Astromancer Solarian
-	        {"High Astromancer Solarian", "The Eye"}, 
+	        {"High Astromancer Solarian", "Tempest Keep"}, 
 	        //{"Solarium Agent", "VF_RS_MobType_Boss"}, //ADD
 	        //{"Solarium Priest", "VF_RS_MobType_Boss"}, //ADD
 	        //High Astromancer Solarian
 	        //Kael'thas Sunstrider
-	        {"Kael'thas Sunstrider", "The Eye"},
+	        {"Kael'thas Sunstrider", "Tempest Keep"},
             //{"Thaladred the Darkener", "Tempest Keep"}, //ADD
             //{"Lord Sanguinar", "Tempest Keep"}, //ADD
             //{"Grand Astromancer Capernian", "Tempest Keep"}, //ADD

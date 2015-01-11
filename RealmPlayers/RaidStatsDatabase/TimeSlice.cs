@@ -6,6 +6,7 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using ProtoBuf;
 
+using WowVersionEnum = VF_RealmPlayersDatabase.WowVersionEnum;
 namespace VF_RaidDamageDatabase
 {
     [ProtoContract]
@@ -278,7 +279,7 @@ namespace VF_RaidDamageDatabase
         public TimeSlice()
         { }
 
-        public TimeSlice(TimeSlice _PreviousTimeSlice, string _DataString, Dictionary<int, string> _UnitIDsToName, List<int> _RaidMemberIDs, string _Zone)
+        public TimeSlice(TimeSlice _PreviousTimeSlice, string _DataString, Dictionary<int, string> _UnitIDsToName, List<int> _RaidMemberIDs, string _Zone, WowVersionEnum _WowVersion)
         {
             Dictionary<int, UnitData> previousUnitDatas = null;
             if(_PreviousTimeSlice != null)
@@ -340,7 +341,7 @@ namespace VF_RaidDamageDatabase
                     {
                         try
                         {
-                            UnitData newUnitData = UnitData.Create(unitData, previousUnitDatas, VF_RealmPlayersDatabase.WowVersionEnum.Vanilla);
+                            UnitData newUnitData = UnitData.Create(unitData, previousUnitDatas, _WowVersion);
                             if (_UnitIDsToName.ContainsKey(newUnitData.I.UnitID) == true)
                             {
                                 UnitDatas.Add(newUnitData.I.UnitID, newUnitData);

@@ -19,8 +19,17 @@ namespace VF_RaidDamageWebsite
             {"Naxxramas", "assets/img/raid/raid-naxxramas.png"}, 
             {"Ahn'Qiraj Temple", "assets/img/raid/raid-aqtemple.png"},
 
-            //Temp
-            {"Serpentshrine Cavern", "assets/img/raid/raid-aqtemple.png"}
+            //TBC
+            {"Karazhan", "assets/img/raid/raid-karazhan.png"},
+            {"Zul'Aman", "assets/img/raid/raid-zulaman.png"},
+            
+            {"Magtheridon's Lair", "assets/img/raid/raid-magtheridon.png"},
+            {"Gruul's Lair", "assets/img/raid/raid-gruul.png"},
+            {"Serpentshrine Cavern", "assets/img/raid/raid-serpentshrinecavern.png"},
+            {"Tempest Keep", "assets/img/raid/raid-tempestkeep.png"},
+            {"Black Temple", "assets/img/raid/raid-blacktemple.png"},
+            {"Hyjal Summit", "assets/img/raid/raid-hyjalsummit.png"},
+            {"Sunwell Plateau", "assets/img/raid/raid-sunwellplateau.png"},
         };
 
         public static ConcurrentDictionary<string, int> g_MeasuredStrings = new ConcurrentDictionary<string, int>();

@@ -74,6 +74,8 @@
     <Content Include="Assets\img\raid\raid-naxxramas.png" />
     <Content Include="Assets\img\raid\raid-onyxia.png" />
     <Content Include="Assets\img\raid\raid-open.png" />
+    <Content Include="Assets\img\raid\raid-serpentshrinecavern.png" />
+    <Content Include="Assets\img\raid\raid-tempestkeep.png" />
     <Content Include="Assets\img\raid\raid-zulgurub.png" />
     <Content Include="Assets\img\VF_RaidStatsIcon64.png" />
     <Content Include="Assets\js\bootstrap.js" />
