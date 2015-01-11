@@ -24,6 +24,7 @@ namespace VF_WoWLauncherServer
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
+            bool debugMode = false;
             if (System.IO.Directory.Exists(g_RPPDBFolder) == false)
             {
                 g_RPPDBFolder = g_RPPDBFolder.Replace(VF_RealmPlayersDatabase.Utility.DefaultServerLocation, VF_RealmPlayersDatabase.Utility.DefaultDebugLocation);
@@ -31,19 +32,25 @@ namespace VF_WoWLauncherServer
                 AddonDatabaseService.g_AddonUploadDataFolder = AddonDatabaseService.g_AddonUploadDataFolder.Replace(VF_RealmPlayersDatabase.Utility.DefaultServerLocation, VF_RealmPlayersDatabase.Utility.DefaultDebugLocation);
                 AddonDatabaseService.g_AddonUploadStatsFolder = AddonDatabaseService.g_AddonUploadStatsFolder.Replace(VF_RealmPlayersDatabase.Utility.DefaultServerLocation, VF_RealmPlayersDatabase.Utility.DefaultDebugLocation);
                 RPPDatabaseHandler.g_AddonContributionsBackupFolder = RPPDatabaseHandler.g_AddonContributionsBackupFolder.Replace(VF_RealmPlayersDatabase.Utility.DefaultServerLocation, VF_RealmPlayersDatabase.Utility.DefaultDebugLocation);
+
+                RDDatabaseHandler.g_AddonContributionsBackupFolder = RDDatabaseHandler.g_AddonContributionsBackupFolder.Replace(VF_RealmPlayersDatabase.Utility.DefaultServerLocation, VF_RealmPlayersDatabase.Utility.DefaultDebugLocation);
+                debugMode = true;
             }
             AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
 
             VF_WoWLauncher.ConsoleUtility.CreateConsole();
 
-            Console.WriteLine("Waiting for ContributorDB to load");
-            while (ContributorDB.GetMongoDB() == null)
+            if (debugMode == false)
             {
-                ContributorDB.Initialize();
-                System.Threading.Thread.Sleep(100);
-                Console.Write(".");
+                Console.WriteLine("Waiting for ContributorDB to load");
+                while (ContributorDB.GetMongoDB() == null)
+                {
+                    ContributorDB.Initialize();
+                    System.Threading.Thread.Sleep(100);
+                    Console.Write(".");
+                }
+                Console.WriteLine("ContributorDB loaded!");
             }
-            Console.WriteLine("ContributorDB loaded!");
 
             //VF_RealmPlayersDatabase.Deprecated.ContributorHandler.Initialize(g_RPPDBFolder + "Database\\");
             g_RPPDatabaseHandler = new RPPDatabaseHandler(g_RPPDBFolder);

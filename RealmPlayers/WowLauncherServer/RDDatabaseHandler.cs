@@ -308,7 +308,7 @@ namespace VF_WoWLauncherServer
             GC.Collect();
         }
 
-        static string g_AddonContributionsBackupFolder = VF_RealmPlayersDatabase.Utility.DefaultServerLocation + "VF_DataServer\\AddonContributionsBackup\\";
+        public static string g_AddonContributionsBackupFolder = VF_RealmPlayersDatabase.Utility.DefaultServerLocation + "VF_DataServer\\AddonContributionsBackup\\";
         enum RDContributionType
         {
             Empty,
