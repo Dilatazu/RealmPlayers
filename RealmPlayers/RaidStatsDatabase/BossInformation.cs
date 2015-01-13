@@ -221,6 +221,19 @@ namespace VF_RaidDamageDatabase
             "Patchwerk",
             "Thaddius",
         };
+        public static List<string> FightsWithDisappearingBoss = new List<string>
+        {
+            "Gothik the Harvester",
+            "Noth the Plaguebringer",
+            "Nefarian",
+            "Razorgore the Untamed",
+            "C'Thun",
+            "Kel'Thuzad",
+            "Ragnaros",
+            "Kael'thas Sunstrider",
+            "High Astromancer Solarian",
+        };
+        #region BossFights
         public static Dictionary<string, string> BossFights = new Dictionary<string, string>
         {
             //Trash
@@ -475,6 +488,8 @@ namespace VF_RaidDamageDatabase
 	        {"Azgalor", "Hyjal Summit"},
 	        {"Archimonde", "Hyjal Summit"},
         };
+        #endregion BossFights
+        #region BossParts
         public static Dictionary<string, string[]> BossParts = new Dictionary<string, string[]>
         { 
             //Sista kommer användas som "MAIN BOSS"
@@ -497,6 +512,8 @@ namespace VF_RaidDamageDatabase
 	        {"Reliquary of Souls", new string[]{"Essence of Anger", "Essence of Desire", "Essence of Suffering"}},
 	        {"Illidari Council", new string[]{"Gathios the Shatterer", "High Nethermancer Zerevor", "Lady Malande", "Veras Darkshadow"}},
         };
+        #endregion BossParts
+        #region BossAdds
         public static Dictionary<string, string[]> BossAdds = new Dictionary<string, string[]>
         {
             //MC
@@ -583,13 +600,30 @@ namespace VF_RaidDamageDatabase
             {"Teron Gorefiend", new string[]{"Shadowy Construct"}},
 
             {"Reliquary of Souls", new string[]{"Essence of Anger", "Essence of Desire", "Essence of Suffering", "Enslaved Soul"}},
-	        {"Illidari Council", new string[]{"Gathios the Shatterer", "High Nethermancer Zerevor", "Lady Malande", "Veras Darkshadow"}},
+	        /*
+                was it wipe on Reliquary of Souls?
+                [20:47:25] Kevin Heidemann: nioe
+                [20:47:27] Kevin Heidemann: nope*
+                [20:47:31] Kevin Heidemann: It's three phases of 1 boss
+                [20:47:39] Kevin Heidemann: On WoL it counted as wipe as well^^
+                [20:48:36] Viktor Friberg: hmm kk. The Death of Essence Of Desire is never registered it seems. Says it has 465k hp left. Maybe some way the server is coded?
+                [20:48:52] Viktor Friberg: maybe you have some idea?
+                [21:06:39] Kevin Heidemann: Probably, would have to check into it
+                [21:08:27] Viktor Friberg: how does the essences die during the fight? Is there anything like "at 20% the boss merges with another one" or something similar special mechanic?
+                [21:08:43] Viktor Friberg: cant remember the fight
+                [21:53:25] Kevin Heidemann: Oh yeah that's it
+                [21:53:44] Kevin Heidemann: at 10% it moves back, spawns add and then comes as next phase after adds down
+                [21:54:18] Viktor Friberg: ahh that explains it
+             */ 
+             
+
+            {"Illidari Council", new string[]{"Gathios the Shatterer", "High Nethermancer Zerevor", "Lady Malande", "Veras Darkshadow"}},
         
             //Mount Hyjal
             {"Anetheron", new string[]{"Towering Infernal"}},
             {"Azgalor", new string[]{"Lesser Doomguard"}},
         };
-
+        #endregion BossAdds
         public static List<string> GetAllEntitiesForFight(string _FightName)
         {
             List<string> retList = new List<string>();

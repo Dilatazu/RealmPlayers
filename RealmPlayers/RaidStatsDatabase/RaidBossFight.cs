@@ -629,7 +629,19 @@ namespace VF_RaidDamageDatabase
         }
         public Dictionary<string, UnitData> GetUnitsDataAsDictionary(bool _MergePetData, int _StartTimeSlice = -1, int _EndTimeSlice = -1)
         {
-            return m_Cache.Get("GetUnitsData", _NotCached_GetUnitsData, _MergePetData, _StartTimeSlice, _EndTimeSlice).ToDictionary();
+            var unitsData = m_Cache.Get("GetUnitsData", _NotCached_GetUnitsData, _MergePetData, _StartTimeSlice, _EndTimeSlice);
+
+            string failString = "";
+            foreach(var unitData in unitsData)
+            {
+                if (unitsData.Count((_Value) => unitData.Item1 == _Value.Item1) > 1)
+                {
+                    failString = failString + ", " + unitData.Item1;
+                }
+            }
+            if(failString != "")
+                Logger.ConsoleWriteLine("Failed GetUnitsDataAsDictionary, Duplicates of: " + failString);
+            return unitsData.ToDictionary();
         }
         public List<Tuple<string, UnitData>> GetUnitsDataCopy(bool _MergePetData, int _StartTimeSlice = -1, int _EndTimeSlice = -1)
         {

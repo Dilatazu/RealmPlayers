@@ -325,13 +325,7 @@ namespace VF_RaidDamageDatabase
                                 }
                                 else
                                 {
-                                    if (currFight.FightName == "Gothik the Harvester"
-                                        || currFight.FightName == "Noth the Plaguebringer"
-                                        || currFight.FightName == "Nefarian"
-                                        || currFight.FightName == "Razorgore the Untamed"
-                                        || currFight.FightName == "C'Thun"
-                                        || currFight.FightName == "Kel'Thuzad"
-                                        || currFight.FightName == "Ragnaros")
+                                    if (BossInformation.FightsWithDisappearingBoss.Contains(currFight.FightName) == true)
                                     {
                                         //Give these fights a second chance to since they do not have the Boss included in the entire fight, check all the adds
                                         var bossAdds = BossInformation.BossAdds[currFight.FightName];
@@ -370,13 +364,7 @@ namespace VF_RaidDamageDatabase
 
                         //Unless the bossfight is Gothik the Harvester! 
                         //then we recalculate to see if any add has been changed the last 60 seconds
-                        if (currFight.FightName == "Gothik the Harvester"
-                            || currFight.FightName == "Noth the Plaguebringer"
-                            || currFight.FightName == "Nefarian"
-                            || currFight.FightName == "Razorgore the Untamed"
-                            || currFight.FightName == "C'Thun"
-                            || currFight.FightName == "Kel'Thuzad"
-                            || currFight.FightName == "Ragnaros")
+                        if (BossInformation.FightsWithDisappearingBoss.Contains(currFight.FightName) == true)
                         {
                             //Check if adds have been active the last 60 seconds, if so extend the lastFightTime!
                             var bossAdds = BossInformation.BossAdds[currFight.FightName];
