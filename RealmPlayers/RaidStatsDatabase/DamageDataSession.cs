@@ -62,7 +62,15 @@ namespace VF_RaidDamageDatabase
             }
             else
             {
-                fightUnitIDs.Add(UnitIDToNames.First((_Value) => { return _Value.Value == _BossName; }).Key);
+                try
+                {
+                    fightUnitIDs.Add(UnitIDToNames.First((_Value) => { return _Value.Value == _BossName; }).Key);
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogException(ex);
+                    Logger.ConsoleWriteLine("Could not find Boss: \"" + _BossName + "\" in UnitIDToNames dictionary", ConsoleColor.Red);
+                }
             }
             return fightUnitIDs;
         }
