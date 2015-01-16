@@ -271,7 +271,7 @@ namespace VF_WoWLauncher
                                     }, () =>
                                     {
                                         if (addonUpdateInfo.MoreInfoSite == "") 
-                                            Utility.MessageBoxShow("Could not find more info for this addon update, full changelog is always available on the forum: forum.realmplayers.com");
+                                            Utility.MessageBoxShow("Could not find more info for this addon update" + (addonUpdateInfo.AddonName.StartsWith("VF_") ? ", full changelog is always available on the forum: forum.realmplayers.com" : "."));
                                         else if (addonUpdateInfo.MoreInfoSite.StartsWith("http://"))
                                             System.Diagnostics.Process.Start(addonUpdateInfo.MoreInfoSite);
                                         else
