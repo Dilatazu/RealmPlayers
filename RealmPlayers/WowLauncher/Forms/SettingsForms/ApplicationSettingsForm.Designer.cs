@@ -62,9 +62,9 @@
             this.c_lblWowDirectory.AutoSize = true;
             this.c_lblWowDirectory.Location = new System.Drawing.Point(6, 143);
             this.c_lblWowDirectory.Name = "c_lblWowDirectory";
-            this.c_lblWowDirectory.Size = new System.Drawing.Size(86, 13);
+            this.c_lblWowDirectory.Size = new System.Drawing.Size(122, 13);
             this.c_lblWowDirectory.TabIndex = 6;
-            this.c_lblWowDirectory.Text = "WoW Directory: ";
+            this.c_lblWowDirectory.Text = "WoW Classic Directory: ";
             // 
             // c_btnWowDirectoryBrowse
             // 

@@ -90,6 +90,13 @@ namespace VF_WoWLauncher
                 return Instance._WowTBCDirectory;
             }
         }
+        public static bool HaveClassic
+        {
+            get
+            {
+                return Instance._WowTBCDirectory != Instance._WowDirectory;
+            }
+        }
         public static bool HaveTBC
         {
             get

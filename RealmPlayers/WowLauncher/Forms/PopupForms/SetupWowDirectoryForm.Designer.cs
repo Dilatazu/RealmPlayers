@@ -42,7 +42,7 @@
             this.c_lblDescription.Name = "c_lblDescription";
             this.c_lblDescription.Size = new System.Drawing.Size(348, 18);
             this.c_lblDescription.TabIndex = 9;
-            this.c_lblDescription.Text = "Please help me find your World of Warcraft Classic directory.";
+            this.c_lblDescription.Text = "Please help me find your World of Warcraft Classic(or TBC) directory.";
             // 
             // c_btnCancel
             // 

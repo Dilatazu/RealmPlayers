@@ -90,7 +90,19 @@ namespace VF_WoWLauncher
 
         public static bool IsValidWowDirectory(string _Directory)
         {
-            return Utility.ContainsFilesAndDirectories(_Directory, new string[] { "WTF", "Interface", "Data", "WoW.exe", "realmlist.wtf" });
+            return Utility.ContainsFilesAndDirectories(_Directory, new string[] { "WTF", "Interface", "Data", "WoW.exe" });
+        }
+        public static bool IsWowDirectoryClassic(string _Directory)
+        {
+            var fileVersionInfo = System.Diagnostics.FileVersionInfo.GetVersionInfo(_Directory + "\\WoW.exe");
+            return fileVersionInfo.FileVersion == "1, 12, 1, 5875"
+                || (fileVersionInfo.FileMajorPart == 1 && fileVersionInfo.FileMinorPart == 12 && fileVersionInfo.FileBuildPart == 1);
+        }
+        public static bool IsWowDirectoryTBC(string _Directory)
+        {
+            var fileVersionInfo = System.Diagnostics.FileVersionInfo.GetVersionInfo(_Directory + "\\WoW.exe");
+            return fileVersionInfo.FileVersion == "2, 4, 3, 8606" 
+                || (fileVersionInfo.FileMajorPart == 2 && fileVersionInfo.FileMinorPart == 4 && fileVersionInfo.FileBuildPart == 3);
         }
         public static short[] GetFileStatus(string _LuaFile, Dictionary<string, DateTime> _BufferedFileStatuses = null)
         {
