@@ -36,5 +36,10 @@ namespace VF_WoWLauncher
         {
             Close();
         }
+
+        private void c_lblProgramDescription_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

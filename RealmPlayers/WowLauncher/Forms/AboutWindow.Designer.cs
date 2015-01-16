@@ -65,6 +65,7 @@
             this.c_lblProgramDescription.Size = new System.Drawing.Size(367, 115);
             this.c_lblProgramDescription.TabIndex = 2;
             this.c_lblProgramDescription.Text = resources.GetString("c_lblProgramDescription.Text");
+            this.c_lblProgramDescription.Click += new System.EventHandler(this.c_lblProgramDescription_Click);
             // 
             // c_btnDonate
             // 
