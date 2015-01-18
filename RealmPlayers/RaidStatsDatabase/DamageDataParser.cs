@@ -149,7 +149,7 @@ namespace VF_RaidDamageDatabase
                                         else if (nameValue[0].StartsWith("RaidID"))
                                         {
                                             string[] raid_Name_ID_Remain = nameValue[1].Split('-');
-                                            string raidName = raid_Name_ID_Remain[0];
+                                            string raidName = RaidID_RaidNameConvert(raid_Name_ID_Remain[0]);
                                             int raidID = -1;
                                             int raidRemaining = -1;
 
@@ -378,6 +378,16 @@ namespace VF_RaidDamageDatabase
                 }
             }
             return damageDataSessions;
+        }
+
+        private static string RaidID_RaidNameConvert(string _RaidName)
+        {
+            if (_RaidName == "The Battle for Mount Hyjal")
+                return "Hyjal Summit";
+            else if (_RaidName == "Coilfang: Serpentshrine Cavern")
+                return "Serpentshrine Cavern";
+
+            return _RaidName;
         }
     }
 }
