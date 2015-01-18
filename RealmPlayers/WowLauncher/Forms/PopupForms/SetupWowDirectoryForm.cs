@@ -33,11 +33,28 @@ namespace VF_WoWLauncher
         {
             if (WowUtility.IsValidWowDirectory(c_txtWowDirectory.Text) == true)
             {
-                Settings.Instance._WowDirectory = c_txtWowDirectory.Text;
-                if (Settings.Instance._WowDirectory.EndsWith("\\") == false && Settings.Instance._WowDirectory.EndsWith("/") == false)
-                    Settings.Instance._WowDirectory += "\\";
-                Settings.Save();
-                Close();
+                if(WowUtility.IsWowDirectoryClassic(c_txtWowDirectory.Text) == true)
+                {
+                    Settings.Instance._WowDirectory = c_txtWowDirectory.Text;
+                    if (Settings.Instance._WowDirectory.EndsWith("\\") == false && Settings.Instance._WowDirectory.EndsWith("/") == false)
+                        Settings.Instance._WowDirectory += "\\";
+                    Settings.Save();
+                    Close();
+                }
+                else if(WowUtility.IsWowDirectoryTBC(c_txtWowDirectory.Text) == true)
+                {
+                    Utility.MessageBoxShow("Please note that this Launcher was originally made for WoW Classic and that some features may not work 100% for WoW TBC. \r\nPlease report any bugs and errors found on the forum at forum.realmplayers.com");
+                    Settings.Instance._WowDirectory = c_txtWowDirectory.Text;
+                    if (Settings.Instance._WowDirectory.EndsWith("\\") == false && Settings.Instance._WowDirectory.EndsWith("/") == false)
+                        Settings.Instance._WowDirectory += "\\";
+                    Settings.Instance._WowTBCDirectory = Settings.Instance._WowDirectory;
+                    Settings.Save();
+                    Close();
+                }
+                else
+                {
+                    Utility.MessageBoxShow(c_txtWowDirectory.Text + " is not a valid Wow Directory. \r\nPlease choose the correct directory where Wow is installed.");
+                }
             }
             else
             {
@@ -49,7 +66,7 @@ namespace VF_WoWLauncher
         private void c_btnBrowse_Click(object sender, EventArgs e)
         {
             VF.FolderSelectDialog folderSelectDialog = new VF.FolderSelectDialog();
-            folderSelectDialog.Title = "Please find the WoW Classic Directory for me";
+            folderSelectDialog.Title = "Please find the WoW Classic(or TBC) Directory for me";
             folderSelectDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyComputer);
             if (folderSelectDialog.ShowDialog() == true)
             {
@@ -74,10 +91,10 @@ namespace VF_WoWLauncher
     {
         public static bool ShowSetupWowDirectory()
         {
-            string previousWowDirectory = Settings.GetWowDirectory(WowVersion.Vanilla);
+            string previousWowDirectory = Settings.GetWowDirectory(WowVersionEnum.Vanilla);
             SetupWowDirectoryForm setupWowDirectoryForm = new SetupWowDirectoryForm();
             setupWowDirectoryForm.ShowDialog();
-            return (previousWowDirectory != Settings.GetWowDirectory(WowVersion.Vanilla)); //True om WowDirectory förändrats
+            return (previousWowDirectory != Settings.GetWowDirectory(WowVersionEnum.Vanilla)); //True om WowDirectory förändrats
         }
     }
 }

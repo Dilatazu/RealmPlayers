@@ -90,6 +90,13 @@ namespace VF_WoWLauncher
                 return Instance._WowTBCDirectory;
             }
         }
+        public static bool HaveClassic
+        {
+            get
+            {
+                return Instance._WowTBCDirectory != Instance._WowDirectory;
+            }
+        }
         public static bool HaveTBC
         {
             get
@@ -142,9 +149,9 @@ namespace VF_WoWLauncher
             Utility.SaveSerialize(StaticValues.LauncherSettingsDirectory + "Settings.cfg", sm_Settings, false);
         }
 
-        internal static string GetWowDirectory(WowVersion _WowVersion)
+        internal static string GetWowDirectory(WowVersionEnum _WowVersion)
         {
-            if (_WowVersion == WowVersion.TBC && HaveTBC == true)
+            if (_WowVersion == WowVersionEnum.TBC && HaveTBC == true)
                 return WowTBCDirectory;
             else
                 return WowDirectory;

@@ -5,22 +5,22 @@ using System.Text;
 
 namespace VF_WoWLauncher
 {
-    enum WowVersion
+    public enum WowVersionEnum
     {
         Vanilla = 1,
         TBC = 2,
     }
     class WowUtility
     {
-        public static string GetPerCharacterSavedVariableFilePath(string _Account, string _Realm, string _Character, string _AddonName, WowVersion _WowVersion)
+        public static string GetPerCharacterSavedVariableFilePath(string _Account, string _Realm, string _Character, string _AddonName, WowVersionEnum _WowVersion)
         {
             return Settings.GetWowDirectory(_WowVersion) + "WTF\\Account\\" + _Account + "\\" + _Realm + "\\" + _Character + "\\SavedVariables\\" + _AddonName + ".lua";
         }
-        public static string GetSavedVariableFilePath(string _Account, string _AddonName, WowVersion _WowVersion)
+        public static string GetSavedVariableFilePath(string _Account, string _AddonName, WowVersionEnum _WowVersion)
         {
             return Settings.GetWowDirectory(_WowVersion) + "WTF\\Account\\" + _Account + "\\SavedVariables\\" + _AddonName + ".lua";
         }
-        public static List<string> GetPerCharacterSavedVariableFilePaths(string _AddonName, WowVersion _WowVersion)
+        public static List<string> GetPerCharacterSavedVariableFilePaths(string _AddonName, WowVersionEnum _WowVersion)
         {
             List<string> returnPaths = new List<string>();
             var accounts = GetAccounts(_WowVersion);
@@ -42,7 +42,7 @@ namespace VF_WoWLauncher
             }
             return returnPaths;
         }
-        public static List<string> GetSavedVariableFilePaths(string _AddonName, WowVersion _WowVersion)
+        public static List<string> GetSavedVariableFilePaths(string _AddonName, WowVersionEnum _WowVersion)
         {
             List<string> returnPaths = new List<string>();
             var accounts = GetAccounts(_WowVersion);
@@ -56,19 +56,19 @@ namespace VF_WoWLauncher
             }
             return returnPaths;
         }
-        public static bool IsAddonInstalled(string _AddonName, WowVersion _WowVersion)
+        public static bool IsAddonInstalled(string _AddonName, WowVersionEnum _WowVersion)
         {
             return System.IO.Directory.Exists(Settings.GetWowDirectory(_WowVersion) + "Interface\\Addons\\" + _AddonName);
         }
-        public static List<string> GetAccounts(WowVersion _WowVersion)
+        public static List<string> GetAccounts(WowVersionEnum _WowVersion)
         {
             return Utility.GetDirectoriesInDirectory(Settings.GetWowDirectory(_WowVersion) + "WTF\\Account\\");
         }
-        public static List<string> GetRealms(string _Account, WowVersion _WowVersion)
+        public static List<string> GetRealms(string _Account, WowVersionEnum _WowVersion)
         {
             return Utility.GetDirectoriesInDirectory(Settings.GetWowDirectory(_WowVersion) + "WTF\\Account\\" + _Account + "\\");
         }
-        public static List<string> GetCharacters(string _Account, string _Realm, WowVersion _WowVersion)
+        public static List<string> GetCharacters(string _Account, string _Realm, WowVersionEnum _WowVersion)
         {
             return Utility.GetDirectoriesInDirectory(Settings.GetWowDirectory(_WowVersion) + "WTF\\Account\\" + _Account + "\\" + _Realm + "\\");
         }
@@ -90,7 +90,19 @@ namespace VF_WoWLauncher
 
         public static bool IsValidWowDirectory(string _Directory)
         {
-            return Utility.ContainsFilesAndDirectories(_Directory, new string[] { "WTF", "Interface", "Data", "WoW.exe", "realmlist.wtf" });
+            return Utility.ContainsFilesAndDirectories(_Directory, new string[] { "WTF", "Interface", "Data", "WoW.exe" });
+        }
+        public static bool IsWowDirectoryClassic(string _Directory)
+        {
+            var fileVersionInfo = System.Diagnostics.FileVersionInfo.GetVersionInfo(_Directory + "\\WoW.exe");
+            return fileVersionInfo.FileVersion == "1, 12, 1, 5875"
+                || (fileVersionInfo.FileMajorPart == 1 && fileVersionInfo.FileMinorPart == 12 && fileVersionInfo.FileBuildPart == 1);
+        }
+        public static bool IsWowDirectoryTBC(string _Directory)
+        {
+            var fileVersionInfo = System.Diagnostics.FileVersionInfo.GetVersionInfo(_Directory + "\\WoW.exe");
+            return fileVersionInfo.FileVersion == "2, 4, 3, 8606" 
+                || (fileVersionInfo.FileMajorPart == 2 && fileVersionInfo.FileMinorPart == 4 && fileVersionInfo.FileBuildPart == 3);
         }
         public static short[] GetFileStatus(string _LuaFile, Dictionary<string, DateTime> _BufferedFileStatuses = null)
         {

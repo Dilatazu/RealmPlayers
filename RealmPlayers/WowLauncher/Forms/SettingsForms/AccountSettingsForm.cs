@@ -25,10 +25,10 @@ namespace VF_WoWLauncher
         }
         private void UpdateAccounts()
         {
-            var accounts = Utility.GetDirectoriesInDirectory(Settings.GetWowDirectory(WowVersion.Vanilla) + "WTF\\Account");
+            var accounts = Utility.GetDirectoriesInDirectory(Settings.GetWowDirectory(WowVersionEnum.Vanilla) + "WTF\\Account");
             for (int i = 0; i < accounts.Count; ++i)
             {
-                string realmPaths = Settings.GetWowDirectory(WowVersion.Vanilla) + "WTF\\Account\\" + accounts[i];
+                string realmPaths = Settings.GetWowDirectory(WowVersionEnum.Vanilla) + "WTF\\Account\\" + accounts[i];
                 var realms = Utility.GetDirectoriesInDirectory(realmPaths);
                 if (realms.Contains(StaticValues.RealmNameConverter.First((_Value) => _Value.Value == (string)c_ddlRealm.SelectedItem).Key) == false)
                 {
@@ -44,7 +44,7 @@ namespace VF_WoWLauncher
         private void UpdateCharacters()
         {
             string account = (string)c_lbAccounts.SelectedItem;
-            string realmPaths = Settings.GetWowDirectory(WowVersion.Vanilla) + "WTF\\Account\\" + account;
+            string realmPaths = Settings.GetWowDirectory(WowVersionEnum.Vanilla) + "WTF\\Account\\" + account;
             var realms = Utility.GetDirectoriesInDirectory(realmPaths);
             List<string> characters = new List<string>();
             foreach (var realm in realms)
@@ -69,7 +69,7 @@ namespace VF_WoWLauncher
         AddonsConfig m_AddonsConfig = null;
         private void UpdateAddons()
         {
-            string characterDir = Settings.GetWowDirectory(WowVersion.Vanilla) + "WTF\\Account\\" + (string)c_lbAccounts.SelectedItem
+            string characterDir = Settings.GetWowDirectory(WowVersionEnum.Vanilla) + "WTF\\Account\\" + (string)c_lbAccounts.SelectedItem
                  + "\\" + StaticValues.RealmNameConverter.First((_Value) => _Value.Value == (string)c_ddlRealm.SelectedItem).Key
                  + "\\" + (string)c_lbCharacters.SelectedItem + "\\";
 
@@ -127,7 +127,7 @@ namespace VF_WoWLauncher
             {
                 if (Utility.MessageBoxShow("Are you sure you want to disable all addons for the character " + (string)c_lbCharacters.SelectedItem + "? This action can not be reversed. All previous settings will be forgotten.", "Disable all addons?", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
                 {
-                    string characterDir = Settings.GetWowDirectory(WowVersion.Vanilla) + "WTF\\Account\\" + (string)c_lbAccounts.SelectedItem
+                    string characterDir = Settings.GetWowDirectory(WowVersionEnum.Vanilla) + "WTF\\Account\\" + (string)c_lbAccounts.SelectedItem
                          + "\\" + StaticValues.RealmNameConverter.First((_Value) => _Value.Value == (string)c_ddlRealm.SelectedItem).Key
                          + "\\" + (string)c_lbCharacters.SelectedItem + "\\";
 
@@ -144,7 +144,7 @@ namespace VF_WoWLauncher
             {
                 if (Utility.MessageBoxShow("Are you sure you want to enable all addons for the character " + (string)c_lbCharacters.SelectedItem + "? This action can not be reversed. All previous settings will be forgotten.", "Enable all addons?", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
                 {
-                    string characterDir = Settings.GetWowDirectory(WowVersion.Vanilla) + "WTF\\Account\\" + (string)c_lbAccounts.SelectedItem
+                    string characterDir = Settings.GetWowDirectory(WowVersionEnum.Vanilla) + "WTF\\Account\\" + (string)c_lbAccounts.SelectedItem
                          + "\\" + StaticValues.RealmNameConverter.First((_Value) => _Value.Value == (string)c_ddlRealm.SelectedItem).Key
                          + "\\" + (string)c_lbCharacters.SelectedItem + "\\";
 

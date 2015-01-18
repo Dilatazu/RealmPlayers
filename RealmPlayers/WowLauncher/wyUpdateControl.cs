@@ -32,8 +32,8 @@ namespace VF_WoWLauncher
             data += wyUpdateProcess.StandardOutput.ReadToEnd();
             int exitCode = wyUpdateProcess.ExitCode;
 
+            data = data.Replace(":\n\n", "\n");
             _UpdateTextData = data;
-            
             if (exitCode == 2)
                 return true;
                 //Return value 0 == no update

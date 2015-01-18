@@ -126,17 +126,17 @@ namespace VF_WoWLauncher
                             bool sentAll;
 
                             Logger.ConsoleWriteLine("Starting to send VF_RealmPlayers Files", ConsoleColor.White);
-                            var sentRealmPlayersFiles = ServerComm.SendAddonData(Settings.UserID, "VF_RealmPlayers", WowVersion.Vanilla, "VF_RealmPlayersData", 50, out sentAll);
+                            var sentRealmPlayersFiles = ServerComm.SendAddonData(Settings.UserID, "VF_RealmPlayers", WowVersionEnum.Vanilla, "VF_RealmPlayersData", 50, out sentAll);
                             foreach (var file in sentRealmPlayersFiles)
                                 Logger.ConsoleWriteLine("Sent VF_RealmPlayers File \"" + file + "\"", ConsoleColor.Green);
 
                             Logger.ConsoleWriteLine("Starting to send VF_RaidDamage Files", ConsoleColor.White);
-                            var sentRaidDamageFiles = ServerComm.SendAddonData(Settings.UserID, "VF_RaidDamage", WowVersion.Vanilla, "VF_RaidDamageData", 5000, out sentAll);
+                            var sentRaidDamageFiles = ServerComm.SendAddonData(Settings.UserID, "VF_RaidDamage", WowVersionEnum.Vanilla, "VF_RaidDamageData", 5000, out sentAll);
                             foreach (var file in sentRaidDamageFiles)
                                 Logger.ConsoleWriteLine("Sent VF_RaidDamage File \"" + file + "\"", ConsoleColor.Cyan);
 
                             Logger.ConsoleWriteLine("Starting to send VF_RealmPlayersTBC Files", ConsoleColor.White);
-                            var sentRealmPlayersTBCFiles = ServerComm.SendAddonData(Settings.UserID, "VF_RealmPlayersTBC", WowVersion.TBC, "VF_RealmPlayersData", 50, out sentAll);
+                            var sentRealmPlayersTBCFiles = ServerComm.SendAddonData(Settings.UserID, "VF_RealmPlayersTBC", WowVersionEnum.TBC, "VF_RealmPlayersData", 50, out sentAll);
                             foreach (var file in sentRealmPlayersTBCFiles)
                                 Logger.ConsoleWriteLine("Sent VF_RealmPlayersTBC File \"" + file + "\"", ConsoleColor.Cyan);
                         }
@@ -159,11 +159,11 @@ namespace VF_WoWLauncher
 
                         System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
                         
-                        var wowVersion = WowVersion.Vanilla;
+                        var wowVersion = WowVersionEnum.Vanilla;
                         if (useRealm == "Archangel(TBC)")
                         {
                             useConfigProfile = "Active Wow Config";
-                            wowVersion = WowVersion.TBC;
+                            wowVersion = WowVersionEnum.TBC;
                             if (Settings.Instance.ClearWDB == true)
                             {
                                 Utility.DeleteDirectory(Settings.GetWowDirectory(wowVersion) + "Cache");

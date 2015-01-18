@@ -42,12 +42,18 @@ namespace VF_WoWLauncherServer
                                     WLN_PacketType packetType = (WLN_PacketType)msg.ReadByte();
                                     if (packetType == WLN_PacketType.Request_AddonUpdateInfo)
                                     {
-                                        Logger.ConsoleWriteLine("Received Request_AddonUpdateInfo from " + msg.SenderIP.ToString());
-                                        WLN_RequestPacket_AddonUpdateInfo[] addonUpdateInfoRequests = msg.ReadClass<WLN_RequestPacket_AddonUpdateInfo[]>();
+#region BACKWARDS_COMPATIBILITY_ONLY
+                                        BackwardsCompatible_Request_AddonUpdateInfo(msg);
+#endregion BACKWARDS_COMPATIBILITY_ONLY
+                                    }
+                                    else if (packetType == WLN_PacketType.Request_AddonUpdateInfoNew)
+                                    {
+                                        WLN_RequestPacket_AddonUpdateInfoNew addonUpdateInfoRequest = msg.ReadClass<WLN_RequestPacket_AddonUpdateInfoNew>();
                                         List<WLN_ResponsePacket_AddonUpdateInfo> result = new List<WLN_ResponsePacket_AddonUpdateInfo>();
+                                        Logger.ConsoleWriteLine("Received Request_AddonUpdateInfoNew from IP=" + msg.SenderIP.ToString() + ", UserID=" + addonUpdateInfoRequest.UserID + ", LauncherVersion=" + addonUpdateInfoRequest.LauncherVersion);
 
                                         Random rand = new Random((int)DateTime.UtcNow.Ticks);
-                                        foreach (var addon in addonUpdateInfoRequests)
+                                        foreach (var addon in addonUpdateInfoRequest.Addons)
                                         {
                                             WLN_ResponsePacket_AddonUpdateInfo addonUpdateInfo = AddonUpdates.GetAddonUpdate(addon);
                                             if (addonUpdateInfo != null)
@@ -55,7 +61,6 @@ namespace VF_WoWLauncherServer
                                                 result.Add(addonUpdateInfo);
                                             }
                                         }
-
                                         var response = msg.CreateResponseMessage(-1);//.SenderConnection.SendPacket_VF(WLN_PacketType.Response_AddonUpdateInfo, result);
                                         response.WriteByte((byte)WLN_PacketType.Response_AddonUpdateInfo);
                                         response.WriteClass(result);
@@ -111,6 +116,28 @@ namespace VF_WoWLauncherServer
                     Logger.LogException(ex);
                 }
             }
+        }
+
+        private void BackwardsCompatible_Request_AddonUpdateInfo(VF.NetworkIncommingMessage msg)
+        {
+            Logger.ConsoleWriteLine("Received Request_AddonUpdateInfo from " + msg.SenderIP.ToString());
+            WLN_RequestPacket_AddonUpdateInfo[] addonUpdateInfoRequests = msg.ReadClass<WLN_RequestPacket_AddonUpdateInfo[]>();
+            List<WLN_ResponsePacket_AddonUpdateInfo> result = new List<WLN_ResponsePacket_AddonUpdateInfo>();
+
+            Random rand = new Random((int)DateTime.UtcNow.Ticks);
+            foreach (var addon in addonUpdateInfoRequests)
+            {
+                WLN_ResponsePacket_AddonUpdateInfo addonUpdateInfo = AddonUpdates.GetAddonUpdate(addon);
+                if (addonUpdateInfo != null)
+                {
+                    result.Add(addonUpdateInfo);
+                }
+            }
+
+            var response = msg.CreateResponseMessage(-1);//.SenderConnection.SendPacket_VF(WLN_PacketType.Response_AddonUpdateInfo, result);
+            response.WriteByte((byte)WLN_PacketType.Response_AddonUpdateInfo);
+            response.WriteClass(result);
+            m_Server.SendMessage(response);
         }
     }
 }

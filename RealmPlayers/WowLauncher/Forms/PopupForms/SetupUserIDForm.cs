@@ -162,9 +162,9 @@ namespace VF_WoWLauncher
             c_txtUserID.Text = Settings.UserID;
             if(RealmPlayersUploader.IsValidUserID(c_txtUserID.Text) == false)
             {
-                if (System.IO.File.Exists(Settings.GetWowDirectory(WowVersion.Vanilla) + "VF_RealmPlayersUploader\\Settings.cfg") == true)
+                if (System.IO.File.Exists(Settings.GetWowDirectory(WowVersionEnum.Vanilla) + "VF_RealmPlayersUploader\\Settings.cfg") == true)
                 {
-                    var oldSettings = System.IO.File.ReadAllLines(Settings.GetWowDirectory(WowVersion.Vanilla) + "VF_RealmPlayersUploader\\Settings.cfg");
+                    var oldSettings = System.IO.File.ReadAllLines(Settings.GetWowDirectory(WowVersionEnum.Vanilla) + "VF_RealmPlayersUploader\\Settings.cfg");
                     foreach (var settingsLine in oldSettings)
                     {
                         if (settingsLine.StartsWith("UserID="))

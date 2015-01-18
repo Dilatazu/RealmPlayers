@@ -11,7 +11,7 @@ namespace VF_WoWLauncher
 {
     public class ServerComm
     {
-        public static string g_Host = "qinarw.dyndns.org";
+        public static string g_Host = "realmplayers.com";
         public static int g_Port = 19374;
 
         public class AddonInfo
@@ -70,25 +70,29 @@ namespace VF_WoWLauncher
             public InstalledAddons.AddonInfo InstalledAddonInfo;
             public string MoreInfoSite = "";
         }
-        internal static List<AddonUpdateInfo> GetAddonUpdateInfos(List<string> _AddonNames, WowVersion _WowVersion)
+        internal static List<AddonUpdateInfo> GetAddonUpdateInfos(List<string> _AddonNames, WowVersionEnum _WowVersion)
         {
             VF.NetworkClient netClient = new VF.NetworkClient(g_Host, g_Port);
 
             //VF.NetworkIncommingMessage msg;
             {
                 VF.NetworkOutgoingMessage newMessage = netClient.CreateMessage();
-                WLN_RequestPacket_AddonUpdateInfo[] request = new WLN_RequestPacket_AddonUpdateInfo[_AddonNames.Count];
+                WLN_RequestPacket_AddonUpdateInfoNew request = new WLN_RequestPacket_AddonUpdateInfoNew();
+                request.UserID = Settings.UserID;
+                request.LauncherVersion = StaticValues.LauncherVersion;
+                request.WowVersion = _WowVersion;
                 for (int i = 0; i < _AddonNames.Count; ++i)
                 {
-                    request[i] = new WLN_RequestPacket_AddonUpdateInfo();
-                    request[i].AddonName = _AddonNames[i];
+                    var addonUpdateInfo = new WLN_RequestPacket_AddonUpdateInfo();
+                    addonUpdateInfo.AddonName = _AddonNames[i];
                     var addonInfo = InstalledAddons.GetAddonInfo(_AddonNames[i], _WowVersion);
                     if (addonInfo != null)
-                        request[i].CurrentVersion = addonInfo.m_VersionString;
+                        addonUpdateInfo.CurrentVersion = addonInfo.m_VersionString;
                     else
-                        request[i].CurrentVersion = "0.0";
+                        addonUpdateInfo.CurrentVersion = "0.0";
+                    request.Addons.Add(addonUpdateInfo);
                 }
-                newMessage.WriteByte((byte)WLN_PacketType.Request_AddonUpdateInfo);
+                newMessage.WriteByte((byte)WLN_PacketType.Request_AddonUpdateInfoNew);
                 newMessage.WriteClass(request);
                 netClient.SendMessage(newMessage);
             }
@@ -193,7 +197,7 @@ namespace VF_WoWLauncher
             retValue.Add("VF_HealingInformation");
             return null;
         }
-        internal static List<string> SendAddonData(string _UserID, string _AddonName, WowVersion _WowVersion, string _ClearLuaVariableName, int _LuaVariableDataLengthThreshold, out bool _SentAll)
+        internal static List<string> SendAddonData(string _UserID, string _AddonName, WowVersionEnum _WowVersion, string _ClearLuaVariableName, int _LuaVariableDataLengthThreshold, out bool _SentAll)
         {
             var savedVariableFiles = WowUtility.GetSavedVariableFilePaths(_AddonName, _WowVersion);//For Accounts only
 

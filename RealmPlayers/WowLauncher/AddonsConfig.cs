@@ -261,7 +261,7 @@ namespace VF_WoWLauncher
                     }
                 }
             }
-            var addons = InstalledAddons.GetInstalledAddons(WowVersion.Vanilla);
+            var addons = InstalledAddons.GetInstalledAddons(WowVersionEnum.Vanilla);
             foreach (var addon in addons)
             {
                 if (ConfigValues.ContainsKey(addon) == false)

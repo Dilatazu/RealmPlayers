@@ -285,11 +285,11 @@ namespace VF_WoWLauncher
             newConfigWTF._LoadConfigFile(_Filename);
             return newConfigWTF;
         }
-        internal static ConfigWTF LoadWTFConfigFile(WowVersion _WowVersion)
+        internal static ConfigWTF LoadWTFConfigFile(WowVersionEnum _WowVersion)
         {
             return LoadConfigFile(Settings.GetWowDirectory(_WowVersion) + "WTF\\Config.wtf");
         }
-        internal void SaveWTFConfigFile(WowVersion _WowVersion)
+        internal void SaveWTFConfigFile(WowVersionEnum _WowVersion)
         {
             SaveConfigFile(Settings.GetWowDirectory(_WowVersion) + "WTF\\Config.wtf");
         }

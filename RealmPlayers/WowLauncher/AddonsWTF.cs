@@ -167,9 +167,9 @@ namespace VF_WoWLauncher
     class AccountAddons
     {
         string m_Account = null;
-        WowVersion m_WowVersion;
+        WowVersionEnum m_WowVersion;
         List<RealmAddons> m_RealmAddons = new List<RealmAddons>();
-        public AccountAddons(string _Account, WowVersion _WowVersion)
+        public AccountAddons(string _Account, WowVersionEnum _WowVersion)
         {
             m_Account = _Account;
             m_WowVersion = _WowVersion;
@@ -180,7 +180,7 @@ namespace VF_WoWLauncher
             }
         }
 
-        public WowVersion WowVersion
+        public WowVersionEnum WowVersion
         {
             get { return m_WowVersion; }
         }
@@ -234,7 +234,7 @@ namespace VF_WoWLauncher
         private AddonsWTF()
         { }
 
-        public static AddonsWTF LoadAllAccountAddons(WowVersion _WowVersion)
+        public static AddonsWTF LoadAllAccountAddons(WowVersionEnum _WowVersion)
         {
             var addonsWTF = new AddonsWTF();
             var accounts = Utility.GetDirectoriesInDirectory(Settings.GetWowDirectory(_WowVersion) + "WTF\\Account");

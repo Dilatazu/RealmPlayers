@@ -34,7 +34,7 @@ namespace VF_WoWLauncher
             c_ddlConfigProfile.Items.Add("Active Wow Config");
             c_ddlConfigProfile.Items.AddRange(ConfigProfiles.GetProfileNames().ToArray());
             if (m_ConfigWTF == null)
-                m_ConfigWTF = ConfigWTF.LoadWTFConfigFile(WowVersion.Vanilla);
+                m_ConfigWTF = ConfigWTF.LoadWTFConfigFile(WowVersionEnum.Vanilla);
             if (c_ddlConfigProfile.Items.Contains(m_ProfileName) == false)
                 c_ddlConfigProfile.Items.Add(m_ProfileName);
 
@@ -118,7 +118,7 @@ namespace VF_WoWLauncher
     }
     public partial class ConfigSettings
     {
-        internal static void EditWTFConfigSettings(WowVersion _WowVersion)
+        internal static void EditWTFConfigSettings(WowVersionEnum _WowVersion)
         {
             ConfigSettingsForm configForm = new ConfigSettingsForm(ConfigWTF.LoadWTFConfigFile(_WowVersion), "Active Wow Config");
             configForm.ShowDialog();
