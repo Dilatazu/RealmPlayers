@@ -16,7 +16,7 @@
 //            RaidDamage, //Must stay as this exact name
 //        }
 
-//        public static string ServerIP = "qinarw.dyndns.org";
+//        public static string ServerIP = "realmplayers.com";
 //        public static int ServerPort = 18374;
 //        static bool ClearWTFfile = true;
 //        static bool AutoUpdateAddon = false;

@@ -11,7 +11,7 @@ namespace VF_WoWLauncher
 {
     public class ServerComm
     {
-        public static string g_Host = "qinarw.dyndns.org";
+        public static string g_Host = "realmplayers.com";
         public static int g_Port = 19374;
 
         public class AddonInfo
