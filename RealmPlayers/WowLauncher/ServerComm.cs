@@ -77,18 +77,20 @@ namespace VF_WoWLauncher
             //VF.NetworkIncommingMessage msg;
             {
                 VF.NetworkOutgoingMessage newMessage = netClient.CreateMessage();
-                WLN_RequestPacket_AddonUpdateInfo[] request = new WLN_RequestPacket_AddonUpdateInfo[_AddonNames.Count];
+                WLN_RequestPacket_AddonUpdateInfoNew request = new WLN_RequestPacket_AddonUpdateInfoNew();
+                
                 for (int i = 0; i < _AddonNames.Count; ++i)
                 {
-                    request[i] = new WLN_RequestPacket_AddonUpdateInfo();
-                    request[i].AddonName = _AddonNames[i];
+                    var addonUpdateInfo = new WLN_RequestPacket_AddonUpdateInfo();
+                    addonUpdateInfo.AddonName = _AddonNames[i];
                     var addonInfo = InstalledAddons.GetAddonInfo(_AddonNames[i], _WowVersion);
                     if (addonInfo != null)
-                        request[i].CurrentVersion = addonInfo.m_VersionString;
+                        addonUpdateInfo.CurrentVersion = addonInfo.m_VersionString;
                     else
-                        request[i].CurrentVersion = "0.0";
+                        addonUpdateInfo.CurrentVersion = "0.0";
+                    request.Addons.Add(addonUpdateInfo);
                 }
-                newMessage.WriteByte((byte)WLN_PacketType.Request_AddonUpdateInfo);
+                newMessage.WriteByte((byte)WLN_PacketType.Request_AddonUpdateInfoNew);
                 newMessage.WriteClass(request);
                 netClient.SendMessage(newMessage);
             }

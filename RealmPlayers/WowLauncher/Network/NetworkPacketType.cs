@@ -12,6 +12,7 @@ namespace WowLauncherNetwork
         Response_AddonUpdateInfo = 1,
         Upload_AddonData = 2,
         Upload_SuccessResponse = 3,
+        Request_AddonUpdateInfoNew = 4,
 
         Request_SearchAddons = 102,
         Response_SearchAddons = 103,
@@ -25,6 +26,16 @@ namespace WowLauncherNetwork
         public string AddonName = "null";
         [ProtoMember(2)]
         public string CurrentVersion = "null";
+    }
+    [ProtoContract]
+    public class WLN_RequestPacket_AddonUpdateInfoNew
+    {
+        [ProtoMember(1)]
+        public string UserID = "Unknown.123456";
+        [ProtoMember(2)]
+        public VF_WoWLauncher.WowVersionEnum WowVersion = VF_WoWLauncher.WowVersionEnum.Vanilla;
+        [ProtoMember(3)]
+        public List<WLN_RequestPacket_AddonUpdateInfo> Addons = new List<WLN_RequestPacket_AddonUpdateInfo>();
     }
     [ProtoContract]
     public class WLN_ResponsePacket_AddonUpdateInfo
