@@ -78,7 +78,9 @@ namespace VF_WoWLauncher
             {
                 VF.NetworkOutgoingMessage newMessage = netClient.CreateMessage();
                 WLN_RequestPacket_AddonUpdateInfoNew request = new WLN_RequestPacket_AddonUpdateInfoNew();
-                
+                request.UserID = Settings.UserID;
+                request.LauncherVersion = StaticValues.LauncherVersion;
+                request.WowVersion = _WowVersion;
                 for (int i = 0; i < _AddonNames.Count; ++i)
                 {
                     var addonUpdateInfo = new WLN_RequestPacket_AddonUpdateInfo();

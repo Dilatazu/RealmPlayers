@@ -33,8 +33,10 @@ namespace WowLauncherNetwork
         [ProtoMember(1)]
         public string UserID = "Unknown.123456";
         [ProtoMember(2)]
-        public VF_WoWLauncher.WowVersionEnum WowVersion = VF_WoWLauncher.WowVersionEnum.Vanilla;
+        public string LauncherVersion = "1.0";
         [ProtoMember(3)]
+        public VF_WoWLauncher.WowVersionEnum WowVersion = VF_WoWLauncher.WowVersionEnum.Vanilla;
+        [ProtoMember(4)]
         public List<WLN_RequestPacket_AddonUpdateInfo> Addons = new List<WLN_RequestPacket_AddonUpdateInfo>();
     }
     [ProtoContract]
