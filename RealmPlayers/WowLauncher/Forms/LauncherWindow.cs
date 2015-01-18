@@ -228,7 +228,7 @@ namespace VF_WoWLauncher
             {
                 try
                 {
-                    foreach (var wowVersion in new WowVersion[] { WowVersion.Vanilla, WowVersion.TBC })
+                    foreach (var wowVersion in new WowVersionEnum[] { WowVersionEnum.Vanilla, WowVersionEnum.TBC })
                     {
                         var installedAddons = InstalledAddons.GetInstalledAddons(wowVersion);
                         var addonUpdateInfos = ServerComm.GetAddonUpdateInfos(installedAddons, wowVersion);
@@ -294,13 +294,13 @@ namespace VF_WoWLauncher
             if (RealmPlayersUploader.IsValidUserID(Settings.UserID) == true)
             {
                 var userIDAddons = new List<string>();
-                if (Settings.HaveClassic == true && InstalledAddons.GetAddonInfo("VF_RealmPlayers", WowVersion.Vanilla) == null)
+                if (Settings.HaveClassic == true && InstalledAddons.GetAddonInfo("VF_RealmPlayers", WowVersionEnum.Vanilla) == null)
                 {
                     userIDAddons.Add("VF_RealmPlayers");
                 }
                 if (Settings.HaveClassic == true 
-                    && InstalledAddons.GetAddonInfo("VF_RaidDamage", WowVersion.Vanilla) == null
-                    && InstalledAddons.GetAddonInfo("VF_RaidStats", WowVersion.Vanilla) == null)
+                    && InstalledAddons.GetAddonInfo("VF_RaidDamage", WowVersionEnum.Vanilla) == null
+                    && InstalledAddons.GetAddonInfo("VF_RaidStats", WowVersionEnum.Vanilla) == null)
                 {
                     //if (InstalledAddons.GetAddonInfo("SW_Stats", WowVersion.Vanilla) != null && InstalledAddons.GetAddonInfo("KLHThreatMeter", WowVersion.Vanilla) != null)
                     //{
@@ -308,11 +308,11 @@ namespace VF_WoWLauncher
                     userIDAddons.Add("VF_RaidStats");
                     //}
                 }
-                if (Settings.HaveTBC == true && InstalledAddons.GetAddonInfo("VF_RealmPlayersTBC", WowVersion.TBC) == null)
+                if (Settings.HaveTBC == true && InstalledAddons.GetAddonInfo("VF_RealmPlayersTBC", WowVersionEnum.TBC) == null)
                 {
                     userIDAddons.Add("VF_RealmPlayersTBC");
                 }
-                if (Settings.HaveTBC == true && InstalledAddons.GetAddonInfo("VF_RaidStatsTBC", WowVersion.TBC) == null)
+                if (Settings.HaveTBC == true && InstalledAddons.GetAddonInfo("VF_RaidStatsTBC", WowVersionEnum.TBC) == null)
                 {
                     userIDAddons.Add("VF_RaidStatsTBC");
                 }
@@ -322,7 +322,7 @@ namespace VF_WoWLauncher
                     {
                         try
                         {
-                            var addonUpdateInfosVanilla = ServerComm.GetAddonUpdateInfos(userIDAddons, WowVersion.Vanilla);
+                            var addonUpdateInfosVanilla = ServerComm.GetAddonUpdateInfos(userIDAddons, WowVersionEnum.Vanilla);
                             foreach (var addonUpdateInfo in addonUpdateInfosVanilla)
                             {
                                 string addonDescription = "";
@@ -366,7 +366,7 @@ namespace VF_WoWLauncher
                                             if (addonPackageFile != "")
                                             {
                                                 var updateAddons = InstalledAddons.GetAddonsInAddonPackage(addonPackageFile);
-                                                var updatedAddons = InstalledAddons.InstallAddonPackage(addonPackageFile, WowVersion.Vanilla, (float _InstallPercentage) => { _SetProgressBarFunc(0.5f + 0.5f * _InstallPercentage); }, addonUpdateInfo.ClearAccountSavedVariablesRequired || addonUpdateInfo.ClearCharacterSavedVariablesRequired);
+                                                var updatedAddons = InstalledAddons.InstallAddonPackage(addonPackageFile, WowVersionEnum.Vanilla, (float _InstallPercentage) => { _SetProgressBarFunc(0.5f + 0.5f * _InstallPercentage); }, addonUpdateInfo.ClearAccountSavedVariablesRequired || addonUpdateInfo.ClearCharacterSavedVariablesRequired);
                                                 if (updatedAddons != null && updatedAddons.Count > 0)
                                                 {
                                                     _SetProgressBarFunc(1.0f);
@@ -399,7 +399,7 @@ namespace VF_WoWLauncher
                             }
 
                             #region TBC Copy pasted
-                            var addonUpdateInfosTBC = ServerComm.GetAddonUpdateInfos(userIDAddons, WowVersion.TBC);
+                            var addonUpdateInfosTBC = ServerComm.GetAddonUpdateInfos(userIDAddons, WowVersionEnum.TBC);
                             foreach (var addonUpdateInfo in addonUpdateInfosTBC)
                             {
                                 string addonDescription = "";
@@ -438,7 +438,7 @@ namespace VF_WoWLauncher
                                             if (Settings.HaveTBC == true && addonPackageFile != "")
                                             {
                                                 var updateAddons = InstalledAddons.GetAddonsInAddonPackage(addonPackageFile);
-                                                var updatedAddons = InstalledAddons.InstallAddonPackage(addonPackageFile, WowVersion.TBC, (float _InstallPercentage) => { _SetProgressBarFunc(0.5f + 0.5f * _InstallPercentage); }, addonUpdateInfo.ClearAccountSavedVariablesRequired || addonUpdateInfo.ClearCharacterSavedVariablesRequired);
+                                                var updatedAddons = InstalledAddons.InstallAddonPackage(addonPackageFile, WowVersionEnum.TBC, (float _InstallPercentage) => { _SetProgressBarFunc(0.5f + 0.5f * _InstallPercentage); }, addonUpdateInfo.ClearAccountSavedVariablesRequired || addonUpdateInfo.ClearCharacterSavedVariablesRequired);
                                                 if (updatedAddons != null && updatedAddons.Count > 0)
                                                 {
                                                     _SetProgressBarFunc(1.0f);
@@ -483,10 +483,10 @@ namespace VF_WoWLauncher
         {
             //Only run first time, sort of as a delayed Load
             this.Activated -= LauncherWindow_PostLoad;
-            if (Settings.GetWowDirectory(WowVersion.Vanilla) == "")
+            if (Settings.GetWowDirectory(WowVersionEnum.Vanilla) == "")
             {
                 SetupWowDirectory.ShowSetupWowDirectory();
-                if (Settings.GetWowDirectory(WowVersion.Vanilla) == "")
+                if (Settings.GetWowDirectory(WowVersionEnum.Vanilla) == "")
                 {
                     Application.Exit();
                     return;
@@ -494,7 +494,7 @@ namespace VF_WoWLauncher
             }
             if (RealmPlayersUploader.IsValidUserID(Settings.UserID) == false)
             {
-                if ((Settings.FirstTimeRunning == true && (WowUtility.IsAddonInstalled("VF_RealmPlayers", WowVersion.Vanilla) || WowUtility.IsAddonInstalled("VF_RaidDamage", WowVersion.Vanilla)))
+                if ((Settings.FirstTimeRunning == true && (WowUtility.IsAddonInstalled("VF_RealmPlayers", WowVersionEnum.Vanilla) || WowUtility.IsAddonInstalled("VF_RaidDamage", WowVersionEnum.Vanilla)))
                 /*|| RealmPlayersUploader.IsDatabasesNotUploaded() == true*/)
                 {
                     SetupUserID.ShowSetupUserID();
@@ -633,10 +633,10 @@ namespace VF_WoWLauncher
 
             System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
             
-            var wowVersion = WowVersion.Vanilla;
+            var wowVersion = WowVersionEnum.Vanilla;
             if ((string)c_ddlRealm.SelectedItem == "Archangel(TBC)")
             {
-                wowVersion = WowVersion.TBC;
+                wowVersion = WowVersionEnum.TBC;
                 if (c_cbClearWDB.Checked == true)
                 {
                     Utility.DeleteDirectory(Settings.GetWowDirectory(wowVersion) + "Cache");
@@ -709,7 +709,7 @@ namespace VF_WoWLauncher
         {
             if ((string)c_ddlConfigProfile.SelectedItem == "Active Wow Config")
             {
-                ConfigSettings.EditWTFConfigSettings(WowVersion.Vanilla);
+                ConfigSettings.EditWTFConfigSettings(WowVersionEnum.Vanilla);
                 InitializeConfigDDL((string)c_ddlConfigProfile.SelectedItem);
             }
             else

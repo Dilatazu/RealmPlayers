@@ -14,7 +14,7 @@ namespace VF_WoWLauncher
     }
     public class InstalledAddons
     {
-        internal static List<string> GetInstalledAddons(WowVersion _WowVersion)
+        internal static List<string> GetInstalledAddons(WowVersionEnum _WowVersion)
         {
             var addons = Utility.GetDirectoriesInDirectory(Settings.GetWowDirectory(_WowVersion) + "Interface\\AddOns\\");
             for (int i = 0; i < addons.Count; ++i)
@@ -33,7 +33,7 @@ namespace VF_WoWLauncher
             }
             return addons;
         }
-        internal static string BackupAddon(string _AddonName, WowVersion _WowVersion, AddonBackupMode _BackupMode = AddonBackupMode.BackupWTF_And_AddonFiles)
+        internal static string BackupAddon(string _AddonName, WowVersionEnum _WowVersion, AddonBackupMode _BackupMode = AddonBackupMode.BackupWTF_And_AddonFiles)
         {
             int fileID = System.Threading.Interlocked.Increment(ref g_UniqueFileIDCounter);
             string backupFileName = StaticValues.LauncherBackupsDirectory + DateTime.Now.ToString("yyyy_MM_dd") + "/BackupAddon_" + _AddonName + "_" + DateTime.Now.ToString("HH_mm_ss") + "." + fileID + ".zip";
@@ -71,7 +71,7 @@ namespace VF_WoWLauncher
             return backupFileName;
         }
         public static int g_UniqueFileIDCounter = 0;
-        internal static string BackupAddons(List<string> _AddonNames, WowVersion _WowVersion, AddonBackupMode _BackupMode = AddonBackupMode.BackupWTF_And_AddonFiles)
+        internal static string BackupAddons(List<string> _AddonNames, WowVersionEnum _WowVersion, AddonBackupMode _BackupMode = AddonBackupMode.BackupWTF_And_AddonFiles)
         {
             int fileID = System.Threading.Interlocked.Increment(ref g_UniqueFileIDCounter);
             string backupFileName = StaticValues.LauncherBackupsDirectory + DateTime.Now.ToString("yyyy_MM_dd") + "/BackupAddons_" + DateTime.Now.ToString("HH_mm_ss") + "." + fileID + ".zip";
@@ -138,7 +138,7 @@ namespace VF_WoWLauncher
             }
             return addonsInPackage;
         }
-        internal static List<string> InstallAddonPackage(string _AddonZipFilePackage, WowVersion _WowVersion, Action<float> _InstallProgress = null, bool _ClearWTFSettings = false)
+        internal static List<string> InstallAddonPackage(string _AddonZipFilePackage, WowVersionEnum _WowVersion, Action<float> _InstallProgress = null, bool _ClearWTFSettings = false)
         {
             List<string> addonsInPackage = GetAddonsInAddonPackage(_AddonZipFilePackage);
             _InstallProgress(0.2f);
@@ -178,7 +178,7 @@ namespace VF_WoWLauncher
             }
             return null;
         }
-        internal static void ReinstallAddon(string _AddonName, WowVersion _WowVersion)
+        internal static void ReinstallAddon(string _AddonName, WowVersionEnum _WowVersion)
         {
             //Delete WTF files
             var savedVariableFiles = WowUtility.GetPerCharacterSavedVariableFilePaths(_AddonName, _WowVersion);
@@ -189,7 +189,7 @@ namespace VF_WoWLauncher
             }
             //Delete WTF files
         }
-        internal static bool UninstallAddon(string _AddonName, WowVersion _WowVersion)
+        internal static bool UninstallAddon(string _AddonName, WowVersionEnum _WowVersion)
         {
             if (System.IO.Directory.Exists(Settings.GetWowDirectory(_WowVersion) + "Interface\\AddOns\\" + _AddonName))
             {
@@ -385,7 +385,7 @@ namespace VF_WoWLauncher
             }
             return addonInfo;
         }
-        internal static AddonInfo GetAddonInfo(string _AddonName, WowVersion _WowVersion)
+        internal static AddonInfo GetAddonInfo(string _AddonName, WowVersionEnum _WowVersion)
         {
             string addonDirectory = Settings.GetWowDirectory(_WowVersion) + "Interface\\AddOns\\" + _AddonName + "\\";
             return GetAddonInfo(_AddonName, addonDirectory);

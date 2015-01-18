@@ -37,7 +37,7 @@ namespace VF_WoWLauncher
         public static ConfigWTF GetProfileConfigFile(string _ProfileName)
         {
             if (_ProfileName == "Active Wow Config")
-                return ConfigWTF.LoadWTFConfigFile(WowVersion.Vanilla);
+                return ConfigWTF.LoadWTFConfigFile(WowVersionEnum.Vanilla);
 
             string configWTFFile = "VF_WowLauncherSettings/Profiles/" + _ProfileName + "/Config.wtf";
             if (System.IO.File.Exists(configWTFFile) == true)

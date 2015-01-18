@@ -29,11 +29,11 @@ namespace VF_WoWLauncher
             Utility.SetPositionToMouse(this);
             //this.TopMost = true;
             (new System.Threading.Tasks.Task(() => {
-                m_AddonsWTF = AddonsWTF.LoadAllAccountAddons(WowVersion.Vanilla);
-                var installedAddons = InstalledAddons.GetInstalledAddons(WowVersion.Vanilla);
+                m_AddonsWTF = AddonsWTF.LoadAllAccountAddons(WowVersionEnum.Vanilla);
+                var installedAddons = InstalledAddons.GetInstalledAddons(WowVersionEnum.Vanilla);
                 foreach (var installedAddon in installedAddons)
                 {
-                    m_AddonInfos[installedAddon] = InstalledAddons.GetAddonInfo(installedAddon, WowVersion.Vanilla);
+                    m_AddonInfos[installedAddon] = InstalledAddons.GetAddonInfo(installedAddon, WowVersionEnum.Vanilla);
                     c_lbAddons.BeginInvoke(new Action(() => {
                         c_lbAddons.Items.Add(installedAddon);
                         if(c_lbAddons.Items.Count == 1) 
@@ -199,8 +199,8 @@ namespace VF_WoWLauncher
             {
                 if (Utility.MessageBoxShow("Are you sure you want to uninstall the addon \"" + addonName + "\"?", "Are you sure?", MessageBoxButtons.YesNoCancel) == System.Windows.Forms.DialogResult.Yes)
                 {
-                    string backupFile = InstalledAddons.BackupAddon(addonName, WowVersion.Vanilla);
-                    if (InstalledAddons.UninstallAddon(addonName, WowVersion.Vanilla) == true)
+                    string backupFile = InstalledAddons.BackupAddon(addonName, WowVersionEnum.Vanilla);
+                    if (InstalledAddons.UninstallAddon(addonName, WowVersionEnum.Vanilla) == true)
                     {
                         Utility.MessageBoxShow("Addon \"" + addonName + "\" was successfully uninstalled!\r\n\r\nA backup zip file of the addon and WTF files was saved incase you regret the decision here:\r\n" + StaticValues.LauncherWorkDirectory + "\\" + backupFile);
                         c_lbAddons.SelectedIndex = 0;
@@ -221,8 +221,8 @@ namespace VF_WoWLauncher
                 }
                 if (Utility.MessageBoxShow("\"" + addonName + "\" is needed for multiple addons. Removing this addon means that the following addons will stop work:\r\n" + neededForStr + "\r\nAre you sure you want to uninstall the addon?", "Are you sure?", MessageBoxButtons.YesNoCancel) == System.Windows.Forms.DialogResult.Yes)
                 {
-                    string backupFile = InstalledAddons.BackupAddon(addonName, WowVersion.Vanilla);
-                    if (InstalledAddons.UninstallAddon(addonName, WowVersion.Vanilla) == true)
+                    string backupFile = InstalledAddons.BackupAddon(addonName, WowVersionEnum.Vanilla);
+                    if (InstalledAddons.UninstallAddon(addonName, WowVersionEnum.Vanilla) == true)
                     {
                         Utility.MessageBoxShow("Addon \"" + addonName + "\" was successfully uninstalled!\r\n\r\nA backup zip file of the addon and WTF files was saved incase you regret the decision:\r\n" + StaticValues.LauncherWorkDirectory + "\\" + backupFile);
                         c_lbAddons.SelectedIndex = 0;
@@ -252,8 +252,8 @@ namespace VF_WoWLauncher
             string addonName = (string)c_lbAddons.SelectedItem;
             if (Utility.MessageBoxShow("Reinstalling an addon means all the previous WTF/savedvariables data will be removed. Are you sure you want to reinstall the addon \"" + addonName + "\"?", "Are you sure?", MessageBoxButtons.YesNoCancel) == System.Windows.Forms.DialogResult.Yes)
             {
-                string backupFile = InstalledAddons.BackupAddon(addonName, WowVersion.Vanilla, AddonBackupMode.BackupWTF);
-                InstalledAddons.ReinstallAddon(addonName, WowVersion.Vanilla);
+                string backupFile = InstalledAddons.BackupAddon(addonName, WowVersionEnum.Vanilla, AddonBackupMode.BackupWTF);
+                InstalledAddons.ReinstallAddon(addonName, WowVersionEnum.Vanilla);
                 Utility.MessageBoxShow("Addon \"" + addonName + "\" was successfully reinstalled!\r\n\r\nA backup zip file of the old WTF files was saved incase you regret the decision:\r\n" + StaticValues.LauncherWorkDirectory + "\\" + backupFile);
             }
         }

@@ -24,42 +24,42 @@ namespace VF_WoWLauncher
 
             Logger.LogText("Started Launching");
 
-            WowVersion wowVersion = WowVersion.Vanilla;
+            WowVersionEnum wowVersion = WowVersionEnum.Vanilla;
             string realmListFile = "";
             if (_RealmName == "Emerald Dream")
             {
                 realmListFile = StaticValues.RealmListWTF_EmeraldDream;
-                wowVersion = WowVersion.Vanilla;
+                wowVersion = WowVersionEnum.Vanilla;
             }
             else if (_RealmName == "Warsong")
             {
                 realmListFile = StaticValues.RealmListWTF_Warsong;
-                wowVersion = WowVersion.Vanilla;
+                wowVersion = WowVersionEnum.Vanilla;
             }
             else if (_RealmName == "Al'Akir")
             {
                 realmListFile = StaticValues.RealmListWTF_AlAkir;
-                wowVersion = WowVersion.Vanilla;
+                wowVersion = WowVersionEnum.Vanilla;
             }
             else if (_RealmName == "VanillaGaming")
             {
                 realmListFile = StaticValues.RealmListWTF_VanillaGaming;
-                wowVersion = WowVersion.Vanilla;
+                wowVersion = WowVersionEnum.Vanilla;
             }
             else if (_RealmName == "Valkyrie")
             {
                 realmListFile = StaticValues.RealmListWTF_Valkyrie;
-                wowVersion = WowVersion.Vanilla;
+                wowVersion = WowVersionEnum.Vanilla;
             }
             else if (_RealmName == "Rebirth")
             {
                 realmListFile = StaticValues.RealmListWTF_Rebirth;
-                wowVersion = WowVersion.Vanilla;
+                wowVersion = WowVersionEnum.Vanilla;
             }
             else if (_RealmName == "Archangel(TBC)")
             {
                 realmListFile = StaticValues.RealmListWTF_Archangel;
-                wowVersion = WowVersion.TBC;
+                wowVersion = WowVersionEnum.TBC;
             }
             else
             {

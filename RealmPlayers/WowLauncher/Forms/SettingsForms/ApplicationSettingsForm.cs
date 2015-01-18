@@ -21,7 +21,7 @@ namespace VF_WoWLauncher
             Utility.SetPositionToMouse(this);
             //this.TopMost = true;
             c_txtUserID.Text = Settings.UserID;
-            c_txtWowDirectory.Text = Settings.GetWowDirectory(WowVersion.Vanilla);
+            c_txtWowDirectory.Text = Settings.GetWowDirectory(WowVersionEnum.Vanilla);
             c_cbAutoRefresh.Checked = Settings.Instance.AutoRefreshNews;
             c_cbxRunNotAdmin.Checked = Settings.Instance.RunWoWNotAdmin;
             c_cbxAutoHide.Checked = Settings.Instance.AutoHideOldNews;
@@ -30,7 +30,7 @@ namespace VF_WoWLauncher
             {
                 c_cbxEnableTBC.Checked = true;
                 c_txtTBCWowDirectory.Enabled = true;
-                c_txtTBCWowDirectory.Text = Settings.GetWowDirectory(WowVersion.TBC);
+                c_txtTBCWowDirectory.Text = Settings.GetWowDirectory(WowVersionEnum.TBC);
                 c_btnTBCWowDirectoryBrowse.Enabled = true;
             }
             else
@@ -64,14 +64,14 @@ namespace VF_WoWLauncher
         {
             if (WowUtility.IsValidWowDirectory(c_txtWowDirectory.Text) == false)
             {
-                var dialogResult = Utility.MessageBoxShow("The specified WoW Classic Directory is not valid. Only valid WoW Classic Directory can be used. Use the old specified \"" + Settings.GetWowDirectory(WowVersion.Vanilla) + "\"?", "Not valid Wow Directory", MessageBoxButtons.YesNo);
+                var dialogResult = Utility.MessageBoxShow("The specified WoW Classic Directory is not valid. Only valid WoW Classic Directory can be used. Use the old specified \"" + Settings.GetWowDirectory(WowVersionEnum.Vanilla) + "\"?", "Not valid Wow Directory", MessageBoxButtons.YesNo);
                 if (dialogResult == System.Windows.Forms.DialogResult.No)
                 {
                     c_txtWowDirectory.ForeColor = Color.Red;
                 }
                 else//if (dialogResult == System.Windows.Forms.DialogResult.Yes)
                 {
-                    c_txtWowDirectory.Text = Settings.GetWowDirectory(WowVersion.Vanilla);
+                    c_txtWowDirectory.Text = Settings.GetWowDirectory(WowVersionEnum.Vanilla);
                 }
                 return;
             }
@@ -85,14 +85,14 @@ namespace VF_WoWLauncher
                 {
                     if (Settings.HaveTBC == true)
                     {
-                        var dialogResult = Utility.MessageBoxShow("The specified WoW The Burning Crusade Directory is not valid. Only valid WoW TBC Directory can be used. Use the old specified \"" + Settings.GetWowDirectory(WowVersion.TBC) + "\"?", "Not valid Wow Directory", MessageBoxButtons.YesNo);
+                        var dialogResult = Utility.MessageBoxShow("The specified WoW The Burning Crusade Directory is not valid. Only valid WoW TBC Directory can be used. Use the old specified \"" + Settings.GetWowDirectory(WowVersionEnum.TBC) + "\"?", "Not valid Wow Directory", MessageBoxButtons.YesNo);
                         if (dialogResult == System.Windows.Forms.DialogResult.No)
                         {
                             c_txtTBCWowDirectory.ForeColor = Color.Red;
                         }
                         else//if (dialogResult == System.Windows.Forms.DialogResult.Yes)
                         {
-                            c_txtTBCWowDirectory.Text = Settings.GetWowDirectory(WowVersion.TBC);
+                            c_txtTBCWowDirectory.Text = Settings.GetWowDirectory(WowVersionEnum.TBC);
                         }
                         return;
                     }
@@ -132,7 +132,7 @@ namespace VF_WoWLauncher
         {
             VF.FolderSelectDialog folderSelectDialog = new VF.FolderSelectDialog();
             folderSelectDialog.Title = "Please find the WoW Classic Directory for me";
-            folderSelectDialog.InitialDirectory = Settings.GetWowDirectory(WowVersion.Vanilla);
+            folderSelectDialog.InitialDirectory = Settings.GetWowDirectory(WowVersionEnum.Vanilla);
             if (folderSelectDialog.ShowDialog() == true)
             {
                 c_txtWowDirectory.Text = folderSelectDialog.FileName;
@@ -224,7 +224,7 @@ namespace VF_WoWLauncher
         {
             VF.FolderSelectDialog folderSelectDialog = new VF.FolderSelectDialog();
             folderSelectDialog.Title = "Please find the WoW The Burning Crusade Directory for me";
-            folderSelectDialog.InitialDirectory = Settings.GetWowDirectory(WowVersion.TBC);
+            folderSelectDialog.InitialDirectory = Settings.GetWowDirectory(WowVersionEnum.TBC);
             if (folderSelectDialog.ShowDialog() == true)
             {
                 c_txtTBCWowDirectory.Text = folderSelectDialog.FileName;

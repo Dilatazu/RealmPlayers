@@ -91,10 +91,10 @@ namespace VF_WoWLauncher
     {
         public static bool ShowSetupWowDirectory()
         {
-            string previousWowDirectory = Settings.GetWowDirectory(WowVersion.Vanilla);
+            string previousWowDirectory = Settings.GetWowDirectory(WowVersionEnum.Vanilla);
             SetupWowDirectoryForm setupWowDirectoryForm = new SetupWowDirectoryForm();
             setupWowDirectoryForm.ShowDialog();
-            return (previousWowDirectory != Settings.GetWowDirectory(WowVersion.Vanilla)); //True om WowDirectory förändrats
+            return (previousWowDirectory != Settings.GetWowDirectory(WowVersionEnum.Vanilla)); //True om WowDirectory förändrats
         }
     }
 }

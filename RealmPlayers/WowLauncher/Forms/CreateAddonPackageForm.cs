@@ -36,7 +36,7 @@ namespace VF_WoWLauncher
         {
             VF.FolderSelectDialog folderSelectDialog = new VF.FolderSelectDialog();
             folderSelectDialog.Title = "Select the folder of the Addon you want to create an AddonPackage for";
-            folderSelectDialog.InitialDirectory = Settings.GetWowDirectory(WowVersion.Vanilla) + "Interface\\AddOns\\";
+            folderSelectDialog.InitialDirectory = Settings.GetWowDirectory(WowVersionEnum.Vanilla) + "Interface\\AddOns\\";
             if (folderSelectDialog.ShowDialog() == true)
             {
                 c_txtAddonFolder.Text = folderSelectDialog.FileName;

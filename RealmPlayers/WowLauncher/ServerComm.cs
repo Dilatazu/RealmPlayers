@@ -70,7 +70,7 @@ namespace VF_WoWLauncher
             public InstalledAddons.AddonInfo InstalledAddonInfo;
             public string MoreInfoSite = "";
         }
-        internal static List<AddonUpdateInfo> GetAddonUpdateInfos(List<string> _AddonNames, WowVersion _WowVersion)
+        internal static List<AddonUpdateInfo> GetAddonUpdateInfos(List<string> _AddonNames, WowVersionEnum _WowVersion)
         {
             VF.NetworkClient netClient = new VF.NetworkClient(g_Host, g_Port);
 
@@ -193,7 +193,7 @@ namespace VF_WoWLauncher
             retValue.Add("VF_HealingInformation");
             return null;
         }
-        internal static List<string> SendAddonData(string _UserID, string _AddonName, WowVersion _WowVersion, string _ClearLuaVariableName, int _LuaVariableDataLengthThreshold, out bool _SentAll)
+        internal static List<string> SendAddonData(string _UserID, string _AddonName, WowVersionEnum _WowVersion, string _ClearLuaVariableName, int _LuaVariableDataLengthThreshold, out bool _SentAll)
         {
             var savedVariableFiles = WowUtility.GetSavedVariableFilePaths(_AddonName, _WowVersion);//For Accounts only
 
