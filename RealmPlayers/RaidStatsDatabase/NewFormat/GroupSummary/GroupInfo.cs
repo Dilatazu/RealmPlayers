@@ -83,7 +83,9 @@ namespace VF_RDDatabase
         {
             foreach (var raid in _GroupRC.Raids)
             {
-                var instanceRuns = BossInformation.InstanceRuns[raid.Value.RaidInstance];
+                Dictionary<string, string[]> instanceRuns;
+                if(BossInformation.InstanceRuns.TryGetValue(raid.Value.RaidInstance, out instanceRuns) == false)
+                    continue;
                 foreach (var instanceRun in instanceRuns)
                 {
                     var instanceClearData = VF_RaidDamageDatabase.RaidInstanceClearData.Generate(raid, instanceRun.Value);
