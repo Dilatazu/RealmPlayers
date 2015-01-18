@@ -97,7 +97,9 @@ namespace VF_RaidDamageWebsite
 
                 foreach (var raid in groupRC.Value.Raids)
                 {
-                    var instanceRuns = BossInformation.InstanceRuns[raid.Value.RaidInstance];
+                    Dictionary<string, string[]> instanceRuns;
+                    if (BossInformation.InstanceRuns.TryGetValue(raid.Value.RaidInstance, out instanceRuns) == false)
+                        continue;
                     foreach (var instanceRun in instanceRuns)
                     {
                         var instanceClearData = RaidInstanceClearData.Generate(raid, instanceRun.Value);
