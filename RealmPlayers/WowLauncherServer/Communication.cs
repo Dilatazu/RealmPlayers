@@ -48,9 +48,9 @@ namespace VF_WoWLauncherServer
                                     }
                                     else if (packetType == WLN_PacketType.Request_AddonUpdateInfoNew)
                                     {
-                                        Logger.ConsoleWriteLine("Received Request_AddonUpdateInfoNew from " + msg.SenderIP.ToString());
                                         WLN_RequestPacket_AddonUpdateInfoNew addonUpdateInfoRequest = msg.ReadClass<WLN_RequestPacket_AddonUpdateInfoNew>();
                                         List<WLN_ResponsePacket_AddonUpdateInfo> result = new List<WLN_ResponsePacket_AddonUpdateInfo>();
+                                        Logger.ConsoleWriteLine("Received Request_AddonUpdateInfoNew from IP=" + msg.SenderIP.ToString() + ", UserID=" + addonUpdateInfoRequest.UserID + ", LauncherVersion=" + addonUpdateInfoRequest.LauncherVersion);
 
                                         Random rand = new Random((int)DateTime.UtcNow.Ticks);
                                         foreach (var addon in addonUpdateInfoRequest.Addons)
