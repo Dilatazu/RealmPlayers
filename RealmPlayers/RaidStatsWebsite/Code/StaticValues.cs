@@ -20,16 +20,16 @@ namespace VF_RaidDamageWebsite
             {"Ahn'Qiraj Temple", "assets/img/raid/raid-aqtemple.png"},
 
             //TBC
-            {"Karazhan", "assets/img/raid/raid-karazhan.png"},
-            {"Zul'Aman", "assets/img/raid/raid-zulaman.png"},
+            {"Karazhan", "assets/img/raid/raid-karazhan.gif"},
+            {"Zul'Aman", "assets/img/raid/raid-zulaman.gif"},
             
-            {"Magtheridon's Lair", "assets/img/raid/raid-magtheridon.png"},
-            {"Gruul's Lair", "assets/img/raid/raid-gruul.png"},
-            {"Serpentshrine Cavern", "assets/img/raid/raid-serpentshrinecavern.png"},
-            {"Tempest Keep", "assets/img/raid/raid-tempestkeep.png"},
-            {"Black Temple", "assets/img/raid/raid-blacktemple.png"},
-            {"Hyjal Summit", "assets/img/raid/raid-hyjalsummit.png"},
-            {"Sunwell Plateau", "assets/img/raid/raid-sunwellplateau.png"},
+            {"Magtheridon's Lair", "assets/img/raid/raid-magtheridon.gif"},
+            {"Gruul's Lair", "assets/img/raid/raid-gruul.gif"},
+            {"Serpentshrine Cavern", "assets/img/raid/raid-serpentshrinecavern.gif"},
+            {"Tempest Keep", "assets/img/raid/raid-tempestkeep.gif"},
+            {"Black Temple", "assets/img/raid/raid-blacktemple.gif"},
+            {"Hyjal Summit", "assets/img/raid/raid-hyjalsummit.gif"},
+            {"Sunwell Plateau", "assets/img/raid/raid-sunwellplateau.gif"},
         };
 
         public static ConcurrentDictionary<string, int> g_MeasuredStrings = new ConcurrentDictionary<string, int>();
