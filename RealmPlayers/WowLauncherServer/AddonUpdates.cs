@@ -13,7 +13,7 @@ namespace VF_WoWLauncherServer
     class AddonUpdates
     {
         public static string AddonUpdateFolder = "D:\\FTP\\WowLauncher\\AddonUpdates\\";
-        public static string AddonUpdateDownloadFTPAddress = "ftp://qinarw.dyndns.org:5511/AddonUpdates/";
+        public static string AddonUpdateDownloadFTPAddress = "ftp://realmplayers.com:5511/AddonUpdates/";
         
 
         private static string GetLatestAddonPackageFilename(string _AddonName)
