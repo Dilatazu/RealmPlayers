@@ -54,7 +54,8 @@ namespace VF
             }
             foreach(var client in clients)
             {
-                if (client._GetExceptions().Count > 0)
+                if (client._GetExceptions().Count > 0 || (client.Socket != null && client.Socket.Connected == false)
+                    || client.IsReceiving() == false)
                 {
                     try
                     {

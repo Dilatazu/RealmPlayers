@@ -23,6 +23,8 @@ namespace VF
 
         bool m_CurrentReceiving = false;
         bool m_CurrentlySending = false;
+        public bool IsReceiving() { return m_CurrentReceiving; }
+        public bool IsSending() { return m_CurrentlySending; }
         public NetworkServerClient(NetworkServer _Server, Socket _Connection)
         {
             m_Server = _Server;
@@ -122,6 +124,8 @@ namespace VF
                 else
                 {
                     m_Exceptions.Enqueue(new Exception("Not all bytes were sent! only " + bytesSent + " out of " + m_CurrentOutgoingMessage._GetBufferSize()));
+                    m_CurrentOutgoingMessage = null;
+                    m_CurrentlySending = false;
                 }
             }
             catch (Exception ex)
