@@ -60,6 +60,10 @@
                     <a href='https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=6BGRWFLQ2VBFQ' target='_blank'></a>
                     </div>
                 </div>
+                <div style="margin-left:3px; margin-top: -5px">
+                    <br />
+                    <div id="changetip_tipme_button" data-bid="k6mvgpR9o9LDJdDCPBpoE" data-uid="nLUrw6VtfeTsfrT5CUMesL"></div><script>(function (document, script, id) { var js, r = document.getElementsByTagName(script)[0], protocol = /^http:/.test(document.location) ? 'http' : 'https'; if (!document.getElementById(id)) { js = document.createElement(script); js.id = id; js.src = protocol + '://widgets.changetip.com/public/js/widgets.js'; r.parentNode.insertBefore(js, r) } }(document, 'script', 'changetip_w_0'));</script>
+                </div>
                 <h4>Donations will go towards the following:</h4>
                 <ul>
                 <li><b><font color='#fff'>Server costs</font></b><br />
