@@ -58,6 +58,7 @@ namespace VF_WoWLauncherServer
             AddonDatabaseService.HandleUnhandledFiles("VF_RealmPlayers");
             AddonDatabaseService.HandleUnhandledFiles("VF_RaidDamage");
             AddonDatabaseService.HandleUnhandledFiles("VF_RealmPlayersTBC");
+            AddonDatabaseService.HandleUnhandledFiles("VF_RaidStatsTBC");
             try
             {
                 Application.Run(new MainWindow());

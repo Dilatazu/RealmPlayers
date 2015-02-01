@@ -125,20 +125,30 @@ namespace VF_WoWLauncher
                         {
                             bool sentAll;
 
-                            Logger.ConsoleWriteLine("Starting to send VF_RealmPlayers Files", ConsoleColor.White);
-                            var sentRealmPlayersFiles = ServerComm.SendAddonData(Settings.UserID, "VF_RealmPlayers", WowVersionEnum.Vanilla, "VF_RealmPlayersData", 50, out sentAll);
-                            foreach (var file in sentRealmPlayersFiles)
-                                Logger.ConsoleWriteLine("Sent VF_RealmPlayers File \"" + file + "\"", ConsoleColor.Green);
+                            if (Settings.HaveClassic == true)
+                            {
+                                Logger.ConsoleWriteLine("Starting to send VF_RealmPlayers Files", ConsoleColor.White);
+                                var sentRealmPlayersFiles = ServerComm.SendAddonData(Settings.UserID, "VF_RealmPlayers", WowVersionEnum.Vanilla, "VF_RealmPlayersData", 50, out sentAll);
+                                foreach (var file in sentRealmPlayersFiles)
+                                    Logger.ConsoleWriteLine("Sent VF_RealmPlayers File \"" + file + "\"", ConsoleColor.Green);
 
-                            Logger.ConsoleWriteLine("Starting to send VF_RaidDamage Files", ConsoleColor.White);
-                            var sentRaidDamageFiles = ServerComm.SendAddonData(Settings.UserID, "VF_RaidDamage", WowVersionEnum.Vanilla, "VF_RaidDamageData", 5000, out sentAll);
-                            foreach (var file in sentRaidDamageFiles)
-                                Logger.ConsoleWriteLine("Sent VF_RaidDamage File \"" + file + "\"", ConsoleColor.Cyan);
+                                Logger.ConsoleWriteLine("Starting to send VF_RaidDamage Files", ConsoleColor.White);
+                                var sentRaidDamageFiles = ServerComm.SendAddonData(Settings.UserID, "VF_RaidDamage", WowVersionEnum.Vanilla, "VF_RaidDamageData", 5000, out sentAll);
+                                foreach (var file in sentRaidDamageFiles)
+                                    Logger.ConsoleWriteLine("Sent VF_RaidDamage File \"" + file + "\"", ConsoleColor.Cyan);
+                            }
+                            if(Settings.HaveTBC == true)
+                            {
+                                Logger.ConsoleWriteLine("Starting to send VF_RealmPlayersTBC Files", ConsoleColor.White);
+                                var sentRealmPlayersTBCFiles = ServerComm.SendAddonData(Settings.UserID, "VF_RealmPlayersTBC", WowVersionEnum.TBC, "VF_RealmPlayersData", 50, out sentAll);
+                                foreach (var file in sentRealmPlayersTBCFiles)
+                                    Logger.ConsoleWriteLine("Sent VF_RealmPlayersTBC File \"" + file + "\"", ConsoleColor.Cyan);
 
-                            Logger.ConsoleWriteLine("Starting to send VF_RealmPlayersTBC Files", ConsoleColor.White);
-                            var sentRealmPlayersTBCFiles = ServerComm.SendAddonData(Settings.UserID, "VF_RealmPlayersTBC", WowVersionEnum.TBC, "VF_RealmPlayersData", 50, out sentAll);
-                            foreach (var file in sentRealmPlayersTBCFiles)
-                                Logger.ConsoleWriteLine("Sent VF_RealmPlayersTBC File \"" + file + "\"", ConsoleColor.Cyan);
+                                Logger.ConsoleWriteLine("Starting to send VF_RaidStatsTBC Files", ConsoleColor.White);
+                                var sentRaidStatsTBCFiles = ServerComm.SendAddonData(Settings.UserID, "VF_RaidStatsTBC", WowVersionEnum.TBC, "VF_RaidStatsData", 5000, out sentAll);
+                                foreach (var file in sentRaidStatsTBCFiles)
+                                    Logger.ConsoleWriteLine("Sent VF_RaidStatsTBC File \"" + file + "\"", ConsoleColor.Cyan);
+                            }
                         }
                         else
                         {

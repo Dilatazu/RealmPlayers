@@ -90,6 +90,12 @@ namespace VF_WoWLauncherServer
                 string raidDamageDataFile;
                 while (m_NewContributions.TryDequeue(out raidDamageDataFile))
                 {
+                    //TODO: remove
+                    if (raidDamageDataFile.Contains("VF_RaidStatsTBC"))
+                    {
+                        m_AddedContributionFiles.Add(raidDamageDataFile);
+                        continue;
+                    }
                     if (AddFightsToDatabase(raidDamageDataFile) >= 1)
                     {
                         m_AddedContributionFiles.Add(raidDamageDataFile);
@@ -331,11 +337,25 @@ namespace VF_WoWLauncherServer
                 return;
             }
             string zipFileName = "";
-            if(_ContributionType == RDContributionType.Data)
-                zipFileName = "VF_RaidDamage_Contributions_" + DateTime.Now.ToString("yyyy_MM_dd") + ".zip";
+            string zipFullFilePath = "";
+
+            if (_Filename.Contains("VF_RaidStatsTBC") == true)
+            {
+                if (_ContributionType == RDContributionType.Data)
+                    zipFileName = "VF_RaidStatsTBC_Contributions_" + DateTime.Now.ToString("yyyy_MM_dd") + ".zip";
+                else
+                    zipFileName = "VF_RaidStatsTBC_Empty" + DateTime.Now.ToString("yyyy_MM_dd") + ".zip";
+                zipFullFilePath = g_AddonContributionsBackupFolder + "VF_RaidStatsTBC\\" + zipFileName;
+            }
             else
-                zipFileName = "VF_RaidDamage_Empty_" + DateTime.Now.ToString("yyyy_MM_dd") + ".zip";
-            string zipFullFilePath = g_AddonContributionsBackupFolder + "VF_RaidDamage\\" + zipFileName;
+            {
+                if (_ContributionType == RDContributionType.Data)
+                    zipFileName = "VF_RaidDamage_Contributions_" + DateTime.Now.ToString("yyyy_MM_dd") + ".zip";
+                else
+                    zipFileName = "VF_RaidDamage_Empty_" + DateTime.Now.ToString("yyyy_MM_dd") + ".zip";
+                zipFullFilePath = g_AddonContributionsBackupFolder + "VF_RaidDamage\\" + zipFileName;
+            }
+
             VF_WoWLauncher.Utility.AssertFilePath(zipFullFilePath);
             ZipFile zipFile;
             if (System.IO.File.Exists(zipFullFilePath) == true)

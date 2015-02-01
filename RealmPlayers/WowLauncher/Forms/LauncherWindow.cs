@@ -180,7 +180,11 @@ namespace VF_WoWLauncher
                     {
                         ForumReader.ForumType forumType = ForumReader.ForumType.FeenixForum;
                         if (_NewPost.m_PostURL.Contains("forum.realmplayers.com") == true)
+                        {
                             forumType = ForumReader.ForumType.RealmPlayersForum;
+                            if (_NewPost.m_PosterName != "Dilatazu")
+                                return;
+                        }
                         string threadNameLower = _NewPost.m_ThreadName.ToLower();
                         if (forumType == ForumReader.ForumType.FeenixForum && Settings.HaveTBC == false && (threadNameLower.Contains("archangel") || threadNameLower.Contains("2.4.3") || threadNameLower.Contains("area 52")))
                         {
