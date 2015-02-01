@@ -10,34 +10,65 @@ namespace RealmPlayersServer
 {
     public partial class AdminInfo : System.Web.UI.Page
     {
-        public MvcHtmlString m_InfoHTML = null;
+        public MvcHtmlString m_PageHTML = null;
         protected void Page_Load(object sender, EventArgs e)
         {
-            this.Title = "Admin | RealmPlayers";
+            PageRequestData requestData = new PageRequestData();
+            requestData.m_RedirectFunction = (string _RedirectURL) => { Response.Redirect(_RedirectURL); };
+            requestData.m_GetQueryStringFunction = (string _Query) => { return Request.QueryString.Get(_Query); };
+            requestData.RawURL = Request.RawUrl;
+            requestData.AbsoluteURLPath = Request.Url.AbsolutePath;
+            PageResponeData data = GeneratePage(requestData);
 
-            string userStr = Request.QueryString.Get("user");
-            string passStr = Request.QueryString.Get("pass");
+            this.Title = data.Title;
+            m_PageHTML = new MvcHtmlString(data.PageHTML);
+        }
+
+        public class PageResponeData
+        {
+            public string Title = "RealmPlayers";
+            public string PageHTML = "";
+        }
+        public struct PageRequestData
+        {
+            public Action<string> m_RedirectFunction;
+            public Func<string, string> m_GetQueryStringFunction;
+            public string RawURL;
+            public string AbsoluteURLPath;
+        }
+
+        private static PageResponeData GeneratePage(PageRequestData _RequestData)
+        {
+            PageResponeData result = new PageResponeData();
+            result.Title = "Admin | RealmPlayers";
+
+            string userStr = _RequestData.m_GetQueryStringFunction("user");
+            string passStr = _RequestData.m_GetQueryStringFunction("pass");
 
             if (userStr != "Viktor" || passStr != "***REMOVED***")
-                Response.Redirect("Index.aspx");
+            {
+                _RequestData.m_RedirectFunction("Index.aspx");
+                return result;
+            }
 
-            int count = PageUtility.GetQueryInt(Request, "count", 500);
-            string detailsStr = Request.QueryString.Get("details");
-            string commandStr = Request.QueryString.Get("command");
-            string queryUrlStr = PageUtility.GetQueryString(Request, "queryurl", "");
-
+            int count = PageUtility.GetQueryInt(_RequestData.m_GetQueryStringFunction, "count", 500);
+            string detailsStr = _RequestData.m_GetQueryStringFunction("details");
+            string commandStr = _RequestData.m_GetQueryStringFunction("command");
+            string queryUrlStr = PageUtility.GetQueryString(_RequestData.m_GetQueryStringFunction, "queryurl", "");
 
             var appInstance = Hidden.ApplicationInstance.Instance;
             if (commandStr == "reload")
             {
                 appInstance.m_LastLoadedDateTime = DateTime.MinValue;
-                Response.Redirect(Request.Url.AbsolutePath + "?user=Viktor&pass=***REMOVED***");
+                _RequestData.m_RedirectFunction(_RequestData.AbsoluteURLPath + "?user=Viktor&pass=***REMOVED***");
+                return result;
             }
-            string info = "<h2><a href='Admininfo.aspx?user=Viktor&pass=***REMOVED***'>Admin Info</a></h2>";
+            string info = "<ul class='breadcrumb'></ul><div class='row'><div class='span12'>"
+                    + "<h2><a href='Admininfo.aspx?user=Viktor&pass=***REMOVED***'>Admin Info</a></h2>";
             info += "<h3><a href='Log.aspx?user=Viktor&pass=***REMOVED***'>Event Log</a></h3><br />";
             info += "<div class='row'><div class='span10'>";
             info += "<h2>User Activity</h2><br />Last complete restart: " + appInstance.m_StartTime.ToString();
-            info += "<br />Last database load time: " + appInstance.m_LastLoadedDateTime.ToLocalTime().ToString() + " <a href='" + Request.RawUrl + "&command=reload" + "'>(Reload now?)</a>";
+            info += "<br />Last database load time: " + appInstance.m_LastLoadedDateTime.ToLocalTime().ToString() + " <a href='" + _RequestData.RawURL + "&command=reload" + "'>(Reload now?)</a>";
             if (detailsStr == null)
             {
                 System.Threading.Monitor.Enter(appInstance.m_RealmPlayersMutex);
@@ -182,18 +213,20 @@ namespace RealmPlayersServer
                         //else
                         //    userUrlReferrer = " from \"" + userUrlReferrer + "\"";
 
-                        listData = urlVisit.VisitTime.ToString("yyyy-MM-dd HH:mm:ss") + " = " + "<a class='nav' href='" + urlVisit.URL + "'>" + urlVisit.URL + "</a>" 
+                        listData = urlVisit.VisitTime.ToString("yyyy-MM-dd HH:mm:ss") + " = " + "<a class='nav' href='" + urlVisit.URL + "'>" + urlVisit.URL + "</a>"
                             + (urlVisit.FromURL != "" ? " from \"" + urlVisit.FromURL + "\"" : "") + "<br />" + listData;
                     }
                     info += listData;
                 }
             }
-                
+
             info += "</div><div class='span2'>";
             info += "<h2>Commands</h2>";
-            info += "<a href='" + Request.RawUrl + "&command=savestats" + "'>Save UserActivity</a>";
+            info += "<a href='" + _RequestData.RawURL + "&command=savestats" + "'>Save UserActivity</a>";
             info += "</div'></div>";
-            m_InfoHTML = new MvcHtmlString(info);
+            info += "</div></div>";
+            result.PageHTML = info;
+            return result;
         }
     }
 }

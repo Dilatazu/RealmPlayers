@@ -143,6 +143,13 @@ namespace RealmPlayersServer
                 result = _DefaultValue;
             return result;
         }
+        public static string GetQueryString(Func<string, string> _GetQueryFunc, string _QueryName, string _DefaultValue = "null")
+        {
+            string result = _GetQueryFunc(_QueryName);
+            if (result == null)
+                result = _DefaultValue;
+            return result;
+        }
         public static WowRealm GetQueryRealm(System.Web.HttpRequest _RequestObject)
         {
             string realmStr = GetQueryString(_RequestObject, "realm", "ED");
@@ -163,6 +170,13 @@ namespace RealmPlayersServer
         public static int GetQueryInt(System.Web.HttpRequest _RequestObject, string _QueryName, int _DefaultValue = 0)
         {
             string resultStr = GetQueryString(_RequestObject, _QueryName, "");
+            int result = _DefaultValue;
+            if (int.TryParse(resultStr, out result) == false) result = _DefaultValue;
+            return result;
+        }
+        public static int GetQueryInt(Func<string, string> _GetQueryFunc, string _QueryName, int _DefaultValue = 0)
+        {
+            string resultStr = GetQueryString(_GetQueryFunc, _QueryName, "");
             int result = _DefaultValue;
             if (int.TryParse(resultStr, out result) == false) result = _DefaultValue;
             return result;
