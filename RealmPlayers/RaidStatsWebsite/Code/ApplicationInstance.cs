@@ -34,6 +34,7 @@ namespace VF_RaidDamageWebsite
         {}
         ApplicationInstance()
         {
+            Authentication.Initialize();
             if (System.IO.Directory.Exists(g_RDDBDir) == false)
             {
                 g_RPPDBDir = g_RPPDBDir.Replace(VF_RealmPlayersDatabase.Utility.DefaultServerLocation, VF_RealmPlayersDatabase.Utility.DefaultDebugLocation);
@@ -46,7 +47,6 @@ namespace VF_RaidDamageWebsite
             //    rppDBDir = "\\\\***REMOVED***\\VF_RealmPlayersData\\RPPDatabase\\Database\\";
             //}
             m_RPPDatabase = new RPPDatabase(rppDBDir);
-
         }
         public static ApplicationInstance Instance
         {
@@ -227,6 +227,15 @@ namespace VF_RaidDamageWebsite
             var groupRC = summaryDB.GetGroupRC(currRaid.Realm, currRaid.RaidOwnerName);
             var raidSummary = groupRC.GetRaid(_UniqueRaidID);
             return currRaid.GetBossFight(_RaidBossFightIndex, GetRaidFightCollection, raidSummary);
+        }
+        public DateTime GetRaidDate(int _UniqueRaidID)
+        {
+            var raidCollection = GetRaidCollection();
+            if (raidCollection.m_Raids.ContainsKey(_UniqueRaidID) == false)
+                return DateTime.Now;
+
+            var currRaid = raidCollection.m_Raids[_UniqueRaidID];
+            return currRaid.RaidEndDate;
         }
         public List<RaidBossFight> GetRaidBossFights(int _UniqueRaidID)
         {

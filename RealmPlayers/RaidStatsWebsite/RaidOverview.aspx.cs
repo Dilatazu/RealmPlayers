@@ -88,6 +88,18 @@ namespace VF_RaidDamageWebsite
             if (uniqueRaidID == -1)
                 Response.Redirect("RaidList.aspx");
 
+            this.Title = "Raid " + uniqueRaidID + " | RaidStats";
+
+            if((DateTime.Now - ApplicationInstance.Instance.GetRaidDate(uniqueRaidID)).TotalDays > 30)
+            {
+                var user = Authentication.GetSessionUser(Page, true);
+                if(user.IsPremium() == false)
+                {
+                    m_TrashHTML = new MvcHtmlString("Sorry. Raids that are older than 30 days are only viewable for Premium users!");
+                    return;
+                }
+            }
+
             var orderedFights = ApplicationInstance.Instance.GetRaidBossFights(uniqueRaidID);
             if (orderedFights == null || orderedFights.Count() == 0)
                 Response.Redirect("RaidList.aspx");
@@ -95,8 +107,6 @@ namespace VF_RaidDamageWebsite
             var orderedTrashFights = ApplicationInstance.Instance.GetRaidTrashFights(uniqueRaidID);
 
             var realmDB = ApplicationInstance.Instance.GetRealmDB(orderedFights.First().GetRaid().Realm);
-
-            this.Title = "Raid " + uniqueRaidID + " | RaidStats";
 
             var currRaid = orderedFights.First().GetRaid();
             if (currRaid.Realm == VF_RealmPlayersDatabase.WowRealm.Test_Server && PageUtility.GetQueryString(Request, "Debug") == "null")
