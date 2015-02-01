@@ -123,6 +123,26 @@ namespace VF_WoWLauncher.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap topic_read {
+            get {
+                object obj = ResourceManager.GetObject("topic_read", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap topic_unread {
+            get {
+                object obj = ResourceManager.GetObject("topic_unread", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap update_critical32 {
             get {
                 object obj = ResourceManager.GetObject("update_critical32", resourceCulture);
@@ -146,6 +166,16 @@ namespace VF_WoWLauncher.Properties {
         internal static System.Drawing.Bitmap update_recommended32 {
             get {
                 object obj = ResourceManager.GetObject("update_recommended32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap VF_RealmPlayersIcon64 {
+            get {
+                object obj = ResourceManager.GetObject("VF_RealmPlayersIcon64", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

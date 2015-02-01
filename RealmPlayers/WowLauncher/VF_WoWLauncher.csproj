@@ -177,6 +177,7 @@
       <DependentUpon>ApplicationSettingsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ForumReader.cs" />
+    <Compile Include="ForumReaderPHP.cs" />
     <Compile Include="FTPUtility.cs" />
     <Compile Include="Network\NetworkPacketType.cs" />
     <Compile Include="NotAdminCCode.cs" />
@@ -344,6 +345,9 @@
     <None Include="Resources\VF_WL_ICON.ico" />
     <None Include="Resources\VF_WL_ICON_32.ico" />
     <Content Include="Resources\NotAdmin.exe" />
+    <None Include="Resources\VF_RealmPlayersIcon64.png" />
+    <None Include="Resources\topic_read.gif" />
+    <None Include="Resources\topic_unread.gif" />
     <Content Include="VF_WL_ICON.ico" />
     <Content Include="wow_icon.ico" />
     <None Include="Resources\update-critical32.png" />

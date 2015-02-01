@@ -33,6 +33,11 @@ namespace VF_WoWLauncher
                 throw;
             }
         }
+        public enum ForumType
+        {
+            FeenixForum,
+            RealmPlayersForum,
+        }
         [ProtoContract]
         public class ForumPost
         {
@@ -59,76 +64,148 @@ namespace VF_WoWLauncher
             [ProtoMember(8)]
             public State m_State = State.NewThisSession;
         }
-        private static List<ForumPost> GetThreadPosts(string _ThreadURL, DateTime _EarliestPostDate)
+        private static List<ForumPost> GetThreadPosts(string _ThreadURL, string _LastPostURL, DateTime _EarliestPostDate, ForumType _ForumType)
         {
-            List<ForumPost> threadPosts = new List<ForumPost>();
-
-            string website = _GetHTMLFile(_ThreadURL + "page__view__getlastpost");
-            string threadName = website.SplitVF("<h1 class='ipsType_pagetitle'>", 2).Last().SplitVF("</h1>").First();
-            threadName = System.Net.WebUtility.HtmlDecode(threadName.Replace("\t", "").Replace("\n", ""));
-
-            string[] websitePart = website.SplitVF("<div class='post_wrap' >");
-
-            for (int i = websitePart.Length - 1; i >= 1; --i)
+            if(_ForumType == ForumType.FeenixForum)
             {
-                try
+                List<ForumPost> threadPosts = new List<ForumPost>();
+
+                string website = _GetHTMLFile(_LastPostURL);
+                string threadName = website.SplitVF("<h1 class='ipsType_pagetitle'>", 2).Last().SplitVF("</h1>").First();
+                threadName = System.Net.WebUtility.HtmlDecode(threadName.Replace("\t", "").Replace("\n", ""));
+
+                string[] websitePart = website.SplitVF("<div class='post_wrap' >");
+
+                for (int i = websitePart.Length - 1; i >= 1; --i)
                 {
-                    string postURL = websitePart[i].SplitVF("<span class='post_id right ipsType_small desc blend_links'><a href='", 2).Last().SplitVF("'").First();
-                    string posterName = websitePart[i].SplitVF("title='View Profile'>", 2).Last().SplitVF("</a>").First();
-                    string gravatarURL = "null";
-                    try 
-                    { 
-                        gravatarURL = "http://www.gravatar.com" + websitePart[i].SplitVF("<img src='http://www.gravatar.com", 2).Last().SplitVF("'").First(); 
-                    }
-                    catch(Exception){}
-
-                    string postBody = websitePart[i].SplitVF("<div class='post_body'>", 2).Last();
-                    string dateString = postBody.SplitVF("<abbr class=\"published\" title=\"", 2).Last().SplitVF("\">").First();
-                    DateTime postDate = DateTime.Parse(dateString);
-                    if (_EarliestPostDate > postDate)
-                    {
-                        break;
-                    }
-                    string postContent = websitePart[i].SplitVF("<div class='post entry-content '>").Last().SplitVF("</div>").First().SplitVF("-->", 2).Last();
-
-                    string[] postContentParts = postContent.Split('<');
-
-                    string realContent = "";
                     try
                     {
-                        foreach (var postContentPart in postContentParts)
+                        string postURL = websitePart[i].SplitVF("<span class='post_id right ipsType_small desc blend_links'><a href='", 2).Last().SplitVF("'").First();
+                        string posterName = websitePart[i].SplitVF("title='View Profile'>", 2).Last().SplitVF("</a>").First();
+                        string gravatarURL = "null";
+                        try
                         {
-                            if (postContentPart.Contains('>'))
-                            {
-                                if (postContentPart.StartsWith("li>") == true)
-                                    realContent += "\n*";
-                                realContent += postContentPart.Substring(postContentPart.IndexOf('>') + 1);
-                            }
-                            else
-                                realContent += postContentPart;
+                            gravatarURL = "http://www.gravatar.com" + websitePart[i].SplitVF("<img src='http://www.gravatar.com", 2).Last().SplitVF("'").First();
                         }
+                        catch (Exception) { }
+
+                        string postBody = websitePart[i].SplitVF("<div class='post_body'>", 2).Last();
+                        string dateString = postBody.SplitVF("<abbr class=\"published\" title=\"", 2).Last().SplitVF("\">").First();
+                        DateTime postDate = DateTime.Parse(dateString);
+                        if (_EarliestPostDate > postDate)
+                        {
+                            break;
+                        }
+                        string postContent = websitePart[i].SplitVF("<div class='post entry-content '>").Last().SplitVF("</div>").First().SplitVF("-->", 2).Last();
+
+                        string[] postContentParts = postContent.Replace("<br />", "\n").Split('<');
+
+                        string realContent = "";
+                        try
+                        {
+                            foreach (var postContentPart in postContentParts)
+                            {
+                                if (postContentPart.Contains('>'))
+                                {
+                                    if (postContentPart.StartsWith("li>") == true)
+                                        realContent += "\n*";
+                                    realContent += postContentPart.Substring(postContentPart.IndexOf('>') + 1);
+                                }
+                                else
+                                    realContent += postContentPart;
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            realContent += "\n!!!COULD NOT READ REST OF THE POST!!!";
+                        }
+                        realContent = System.Net.WebUtility.HtmlDecode(realContent);
+                        realContent = realContent.Replace("\t", "");
+
+                        string[] cn = realContent.SplitVF("\n", StringSplitOptions.RemoveEmptyEntries);
+
+                        realContent = "";
+                        foreach (var c in cn)
+                        {
+                            realContent += c + "\n";
+                        }
+                        var newForumPost = new ForumPost { m_ThreadName = threadName, m_ThreadURL = _ThreadURL, m_PostURL = postURL, m_PosterName = posterName, m_PosterImageURL = gravatarURL, m_PostContent = realContent, m_PostDate = postDate };
+                        threadPosts.Add(newForumPost);
                     }
                     catch (Exception)
-                    {
-                        realContent += "\n!!!COULD NOT READ REST OF THE POST!!!";
-                    }
-                    realContent = System.Net.WebUtility.HtmlDecode(realContent);
-                    realContent = realContent.Replace("\t", "");
-
-                    string[] cn = realContent.SplitVF("\n", StringSplitOptions.RemoveEmptyEntries);
-
-                    realContent = "";
-                    foreach (var c in cn)
-                    {
-                        realContent += c + "\n";
-                    }
-                    var newForumPost = new ForumPost { m_ThreadName = threadName, m_ThreadURL = _ThreadURL, m_PostURL = postURL, m_PosterName = posterName, m_PosterImageURL = gravatarURL, m_PostContent = realContent, m_PostDate = postDate };
-                    threadPosts.Add(newForumPost);
+                    { }
                 }
-                catch (Exception)
-                { }
+                return threadPosts;
             }
-            return threadPosts;
+            else
+            {
+                List<ForumPost> threadPosts = new List<ForumPost>();
+
+                string website = _GetHTMLFile(_LastPostURL);
+                string threadContent = website.SplitVF("<div id=\"page-body\">", 2).Last();
+                string threadName = System.Net.WebUtility.HtmlDecode(threadContent.SplitVF("viewtopic.php", 2).Last().SplitVF(">", 2).Last().SplitVF("</a></h2>", 2).First());
+
+                string[] websitePart = website.SplitVF("<p class=\"author\"><a href=\"");
+
+                for (int i = websitePart.Length - 1; i >= 1; --i)
+                {
+                    try
+                    {
+                        string postURL = websitePart[i].SplitVF("\">", 2).First();
+                        postURL = postURL.Replace("./", "http://forum.realmplayers.com/");
+                        postURL = System.Net.WebUtility.HtmlDecode(postURL);
+                        string posterInfo = websitePart[i].SplitVF("<dl class=\"postprofile\"", 2).Last().SplitVF("</dt>").First();
+                        string posterName = posterInfo.SplitVF("</a>\r\n").First().SplitVF(">").Last();
+                        string posterImageURL = posterInfo.SplitVF("User avatar\" /></a><br />").First().SplitVF("<img src=\"", 2).Last().SplitVF("\"").First();
+                        posterImageURL = posterImageURL.Replace("./", "http://forum.realmplayers.com/");
+
+                        string dateString = websitePart[i].SplitVF("</strong> &raquo; ", 2).Last().SplitVF(" </p>", 2).First();
+                        DateTime postDate = ParseDateString(dateString, DateTime.MinValue);
+                        if (_EarliestPostDate > postDate)
+                        {
+                            break;
+                        }
+                        string postContent = websitePart[i].SplitVF("<div class=\"content\">", 2).Last().SplitVF("<dl class", 2).First();
+
+                        string[] postContentParts = postContent.Replace("<br />", "\r\n").Split('<');
+
+                        string realContent = "";
+                        try
+                        {
+                            foreach (var postContentPart in postContentParts)
+                            {
+                                if (postContentPart.Contains('>'))
+                                {
+                                    if (postContentPart.StartsWith("li>") == true)
+                                        realContent += "\n*";
+                                    realContent += postContentPart.Substring(postContentPart.IndexOf('>') + 1);
+                                }
+                                else
+                                    realContent += postContentPart;
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            realContent += "\n!!!COULD NOT READ REST OF THE POST!!!";
+                        }
+                        realContent = System.Net.WebUtility.HtmlDecode(realContent);
+                        realContent = realContent.Replace("\t", "");
+
+                        string[] cn = realContent.SplitVF("\r\n", StringSplitOptions.RemoveEmptyEntries);
+
+                        realContent = "";
+                        foreach (var c in cn)
+                        {
+                            realContent += c + "\n";
+                        }
+                        var newForumPost = new ForumPost { m_ThreadName = threadName, m_ThreadURL = _ThreadURL, m_PostURL = postURL, m_PosterName = posterName, m_PosterImageURL = posterImageURL, m_PostContent = realContent, m_PostDate = postDate };
+                        threadPosts.Add(newForumPost);
+                    }
+                    catch (Exception)
+                    { }
+                }
+                return threadPosts;
+            }
         }
         [ProtoContract]
         public class ForumSection
@@ -143,7 +220,7 @@ namespace VF_WoWLauncher
             public Dictionary<string, DateTime> m_LastUpdatedThreads = new Dictionary<string, DateTime>();
             public bool m_DataUpdated = false;//No need to save this
 
-            public void UpdateThread(string _ThreadURL, DateTime _LatestPost, Action<ForumPost> _RetPosts)
+            public void UpdateThread(string _ThreadURL, string _LastPostURL, DateTime _LatestPost, Action<ForumPost> _RetPosts, ForumType _ForumType)
             {
                 if (m_LastUpdatedThreads.ContainsKey(_ThreadURL) == false)
                     m_LastUpdatedThreads.Add(_ThreadURL, DateTime.MinValue.AddDays(10));
@@ -152,7 +229,7 @@ namespace VF_WoWLauncher
                 {
                     try
                     {
-                        var newThreadPosts = GetThreadPosts(_ThreadURL, m_LastUpdatedThreads[_ThreadURL].AddDays(-1));
+                        var newThreadPosts = GetThreadPosts(_ThreadURL, _LastPostURL, m_LastUpdatedThreads[_ThreadURL].AddDays(-1), _ForumType);
 
                         foreach (var newThreadPost in newThreadPosts)
                         {
@@ -230,7 +307,7 @@ namespace VF_WoWLauncher
                 }
             }
         }
-        public static void GetLatestPosts(string[] _ForumAddresses, Action<ForumPost> _RetPosts, bool _OnlyNewest = false) //"http://www.wow-one.com/forum/117-server-updates/"
+        public static void GetLatestPosts(string[] _ForumAddresses, Action<ForumPost> _RetPosts, ForumType _ForumType, bool _OnlyNewest = false) //"http://www.wow-one.com/forum/117-server-updates/"
         {
             if (_OnlyNewest == false)
             {
@@ -255,7 +332,7 @@ namespace VF_WoWLauncher
                 try
                 {
                     ForumSection forumSection = GetForumSection(forumAddress);
-                    _GetLatestPosts(forumSection, _RetPosts);
+                    _GetLatestPosts(forumSection, _RetPosts, _ForumType);
                 }
                 catch (Exception ex)
                 {
@@ -264,7 +341,7 @@ namespace VF_WoWLauncher
             }
             SaveForumSections();
         }
-        public static void GetLatestPosts(string _ForumAddress, Action<ForumPost> _RetPosts, bool _OnlyNewest = false) //"http://www.wow-one.com/forum/117-server-updates/"
+        public static void GetLatestPosts(string _ForumAddress, Action<ForumPost> _RetPosts, ForumType _ForumType, bool _OnlyNewest = false) //"http://www.wow-one.com/forum/117-server-updates/"
         {
             ForumSection forumSection = GetForumSection(_ForumAddress);
 
@@ -275,16 +352,18 @@ namespace VF_WoWLauncher
                     _RetPosts(threadPost);
                 }
             }
-            _GetLatestPosts(forumSection, _RetPosts);
+            _GetLatestPosts(forumSection, _RetPosts, _ForumType);
             SaveForumSections();
         }
-        private static void _GetLatestPosts(ForumSection _ForumSection, Action<ForumPost> _RetPosts)
+        private static void _GetLatestPosts(ForumSection _ForumSection, Action<ForumPost> _RetPosts, ForumType _ForumType)
         {
             if ((DateTime.Now - _ForumSection.m_LastPollDatTime).TotalMinutes < 5)
                 return;
 
+            string website = _GetHTMLFile(_ForumSection.m_ForumSectionURL);
+
+            if(_ForumType == ForumType.FeenixForum)
             {
-                string website = _GetHTMLFile(_ForumSection.m_ForumSectionURL);
                 string[] websitePart = website.SplitVF("<td class='col_f_content '>");
 
 
@@ -305,7 +384,7 @@ namespace VF_WoWLauncher
                         if (dateStr.StartsWith("Today") == true)
                         {
                             DateTime refDate = DateTime.Now;
-                            latestPostDate = DateTime.Parse(dateStr.Replace("Yesterday,", "" + refDate.Day + " " + refDate.ToString("MMM") + " " + refDate.Year));
+                            latestPostDate = DateTime.Parse(dateStr.Replace("Today,", "" + refDate.Day + " " + refDate.ToString("MMM") + " " + refDate.Year));
                         }
                         else if (dateStr.StartsWith("Yesterday") == true)
                         {
@@ -328,11 +407,32 @@ namespace VF_WoWLauncher
                     if (threadLink.StartsWith("http://www.wow-one.com/forum/topic") == false)
                         continue;
 
-                    if((DateTime.Now - latestPostDate).TotalDays < 14)
-                        _ForumSection.UpdateThread(threadLink, latestPostDate, _RetPosts);
+                    if ((DateTime.Now - latestPostDate).TotalDays < 14)
+                        _ForumSection.UpdateThread(threadLink, threadLink + "page__view__getlastpost", latestPostDate, _RetPosts, _ForumType);
 
                     //topics.Add(Tuple.Create(System.Net.WebUtility.HtmlDecode(topicName), topicLink));
                 }
+            }
+            else
+            {
+                string[] websitePart = website.SplitVF("<dt title=\"");
+
+                for (int i = 1; i < websitePart.Length; ++i)
+                {
+                    //string topicName = websitePart[i].SplitVF("class=\"topictitle\">", 2).Last().SplitVF("</a>").First();
+                    string dateStr = websitePart[i].SplitVF("\"View the latest post\" /></a> <br />", 2).Last().SplitVF("</span>").First();
+                    DateTime latestPostDate = ParseDateString(dateStr, DateTime.MinValue);
+
+                    string threadLink = websitePart[i].SplitVF("<a href=\"", 2).Last().SplitVF("\" class", 2).First().SplitVF("&amp;sid=").First();
+
+                    if (threadLink.StartsWith("./viewtopic.php?") == false)
+                        continue;
+
+                    string lastPostLink = threadLink + websitePart[i].SplitVF("<dd class=\"lastpost\"", 2).Last().SplitVF(threadLink).Last().SplitVF("\"><img src=", 2).First();
+                    if ((DateTime.Now - latestPostDate).TotalDays < 14)
+                        _ForumSection.UpdateThread(System.Net.WebUtility.HtmlDecode(threadLink.Replace("./viewtopic.php", "http://forum.realmplayers.com/viewtopic.php")), System.Net.WebUtility.HtmlDecode(lastPostLink.Replace("./viewtopic.php", "http://forum.realmplayers.com/viewtopic.php")), latestPostDate, _RetPosts, _ForumType);
+                }
+
             }
             _ForumSection.m_LastPollDatTime = DateTime.Now;
 
@@ -401,6 +501,33 @@ namespace VF_WoWLauncher
             //        {}
             //    }
             //}
+        }
+
+        private static DateTime ParseDateString(string dateStr, DateTime _ErrorDate)
+        {
+            DateTime date = _ErrorDate;
+            try
+            {
+                if (dateStr.StartsWith("Today") == true)
+                {
+                    DateTime refDate = DateTime.Now;
+                    date = DateTime.Parse(dateStr.Replace("Today,", "" + refDate.Day + " " + refDate.ToString("MMM") + " " + refDate.Year));
+                }
+                else if (dateStr.StartsWith("Yesterday") == true)
+                {
+                    DateTime refDate = DateTime.Now.AddDays(-1);
+                    date = DateTime.Parse(dateStr.Replace("Yesterday,", "" + refDate.Day + " " + refDate.ToString("MMM") + " " + refDate.Year));
+                }
+                else
+                {
+                    date = DateTime.Parse(dateStr);
+                }
+            }
+            catch (Exception)
+            {
+                date = _ErrorDate;
+            }
+            return date;
         }
     }
 }

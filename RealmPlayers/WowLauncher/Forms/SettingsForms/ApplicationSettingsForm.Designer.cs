@@ -183,9 +183,9 @@
             this.c_cbAutoRefresh.AutoSize = true;
             this.c_cbAutoRefresh.Location = new System.Drawing.Point(10, 83);
             this.c_cbAutoRefresh.Name = "c_cbAutoRefresh";
-            this.c_cbAutoRefresh.Size = new System.Drawing.Size(185, 17);
+            this.c_cbAutoRefresh.Size = new System.Drawing.Size(173, 17);
             this.c_cbAutoRefresh.TabIndex = 13;
-            this.c_cbAutoRefresh.Text = "Poll wow-one for news every hour";
+            this.c_cbAutoRefresh.Text = "Poll forums for news every hour";
             this.c_cbAutoRefresh.UseVisualStyleBackColor = true;
             this.c_cbAutoRefresh.CheckedChanged += new System.EventHandler(this.c_cbAutoRefresh_CheckedChanged);
             // 

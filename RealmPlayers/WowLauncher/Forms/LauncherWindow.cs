@@ -156,6 +156,14 @@ namespace VF_WoWLauncher
             Program.g_LauncherApp.InitiateJumpList();
         }
 
+        //void FilterNews()
+        //{
+        //    for(int i = 0; i < c_dlAddons.flpListBox.Controls.Count; ++i)
+        //    {
+
+        //    }
+        //}
+
         bool m_PollingForNews = false;
         void GetLatestNews(bool _FirstTime)
         {
@@ -168,52 +176,67 @@ namespace VF_WoWLauncher
                 try
                 {
                     DateTime minDate = DateTime.Now.AddDays(-14);
+                    Action<ForumReader.ForumPost> newPostLambda = (ForumReader.ForumPost _NewPost) =>
+                    {
+                        ForumReader.ForumType forumType = ForumReader.ForumType.FeenixForum;
+                        if (_NewPost.m_PostURL.Contains("forum.realmplayers.com") == true)
+                            forumType = ForumReader.ForumType.RealmPlayersForum;
+                        string threadNameLower = _NewPost.m_ThreadName.ToLower();
+                        if (forumType == ForumReader.ForumType.FeenixForum && Settings.HaveTBC == false && (threadNameLower.Contains("archangel") || threadNameLower.Contains("2.4.3") || threadNameLower.Contains("area 52")))
+                        {
+                            if (threadNameLower.Contains("emerald dream") || threadNameLower.Contains("warsong") || threadNameLower.Contains("al'akir") || threadNameLower.Contains("1.12.1") || _NewPost.m_ThreadName.Contains("ED"))
+                            {
+
+                            }
+                            else
+                            {
+                                //Skip this Thread
+                                Logger.ConsoleWriteLine("Skipped thread " + _NewPost.m_ThreadName + " because it seems to be about Archangel/2.4.3 server only");
+                                return;
+                            }
+                        }
+                        if (_NewPost.m_PostDate > minDate && _NewPost.m_State != ForumReader.ForumPost.State.Read)
+                        {
+                            c_dlAddons.BeginInvoke(new Action(() =>
+                            {
+                                var image = (forumType == ForumReader.ForumType.FeenixForum ? Properties.Resources.f_icon_read : Properties.Resources.topic_read);
+                                if (_NewPost.m_State == ForumReader.ForumPost.State.NewThisSession || (DateTime.Now - _NewPost.m_PostDate).TotalHours < 48)
+                                {
+                                    _NewPost.m_State = ForumReader.ForumPost.State.Unread;
+                                    image = (forumType == ForumReader.ForumType.FeenixForum ? Properties.Resources.f_icon : Properties.Resources.topic_unread);
+                                    ForumReader.TriggerSaveForumCache();
+                                }
+                                c_dlAddons.AddItem(int.MinValue + (int)((_NewPost.m_PostDate - minDate).TotalMinutes)
+                                    , image
+                                    , _NewPost.m_ThreadName, (_NewPost.m_PostContent.Length > 1200 ? "This post is long! Click \"Goto thread\" to read the full post on the forum.\r\n\r\n" + _NewPost.m_PostContent.Substring(0, 1024) + "..." : _NewPost.m_PostContent), _NewPost.m_PostDate.ToString("yyyy-MM-dd HH:mm:ss") + " by " + _NewPost.m_PosterName
+                                    , new DetailedList.RightSideForumPost(() =>
+                                    {
+                                        //System.Diagnostics.Process.Start(_NewPost.m_ThreadURL + "page__view__getlastpost");
+                                        System.Diagnostics.Process.Start(_NewPost.m_PostURL);
+                                    }, (_ListItem) =>
+                                    {
+                                        _NewPost.m_State = ForumReader.ForumPost.State.Read;
+                                        ForumReader.TriggerSaveForumCache();
+                                        c_dlAddons.RemoveItem(_ListItem);
+                                    }));
+                            }));
+                        }
+                    };
                     ForumReader.GetLatestPosts(new string[]{"http://www.wow-one.com/forum/117-server-updates/"
                         , "http://www.wow-one.com/forum/192-information-and-releases/"
                         , "http://www.wow-one.com/forum/3-news-and-announcements/"
                         , "http://www.wow-one.com/forum/32-1121-changelogs/"}
-                        , (ForumReader.ForumPost _NewPost) =>
-                        {
-                            string threadNameLower = _NewPost.m_ThreadName.ToLower();
-                            if (Settings.HaveTBC == false && (threadNameLower.Contains("archangel") || threadNameLower.Contains("2.4.3")))
-                            {
-                                if (threadNameLower.Contains("emerald dream") || threadNameLower.Contains("warsong") || threadNameLower.Contains("al'akir") || threadNameLower.Contains("1.12.1") || _NewPost.m_ThreadName.Contains("ED"))
-                                {
+                        , newPostLambda, ForumReader.ForumType.FeenixForum, onlyNewest);
 
-                                }
-                                else
-                                {
-                                    //Skip this Thread
-                                    Logger.ConsoleWriteLine("Skipped thread " + _NewPost.m_ThreadName + " because it seems to be about Archangel/2.4.3 server only");
-                                    return;
-                                }
-                            }
-                            if (_NewPost.m_PostDate > minDate && _NewPost.m_State != ForumReader.ForumPost.State.Read)
-                            {
-                                c_dlAddons.BeginInvoke(new Action(() =>
-                                {
-                                    var image = Properties.Resources.f_icon_read;
-                                    if (_NewPost.m_State == ForumReader.ForumPost.State.NewThisSession || (DateTime.Now - _NewPost.m_PostDate).TotalHours < 48)
-                                    {
-                                        _NewPost.m_State = ForumReader.ForumPost.State.Unread;
-                                        image = Properties.Resources.f_icon;
-                                        ForumReader.TriggerSaveForumCache();
-                                    }
-                                    c_dlAddons.AddItem(int.MinValue + (int)((_NewPost.m_PostDate - minDate).TotalMinutes)
-                                        , image
-                                        , _NewPost.m_ThreadName, (_NewPost.m_PostContent.Length > 1200 ? "This post is long! Click \"Goto thread\" to read the full post on the forum.\r\n\r\n" + _NewPost.m_PostContent.Substring(0, 1024) + "..." : _NewPost.m_PostContent), _NewPost.m_PostDate.ToString("yyyy-MM-dd HH:mm:ss") + " by " + _NewPost.m_PosterName
-                                        , new DetailedList.RightSideForumPost(() =>
-                                        {
-                                            System.Diagnostics.Process.Start(_NewPost.m_ThreadURL + "page__view__getlastpost");
-                                        }, (_ListItem) =>
-                                        {
-                                            _NewPost.m_State = ForumReader.ForumPost.State.Read;
-                                            ForumReader.TriggerSaveForumCache();
-                                            c_dlAddons.RemoveItem(_ListItem);
-                                        }));
-                                }));
-                            }
-                        }, onlyNewest);
+                    ForumReader.GetLatestPosts(new string[]{"http://forum.realmplayers.com/viewforum.php?f=14"
+                        , "http://forum.realmplayers.com/viewforum.php?f=15"
+                        , "http://forum.realmplayers.com/viewforum.php?f=16"
+                        , "http://forum.realmplayers.com/viewforum.php?f=17"
+                        , "http://forum.realmplayers.com/viewforum.php?f=13"
+                        , "http://forum.realmplayers.com/viewforum.php?f=6"
+                        , "http://forum.realmplayers.com/viewforum.php?f=8"
+                        , "http://forum.realmplayers.com/viewforum.php?f=10"}
+                        , newPostLambda, ForumReader.ForumType.RealmPlayersForum, onlyNewest);
                 }
                 catch (Exception ex)
                 {
