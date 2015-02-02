@@ -145,7 +145,7 @@ namespace VF_RaidDamageWebsite
                 summaryDB = VF_RDDatabase.SummaryDatabase.LoadSummaryDatabase(g_RDDBDir);
                 summaryDB.GeneratePlayerSummaries();
                 return summaryDB;
-            }, (_RaidCollection, _LastLoadTime) => { return (DateTime.UtcNow - _LastLoadTime).TotalMinutes > 1; });
+            }, (_RaidCollection, _LastLoadTime) => { return (DateTime.UtcNow - _LastLoadTime).TotalMinutes > 30; });
         }
         public FightDataCollection GetRaidFightCollection(string _FightFile)
         {
@@ -198,7 +198,7 @@ namespace VF_RaidDamageWebsite
                 VF_RaidDamageDatabase.RaidCollection raidCollection = null;
                 VF.Utility.LoadSerialize<VF_RaidDamageDatabase.RaidCollection>(g_RDDBDir + "RaidCollection.dat", out raidCollection);
                 return raidCollection;
-            }, (_RaidCollection, _LastLoadTime) => { return (DateTime.UtcNow - _LastLoadTime).TotalMinutes > 1; });
+            }, (_RaidCollection, _LastLoadTime) => { return (DateTime.UtcNow - _LastLoadTime).TotalMinutes > 20; });
         }
 
 
@@ -262,7 +262,7 @@ namespace VF_RaidDamageWebsite
                 VF_RPDatabase.GuildSummaryDatabase summaryDB = null;
                 summaryDB = VF_RPDatabase.GuildSummaryDatabase.LoadSummaryDatabase(g_RPPDBDir);
                 return summaryDB;
-            }, (_RaidCollection, _LastLoadTime) => { return (DateTime.UtcNow - _LastLoadTime).TotalMinutes > 20; });
+            }, (_RaidCollection, _LastLoadTime) => { return (DateTime.UtcNow - _LastLoadTime).TotalMinutes > 30; });
         }
     }
 }
