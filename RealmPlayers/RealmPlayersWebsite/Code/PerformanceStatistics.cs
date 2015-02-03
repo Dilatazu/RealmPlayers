@@ -211,6 +211,7 @@ namespace RealmPlayersServer
         }
         public static void SaveStatistics()
         {
+            return;//DISABLED FOR NOW
             AssertInitialize();
             string statsNowFilename = Constants.RPPDbWriteDir + "PerformanceStatistics/PerfStats_Now.dat";
             VF_RealmPlayersDatabase.Utility.AssertFilePath(statsNowFilename);
@@ -249,6 +250,7 @@ namespace RealmPlayersServer
         }
         public static void AddStatistics(HttpContext _ContextObject, int _PreRenderTimeMs, int _RenderTimeMs, int _PageSize)
         {
+            return;//DISABLED FOR NOW
             AssertInitialize();
             string clientIP = _ContextObject.Request.UserHostAddress;
             if (clientIP == null)
