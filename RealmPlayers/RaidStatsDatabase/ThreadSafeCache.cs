@@ -14,7 +14,7 @@ namespace VF_RaidDamageDatabase
         {
             T_Return retValue;
 
-            Monitor.Enter(m_Data);
+            lock(m_Data)
             {
                 if (m_Data.ContainsKey(_DataKey) == false)
                 {
@@ -31,7 +31,6 @@ namespace VF_RaidDamageDatabase
                     retValue = (T_Return)m_Data[_DataKey];
                 }
             }
-            Monitor.Exit(m_Data);
             return retValue;
         }
         public T_Return Get<T_Return>(string _UniqueIdentifier, Func<T_Return> _CreateFunc)

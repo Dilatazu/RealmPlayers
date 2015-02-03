@@ -107,7 +107,10 @@ namespace RealmPlayersServer
                     Monitor.Enter(dataHolder.m_LockObject);
                     returnData = dataHolder.m_Data;
                     if (dataHolder.IsDataLoaded() == true && returnData == null)
+                    {
+                        Monitor.Exit(dataHolder.m_LockObject);
                         return default(T);//null
+                    }
                 }
             }
             else if ((DateTime.UtcNow - dataHolder.m_LastOutdateCheckDateTime) > _CheckOutdatedEvery.Value)
@@ -133,10 +136,11 @@ namespace RealmPlayersServer
         {
             Guid guid = typeof(T).GUID;
             DataHolder dataHolder = null;
-            Monitor.Enter(m_LockObject);
-            if (m_Data.TryGetValue(guid, out dataHolder) == false)
-                dataHolder = null;
-            Monitor.Exit(m_LockObject);
+            lock(m_LockObject)
+            {
+                if (m_Data.TryGetValue(guid, out dataHolder) == false)
+                    dataHolder = null;
+            }
             if (dataHolder != null)
                 return dataHolder.m_LastLoadTime;
             else

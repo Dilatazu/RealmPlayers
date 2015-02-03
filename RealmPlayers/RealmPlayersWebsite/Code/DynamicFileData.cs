@@ -35,9 +35,10 @@ namespace RealmPlayersServer
                     }
                     if (retString != "")
                     {
-                        Monitor.Enter(sm_Instance);
-                        sm_Instance.m_TextFiles[_Path] = new Tuple<string, DateTime>(retString, DateTime.UtcNow);
-                        Monitor.Exit(sm_Instance);
+                        lock (sm_Instance)
+                        {
+                            sm_Instance.m_TextFiles[_Path] = new Tuple<string, DateTime>(retString, DateTime.UtcNow);
+                        }
                     }
                 }
                 else
@@ -59,10 +60,11 @@ namespace RealmPlayersServer
                 }
                 if (retString != "")
                 {
-                    Monitor.Enter(sm_Instance);
-                    if(sm_Instance.m_TextFiles.ContainsKey(_Path) == false)
-                        sm_Instance.m_TextFiles.Add(_Path, new Tuple<string, DateTime>(retString, DateTime.UtcNow));
-                    Monitor.Exit(sm_Instance);
+                    lock(sm_Instance)
+                    {
+                        if (sm_Instance.m_TextFiles.ContainsKey(_Path) == false)
+                            sm_Instance.m_TextFiles.Add(_Path, new Tuple<string, DateTime>(retString, DateTime.UtcNow));
+                    }
                 }
             }
             return retString;

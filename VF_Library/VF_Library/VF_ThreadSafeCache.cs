@@ -14,7 +14,7 @@ namespace VF
         {
             T_Return retValue;
 
-            Monitor.Enter(m_Data);
+            lock(m_Data)
             {
                 if (m_Data.ContainsKey(_DataKey) == false)
                 {
@@ -38,7 +38,6 @@ namespace VF
                     retValue = (T_Return)m_Data[_DataKey];
                 }
             }
-            Monitor.Exit(m_Data);
             return retValue;
         }
         public T_Return Get<T_Return>(string _UniqueIdentifier, Func<T_Return> _CreateFunc)
@@ -77,9 +76,10 @@ namespace VF
         }
         public void ClearCache(string _UniqueIdentifier)
         {
-            Monitor.Enter(m_Data);
-            m_Data.RemoveKeys((_Key) => _Key.StartsWith(_UniqueIdentifier) && (_Key == _UniqueIdentifier || _Key.StartsWith(_UniqueIdentifier + "_")));
-            Monitor.Exit(m_Data);
+            lock(m_Data)
+            {
+                m_Data.RemoveKeys((_Key) => _Key.StartsWith(_UniqueIdentifier) && (_Key == _UniqueIdentifier || _Key.StartsWith(_UniqueIdentifier + "_")));
+            }
         }
     }
 }

@@ -45,16 +45,17 @@ namespace VF_RaidDamageWebsite
                         {
                             Logger.LogException(ex);
                         }
-                        Monitor.Enter(m_LockObject);
-                        if (m_DataPriv == null || result != null)
+                        lock(m_LockObject)
                         {
-                            m_DataPriv = result;
-                            m_LastOutdateCheckDateTime = DateTime.UtcNow;
-                            m_LastLoadTime = DateTime.UtcNow;
+                            if (m_DataPriv == null || result != null)
+                            {
+                                m_DataPriv = result;
+                                m_LastOutdateCheckDateTime = DateTime.UtcNow;
+                                m_LastLoadTime = DateTime.UtcNow;
+                            }
+                            m_LoadTask = null;
+                            m_DataLoaded = true;
                         }
-                        m_LoadTask = null;
-                        m_DataLoaded = true;
-                        Monitor.Exit(m_LockObject);
                     });
                     m_LoadTask.Start();
                 }
@@ -70,13 +71,14 @@ namespace VF_RaidDamageWebsite
 
             Guid guid = typeof(T).GUID;
             DataHolder dataHolder = null;
-            Monitor.Enter(m_LockObject);
-            if (m_Data.TryGetValue(guid, out dataHolder) == false)
+            lock(m_LockObject)
             {
-                dataHolder = new DataHolder();
-                m_Data.Add(guid, dataHolder);
+                if (m_Data.TryGetValue(guid, out dataHolder) == false)
+                {
+                    dataHolder = new DataHolder();
+                    m_Data.Add(guid, dataHolder);
+                }
             }
-            Monitor.Exit(m_LockObject);
 
             if (dataHolder.m_Data == null && _WaitUntilLoaded == false)
             {//Either Locking or returning, no other outcome
@@ -105,7 +107,10 @@ namespace VF_RaidDamageWebsite
                     Monitor.Enter(dataHolder.m_LockObject);
                     returnData = dataHolder.m_Data;
                     if (dataHolder.IsDataLoaded() == true && returnData == null)
+                    {
+                        Monitor.Exit(dataHolder.m_LockObject);
                         return default(T);//null
+                    }
                 }
             }
             else if ((DateTime.UtcNow - dataHolder.m_LastOutdateCheckDateTime) > _CheckOutdatedEvery.Value)
@@ -131,10 +136,11 @@ namespace VF_RaidDamageWebsite
         {
             Guid guid = typeof(T).GUID;
             DataHolder dataHolder = null;
-            Monitor.Enter(m_LockObject);
-            if (m_Data.TryGetValue(guid, out dataHolder) == false)
-                dataHolder = null;
-            Monitor.Exit(m_LockObject);
+            lock(m_LockObject)
+            {
+                if (m_Data.TryGetValue(guid, out dataHolder) == false)
+                    dataHolder = null;
+            }
             if (dataHolder != null)
                 return dataHolder.m_LastLoadTime;
             else

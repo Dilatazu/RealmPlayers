@@ -145,7 +145,7 @@ namespace VF_RaidDamageWebsite
                 summaryDB = VF_RDDatabase.SummaryDatabase.LoadSummaryDatabase(g_RDDBDir);
                 summaryDB.GeneratePlayerSummaries();
                 return summaryDB;
-            }, (_RaidCollection, _LastLoadTime) => { return (DateTime.UtcNow - _LastLoadTime).TotalMinutes > 30; });
+            }, (_RaidCollection, _LastLoadTime) => { return (DateTime.UtcNow - _LastLoadTime).TotalMinutes > 10; });
         }
         public FightDataCollection GetRaidFightCollection(string _FightFile)
         {
@@ -154,41 +154,55 @@ namespace VF_RaidDamageWebsite
                 _FightFile = _FightFile.Substring(g_RDDBDir.Length);
             }
             VF_RaidDamageDatabase.FightDataCollection fightDataCollection = null;
-            Monitor.Enter(m_Mutex);
-            if (m_Fights.ContainsKey(_FightFile) == true)
+            lock(m_Mutex)
             {
-                fightDataCollection = m_Fights[_FightFile].Item2;
-                m_Fights[_FightFile] = Tuple.Create(DateTime.UtcNow, fightDataCollection);
-            }
-            else
-            {
-                VF.Utility.LoadSerialize(g_RDDBDir + _FightFile, out fightDataCollection);
-                m_Fights.Add(_FightFile, Tuple.Create(DateTime.UtcNow, fightDataCollection));
-
-                int secondThreshold = 30 * 60;
-                long currMemory = GC.GetTotalMemory(false);
-                if (currMemory > 3L * 1024L * 1024L * 1024L)
-                    secondThreshold = 0;
-                else if (currMemory > 2L * 1024L * 1024L * 1024L)
-                    secondThreshold = 5 * 60;
-                else if (currMemory > 1L * 1024L * 1024L * 1024L)
-                    secondThreshold = 20 * 60;
-
-                Logger.ConsoleWriteLine("Loaded data file: \"" + _FightFile + "\", Current memory usage: " + ((double)currMemory / 1024.0 / 1024.0).ToString("0.000") + "MB", ConsoleColor.White);
-
-                List<string> unloadFiles = new List<string>();
-                foreach (var fight in m_Fights)
+                if (m_Fights.ContainsKey(_FightFile) == true)
                 {
-                    if ((DateTime.UtcNow - fight.Value.Item1).TotalSeconds > secondThreshold)
+                    fightDataCollection = m_Fights[_FightFile].Item2;
+                    m_Fights[_FightFile] = Tuple.Create(DateTime.UtcNow, fightDataCollection);
+                }
+                else
+                {
+                    VF.Utility.LoadSerialize(g_RDDBDir + _FightFile, out fightDataCollection);
+                    m_Fights.Add(_FightFile, Tuple.Create(DateTime.UtcNow, fightDataCollection));
+                    
+                    int secondThreshold = 30 * 60;
+                    long currMemory = GC.GetTotalMemory(false);
+                    if (currMemory > 3L * 1024L * 1024L * 1024L)
+                        secondThreshold = 0;
+                    else if (currMemory > 2L * 1024L * 1024L * 1024L)
+                        secondThreshold = 5 * 60;
+                    else if (currMemory > 1L * 1024L * 1024L * 1024L)
+                        secondThreshold = 20 * 60;
+                    try
                     {
-                        unloadFiles.Add(fight.Key);
+                        Logger.ConsoleWriteLine(HttpContext.Current.Request.UserHostAddress + " - Loaded data file: \"" + _FightFile + "\", Current memory usage: " + ((double)currMemory / 1024.0 / 1024.0).ToString("0.000") + "MB", ConsoleColor.White);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.LogException(ex);
+                    }
+                    List<string> unloadFiles = new List<string>();
+                    foreach (var fight in m_Fights)
+                    {
+                        if ((DateTime.UtcNow - fight.Value.Item1).TotalSeconds > secondThreshold)
+                        {
+                            unloadFiles.Add(fight.Key);
+                        }
+                    }
+                    m_Fights.RemoveKeys((_Key) => unloadFiles.Contains(_Key));
+                    if (unloadFiles.Count > 0)
+                    {
+                        Logger.ConsoleWriteLine("Unloaded " + unloadFiles.Count + " files", ConsoleColor.Yellow);
+                        if (currMemory > 4L * 1024L * 1024L * 1024L || unloadFiles.Count > 50)
+                        {
+                            Logger.ConsoleWriteLine(HttpContext.Current.Request.UserHostAddress + " Forced a garbage collect!", ConsoleColor.White);
+                            GC.Collect();
+                        }
                     }
                 }
-                m_Fights.RemoveKeys((_Key) => unloadFiles.Contains(_Key));
-                if (unloadFiles.Count > 0)
-                    Logger.ConsoleWriteLine("Unloaded " + unloadFiles.Count + " files", ConsoleColor.Yellow);
             }
-            Monitor.Exit(m_Mutex);
+            GC.Collect(GC.MaxGeneration, GCCollectionMode.Optimized);
             return fightDataCollection;
         }
         public VF_RaidDamageDatabase.RaidCollection GetRaidCollection()
@@ -198,7 +212,7 @@ namespace VF_RaidDamageWebsite
                 VF_RaidDamageDatabase.RaidCollection raidCollection = null;
                 VF.Utility.LoadSerialize<VF_RaidDamageDatabase.RaidCollection>(g_RDDBDir + "RaidCollection.dat", out raidCollection);
                 return raidCollection;
-            }, (_RaidCollection, _LastLoadTime) => { return (DateTime.UtcNow - _LastLoadTime).TotalMinutes > 20; });
+            }, (_RaidCollection, _LastLoadTime) => { return (DateTime.UtcNow - _LastLoadTime).TotalMinutes > 5; });
         }
 
 

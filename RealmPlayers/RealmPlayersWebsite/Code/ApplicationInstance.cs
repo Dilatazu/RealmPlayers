@@ -457,13 +457,14 @@ namespace RealmPlayersServer
                                                 || itemDatabaseAddress.Contains("db.vanillagaming.org")
                                                 || itemDatabaseAddress.Contains("db.valkyrie-wow.com"))
                                                 {
-                                                    Monitor.Enter(m_ItemInfoLock);
-                                                    if (itemInfoCache.ContainsKey(_ItemID) == false)
-                                                        itemInfoCache.Add(_ItemID, itemInfo);
-                                                    else
-                                                        itemInfoCache[_ItemID] = itemInfo;
-                                                    m_ItemInfoUpdated = true;
-                                                    Monitor.Exit(m_ItemInfoLock);
+                                                    lock(m_ItemInfoLock)
+                                                    {
+                                                        if (itemInfoCache.ContainsKey(_ItemID) == false)
+                                                            itemInfoCache.Add(_ItemID, itemInfo);
+                                                        else
+                                                            itemInfoCache[_ItemID] = itemInfo;
+                                                        m_ItemInfoUpdated = true;
+                                                    }
                                                     if (itemDatabaseAddress != m_CurrentItemDatabaseOrder.First())
                                                     {
                                                         var newItemDatabaseOrder = new List<string>(StaticValues.ItemDatabaseAddresses);

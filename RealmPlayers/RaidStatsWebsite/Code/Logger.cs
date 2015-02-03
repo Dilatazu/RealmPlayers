@@ -26,37 +26,38 @@ namespace VF_RaidDamageWebsite
             string fullMessage = dateTimeNow + " : " + _Message;
             int colorARGB = _Color.ToArgb() & 0xFFFFFF;
             fullMessage = "<font color='#" + colorARGB.ToString("X6") + "'>" + fullMessage + "</font><br/>";
-            Monitor.Enter(sm_Log);
-            bool addedDuplicate = false;
-            if (sm_Log.Count > 0)
+            lock(sm_Log)
             {
-                try
+                bool addedDuplicate = false;
+                if (sm_Log.Count > 0)
                 {
-                    if (sm_Log.Last().EndsWith(fullMessage))
+                    try
                     {
-                        if (sm_Log.Last().StartsWith("<") == false)
+                        if (sm_Log.Last().EndsWith(fullMessage))
                         {
-                            int indexOfStar = sm_Log.Last().IndexOf('*');
-                            string num = sm_Log.Last().Substring(0, indexOfStar);
-                            num = "" + (int.Parse(num) + 1);
-                            sm_Log[sm_Log.Count - 1] = num + sm_Log[sm_Log.Count - 1].Substring(indexOfStar);
-                            addedDuplicate = true;
-                        }
-                        else
-                        {
-                            sm_Log[sm_Log.Count - 1] = "2* " + sm_Log[sm_Log.Count - 1];
-                            addedDuplicate = true;
+                            if (sm_Log.Last().StartsWith("<") == false)
+                            {
+                                int indexOfStar = sm_Log.Last().IndexOf('*');
+                                string num = sm_Log.Last().Substring(0, indexOfStar);
+                                num = "" + (int.Parse(num) + 1);
+                                sm_Log[sm_Log.Count - 1] = num + sm_Log[sm_Log.Count - 1].Substring(indexOfStar);
+                                addedDuplicate = true;
+                            }
+                            else
+                            {
+                                sm_Log[sm_Log.Count - 1] = "2* " + sm_Log[sm_Log.Count - 1];
+                                addedDuplicate = true;
+                            }
                         }
                     }
+                    catch (Exception)
+                    { }
                 }
-                catch (Exception)
-                { }
+                if (addedDuplicate == false)
+                {
+                    sm_Log.Add(fullMessage);
+                }
             }
-            if (addedDuplicate == false)
-            {
-                sm_Log.Add(fullMessage);
-            }
-            Monitor.Exit(sm_Log);
         }
         public static void ConsoleWriteLine(string _Message, ConsoleColor _Color = ConsoleColor.White)
         {
@@ -65,21 +66,24 @@ namespace VF_RaidDamageWebsite
         public static List<string> GetCopyOfLog(int _Count)
         {
             List<string> retLog = new List<string>();
-            Monitor.Enter(sm_Log);
-            if (_Count > sm_Log.Count)
-                _Count = sm_Log.Count;
-            for (int i = sm_Log.Count - _Count; i < sm_Log.Count; ++i)
+            lock(sm_Log)
             {
-                retLog.Add(sm_Log[i]);
+                if (_Count > sm_Log.Count)
+                    _Count = sm_Log.Count;
+                for (int i = sm_Log.Count - _Count; i < sm_Log.Count; ++i)
+                {
+                    retLog.Add(sm_Log[i]);
+                }
             }
-            Monitor.Exit(sm_Log);
             return retLog;
         }
         public static List<string> GetCopyOfLog()
         {
-            Monitor.Enter(sm_Log);
-            List<string> retLog = new List<string>(sm_Log);
-            Monitor.Exit(sm_Log);
+            List<string> retLog = null;
+            lock (sm_Log)
+            {
+                retLog = new List<string>(sm_Log);
+            }
             return retLog;
         }
 

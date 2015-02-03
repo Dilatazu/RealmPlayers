@@ -36,16 +36,17 @@ namespace VF_RealmPlayersDatabase
             var loadStatus = m_LoadStatus;
             if (loadStatus < _LoadStatus)
             {
-                Monitor.Enter(m_LockObj);
-                loadStatus = m_LoadStatus;
-                while (loadStatus < _LoadStatus)
+                lock(m_LockObj)
                 {
-                    Monitor.Exit(m_LockObj);
-                    System.Threading.Thread.Sleep(1000);
-                    Monitor.Enter(m_LockObj);
                     loadStatus = m_LoadStatus;
+                    while (loadStatus < _LoadStatus)
+                    {
+                        Monitor.Exit(m_LockObj);
+                        System.Threading.Thread.Sleep(1000);
+                        Monitor.Enter(m_LockObj);
+                        loadStatus = m_LoadStatus;
+                    }
                 }
-                Monitor.Exit(m_LockObj);
             }
             return true;
         }
@@ -74,65 +75,6 @@ namespace VF_RealmPlayersDatabase
             }
         }
 
-        //volatile bool m_CurrentlyLoadingCacheDatabase = false;
-        //public GeneratedData.RealmCacheDatabase GetCacheDatabase(bool _GenerateEverything = false, bool _ThreadLoading = false)
-        //{
-        //    WaitForLoad(LoadStatus.EverythingLoaded);
-        //    Monitor.Enter(m_LockObj);
-
-        //    if (m_CacheDatabase == null && m_CurrentlyLoadingCacheDatabase == false)
-        //    {
-        //        m_CurrentlyLoadingCacheDatabase = true;
-        //        Monitor.Exit(m_LockObj);
-        //        var loadTask = new System.Threading.Tasks.Task(() =>
-        //        {
-        //            try
-        //            {
-        //                GeneratedData.RealmCacheDatabase cacheDatabase = null;
-        //                try
-        //                {
-        //                    cacheDatabase = new GeneratedData.RealmCacheDatabase(this);
-        //                }
-        //                catch (Exception)
-        //                { }
-        //                Monitor.Enter(m_LockObj);
-        //                if(m_CacheDatabase == null)
-        //                    m_CacheDatabase = cacheDatabase;
-        //                m_CurrentlyLoadingCacheDatabase = false;
-        //                Monitor.Exit(m_LockObj);
-        //                if (_GenerateEverything == true)
-        //                {
-        //                    //(new System.Threading.Tasks.Task(() =>
-        //                    //{
-        //                    //    try
-        //                    //    {
-        //                    //        m_CacheDatabase.GenerateGuilds(true);
-        //                    //    }
-        //                    //    catch (Exception ex)
-        //                    //    {
-        //                    //        Logger.LogException(ex);
-        //                    //    }
-        //                    //})).Start();
-        //                    m_CacheDatabase.GenerateItemsUsed();
-        //                }
-        //            }
-        //            catch (Exception ex)
-        //            {
-        //                Logger.LogException(ex);
-        //            }
-        //        });
-        //        if(_ThreadLoading == false)
-        //        {
-        //            loadTask.RunSynchronously();
-        //            loadTask.Wait();
-        //        }
-        //        else
-        //            loadTask.Start();
-        //    }
-        //    else
-        //        Monitor.Exit(m_LockObj);
-        //    return m_CacheDatabase;
-        //}
         public RealmDatabase(WowRealm _Realm)
         {
             Realm = _Realm;
@@ -359,10 +301,11 @@ namespace VF_RealmPlayersDatabase
                     Dictionary<string, PlayerData.Player> loadedPlayers = null;
                     Utility.LoadSerialize<Dictionary<string, PlayerData.Player>>(_RealmPath + "\\PlayersData.dat", out loadedPlayers);
 
-                    Monitor.Enter(m_LockObj);
-                    m_Players = loadedPlayers;
-                    m_LoadStatus = LoadStatus.PlayersLoaded;
-                    Monitor.Exit(m_LockObj);
+                    lock(m_LockObj)
+                    {
+                        m_Players = loadedPlayers;
+                        m_LoadStatus = LoadStatus.PlayersLoaded;
+                    }
                 }
                 if (System.IO.File.Exists(_RealmPath + "\\PlayersHistoryData_Now.dat") == true)
                 {
@@ -373,10 +316,11 @@ namespace VF_RealmPlayersDatabase
                     Dictionary<string, PlayerData.PlayerHistory> loadedPlayersHistory = null;
                     loadedPlayersHistory = _LoadPlayersHistoryChunked(_RealmPath, loadDate);
 
-                    Monitor.Enter(m_LockObj);
-                    m_History.m_PlayersHistory = loadedPlayersHistory;
-                    m_LoadStatus = LoadStatus.PlayersHistoryLoaded;
-                    Monitor.Exit(m_LockObj);
+                    lock (m_LockObj)
+                    {
+                        m_History.m_PlayersHistory = loadedPlayersHistory;
+                        m_LoadStatus = LoadStatus.PlayersHistoryLoaded;
+                    }
                 }
                 if (System.IO.File.Exists(_RealmPath + "\\PlayersExtraData.dat") == true)
                 {
@@ -386,16 +330,18 @@ namespace VF_RealmPlayersDatabase
                     {
                         loadedPlayersExtraData = new Dictionary<string, PlayerData.ExtraData>();
                     }
-                    
-                    Monitor.Enter(m_LockObj);
-                    m_PlayersExtraData = loadedPlayersExtraData;
-                    m_LoadStatus = LoadStatus.PlayersExtraDataLoaded;
-                    Monitor.Exit(m_LockObj);
+
+                    lock (m_LockObj)
+                    {
+                        m_PlayersExtraData = loadedPlayersExtraData;
+                        m_LoadStatus = LoadStatus.PlayersExtraDataLoaded;
+                    }
                 }
 
-                Monitor.Enter(m_LockObj);
-                m_LoadStatus = LoadStatus.EverythingLoaded;
-                Monitor.Exit(m_LockObj);
+                lock (m_LockObj)
+                {
+                    m_LoadStatus = LoadStatus.EverythingLoaded;
+                }
                 m_LoaderThread = null;
 
                 Logger.ConsoleWriteLine("Done with loading Database " + Realm.ToString() + ", it took " + (timer.ElapsedMilliseconds / 1000) + " seconds", ConsoleColor.Green);
@@ -407,15 +353,15 @@ namespace VF_RealmPlayersDatabase
         }
         public void LoadDatabase(string _RealmPath, DateTime? _HistoryEarliestDateTime = null)
         {
-            Monitor.Enter(m_LockObj);
-            if (m_LoadStatus == LoadStatus.EverythingLoaded)
-                m_LoadStatus = LoadStatus.CurrentlyLoading;
-            else
+            lock (m_LockObj)
             {
-                Monitor.Exit(m_LockObj);
-                return;
+                if (m_LoadStatus == LoadStatus.EverythingLoaded)
+                    m_LoadStatus = LoadStatus.CurrentlyLoading;
+                else
+                {
+                    return;
+                }
             }
-            Monitor.Exit(m_LockObj);
             m_LoaderThread = new System.Threading.Thread(() => Thread_LoadDatabase(_RealmPath, _HistoryEarliestDateTime));
             m_LoaderThread.Start();
         }
@@ -491,57 +437,58 @@ namespace VF_RealmPlayersDatabase
                 Logger.ConsoleWriteLine("Started Saving Database " + Realm.ToString(), ConsoleColor.Green);
                 Utility.BackupFile(_RealmPath + "\\PlayersData.dat");
                 _SaveDatabaseFile(_RealmPath + "\\PlayersData.dat", Players);
-                Monitor.Enter(m_LockObj);
-                DateTime saveDateTime = new DateTime(2013, 5, 1, 0, 0, 0);
-                try
-                {
-                    while (saveDateTime.AddMonths(1) < DateTime.UtcNow)
-                    {
-                        if (m_History.ExistsEarlierThan(saveDateTime.AddMonths(1)) == true)
-                        {
-                            if (m_History.ExistsEarlierThan(saveDateTime) == false)
-                            {
-                                bool removeOldData = (DateTime.UtcNow - saveDateTime.AddMonths(1)).TotalDays > 7;
-                                if (removeOldData == true)
-                                {
-                                    Dictionary<string, PlayerData.PlayerHistory> oldHistory = new Dictionary<string, PlayerData.PlayerHistory>();
-                                    foreach (var playerHistory in PlayersHistory)
-                                    {
-                                        var oldPlayerHistory = playerHistory.Value.ExtractOldHistory(saveDateTime.AddMonths(1), removeOldData);
-                                        oldHistory.Add(playerHistory.Key, oldPlayerHistory);
-                                    }
-                                    
-                                    try
-                                    {
-                                        Utility.BackupFile(_RealmPath + "\\PlayersHistoryData_" + saveDateTime.ToString("yyyy_MM") + ".dat");
-                                    }
-                                    catch (Exception)
-                                    {
-                                        Logger.ConsoleWriteLine("Backup of PlayersHistoryData_****_**.dat failed", ConsoleColor.Red);
-                                    }
-                                    _SaveDatabaseFile(_RealmPath + "\\PlayersHistoryData_" + saveDateTime.ToString("yyyy_MM") + ".dat", oldHistory);
-                                }
-                            }
-                            else
-                                Logger.ConsoleWriteLine("Error occurred in history data saving", ConsoleColor.Red);
-                        }
-                        saveDateTime = saveDateTime.AddMonths(1);
-                    }
+                lock(m_LockObj)
+                { 
+                    DateTime saveDateTime = new DateTime(2013, 5, 1, 0, 0, 0);
                     try
                     {
-                        Utility.BackupFile(_RealmPath + "\\PlayersHistoryData_Now.dat");
+                        while (saveDateTime.AddMonths(1) < DateTime.UtcNow)
+                        {
+                            if (m_History.ExistsEarlierThan(saveDateTime.AddMonths(1)) == true)
+                            {
+                                if (m_History.ExistsEarlierThan(saveDateTime) == false)
+                                {
+                                    bool removeOldData = (DateTime.UtcNow - saveDateTime.AddMonths(1)).TotalDays > 7;
+                                    if (removeOldData == true)
+                                    {
+                                        Dictionary<string, PlayerData.PlayerHistory> oldHistory = new Dictionary<string, PlayerData.PlayerHistory>();
+                                        foreach (var playerHistory in PlayersHistory)
+                                        {
+                                            var oldPlayerHistory = playerHistory.Value.ExtractOldHistory(saveDateTime.AddMonths(1), removeOldData);
+                                            oldHistory.Add(playerHistory.Key, oldPlayerHistory);
+                                        }
+                                    
+                                        try
+                                        {
+                                            Utility.BackupFile(_RealmPath + "\\PlayersHistoryData_" + saveDateTime.ToString("yyyy_MM") + ".dat");
+                                        }
+                                        catch (Exception)
+                                        {
+                                            Logger.ConsoleWriteLine("Backup of PlayersHistoryData_****_**.dat failed", ConsoleColor.Red);
+                                        }
+                                        _SaveDatabaseFile(_RealmPath + "\\PlayersHistoryData_" + saveDateTime.ToString("yyyy_MM") + ".dat", oldHistory);
+                                    }
+                                }
+                                else
+                                    Logger.ConsoleWriteLine("Error occurred in history data saving", ConsoleColor.Red);
+                            }
+                            saveDateTime = saveDateTime.AddMonths(1);
+                        }
+                        try
+                        {
+                            Utility.BackupFile(_RealmPath + "\\PlayersHistoryData_Now.dat");
+                        }
+                        catch (Exception)
+                        {
+                            Logger.ConsoleWriteLine("Backup of PlayersHistoryData_Now.dat failed", ConsoleColor.Red);
+                        }
+                        _SaveDatabaseFile(_RealmPath + "\\PlayersHistoryData_Now.dat", PlayersHistory);
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
-                        Logger.ConsoleWriteLine("Backup of PlayersHistoryData_Now.dat failed", ConsoleColor.Red);
+                        Logger.ConsoleWriteLine("Exception occurred during history data saving: " + ex.ToString(), ConsoleColor.Red);
                     }
-                    _SaveDatabaseFile(_RealmPath + "\\PlayersHistoryData_Now.dat", PlayersHistory);
                 }
-                catch (Exception ex)
-                {
-                    Logger.ConsoleWriteLine("Exception occurred during history data saving: " + ex.ToString(), ConsoleColor.Red);
-                }
-                Monitor.Exit(m_LockObj);
                 Utility.BackupFile(_RealmPath + "\\PlayersExtraData.dat");
                 _VFSaveDatabaseFile(_RealmPath + "\\PlayersExtraData.dat", PlayersExtraData);
                 Updated = false;
