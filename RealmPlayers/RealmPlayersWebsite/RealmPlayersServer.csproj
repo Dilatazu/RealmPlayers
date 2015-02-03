@@ -202,6 +202,7 @@
     <Content Include="PVPList.aspx" />
     <Content Include="RareItemsList.aspx" />
     <Content Include="RealmControl.ascx" />
+    <Content Include="robots.txt" />
     <Content Include="Sign_Up.aspx" />
     <Content Include="UserSection.aspx" />
     <Content Include="VF_RealmPlayersIcon32.ico" />
@@ -494,6 +495,7 @@
     </Reference>
     <Reference Include="System.Web.Mvc, Version=4.0.0.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
+	  <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.Mvc.4.0.40804.0\lib\net40\System.Web.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
