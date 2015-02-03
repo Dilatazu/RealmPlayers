@@ -322,15 +322,15 @@ namespace VF_WoWLauncherServer
         }
         void BackupRDContribution(string _Filename, RDContributionType _ContributionType)
         {
-            while(true)
-            {
-                Console.WriteLine("Disabled Backup and deletion for now");
-                for (int i = 0; i < 20; ++i)
-                {
-                    System.Threading.Thread.Sleep(500);
-                    Console.Write(".");
-                }
-            }
+            //while(true)
+            //{
+            //    Console.WriteLine("Disabled Backup and deletion for now");
+            //    for (int i = 0; i < 20; ++i)
+            //    {
+            //        System.Threading.Thread.Sleep(500);
+            //        Console.Write(".");
+            //    }
+            //}
             if (System.IO.File.Exists(_Filename) == false)
             {
                 Logger.ConsoleWriteLine("Could not backup file: " + _Filename + ", it does not exist!", ConsoleColor.Red);

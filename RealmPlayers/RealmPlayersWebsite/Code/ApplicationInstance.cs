@@ -195,7 +195,7 @@ namespace RealmPlayersServer
                         m_ContributorStatistics = null;
                         m_LastLoadedDateTime = DateTime.UtcNow;
                     }
-                    Logger.ConsoleWriteLine("LoadRPPDatabase(): Reloaded database, it took: " + (DateTime.UtcNow - startLoadTime).Seconds + " seconds", ConsoleColor.Green);
+                    Logger.ConsoleWriteLine("LoadRPPDatabase(): Reloaded database, it took: " + (int)(DateTime.UtcNow - startLoadTime).TotalSeconds + " seconds", ConsoleColor.Green);
                     m_LoadRealmPlayersThread = null;
                     m_ThreadSafeCache.ClearCache("FindPlayersMatching");
                     GC.Collect();
