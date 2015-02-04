@@ -40,6 +40,7 @@ namespace VF_RealmPlayersDatabase
                             realmDB.Value.RemoveUnknowns();
                         if (_PurgeGMs == true)
                             realmDB.Value.RemoveGMs();
+                        GC.Collect();
                     });
                     purgeTask.Start();
                     purgeTasks.Add(purgeTask);
