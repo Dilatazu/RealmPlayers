@@ -33,6 +33,18 @@ namespace VF_WoWLauncherServer
             copyMenu.Click += c_lsContributors_CopyMenu_Click;
             c_lsContributors.MouseMove += c_lsContributors_MouseMove;
             UpdateContributorsList();
+
+            ToggleLockedButtons();
+            AddonUpdates.LoadAddonBetaInfo();
+            foreach (var betaParticipant in AddonUpdates.GetBetaAddonInfo())
+            {
+                if (betaParticipant.Value == null)
+                    continue;
+                foreach (var betaUser in betaParticipant.Value)
+                {
+                    c_lsBetaUsers.Items.Add(betaParticipant.Key + " - " + betaUser);
+                }
+            }
         }
 
         void c_lsContributors_MouseMove(object sender, MouseEventArgs e)
@@ -185,6 +197,71 @@ namespace VF_WoWLauncherServer
             catch (Exception ex)
             {
                 Logger.LogException(ex);
+            }
+        }
+
+        private void ToggleLockedButtons()
+        {
+            foreach (Control button in this.Controls)
+            {
+                if (button.GetType() != typeof(Button))
+                    continue;
+                if (button == button8)
+                    continue;
+                if (button.Enabled == true)
+                    button.Enabled = false;
+                else
+                    button.Enabled = true;
+            }
+        }
+        private void button8_Click(object sender, EventArgs e)
+        {
+            ToggleLockedButtons();
+        }
+
+        private void MainWindow_Activated(object sender, EventArgs e)
+        {
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            string betaAddon = c_txtBetaAddon.Text;
+            string betaUser = c_txtBetaUserID.Text;
+            if(AddonUpdates.AddBetaParticipant(betaAddon, betaUser) == true)
+            {
+                c_lsBetaUsers.Items.Add(betaAddon + " - " + betaUser);
+            }
+        }
+
+        private void c_txtBetaAddon_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void c_txtBetaUserID_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void c_lsBetaUsers_KeyDown(object sender, KeyEventArgs e)
+        {
+            
+        }
+
+        private void c_lsBetaUsers_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void toolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            if (c_lsBetaUsers.SelectedItem != null && c_lsBetaUsers.SelectedItem.GetType() == typeof(string))
+            {
+                var splitValues = ((string)c_lsBetaUsers.SelectedItem).SplitVF(" - ");
+                if(AddonUpdates.RemoveBetaParticipant(splitValues[0], splitValues[1]) == true)
+                {
+                    c_lsBetaUsers.Items.Remove(c_lsBetaUsers.SelectedItem);
+                }
             }
         }
     }

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.c_btnAddAddonPackage = new System.Windows.Forms.Button();
             this.c_btnAddContributor = new System.Windows.Forms.Button();
             this.c_txtAddContributorName = new System.Windows.Forms.TextBox();
@@ -39,6 +40,16 @@
             this.button5 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
             this.button7 = new System.Windows.Forms.Button();
+            this.button8 = new System.Windows.Forms.Button();
+            this.c_txtBetaAddon = new System.Windows.Forms.TextBox();
+            this.button9 = new System.Windows.Forms.Button();
+            this.c_txtBetaUserID = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.c_lsBetaUsers = new System.Windows.Forms.ListBox();
+            this.c_cmsBetaUsers = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.c_cmsBetaUsers.SuspendLayout();
             this.SuspendLayout();
             // 
             // c_btnAddAddonPackage
@@ -53,7 +64,7 @@
             // 
             // c_btnAddContributor
             // 
-            this.c_btnAddContributor.Location = new System.Drawing.Point(430, 399);
+            this.c_btnAddContributor.Location = new System.Drawing.Point(430, 164);
             this.c_btnAddContributor.Name = "c_btnAddContributor";
             this.c_btnAddContributor.Size = new System.Drawing.Size(91, 23);
             this.c_btnAddContributor.TabIndex = 1;
@@ -64,7 +75,7 @@
             // c_txtAddContributorName
             // 
             this.c_txtAddContributorName.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.c_txtAddContributorName.Location = new System.Drawing.Point(296, 400);
+            this.c_txtAddContributorName.Location = new System.Drawing.Point(296, 165);
             this.c_txtAddContributorName.Name = "c_txtAddContributorName";
             this.c_txtAddContributorName.Size = new System.Drawing.Size(128, 22);
             this.c_txtAddContributorName.TabIndex = 2;
@@ -74,7 +85,7 @@
             this.c_lsContributors.FormattingEnabled = true;
             this.c_lsContributors.Location = new System.Drawing.Point(296, 12);
             this.c_lsContributors.Name = "c_lsContributors";
-            this.c_lsContributors.Size = new System.Drawing.Size(225, 381);
+            this.c_lsContributors.Size = new System.Drawing.Size(225, 147);
             this.c_lsContributors.TabIndex = 3;
             this.c_lsContributors.SelectedIndexChanged += new System.EventHandler(this.c_lsContributors_SelectedIndexChanged);
             // 
@@ -148,11 +159,100 @@
             this.button7.UseVisualStyleBackColor = true;
             this.button7.Click += new System.EventHandler(this.button7_Click);
             // 
+            // button8
+            // 
+            this.button8.Location = new System.Drawing.Point(181, 12);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(109, 23);
+            this.button8.TabIndex = 11;
+            this.button8.Text = "Toggle Locked";
+            this.button8.UseVisualStyleBackColor = true;
+            this.button8.Click += new System.EventHandler(this.button8_Click);
+            // 
+            // c_txtBetaAddon
+            // 
+            this.c_txtBetaAddon.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.c_txtBetaAddon.Location = new System.Drawing.Point(268, 372);
+            this.c_txtBetaAddon.Name = "c_txtBetaAddon";
+            this.c_txtBetaAddon.Size = new System.Drawing.Size(253, 22);
+            this.c_txtBetaAddon.TabIndex = 13;
+            this.c_txtBetaAddon.Text = "VF_RaidStatsTBC";
+            this.c_txtBetaAddon.TextChanged += new System.EventHandler(this.c_txtBetaAddon_TextChanged);
+            // 
+            // button9
+            // 
+            this.button9.Location = new System.Drawing.Point(430, 400);
+            this.button9.Name = "button9";
+            this.button9.Size = new System.Drawing.Size(91, 22);
+            this.button9.TabIndex = 12;
+            this.button9.Text = "Add Beta User";
+            this.button9.UseVisualStyleBackColor = true;
+            this.button9.Click += new System.EventHandler(this.button9_Click);
+            // 
+            // c_txtBetaUserID
+            // 
+            this.c_txtBetaUserID.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.c_txtBetaUserID.Location = new System.Drawing.Point(268, 400);
+            this.c_txtBetaUserID.Name = "c_txtBetaUserID";
+            this.c_txtBetaUserID.Size = new System.Drawing.Size(156, 22);
+            this.c_txtBetaUserID.TabIndex = 14;
+            this.c_txtBetaUserID.TextChanged += new System.EventHandler(this.c_txtBetaUserID_TextChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(224, 377);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(38, 13);
+            this.label1.TabIndex = 15;
+            this.label1.Text = "Addon";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(224, 405);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(40, 13);
+            this.label2.TabIndex = 16;
+            this.label2.Text = "UserID";
+            // 
+            // c_lsBetaUsers
+            // 
+            this.c_lsBetaUsers.ContextMenuStrip = this.c_cmsBetaUsers;
+            this.c_lsBetaUsers.FormattingEnabled = true;
+            this.c_lsBetaUsers.Location = new System.Drawing.Point(227, 206);
+            this.c_lsBetaUsers.Name = "c_lsBetaUsers";
+            this.c_lsBetaUsers.Size = new System.Drawing.Size(294, 160);
+            this.c_lsBetaUsers.TabIndex = 17;
+            this.c_lsBetaUsers.SelectedIndexChanged += new System.EventHandler(this.c_lsBetaUsers_SelectedIndexChanged);
+            this.c_lsBetaUsers.KeyDown += new System.Windows.Forms.KeyEventHandler(this.c_lsBetaUsers_KeyDown);
+            // 
+            // c_cmsBetaUsers
+            // 
+            this.c_cmsBetaUsers.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem1});
+            this.c_cmsBetaUsers.Name = "c_cmsBetaUsers";
+            this.c_cmsBetaUsers.Size = new System.Drawing.Size(204, 26);
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(203, 22);
+            this.toolStripMenuItem1.Text = "Remove Beta Participant";
+            this.toolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(533, 434);
+            this.Controls.Add(this.c_lsBetaUsers);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.c_txtBetaUserID);
+            this.Controls.Add(this.c_txtBetaAddon);
+            this.Controls.Add(this.button9);
+            this.Controls.Add(this.button8);
             this.Controls.Add(this.button7);
             this.Controls.Add(this.button6);
             this.Controls.Add(this.button5);
@@ -166,7 +266,9 @@
             this.Controls.Add(this.c_btnAddAddonPackage);
             this.Name = "MainWindow";
             this.Text = "Form1";
+            this.Activated += new System.EventHandler(this.MainWindow_Activated);
             this.Load += new System.EventHandler(this.MainWindow_Load);
+            this.c_cmsBetaUsers.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -185,6 +287,15 @@
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.Button button8;
+        private System.Windows.Forms.TextBox c_txtBetaAddon;
+        private System.Windows.Forms.Button button9;
+        private System.Windows.Forms.TextBox c_txtBetaUserID;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.ListBox c_lsBetaUsers;
+        private System.Windows.Forms.ContextMenuStrip c_cmsBetaUsers;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
     }
 }
 

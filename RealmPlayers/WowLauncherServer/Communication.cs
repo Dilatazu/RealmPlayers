@@ -55,7 +55,7 @@ namespace VF_WoWLauncherServer
                                         Random rand = new Random((int)DateTime.UtcNow.Ticks);
                                         foreach (var addon in addonUpdateInfoRequest.Addons)
                                         {
-                                            WLN_ResponsePacket_AddonUpdateInfo addonUpdateInfo = AddonUpdates.GetAddonUpdate(addon);
+                                            WLN_ResponsePacket_AddonUpdateInfo addonUpdateInfo = AddonUpdates.GetAddonUpdate(addonUpdateInfoRequest.UserID, addon);
                                             if (addonUpdateInfo != null)
                                             {
                                                 result.Add(addonUpdateInfo);
@@ -127,7 +127,7 @@ namespace VF_WoWLauncherServer
             Random rand = new Random((int)DateTime.UtcNow.Ticks);
             foreach (var addon in addonUpdateInfoRequests)
             {
-                WLN_ResponsePacket_AddonUpdateInfo addonUpdateInfo = AddonUpdates.GetAddonUpdate(addon);
+                WLN_ResponsePacket_AddonUpdateInfo addonUpdateInfo = AddonUpdates.GetAddonUpdate("", addon);
                 if (addonUpdateInfo != null)
                 {
                     result.Add(addonUpdateInfo);

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ProtoBuf;
 
 using ICSharpCode.SharpZipLib.Zip;
 
@@ -37,16 +38,83 @@ namespace VF_WoWLauncherServer
             return highestVersioniteratedNumber_File;
         }
 
+        static Dictionary<string, List<string>> DefaultBetaAddonInfo()
+        {
+            return new Dictionary<string, List<string>>
+            {
+                {"VF_RaidStatsTBC", new List<string>{}},
+                {"VF_BGStats", new List<string>{}},
+                {"VF_BGStatsTBC", new List<string>{}}
+            };
+        }
+        static Dictionary<string, List<string>> m_BetaAddonInfo = DefaultBetaAddonInfo();
+        public static Dictionary<string, List<string>> GetBetaAddonInfo()
+        {
+            return m_BetaAddonInfo;
+        }
+        public static void LoadAddonBetaInfo(string _BetaInfoFilename = "BetaAddonsInfo.dat")
+        {
+            if (VF.Utility.LoadSerialize(_BetaInfoFilename, out m_BetaAddonInfo) == false)
+            {
+                Logger.ConsoleWriteLine("FAILED TO LOAD AddonBetaData...", ConsoleColor.Red);
+                m_BetaAddonInfo = DefaultBetaAddonInfo();
+            }
+        }
+        public static void SaveAddonBetaInfo(string _BetaInfoFilename = "BetaAddonsInfo.dat")
+        {
+            VF.Utility.SaveSerialize(_BetaInfoFilename, m_BetaAddonInfo, true);
+        }
+        public static bool AddBetaParticipant(string _AddonName, string _UserID)
+        {
+            if(IsBetaParticipant(_AddonName, _UserID) == true)
+            {
+                Logger.ConsoleWriteLine("Ensured beta UserID(" + _UserID + ") for Addon(" + _AddonName + ")", ConsoleColor.Green);
+                return false;
+            }
+            m_BetaAddonInfo.AddToList(_AddonName, _UserID);
+            Logger.ConsoleWriteLine("Added beta UserID(" + _UserID + ") for Addon(" + _AddonName + ")", ConsoleColor.Green);
+            SaveAddonBetaInfo();
+            return true;
+        }
+        public static bool RemoveBetaParticipant(string _AddonName, string _UserID)
+        {
+            List<string> participants;
+            if(m_BetaAddonInfo.TryGetValue(_AddonName, out participants) == true)
+            {
+                if(participants.Remove(_UserID) == true)
+                {
+                    Logger.ConsoleWriteLine("Removed beta UserID(" + _UserID + ") for Addon(" + _AddonName + ")", ConsoleColor.Green);
+                    SaveAddonBetaInfo();
+                    return true;
+                }
+            }
+            return false;
+        }
+        public static bool IsAddonBeta(string _AddonName)
+        {
+            if (m_BetaAddonInfo.ContainsKey(_AddonName) == true)
+                return true;
+            return false;
+        }
+        public static bool IsBetaParticipant(string _AddonName, string _UserID)
+        {
+            if (IsAddonBeta(_AddonName) == false)
+                return false;
+            return m_BetaAddonInfo[_AddonName].Contains(_UserID);
+        }
 
-        
-
-        public static WLN_ResponsePacket_AddonUpdateInfo GetAddonUpdate(WLN_RequestPacket_AddonUpdateInfo _Request)
+        public static WLN_ResponsePacket_AddonUpdateInfo GetAddonUpdate(string _UserID, WLN_RequestPacket_AddonUpdateInfo _Request)
         {
             string addonName = _Request.AddonName;
             string latestAddonPackageFilename = GetLatestAddonPackageFilename(addonName);
             if (latestAddonPackageFilename == "")
                 return null;
 
+            if (IsAddonBeta(addonName) && _Request.CurrentVersion == "0.0")
+            {
+                if (IsBetaParticipant(addonName, _UserID) == false)
+                    return null;
+            }
             try
             {
                 DescriptionFileData addonDescription = GetDescriptionFileData(addonName, latestAddonPackageFilename);
