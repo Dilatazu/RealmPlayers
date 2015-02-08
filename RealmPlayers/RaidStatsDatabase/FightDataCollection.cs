@@ -190,6 +190,8 @@ namespace VF_RaidDamageDatabase
         public List<Tuple<DateTime, string, List<int>>> m_BossLoot = new List<Tuple<DateTime, string, List<int>>>();
         [ProtoMember(5)]
         public List<Tuple<DateTime, string, int>> m_PlayerLoot = new List<Tuple<DateTime, string, int>>();
+        [ProtoMember(6)]
+        public List<string> m_BuffIDToNames = new List<string>();
 
         public List<FightCacheData> Fights
         {
@@ -240,9 +242,35 @@ namespace VF_RaidDamageDatabase
         { }
         private FightDataCollection(List<DamageDataSession> _DataSessions)//, Dictionary<string, string> _InterestingFights)
         {
+            List<string> unitIDNames = new List<string>();
             var timer = System.Diagnostics.Stopwatch.StartNew();
             foreach (var dataSession in _DataSessions)
             {
+                Dictionary<int, int> buffIDTranslationTable = new Dictionary<int,int>();
+                foreach(var buffID in dataSession.BuffIDToNames)
+                {
+                    int index = m_BuffIDToNames.IndexOf(buffID.Value);
+                    if(index < 0)
+                    {
+                        index = m_BuffIDToNames.Count;
+                        m_BuffIDToNames.Add(buffID.Value);
+                    }
+                    buffIDTranslationTable.Add(buffID.Key, index);
+                }
+
+                Dictionary<int, int> nameIDTranslationTable = new Dictionary<int, int>();
+                foreach (var unitID in dataSession.UnitIDToNames)
+                {
+                    int index = unitIDNames.IndexOf(unitID.Value);
+                    if (index < 0)
+                    {
+                        index = unitIDNames.Count;
+                        unitIDNames.Add(unitID.Value);
+                        m_UnitIDToNames.Add(index, unitID.Value);
+                    }
+                    nameIDTranslationTable.Add(unitID.Key, index);
+                }
+
                 List<FightData> fights = null;
                 try
                 {
@@ -256,280 +284,100 @@ namespace VF_RaidDamageDatabase
                 m_RaidMembers.AddRangeUnique(dataSession.RaidMembers);
                 m_BossLoot.AddRange(dataSession.BossLoot);
                 m_PlayerLoot.AddRange(dataSession.PlayerLoot);
-                List<TimeSlice> processedTimeSlices1 = new List<TimeSlice>();
-                List<TimeSlice> processedTimeSlices2 = new List<TimeSlice>();
+                List<TimeSlice> processedTimeSlices = new List<TimeSlice>();
                 foreach (var fight in fights)
                 {
-                    Dictionary<int, int> replacingUnitIDs = new Dictionary<int, int>();
-                    foreach (var timeSlice in fight.TimeSlices)
-                    {
-                        if (processedTimeSlices1.Contains(timeSlice) == true)
-                        {
-                            Logger.ConsoleWriteLine("Skipped processing a timeslice1(" + timeSlice.Time + "), already processed!", ConsoleColor.Yellow);
-                            continue;//Do not process a timeslice more than once!
-                        }
-                        processedTimeSlices1.Add(timeSlice);
-                        foreach (var unitData in timeSlice.UnitDatas)
-                        {
-                            string unitName = dataSession.UnitIDToNames[unitData.Key];
-                            if (m_UnitIDToNames.ContainsKey(unitData.Key) == true)
-                            {
-                                //Globala lookup innehåller keyn redan
-                                if (unitName != m_UnitIDToNames[unitData.Key])
-                                {
-                                    //Namnet är inte samma i globala lookup.
-                                    //Skapa nytt m_UnitIDToNames åt oss (_GenerateUnitID) och byt ut vårat ID på alla ställen
-
-                                    if (replacingUnitIDs.ContainsKey(unitData.Key) == false)
-                                    {
-                                        int newKey = _GenerateUnitID(unitName);
-                                        replacingUnitIDs.Add(unitData.Key, newKey);
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                //Key existerar inte redan
-
-                                //Ta reda på om namnet redan existerar i globala lookup
-                                var foundName = m_UnitIDToNames.FirstOrDefault((_Value) => _Value.Value == unitName);
-                                if (foundName.Equals(default(KeyValuePair<int, string>)) == false)
-                                {
-                                    //Namnet existerade i globala lookup så vi använder oss utav detta namnets key
-                                    if (replacingUnitIDs.ContainsKey(unitData.Key) == false)
-                                        replacingUnitIDs.Add(unitData.Key, foundName.Key);
-                                    else if (replacingUnitIDs[unitData.Key] != foundName.Key)
-                                        throw new Exception("replacingUnitIDs[unitData.Key](" + replacingUnitIDs[unitData.Key] + ") != foundName.Key(" + foundName.Key + "), should never happen!!!");
-                                }
-                                else
-                                {// if (dataSession.UnitIDToNames.ContainsKey(unitData.Key) == true)
-                                    //Om inte namnet existerar i globala lookup så roffar vi åt oss namnet
-                                    m_UnitIDToNames.Add(unitData.Key, unitName);
-                                }
-                            }
-
-                            /*
-                            if (m_UnitIDToNames.ContainsKey(unitData.Key) == true)
-                            {
-                                //Globala lookup innehåller keyn redan
-                                if (unitName == m_UnitIDToNames[unitData.Key])
-                                {
-                                    //Namnet är redan samma som i globala lookup, inget behövs göras
-                                }
-                                else
-                                {
-                                    //Namnet är inte samma i globala lookup.
-                                    //Byt ut så att vi använder globala lookup namnet istället
-                                    if (replacingUnitIDs.ContainsKey(unitData.Key) == false)
-                                    {
-                                        int newKey = _GenerateUnitID(unitName);
-                                        replacingUnitIDs.Add(unitData.Key, newKey);
-                                    }
-                                    else
-                                    {
-                                        //Utbytet är redan tillagt
-                                    }
-
-                                    //var foundName = m_UnitIDToNames.FirstOrDefault((_Value) => _Value.Value == unitName);
-                                    //if (foundName.Equals(default(KeyValuePair<int, string>)) == false)
-                                    //{
-                                    //    if (replacingUnitIDs.ContainsKey(unitData.Key) == false)
-                                    //        replacingUnitIDs.Add(unitData.Key, foundName.Key);
-                                    //    else if (replacingUnitIDs[unitData.Key] != foundName.Key)
-                                    //        throw new Exception("replacingUnitIDs[unitData.Key](" + replacingUnitIDs[unitData.Key] + ") != foundName.Key(" + foundName.Key + "), should never happen!!!");
-                                    //}
-                                    //else 
-                                }
-                            }
-                            else
-                            {
-                                //Globala lookup innehåller inte keyn, vi kan antingen lägga till den direkt och säga den är våran
-                                //Men eftersom vi vill ha 1-1 mappning så gör vi inte detta.
-
-                                //Ta reda på om namnet redan existerar i den globala lookupen
-                                var foundName = m_UnitIDToNames.FirstOrDefault((_Value) => _Value.Value == unitName);
-                                if (foundName.Equals(default(KeyValuePair<int, string>)) == false)
-                                {
-                                    //Namnet existerade i globala lookup så vi använder oss utav detta namnets key
-                                    if (replacingUnitIDs.ContainsKey(unitData.Key) == false)
-                                        replacingUnitIDs.Add(unitData.Key, foundName.Key);
-                                    else if (replacingUnitIDs[unitData.Key] != foundName.Key)
-                                        throw new Exception("replacingUnitIDs[unitData.Key](" + replacingUnitIDs[unitData.Key] + ") != foundName.Key(" + foundName.Key + "), should never happen!!!");
-                                }
-                                else
-                                {// if (dataSession.UnitIDToNames.ContainsKey(unitData.Key) == true)
-                                    //Om inte namnet existerar i globala lookup så roffar vi åt oss namnet
-                                    m_UnitIDToNames.Add(unitData.Key, unitName);
-                                }
-                            }*/
-                        }
-                    }
-                /*}
-                foreach (var fight in fights)
-                {*/
-                    List<KeyValuePair<int, int>> tempReplacingUnitIDs2 = new List<KeyValuePair<int, int>>(replacingUnitIDs.ToList());
-                    List<KeyValuePair<int, int>> sortedReplacingUnitIDs = new List<KeyValuePair<int, int>>();
-                    List<KeyValuePair<int, int>> swapUnitIDs = new List<KeyValuePair<int, int>>();
-                    while (sortedReplacingUnitIDs.Count + (swapUnitIDs.Count * 2) != replacingUnitIDs.Count)
-                    {
-                        for (int i = 0; i < tempReplacingUnitIDs2.Count; ++i)
-                        {
-                            var currIobj = tempReplacingUnitIDs2[i];
-                            var indexOfDependency = tempReplacingUnitIDs2.FindIndex((_Value) => _Value.Key == currIobj.Value);
-                            if (indexOfDependency != -1)
-                            {
-                                //Dependency
-                                //check if its circular dependency(SWAP TIME)
-                                if (tempReplacingUnitIDs2[indexOfDependency].Value == currIobj.Key
-                                && tempReplacingUnitIDs2[indexOfDependency].Key == currIobj.Value)
-                                {
-                                    //Circular dependency, lets swap them instead.
-                                    sortedReplacingUnitIDs.Add(currIobj);
-                                    sortedReplacingUnitIDs.Add(new KeyValuePair<int, int>(currIobj.Value, currIobj.Key));
-                                    if (indexOfDependency > i)
-                                    {//Always remove highest index first!
-                                        tempReplacingUnitIDs2.RemoveAt(indexOfDependency);
-                                        tempReplacingUnitIDs2.RemoveAt(i);
-                                        --i;
-                                    }
-                                    else
-                                    {//Always remove highest index first!
-                                        tempReplacingUnitIDs2.RemoveAt(i);
-                                        tempReplacingUnitIDs2.RemoveAt(indexOfDependency);
-                                        i -= 2;
-                                    }
-                                }
-                                else
-                                {
-
-                                }
-                            }
-                            else
-                            {
-                                //Inte dependency, placera först!
-                                sortedReplacingUnitIDs.Add(currIobj);
-                                tempReplacingUnitIDs2.RemoveAt(i);
-                                --i;
-                            }
-                        }
-                        if (timer.Elapsed.TotalMinutes > 2)
-                            throw new Exception("Timeout - Stuck in infinite ReplaceUnitID loop");
-                    }
-                    foreach (var replacingUnitID in replacingUnitIDs)
-                    {
-                        var obj = sortedReplacingUnitIDs.FirstOrDefault((_Value) => _Value.Key == replacingUnitID.Key);
-                        if (obj.Equals(default(KeyValuePair<int, int>)) == false)
-                        {
-                            if (obj.Value != replacingUnitID.Value)
-                                throw new Exception(Utility.GetMethodAndLineNumber() + " -> SortedReplacingUnitIDs was not correctly generated!!!");
-                        }
-                        else
-                        {
-                            //var obj2 = swapUnitIDs.First((_Value) => _Value.Key == replacingUnitID.Key || _Value.Key == replacingUnitID.Value);
-                            //if(obj2.Value == replacingUnitID.Value || obj2.Value == replacingUnitID.Key)
-                            //{
-                            //    //No probs
-                            //}
-                            //else
-                            {
-                                throw new Exception(Utility.GetMethodAndLineNumber() + " -> SwapUnitIDs was not correctly generated!!!");
-                            }
-                        }
-                    }
-                    //Correcting the UnitIDs
-                    List<int> newFightUnitIDs = new List<int>();
+                    //Correcting the UnitID and BuffIDs
+                    List<int> translatedFightUnitIDs = new List<int>();
                     foreach (var unitID in fight.FightUnitIDs)
                     {
-                        if (replacingUnitIDs.ContainsKey(unitID) == true)
+                        if (nameIDTranslationTable.ContainsKey(unitID) == true)
                         {
-                            newFightUnitIDs.Add(replacingUnitIDs[unitID]);
+                            translatedFightUnitIDs.Add(nameIDTranslationTable[unitID]);
                         }
                         else
                         {
-                            newFightUnitIDs.Add(unitID);
+                            Logger.ConsoleWriteLine("when generating translatedFightUnitIDs: THIS IS SERIOUS AND SHOULD NEVER HAPPEN!!!", ConsoleColor.Red);
                         }
                     }
-                    fight.m_FightUnitIDs = newFightUnitIDs;
-
-                    //replacingUnitIDs = null;
+                    fight.m_FightUnitIDs = translatedFightUnitIDs;
+                    
                     foreach (var timeSlice in fight.TimeSlices)
                     {
-                        if (processedTimeSlices2.Contains(timeSlice) == true)
+                        if (processedTimeSlices.Contains(timeSlice) == true)
                         {
-                            Logger.ConsoleWriteLine("Skipped processing a timeslice2(" + timeSlice.Time + "), already processed!", ConsoleColor.Yellow);
+                            Logger.ConsoleWriteLine("Skipped processing a timeslice(" + timeSlice.Time + "), already processed!", ConsoleColor.Yellow);
                             continue;//Do not process a timeslice more than once!
                         }
-                        processedTimeSlices2.Add(timeSlice);
+                        processedTimeSlices.Add(timeSlice);
 
-                        List<int> allreadySwapped = new List<int>();
-
-                        for (int i = 0; i < sortedReplacingUnitIDs.Count; ++i)
+                        //Fixing UnitDatas
+                        Dictionary<int, UnitData> translatedUnitDatas = new Dictionary<int, UnitData>();
+                        foreach(var unitData in timeSlice.UnitDatas)
                         {
-                            var replacingUnitID = sortedReplacingUnitIDs[i];
-                            if (timeSlice.UnitDatas.ContainsKey(replacingUnitID.Key) == true)
+                            if (nameIDTranslationTable.ContainsKey(unitData.Key) == true)
                             {
-                                if (timeSlice.UnitDatas.ContainsKey(replacingUnitID.Value) == false)
+                                int newUnitID = nameIDTranslationTable[unitData.Key];
+                                unitData.Value.I.SetNewUnitID(newUnitID);
+                                translatedUnitDatas.Add(newUnitID, unitData.Value);
+                            }
+                            else
+                            {
+                                Logger.ConsoleWriteLine("when generating translatedUnitDatas: THIS IS SERIOUS AND SHOULD NEVER HAPPEN!!!", ConsoleColor.Red);
+                            }
+                        }
+                        timeSlice.UnitDatas = translatedUnitDatas;
+                        //Fixing UnitDatas
+
+                        //Fixing ChangedUnitDatas
+                        List<int> translatedChangedUnitDatas = new List<int>();
+                        foreach (var changedUnitID in timeSlice.ChangedUnitDatas)
+                        {
+                            if (nameIDTranslationTable.ContainsKey(changedUnitID) == true)
+                            {
+                                translatedChangedUnitDatas.Add(nameIDTranslationTable[changedUnitID]);
+                            }
+                            else
+                            {
+                                Logger.ConsoleWriteLine("when generating translatedChangedUnitDatas: THIS IS SERIOUS AND SHOULD NEVER HAPPEN!!!", ConsoleColor.Red);
+                            }
+                        }
+                        timeSlice.ChangedUnitDatas = translatedChangedUnitDatas;
+                        //Fixing ChangedUnitDatas
+
+                        //Fixing UnitBuffs
+                        if(timeSlice.UnitBuffs != null)
+                        {
+                            Dictionary<int, List<BuffInfo>> translatedUnitBuffs = new Dictionary<int, List<BuffInfo>>();
+                            foreach (var unitBuff in timeSlice.UnitBuffs)
+                            {
+                                if (nameIDTranslationTable.ContainsKey(unitBuff.Key) == true)
                                 {
-                                    timeSlice.UnitDatas.Add(replacingUnitID.Value, timeSlice.UnitDatas[replacingUnitID.Key]);
-                                    timeSlice.UnitDatas.Remove(replacingUnitID.Key);
-                                    timeSlice.UnitDatas[replacingUnitID.Value].I.SetNewUnitID(replacingUnitID.Value);
-                                    int changedUnitIDIndex = timeSlice.ChangedUnitDatas.FindIndex((_Val) => _Val == replacingUnitID.Key);
-                                    if (changedUnitIDIndex != -1)
+                                    var translatedBuffInfos = new List<BuffInfo>();
+                                    foreach (var buffInfo in unitBuff.Value)
                                     {
-                                        timeSlice.ChangedUnitDatas[changedUnitIDIndex] = replacingUnitID.Value;
-                                    }
-                                }
-                                else
-                                {
-                                    if (replacingUnitIDs.ContainsKey(replacingUnitID.Value) == true && replacingUnitIDs[replacingUnitID.Value] == replacingUnitID.Key)
-                                    {
-                                        //Swapp dags om vi inte redan gjort
-                                        //throw new Exception("Meen... Hur troligt är det att 2 ska swappas egentligen?...");
-                                        if (allreadySwapped.Contains(replacingUnitID.Key) == false)
+                                        if (buffIDTranslationTable.ContainsKey(buffInfo.BuffID) == true)
                                         {
-                                            if (allreadySwapped.Contains(replacingUnitID.Value) == true)
-                                                throw new Exception(Utility.GetMethodAndLineNumber() + " -> allreadySwapped.Contains(replacingUnitID.Value) == true: Detta borde aldrig kunna ske heller!");
-                                            //Swap time!
-                                            var temp = timeSlice.UnitDatas[replacingUnitID.Key];
-                                            timeSlice.UnitDatas[replacingUnitID.Key] = timeSlice.UnitDatas[replacingUnitID.Value];
-                                            timeSlice.UnitDatas[replacingUnitID.Key].I.SetNewUnitID(replacingUnitID.Key);
-                                            timeSlice.UnitDatas[replacingUnitID.Value] = temp;
-                                            timeSlice.UnitDatas[replacingUnitID.Value].I.SetNewUnitID(replacingUnitID.Value);
-
-                                            int changedUnitIDIndex1 = timeSlice.ChangedUnitDatas.FindIndex((_Val) => _Val == replacingUnitID.Key);
-                                            if (changedUnitIDIndex1 != -1)
-                                            {
-                                                timeSlice.ChangedUnitDatas[changedUnitIDIndex1] = replacingUnitID.Value;
-                                            }
-                                            int changedUnitIDIndex2 = timeSlice.ChangedUnitDatas.FindIndex((_Val) => _Val == replacingUnitID.Value);
-                                            if (changedUnitIDIndex2 != -1)
-                                            {
-                                                timeSlice.ChangedUnitDatas[changedUnitIDIndex2] = replacingUnitID.Key;
-                                            }
-
-                                            allreadySwapped.Add(replacingUnitID.Key);
-                                            allreadySwapped.Add(replacingUnitID.Value);
+                                            translatedBuffInfos.Add(new BuffInfo { BuffID = buffIDTranslationTable[buffInfo.BuffID], LastUpdatedTimeSlice = buffInfo.LastUpdatedTimeSlice });
                                         }
                                         else
                                         {
-                                            if (allreadySwapped.Contains(replacingUnitID.Key) == false)
-                                                throw new Exception(Utility.GetMethodAndLineNumber() + " -> allreadySwapped.Contains(replacingUnitID.Key) == false: Detta borde aldrig kunna ske heller!");
+                                            Logger.ConsoleWriteLine("when generating translatedUnitBuffs.BuffInfo: THIS IS SERIOUS AND SHOULD NEVER HAPPEN!!!", ConsoleColor.Red);
                                         }
                                     }
-                                    else
-                                    {
-                                        //Det var tydligen bara en dependency...
-
-                                    //}
-                                    //else
-                                    //{
-                                        throw new Exception(Utility.GetMethodAndLineNumber() + " -> replacingUnitIDs.ContainsKey(replacingUnitID.Value) == false: Detta borde inte ske!");
-                                    }
+                                    translatedUnitBuffs.Add(nameIDTranslationTable[unitBuff.Key], translatedBuffInfos);
+                                }
+                                else
+                                {
+                                    Logger.ConsoleWriteLine("when generating translatedUnitBuffs: THIS IS SERIOUS AND SHOULD NEVER HAPPEN!!!", ConsoleColor.Red);
                                 }
                             }
+                            timeSlice.UnitBuffs = translatedUnitBuffs;
                         }
+                        //Fixing UnitBuffs
+
                     }
-                    //Correcting the UnitIDs
+                    //Correcting the UnitID and BuffIDs
 
                     m_FightCacheDatas.Add(new FightCacheData(fight, this));
                     m_FightDatas.Add(fight);
