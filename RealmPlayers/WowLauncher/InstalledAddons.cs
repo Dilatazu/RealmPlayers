@@ -33,6 +33,24 @@ namespace VF_WoWLauncher
             }
             return addons;
         }
+        internal static void ModifyInstalledAddon(string _AddonName, WowVersionEnum _WowVersion, string _VariableName, string _VariableValue)
+        {
+            string addonFile = Settings.GetWowDirectory(_WowVersion) + "Interface\\AddOns\\" + _AddonName + "\\" + _AddonName + ".lua";
+            if(System.IO.File.Exists(addonFile) == true)
+            {
+                string addonCode = System.IO.File.ReadAllText(addonFile, Encoding.UTF8);
+                int index = addonCode.IndexOf("\r\n" + _VariableName + " = ");
+                if (index < 0)
+                {
+                    System.IO.File.AppendText(addonFile).Write("\r\n" + _VariableName + " = " + _VariableValue + ";");
+                }
+                else
+                {
+                    int endIndex = addonCode.IndexOf(';', index);
+                    System.IO.File.WriteAllText(addonFile, addonCode.Substring(0, index) + "\r\n" + _VariableName + " = " + _VariableValue + addonCode.Substring(endIndex));
+                }
+            }
+        }
         internal static string BackupAddon(string _AddonName, WowVersionEnum _WowVersion, AddonBackupMode _BackupMode = AddonBackupMode.BackupWTF_And_AddonFiles)
         {
             int fileID = System.Threading.Interlocked.Increment(ref g_UniqueFileIDCounter);

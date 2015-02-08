@@ -131,11 +131,33 @@ namespace VF_WoWLauncher
                                 var sentRealmPlayersFiles = ServerComm.SendAddonData(Settings.UserID, "VF_RealmPlayers", WowVersionEnum.Vanilla, "VF_RealmPlayersData", 50, out sentAll);
                                 foreach (var file in sentRealmPlayersFiles)
                                     Logger.ConsoleWriteLine("Sent VF_RealmPlayers File \"" + file + "\"", ConsoleColor.Green);
+                                if(sentAll == true)
+                                {
+                                    InstalledAddons.ModifyInstalledAddon("VF_RealmPlayers", WowVersionEnum.Vanilla, "VF_RP_LastUploadedData", "\"" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "\"");
+                                }
 
-                                Logger.ConsoleWriteLine("Starting to send VF_RaidDamage Files", ConsoleColor.White);
-                                var sentRaidDamageFiles = ServerComm.SendAddonData(Settings.UserID, "VF_RaidDamage", WowVersionEnum.Vanilla, "VF_RaidDamageData", 5000, out sentAll);
-                                foreach (var file in sentRaidDamageFiles)
-                                    Logger.ConsoleWriteLine("Sent VF_RaidDamage File \"" + file + "\"", ConsoleColor.Cyan);
+                                if(InstalledAddons.GetAddonInfo("VF_RaidStats", WowVersionEnum.Vanilla) != null)
+                                {
+                                    Logger.ConsoleWriteLine("Starting to send VF_RaidStats Files", ConsoleColor.White);
+                                    var sentRaidStatsFiles = ServerComm.SendAddonData(Settings.UserID, "VF_RaidStats", WowVersionEnum.Vanilla, "VF_RaidStatsData", 5000, out sentAll);
+                                    foreach (var file in sentRaidStatsFiles)
+                                        Logger.ConsoleWriteLine("Sent VF_RaidStats File \"" + file + "\"", ConsoleColor.Cyan);
+                                    if (sentAll == true)
+                                    {
+                                        InstalledAddons.ModifyInstalledAddon("VF_RaidStats", WowVersionEnum.Vanilla, "VF_RS_LastUploadedData", "\"" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "\"");
+                                    }
+                                }
+                                else
+                                {
+                                    Logger.ConsoleWriteLine("Starting to send VF_RaidDamage Files", ConsoleColor.White);
+                                    var sentRaidDamageFiles = ServerComm.SendAddonData(Settings.UserID, "VF_RaidDamage", WowVersionEnum.Vanilla, "VF_RaidDamageData", 5000, out sentAll);
+                                    foreach (var file in sentRaidDamageFiles)
+                                        Logger.ConsoleWriteLine("Sent VF_RaidDamage File \"" + file + "\"", ConsoleColor.Cyan);
+                                    if (sentAll == true)
+                                    {
+                                        InstalledAddons.ModifyInstalledAddon("VF_RaidDamage", WowVersionEnum.Vanilla, "VF_RD_LastUploadedData", "\"" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "\"");
+                                    }
+                                }
                             }
                             if(Settings.HaveTBC == true)
                             {
@@ -143,11 +165,19 @@ namespace VF_WoWLauncher
                                 var sentRealmPlayersTBCFiles = ServerComm.SendAddonData(Settings.UserID, "VF_RealmPlayersTBC", WowVersionEnum.TBC, "VF_RealmPlayersData", 50, out sentAll);
                                 foreach (var file in sentRealmPlayersTBCFiles)
                                     Logger.ConsoleWriteLine("Sent VF_RealmPlayersTBC File \"" + file + "\"", ConsoleColor.Cyan);
+                                if (sentAll == true)
+                                {
+                                    InstalledAddons.ModifyInstalledAddon("VF_RealmPlayersTBC", WowVersionEnum.TBC, "VF_RP_LastUploadedData", "\"" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "\"");
+                                }
 
                                 Logger.ConsoleWriteLine("Starting to send VF_RaidStatsTBC Files", ConsoleColor.White);
                                 var sentRaidStatsTBCFiles = ServerComm.SendAddonData(Settings.UserID, "VF_RaidStatsTBC", WowVersionEnum.TBC, "VF_RaidStatsData", 5000, out sentAll);
                                 foreach (var file in sentRaidStatsTBCFiles)
                                     Logger.ConsoleWriteLine("Sent VF_RaidStatsTBC File \"" + file + "\"", ConsoleColor.Cyan);
+                                if (sentAll == true)
+                                {
+                                    InstalledAddons.ModifyInstalledAddon("VF_RaidStatsTBC", WowVersionEnum.TBC, "VF_RS_LastUploadedData", "\"" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "\"");
+                                }
                             }
                         }
                         else

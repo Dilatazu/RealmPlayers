@@ -205,7 +205,7 @@ namespace VF_WoWLauncher
             VF.NetworkClient netClient = null;
 
             List<string> sentAddonFiles = new List<string>();
-            _SentAll = false;//Default läge
+            _SentAll = true;//Default läge
             try
             {
                 foreach (var luaFilePath in savedVariableFiles)
@@ -248,12 +248,14 @@ namespace VF_WoWLauncher
                             Logger.ConsoleWriteLine("Operation Successfull! Preparing for next file.", ConsoleColor.Green);
                         }
                         else
+                        {
                             Logger.ConsoleWriteLine("Operation Failed! Preparing for next file.", ConsoleColor.Red);
+                            _SentAll = false;
+                        }
                     }
                     else
                     { }
                 }
-                _SentAll = true;
             }
             catch (Exception ex)
             {
