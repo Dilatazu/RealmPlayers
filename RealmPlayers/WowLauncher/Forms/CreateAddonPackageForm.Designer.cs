@@ -122,6 +122,7 @@
             this.c_btnCancel.TabIndex = 19;
             this.c_btnCancel.Text = "Cancel";
             this.c_btnCancel.UseVisualStyleBackColor = true;
+            this.c_btnCancel.Click += new System.EventHandler(this.c_btnCancel_Click);
             // 
             // c_cbUpdateImportance
             // 

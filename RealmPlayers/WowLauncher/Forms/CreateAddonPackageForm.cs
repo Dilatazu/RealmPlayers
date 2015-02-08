@@ -140,5 +140,10 @@ namespace VF_WoWLauncher
                 _stream.Position = 0;
             }
         }
+
+        private void c_btnCancel_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
     }
 }
