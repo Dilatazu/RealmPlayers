@@ -425,6 +425,8 @@ namespace VF_RaidDamageDatabase
                                     bool unexpectedEqError = false;
                                     foreach (var buff in addBuffs)
                                     {
+                                        if (buff == "")
+                                            continue;
                                         BuffInfo buffInfo;
                                         buffInfo.BuffID = int.Parse(buff);
                                         buffInfo.LastUpdatedTimeSlice = this.TimeSliceCounter;
@@ -444,6 +446,8 @@ namespace VF_RaidDamageDatabase
                                     }
                                     foreach (var buff in subBuffs)
                                     {
+                                        if (buff == "")
+                                            continue;
                                         int buffID = int.Parse(buff);
                                         int buffIndex = currUnitBuffs.FindIndex((_Value) => _Value.BuffID == buffID);
                                         if (buffIndex >= 0)
@@ -457,6 +461,8 @@ namespace VF_RaidDamageDatabase
                                     }
                                     foreach (var buff in eqBuffs)
                                     {
+                                        if (buff == "")
+                                            continue;
                                         BuffInfo buffInfo;
                                         buffInfo.BuffID = int.Parse(buff);
                                         buffInfo.LastUpdatedTimeSlice = this.TimeSliceCounter;
