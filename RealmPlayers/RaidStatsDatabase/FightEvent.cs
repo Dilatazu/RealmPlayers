@@ -33,7 +33,7 @@ namespace VF_RaidDamageDatabase
 
             var fightDetails = _Fight.GetFightDetails();
             int firstTime = _Fight.GetFightData().TimeSlices.First().Time;
-            TimeSlice lastTimeSlice = null;
+            //TimeSlice lastTimeSlice = null;
             for (int i = 0; i < fightDetails.Count; ++i)
             {
                 var fightDetail = fightDetails[i];

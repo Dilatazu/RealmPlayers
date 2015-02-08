@@ -12,6 +12,7 @@ namespace VF_RaidDamageDatabase
         public static char DamageDataSession_VERSION = (char)2;
         public List<TimeSlice> TimeSlices = new List<TimeSlice>();
         public Dictionary<int, string> UnitIDToNames = new Dictionary<int, string>();
+        public Dictionary<int, string> BuffIDToNames = new Dictionary<int, string>();
         public List<string> RaidMembers = new List<string>();
         public DateTime StartDateTime = DateTime.MinValue;
         public int StartTime = 0;

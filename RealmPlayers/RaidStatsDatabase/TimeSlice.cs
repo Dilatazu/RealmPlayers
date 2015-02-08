@@ -10,6 +10,14 @@ using WowVersionEnum = VF_RealmPlayersDatabase.WowVersionEnum;
 namespace VF_RaidDamageDatabase
 {
     [ProtoContract]
+    public struct BuffInfo
+    {
+        [ProtoMember(1)]
+        public int BuffID;
+        [ProtoMember(2)]
+        public int LastUpdatedTimeSlice;
+    }
+    [ProtoContract]
     [Serializable]
     public class TimeSlice : ISerializable
     {
@@ -24,6 +32,10 @@ namespace VF_RaidDamageDatabase
         public Dictionary<int, UnitData> UnitDatas = new Dictionary<int, UnitData>();
         [ProtoMember(5)]
         public List<int> ChangedUnitDatas = new List<int>();
+        [ProtoMember(6)]
+        public Dictionary<int, List<BuffInfo>> UnitBuffs = null;
+        [ProtoMember(7)]
+        public int TimeSliceCounter = 0;
 
         public bool IsEvent(string _EventType)
         {
@@ -279,11 +291,28 @@ namespace VF_RaidDamageDatabase
         public TimeSlice()
         { }
 
-        public TimeSlice(TimeSlice _PreviousTimeSlice, string _DataString, Dictionary<int, string> _UnitIDsToName, List<int> _RaidMemberIDs, string _Zone, WowVersionEnum _WowVersion)
+        public TimeSlice(TimeSlice _PreviousTimeSlice, string _DataString, Dictionary<int, string> _UnitIDsToName, List<int> _RaidMemberIDs, string _Zone, WowVersionEnum _WowVersion, Dictionary<int, string> _BuffIDsToName)
         {
             Dictionary<int, UnitData> previousUnitDatas = null;
             if(_PreviousTimeSlice != null)
+            {
                 previousUnitDatas = _PreviousTimeSlice.UnitDatas;
+                if(_PreviousTimeSlice.UnitBuffs != null)
+                {
+                    UnitBuffs = new Dictionary<int, List<BuffInfo>>();
+                    foreach(var buffData in _PreviousTimeSlice.UnitBuffs)
+                    {
+                        if (buffData.Value != null)
+                        {
+                            foreach (BuffInfo buffInfo in buffData.Value)
+                            {
+                                UnitBuffs.AddToList(buffData.Key, buffInfo);
+                            }
+                        }
+                    }
+                }
+                TimeSliceCounter = _PreviousTimeSlice.TimeSliceCounter + 1;
+            }
 
             Zone = _Zone;
             string[] splitData = _DataString.Split(',');
@@ -307,13 +336,30 @@ namespace VF_RaidDamageDatabase
                     {//ID to Name convertion
                         //try
                         {
-                            string[] idToNameData = unitData.Split('=');
-                            string unitName = idToNameData[0];
-                            int unitID = int.Parse(idToNameData[1]);
-                            if (_UnitIDsToName.ContainsKey(unitID) == false)
-                                _UnitIDsToName.Add(unitID, unitName);
-                            else if(unitName.StartsWith("VF_PET_"))
-                                _UnitIDsToName[unitID] = unitName;
+                            if(unitData.StartsWith("B."))
+                            {
+                                try 
+	                            {	 
+                                    //BuffID Definition for 1.8.9, TODO: Implement parsing!
+                                    //unitData = "B.AGGRO_TEST_WHATEVER=3"
+                                    string[] idToBuffData = unitData.Substring(2).Split('=');
+                                    string buffName = idToBuffData[0];
+                                    int buffID = int.Parse(idToBuffData[1]);
+                                    _BuffIDsToName.AddOrSet(buffID, buffName);
+                                }
+                                catch(Exception)
+                                {}
+                            }
+                            else
+                            {
+                                string[] idToNameData = unitData.Split('=');
+                                string unitName = idToNameData[0];
+                                int unitID = int.Parse(idToNameData[1]);
+                                if (_UnitIDsToName.ContainsKey(unitID) == false)
+                                    _UnitIDsToName.Add(unitID, unitName);
+                                else if (unitName.StartsWith("VF_PET_"))
+                                    _UnitIDsToName[unitID] = unitName;
+                            }
                         }
                         //catch (Exception)
                         {}
@@ -335,6 +381,134 @@ namespace VF_RaidDamageDatabase
 	                    catch (Exception ex)
 	                    {
 		                    Logger.LogException(ex);
+	                    }
+                    }
+                    else if(unitData.StartsWith("B"))
+                    {
+                        try 
+	                    {	 
+                            //Buff Data for 1.8.9, TODO: Implement parsing!
+                            //"B12 3 2 4 5" <-- 12 is playerID, other numbers are BuffIDs
+                            string dataString = "";
+                            if(unitData.StartsWith("BF"))
+                            {
+                                //Means that there was 16 buffs active, which means the buffs info might not be 100% accurate!
+                                //TODO: do something useful with this information!
+                                dataString = unitData.Substring(2);
+                            }
+                            else
+                            {
+                                dataString = unitData.Substring(1);
+                            }
+
+                            string[] buffData = dataString.Split('.');
+                            if (buffData.Length == 4)
+                            {
+                                int unitID = int.Parse(buffData[0]);
+                                string[] eqBuffs = buffData[1].Split(' ');
+                                string[] subBuffs = buffData[2].Split(' ');
+                                string[] addBuffs = buffData[3].Split(' ');
+
+                                if (UnitBuffs == null)
+                                {
+                                    UnitBuffs = new Dictionary<int, List<BuffInfo>>();
+                                }
+                                if (UnitBuffs.ContainsKey(unitID) == false)
+                                    UnitBuffs.Add(unitID, new List<BuffInfo>());
+
+                                List<BuffInfo> currUnitBuffs = UnitBuffs[unitID];
+                                
+                                try
+                                {
+                                    bool unexpectedAddError = false;
+                                    bool unexpectedSubError = false;
+                                    bool unexpectedEqError = false;
+                                    foreach (var buff in addBuffs)
+                                    {
+                                        BuffInfo buffInfo;
+                                        buffInfo.BuffID = int.Parse(buff);
+                                        buffInfo.LastUpdatedTimeSlice = this.TimeSliceCounter;
+                                        int buffIndex = currUnitBuffs.FindIndex((_Value) => _Value.BuffID == buffInfo.BuffID);
+                                        if (buffIndex >= 0)
+                                        {
+                                            unexpectedAddError = true;
+                                            currUnitBuffs[buffIndex] = buffInfo;
+                                        }
+                                        else
+                                        {
+                                            currUnitBuffs.Add(buffInfo);
+                                        }
+                                        //if (currUnitBuffs.Contains(buffID) == true)
+                                        //    unexpectedError = true;
+                                        //UnitBuffs.AddToDistinctList(unitID, int.Parse(buff));
+                                    }
+                                    foreach (var buff in subBuffs)
+                                    {
+                                        int buffID = int.Parse(buff);
+                                        int buffIndex = currUnitBuffs.FindIndex((_Value) => _Value.BuffID == buffID);
+                                        if (buffIndex >= 0)
+                                        {
+                                            currUnitBuffs.RemoveAt(buffIndex);
+                                        }
+                                        else
+                                        {
+                                            unexpectedSubError = true;
+                                        }
+                                    }
+                                    foreach (var buff in eqBuffs)
+                                    {
+                                        BuffInfo buffInfo;
+                                        buffInfo.BuffID = int.Parse(buff);
+                                        buffInfo.LastUpdatedTimeSlice = this.TimeSliceCounter;
+                                        int buffIndex = currUnitBuffs.FindIndex((_Value) => _Value.BuffID == buffInfo.BuffID);
+                                        if (buffIndex >= 0)
+                                        {
+                                            currUnitBuffs[buffIndex] = buffInfo;
+                                        }
+                                        else
+                                        {
+                                            unexpectedEqError = true;
+                                            currUnitBuffs.Add(buffInfo);
+                                        }
+                                    }
+                                    if (unexpectedAddError)
+                                        Logger.ConsoleWriteLine("Buff already exists when adding UnitBuff!!! unitData = \"" + unitData + "\"", ConsoleColor.Red);
+                                    if (unexpectedSubError)
+                                        Logger.ConsoleWriteLine("Buff does not exists when removing UnitBuff!!! unitData = \"" + unitData + "\"", ConsoleColor.Red);
+                                    if (unexpectedEqError)
+                                        Logger.ConsoleWriteLine("Buff does not exists when equaling UnitBuff!!! unitData = \"" + unitData + "\"", ConsoleColor.Red);
+
+                                    const int ADDON_REFRESH_EQ_RATE = 20 * 2;//20 is from refreshrate in addon and we double it just to be safe
+                                    List<int> removeBuffIDs = null;
+                                    foreach(var buffInfo in currUnitBuffs)
+                                    {
+                                        if (this.TimeSliceCounter - buffInfo.LastUpdatedTimeSlice > ADDON_REFRESH_EQ_RATE)
+                                        {
+                                            if (removeBuffIDs == null)
+                                                removeBuffIDs = new List<int>();
+                                            removeBuffIDs.Add(buffInfo.BuffID);
+                                        }
+                                    }
+                                    if(removeBuffIDs != null)
+                                    {
+                                            foreach(var removeBuffID in removeBuffIDs)
+                                            {
+                                                int buffIndex = currUnitBuffs.FindIndex((_Value) => _Value.BuffID == removeBuffID);
+                                                currUnitBuffs.RemoveAt(buffIndex);
+                                            }
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    Logger.LogException(ex);
+                                }
+                            }
+                            else
+                                Logger.ConsoleWriteLine("Unexpected error when parsing UnitBuffs!!! unitData = \"" + unitData + "\"", ConsoleColor.Red);
+	                    }
+	                    catch (Exception)
+	                    {
+		                    
 	                    }
                     }
                     else

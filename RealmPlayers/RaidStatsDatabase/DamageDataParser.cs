@@ -311,7 +311,7 @@ namespace VF_RaidDamageDatabase
                             }
                             else if(timeSlice.StartsWith("Session:") == false)
                             {//Timeslice data
-                                TimeSlice newTimeSlice = new TimeSlice(lastTimeSlice, timeSlice, newSession.UnitIDToNames, raidMemberIDs, currZone, _WowVersion);
+                                TimeSlice newTimeSlice = new TimeSlice(lastTimeSlice, timeSlice, newSession.UnitIDToNames, raidMemberIDs, currZone, _WowVersion, newSession.BuffIDToNames);
                                 newSession.TimeSlices.Add(newTimeSlice);
                                 lastTimeSlice = newTimeSlice;
                             }

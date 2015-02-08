@@ -73,6 +73,23 @@ public static class VF_DictionaryExtensions
             _Dictionary.Add(_Key, new List<TValue>());
         _Dictionary[_Key].Add(_Value);
     }
+    public static void RemoveFromList<TKey, TValue>(
+        this Dictionary<TKey, List<TValue>> _Dictionary,
+        TKey _Key, TValue _Value)
+    {
+        if (_Dictionary.ContainsKey(_Key) == false)
+            _Dictionary.Add(_Key, new List<TValue>());
+        _Dictionary[_Key].Remove(_Value);
+    }
+    public static void AddToDistinctList<TKey>(
+        this Dictionary<TKey, List<int>> _Dictionary,
+        TKey _Key, int _Value)
+    {
+        if (_Dictionary.ContainsKey(_Key) == false)
+            _Dictionary.Add(_Key, new List<int>());
+        if (_Dictionary[_Key].Contains(_Value) == false)
+            _Dictionary[_Key].Add(_Value);
+    }
     public static void AddToDistinctList<TKey>(
         this Dictionary<TKey, List<string>> _Dictionary,
         TKey _Key, string _Value)
