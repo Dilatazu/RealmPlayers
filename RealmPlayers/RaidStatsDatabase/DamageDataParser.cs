@@ -145,6 +145,7 @@ namespace VF_RaidDamageDatabase
                                         else if (nameValue[0] == "AddonVersion")
                                         {
                                             newSession.AddonVersion = nameValue[1];
+                                            Logger.ConsoleWriteLine(newSession.StartDateTime.ToString("yyyy-MM-dd HH:mm:ss") + " VF_RaidDamage " + newSession.AddonVersion, ConsoleColor.Cyan);
                                         }
                                         else if (nameValue[0].StartsWith("RaidID"))
                                         {

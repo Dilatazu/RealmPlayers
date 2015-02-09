@@ -284,6 +284,22 @@ namespace VF_RaidDamageWebsite
                 }
                 /////////////////////
 
+                ///////////////////////
+                string buffInfo = "";
+                if(PageUtility.GetQueryString(Request, "Debug", "null") == "Buff")
+                {
+                    var buffIDToNames = interestingFight.GetFightCacheData().m_FightDataCollection.m_BuffIDToNames;
+                    if (buffIDToNames != null && buffIDToNames.Count > 0)
+                    {
+                        buffInfo = "<h3>Buffs used:</h3>";
+                        foreach(var buff in buffIDToNames)
+                        {
+                            buffInfo += buff + ", ";
+                        }
+                    }
+                }
+                ///////////////////////
+
                 var realm = interestingFight.GetRaid().Realm;
                 ///////////////////////
                 string lootDropped = "";
@@ -294,7 +310,7 @@ namespace VF_RaidDamageWebsite
                 }
                 ///////////////////////
 
-                m_FightOverviewInfoHTML = new MvcHtmlString(fightOverViewInfo + playersAttendingStr + lootDropped + enemyUnits + playerDeaths + unrealisticPlayerSpikes);
+                m_FightOverviewInfoHTML = new MvcHtmlString(fightOverViewInfo + playersAttendingStr + buffInfo + lootDropped + enemyUnits + playerDeaths + unrealisticPlayerSpikes);
 
                 string graphSection = "";
                 {
