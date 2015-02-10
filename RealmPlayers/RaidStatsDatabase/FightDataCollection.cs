@@ -285,6 +285,7 @@ namespace VF_RaidDamageDatabase
                 m_BossLoot.AddRange(dataSession.BossLoot);
                 m_PlayerLoot.AddRange(dataSession.PlayerLoot);
                 List<TimeSlice> processedTimeSlices = new List<TimeSlice>();
+                List<int> skippedTimeSlices = new List<int>();
                 foreach (var fight in fights)
                 {
                     //Correcting the UnitID and BuffIDs
@@ -306,7 +307,7 @@ namespace VF_RaidDamageDatabase
                     {
                         if (processedTimeSlices.Contains(timeSlice) == true)
                         {
-                            Logger.ConsoleWriteLine("Skipped processing a timeslice(" + timeSlice.Time + "), already processed!", ConsoleColor.Yellow);
+                            skippedTimeSlices.Add(timeSlice.Time);
                             continue;//Do not process a timeslice more than once!
                         }
                         processedTimeSlices.Add(timeSlice);
@@ -381,6 +382,15 @@ namespace VF_RaidDamageDatabase
 
                     m_FightCacheDatas.Add(new FightCacheData(fight, this));
                     m_FightDatas.Add(fight);
+                }
+                if (skippedTimeSlices.Count > 0)
+                {
+                    string skipText = "Skipped processing " + skippedTimeSlices.Count + " timeslices: ";
+                    foreach (int timeSlice in skippedTimeSlices)
+                    {
+                        skipText += timeSlice.ToString() + ", ";
+                    }
+                    Logger.ConsoleWriteLine(skipText + ", already processed!", ConsoleColor.Yellow);
                 }
             }
         }
