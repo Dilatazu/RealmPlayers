@@ -288,6 +288,12 @@ namespace VF_RaidDamageDatabase
                 List<int> skippedTimeSlices = new List<int>();
                 foreach (var fight in fights)
                 {
+                    int TFUDViolations = 0;
+                    int TUDViolations = 0;
+                    int TCUDViolations = 0;
+                    int TUBBIViolations = 0;
+                    int TUBViolations = 0;
+
                     //Correcting the UnitID and BuffIDs
                     List<int> translatedFightUnitIDs = new List<int>();
                     foreach (var unitID in fight.FightUnitIDs)
@@ -298,7 +304,7 @@ namespace VF_RaidDamageDatabase
                         }
                         else
                         {
-                            Logger.ConsoleWriteLine("when generating translatedFightUnitIDs: THIS IS SERIOUS AND SHOULD NEVER HAPPEN!!!", ConsoleColor.Red);
+                            ++TFUDViolations;
                         }
                     }
                     fight.m_FightUnitIDs = translatedFightUnitIDs;
@@ -324,7 +330,7 @@ namespace VF_RaidDamageDatabase
                             }
                             else
                             {
-                                Logger.ConsoleWriteLine("when generating translatedUnitDatas: THIS IS SERIOUS AND SHOULD NEVER HAPPEN!!!", ConsoleColor.Red);
+                                ++TUDViolations;
                             }
                         }
                         timeSlice.UnitDatas = translatedUnitDatas;
@@ -340,7 +346,7 @@ namespace VF_RaidDamageDatabase
                             }
                             else
                             {
-                                Logger.ConsoleWriteLine("when generating translatedChangedUnitDatas: THIS IS SERIOUS AND SHOULD NEVER HAPPEN!!!", ConsoleColor.Red);
+                                ++TCUDViolations;
                             }
                         }
                         timeSlice.ChangedUnitDatas = translatedChangedUnitDatas;
@@ -363,14 +369,14 @@ namespace VF_RaidDamageDatabase
                                         }
                                         else
                                         {
-                                            Logger.ConsoleWriteLine("when generating translatedUnitBuffs.BuffInfo: THIS IS SERIOUS AND SHOULD NEVER HAPPEN!!!", ConsoleColor.Red);
+                                            ++TUBBIViolations;
                                         }
                                     }
                                     translatedUnitBuffs.Add(nameIDTranslationTable[unitBuff.Key], translatedBuffInfos);
                                 }
                                 else
                                 {
-                                    Logger.ConsoleWriteLine("when generating translatedUnitBuffs: THIS IS SERIOUS AND SHOULD NEVER HAPPEN!!!", ConsoleColor.Red);
+                                    ++TUBViolations;
                                 }
                             }
                             timeSlice.UnitBuffs = translatedUnitBuffs;
@@ -379,6 +385,32 @@ namespace VF_RaidDamageDatabase
 
                     }
                     //Correcting the UnitID and BuffIDs
+
+                    if (TFUDViolations > 0)
+                    {
+                        Logger.ConsoleWriteLine("when generating translatedFightUnitIDs: "
+                            + TFUDViolations + "x THIS IS SERIOUS AND SHOULD NEVER HAPPEN!!! Raid(" + fight.StartDateTime.ToString("yyyy-MM-dd HH:mm:ss") + ")", ConsoleColor.Red);
+                    }
+                    if (TUDViolations > 0)
+                    {
+                        Logger.ConsoleWriteLine("when generating translatedUnitDatas: "
+                            + TUDViolations + "x THIS IS SERIOUS AND SHOULD NEVER HAPPEN!!! Raid(" + fight.StartDateTime.ToString("yyyy-MM-dd HH:mm:ss") + ")", ConsoleColor.Red);
+                    }
+                    if (TCUDViolations > 0)
+                    {
+                        Logger.ConsoleWriteLine("when generating translatedChangedUnitDatas: "
+                            + TCUDViolations + "x THIS IS SERIOUS AND SHOULD NEVER HAPPEN!!! Raid(" + fight.StartDateTime.ToString("yyyy-MM-dd HH:mm:ss") + ")", ConsoleColor.Red);
+                    }
+                    if (TUBBIViolations > 0)
+                    {
+                        Logger.ConsoleWriteLine("when generating translatedUnitBuffs.BuffInfo: "
+                            + TUBBIViolations + "x THIS IS SERIOUS AND SHOULD NEVER HAPPEN!!! Raid(" + fight.StartDateTime.ToString("yyyy-MM-dd HH:mm:ss") + ")", ConsoleColor.Red);
+                    }
+                    if (TUBViolations > 0)
+                    {
+                        Logger.ConsoleWriteLine("when generating translatedUnitBuffs: "
+                            + TUBViolations + "x THIS IS SERIOUS AND SHOULD NEVER HAPPEN!!! Raid(" + fight.StartDateTime.ToString("yyyy-MM-dd HH:mm:ss") + ")", ConsoleColor.Red);
+                    }
 
                     m_FightCacheDatas.Add(new FightCacheData(fight, this));
                     m_FightDatas.Add(fight);
