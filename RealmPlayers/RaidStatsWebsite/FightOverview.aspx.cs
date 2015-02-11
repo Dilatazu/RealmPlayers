@@ -288,14 +288,50 @@ namespace VF_RaidDamageWebsite
                 string buffInfo = "";
                 if(PageUtility.GetQueryString(Request, "Debug", "null") == "Buff")
                 {
+                    int thaddiusBuffID = -1;
                     var buffIDToNames = interestingFight.GetFightCacheData().m_FightDataCollection.m_BuffIDToNames;
                     if (buffIDToNames != null && buffIDToNames.Count > 0)
                     {
                         buffInfo = "<h3>Buffs used:</h3>";
                         foreach(var buff in buffIDToNames)
                         {
-                            buffInfo += buff + ", ";
+                            if(buff == "Spell_ChargePositive")
+                            {
+                                thaddiusBuffID = buffIDToNames.IndexOf(buff);
+                            }
+                            else
+                            {
+                                buffInfo += "<img src='http://realmplayers.com/Assets/wowicons/43x43/" + buff + ".png'></img>";
+                            }
                         }
+                    }
+                    int lexmoreNameID = interestingFight.GetFightCacheData().m_FightDataCollection.GetUnitIDFromName("Lexmore");
+                    Dictionary<int, int> accumulatedTime = new Dictionary<int, int>();
+                    int prevTimeSliceTime = interestingFight.GetFightData().TimeSlices.First().Time;
+                    foreach(var timeSlice in interestingFight.GetFightData().TimeSlices)
+                    {
+                        int deltaTime = timeSlice.Time - prevTimeSliceTime;
+                        foreach(var unitBuff in timeSlice.UnitBuffs)
+                        {
+                            if(unitBuff.Key == lexmoreNameID)
+                            {
+                                foreach(var buff in unitBuff.Value)
+                                {
+                                    if(accumulatedTime.ContainsKey(buff.BuffID) == false)
+                                    {
+                                        accumulatedTime.Add(buff.BuffID, 0);
+                                    }
+                                    accumulatedTime[buff.BuffID] += deltaTime;
+                                }
+                            }
+                        }
+                    }
+
+                    var orderedAccTime = accumulatedTime.OrderByDescending((_Value) => _Value.Value);
+                    foreach (var accum in orderedAccTime)
+                    {
+                        buffInfo += "<br />" + "<img src='http://realmplayers.com/Assets/wowicons/43x43/" + interestingFight.GetFightCacheData().m_FightDataCollection.m_BuffIDToNames[accum.Key] + ".png'></img>"
+                            + " buff during " + accum.Value + " seconds of the fight!";
                     }
                 }
                 ///////////////////////
