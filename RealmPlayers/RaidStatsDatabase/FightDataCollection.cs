@@ -293,6 +293,8 @@ namespace VF_RaidDamageDatabase
                     int TCUDViolations = 0;
                     int TUBBIViolations = 0;
                     int TUBViolations = 0;
+                    int TUDBBIViolations = 0;
+                    int TUDBViolations = 0;
 
                     //Correcting the UnitID and BuffIDs
                     List<int> translatedFightUnitIDs = new List<int>();
@@ -383,33 +385,74 @@ namespace VF_RaidDamageDatabase
                         }
                         //Fixing UnitBuffs
 
+                        //Fixing UnitDebuffs
+                        if (timeSlice.UnitBuffs != null)
+                        {
+                            Dictionary<int, List<BuffInfo>> translatedUnitDebuffs = new Dictionary<int, List<BuffInfo>>();
+                            foreach (var unitBuff in timeSlice.UnitDebuffs)
+                            {
+                                if (nameIDTranslationTable.ContainsKey(unitBuff.Key) == true)
+                                {
+                                    var translatedBuffInfos = new List<BuffInfo>();
+                                    foreach (var buffInfo in unitBuff.Value)
+                                    {
+                                        if (buffIDTranslationTable.ContainsKey(buffInfo.BuffID) == true)
+                                        {
+                                            translatedBuffInfos.Add(new BuffInfo { BuffID = buffIDTranslationTable[buffInfo.BuffID], LastUpdatedTimeSlice = buffInfo.LastUpdatedTimeSlice });
+                                        }
+                                        else
+                                        {
+                                            ++TUDBBIViolations;
+                                        }
+                                    }
+                                    translatedUnitDebuffs.Add(nameIDTranslationTable[unitBuff.Key], translatedBuffInfos);
+                                }
+                                else
+                                {
+                                    ++TUDBViolations;
+                                }
+                            }
+                            timeSlice.UnitDebuffs = translatedUnitDebuffs;
+                        }
+                        //Fixing UnitDebuffs
+
                     }
                     //Correcting the UnitID and BuffIDs
 
                     if (TFUDViolations > 0)
                     {
                         Logger.ConsoleWriteLine("when generating translatedFightUnitIDs: "
-                            + TFUDViolations + "x THIS IS SERIOUS AND SHOULD NEVER HAPPEN!!! Raid(" + fight.StartDateTime.ToString("yyyy-MM-dd HH:mm:ss") + ")", ConsoleColor.Red);
+                            + TFUDViolations + "x THIS IS SERIOUS AND SHOULD NEVER HAPPEN!!! Fight(" + fight.StartDateTime.ToString("yyyy-MM-dd HH:mm:ss") + ")", ConsoleColor.Red);
                     }
                     if (TUDViolations > 0)
                     {
                         Logger.ConsoleWriteLine("when generating translatedUnitDatas: "
-                            + TUDViolations + "x THIS IS SERIOUS AND SHOULD NEVER HAPPEN!!! Raid(" + fight.StartDateTime.ToString("yyyy-MM-dd HH:mm:ss") + ")", ConsoleColor.Red);
+                            + TUDViolations + "x THIS IS SERIOUS AND SHOULD NEVER HAPPEN!!! Fight(" + fight.StartDateTime.ToString("yyyy-MM-dd HH:mm:ss") + ")", ConsoleColor.Red);
                     }
                     if (TCUDViolations > 0)
                     {
                         Logger.ConsoleWriteLine("when generating translatedChangedUnitDatas: "
-                            + TCUDViolations + "x THIS IS SERIOUS AND SHOULD NEVER HAPPEN!!! Raid(" + fight.StartDateTime.ToString("yyyy-MM-dd HH:mm:ss") + ")", ConsoleColor.Red);
+                            + TCUDViolations + "x THIS IS SERIOUS AND SHOULD NEVER HAPPEN!!! Fight(" + fight.StartDateTime.ToString("yyyy-MM-dd HH:mm:ss") + ")", ConsoleColor.Red);
                     }
                     if (TUBBIViolations > 0)
                     {
                         Logger.ConsoleWriteLine("when generating translatedUnitBuffs.BuffInfo: "
-                            + TUBBIViolations + "x THIS IS SERIOUS AND SHOULD NEVER HAPPEN!!! Raid(" + fight.StartDateTime.ToString("yyyy-MM-dd HH:mm:ss") + ")", ConsoleColor.Red);
+                            + TUBBIViolations + "x THIS IS SERIOUS AND SHOULD NEVER HAPPEN!!! Fight(" + fight.StartDateTime.ToString("yyyy-MM-dd HH:mm:ss") + ")", ConsoleColor.Red);
                     }
                     if (TUBViolations > 0)
                     {
                         Logger.ConsoleWriteLine("when generating translatedUnitBuffs: "
-                            + TUBViolations + "x THIS IS SERIOUS AND SHOULD NEVER HAPPEN!!! Raid(" + fight.StartDateTime.ToString("yyyy-MM-dd HH:mm:ss") + ")", ConsoleColor.Red);
+                            + TUBViolations + "x THIS IS SERIOUS AND SHOULD NEVER HAPPEN!!! Fight(" + fight.StartDateTime.ToString("yyyy-MM-dd HH:mm:ss") + ")", ConsoleColor.Red);
+                    }
+                    if (TUDBBIViolations > 0)
+                    {
+                        Logger.ConsoleWriteLine("when generating translatedUnitDebuffs.BuffInfo: "
+                            + TUDBBIViolations + "x THIS IS SERIOUS AND SHOULD NEVER HAPPEN!!! Fight(" + fight.StartDateTime.ToString("yyyy-MM-dd HH:mm:ss") + ")", ConsoleColor.Red);
+                    }
+                    if (TUDBViolations > 0)
+                    {
+                        Logger.ConsoleWriteLine("when generating translatedUnitDebuffs: "
+                            + TUDBViolations + "x THIS IS SERIOUS AND SHOULD NEVER HAPPEN!!! Fight(" + fight.StartDateTime.ToString("yyyy-MM-dd HH:mm:ss") + ")", ConsoleColor.Red);
                     }
 
                     m_FightCacheDatas.Add(new FightCacheData(fight, this));
