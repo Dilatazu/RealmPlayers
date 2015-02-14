@@ -100,6 +100,66 @@ namespace VF_RaidDamageWebsite
             }
         }
 
+        Dictionary<char, string> BuffIconParser = new Dictionary<char, string>{
+            {'a', "WTF_"},
+            {'b', "Ability_"},
+            {'c', "Racial_"},
+            {'d', "Creature_"},
+            {'e', "Warrior_"},
+            {'f', "Paladin_"},
+            {'g', "Hunter_"},
+            {'h', "Druid_"},
+            {'i', "Rogue_"},
+            {'j', "Shaman_"},
+            {'k', "Mage_"},
+            {'l', "Mount_"},
+            {'m', "Pet_"},
+            {'n', "INV_"},
+            {'o', "Potion_"},
+            {'p', "Spell_"},
+            {'q', "Fire_"},
+            {'r', "Frost_"},
+            {'s', "Holy_"},
+            {'t', "Nature_"},
+            {'u', "Shadow_"},
+            {'v', "Sword_"},
+            {'w', "Misc_"},
+            {'x', "Food_"},
+            {'y', "Jewelry_"},
+            {'z', "Drink_"},
+        };
+
+        string GetBuffIconImage(string _Buff)
+        {
+            string realBuffName = "";
+            bool fresh = true;
+            for (int i = 0; i < _Buff.Length; ++i)
+            {
+                if(fresh == true)
+                {
+                    string value;
+                    if (BuffIconParser.TryGetValue(_Buff[i], out value) == true)
+                    {
+                        realBuffName += value;
+                    }
+                    else
+                    {
+                        realBuffName += _Buff[i];
+                        fresh = false;
+                    }
+                }
+                else
+                {
+                    realBuffName += _Buff[i];
+                    if (_Buff[i] == '_')
+                        fresh = true;
+                    else
+                        fresh = false;
+                }
+            }
+            return "<img src='http://realmplayers.com/Assets/wowicons/43x43/" + realBuffName + ".png'></img>";
+        }
+
         private void GenerateBossFightPage(bool DEBUG_Website, bool filteredData, int uniqueRaidID, RaidBossFight interestingFight)
         {
             if (interestingFight == null)
@@ -286,52 +346,84 @@ namespace VF_RaidDamageWebsite
 
                 ///////////////////////
                 string buffInfo = "";
-                if(PageUtility.GetQueryString(Request, "Debug", "null") == "Buff")
+                if (PageUtility.GetQueryString(Request, "DebugBuff", "null") != "null")
                 {
-                    int thaddiusBuffID = -1;
-                    var buffIDToNames = interestingFight.GetFightCacheData().m_FightDataCollection.m_BuffIDToNames;
-                    if (buffIDToNames != null && buffIDToNames.Count > 0)
+                    string debugBuffName = PageUtility.GetQueryString(Request, "DebugBuff", "null");
+                    if (playersAttending.Exists((_Value) => { return _Value.Item1 == debugBuffName; }) == true)
                     {
-                        buffInfo = "<h3>Buffs used:</h3>";
-                        foreach(var buff in buffIDToNames)
+                        int playerNameID = interestingFight.GetFightCacheData().m_FightDataCollection.GetUnitIDFromName(debugBuffName);
+                        Dictionary<int, int> accumulatedTime = new Dictionary<int, int>();
+                        Dictionary<int, int> accumulatedTime2 = new Dictionary<int, int>();
+                        int prevTimeSliceTime = interestingFight.GetFightData().TimeSlices.First().Time;
+                        foreach (var timeSlice in interestingFight.GetFightData().TimeSlices)
                         {
-                            if(buff == "Spell_ChargePositive")
+                            int deltaTime = timeSlice.Time - prevTimeSliceTime;
+                            if (timeSlice.UnitBuffs != null)
                             {
-                                thaddiusBuffID = buffIDToNames.IndexOf(buff);
-                            }
-                            else
-                            {
-                                buffInfo += "<img src='http://realmplayers.com/Assets/wowicons/43x43/" + buff + ".png'></img>";
-                            }
-                        }
-                    }
-                    int lexmoreNameID = interestingFight.GetFightCacheData().m_FightDataCollection.GetUnitIDFromName("Lexmore");
-                    Dictionary<int, int> accumulatedTime = new Dictionary<int, int>();
-                    int prevTimeSliceTime = interestingFight.GetFightData().TimeSlices.First().Time;
-                    foreach(var timeSlice in interestingFight.GetFightData().TimeSlices)
-                    {
-                        int deltaTime = timeSlice.Time - prevTimeSliceTime;
-                        foreach(var unitBuff in timeSlice.UnitBuffs)
-                        {
-                            if(unitBuff.Key == lexmoreNameID)
-                            {
-                                foreach(var buff in unitBuff.Value)
+                                foreach (var unitBuff in timeSlice.UnitBuffs)
                                 {
-                                    if(accumulatedTime.ContainsKey(buff.BuffID) == false)
+                                    if (unitBuff.Key == playerNameID)
                                     {
-                                        accumulatedTime.Add(buff.BuffID, 0);
+                                        if (unitBuff.Value == null)
+                                            continue;
+                                        foreach (var buff in unitBuff.Value)
+                                        {
+                                            if (accumulatedTime.ContainsKey(buff.BuffID) == false)
+                                            {
+                                                accumulatedTime.Add(buff.BuffID, 0);
+                                            }
+                                            accumulatedTime[buff.BuffID] += deltaTime;
+                                        }
                                     }
-                                    accumulatedTime[buff.BuffID] += deltaTime;
+                                }
+                            }
+                            if (timeSlice.UnitDebuffs != null)
+                            {
+                                foreach (var unitBuff in timeSlice.UnitDebuffs)
+                                {
+                                    if (unitBuff.Key == playerNameID)
+                                    {
+                                        if (unitBuff.Value == null)
+                                            continue;
+                                        foreach (var buff in unitBuff.Value)
+                                        {
+                                            if (accumulatedTime2.ContainsKey(buff.BuffID) == false)
+                                            {
+                                                accumulatedTime2.Add(buff.BuffID, 0);
+                                            }
+                                            accumulatedTime2[buff.BuffID] += deltaTime;
+                                        }
+                                    }
                                 }
                             }
                         }
-                    }
 
-                    var orderedAccTime = accumulatedTime.OrderByDescending((_Value) => _Value.Value);
-                    foreach (var accum in orderedAccTime)
+                        buffInfo = "<h3>Buffs used by " + debugBuffName + ":</h3>";
+                        var orderedAccTime = accumulatedTime.OrderByDescending((_Value) => _Value.Value);
+                        foreach (var accum in orderedAccTime)
+                        {
+                            buffInfo += GetBuffIconImage(interestingFight.GetFightCacheData().m_FightDataCollection.m_BuffIDToNames[accum.Key])
+                                + " buff during " + accum.Value + " seconds of the fight!<br />";
+                        }
+                        buffInfo += "<h3>Debuffs:</h3>";
+                        var orderedAccTime2 = accumulatedTime2.OrderByDescending((_Value) => _Value.Value);
+                        foreach (var accum in orderedAccTime2)
+                        {
+                            buffInfo += GetBuffIconImage(interestingFight.GetFightCacheData().m_FightDataCollection.m_BuffIDToNames[accum.Key])
+                                + " debuff during " + accum.Value + " seconds of the fight!<br />";
+                        }
+                    }
+                    else
                     {
-                        buffInfo += "<br />" + "<img src='http://realmplayers.com/Assets/wowicons/43x43/" + interestingFight.GetFightCacheData().m_FightDataCollection.m_BuffIDToNames[accum.Key] + ".png'></img>"
-                            + " buff during " + accum.Value + " seconds of the fight!";
+                        var buffIDToNames = interestingFight.GetFightCacheData().m_FightDataCollection.m_BuffIDToNames;
+                        if (buffIDToNames != null && buffIDToNames.Count > 0)
+                        {
+                            buffInfo = "<h3>Buffs used:</h3>";
+                            foreach (var buff in buffIDToNames)
+                            {
+                                buffInfo += GetBuffIconImage(buff);
+                            }
+                        }
                     }
                 }
                 ///////////////////////
