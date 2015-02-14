@@ -232,6 +232,7 @@ namespace VF_RaidDamageDatabase
             "Ragnaros",
             "Kael'thas Sunstrider",
             "High Astromancer Solarian",
+            "Illidan Stormrage",
         };
         #region BossFights
         public static Dictionary<string, string> BossFights = new Dictionary<string, string>
@@ -618,7 +619,8 @@ namespace VF_RaidDamageDatabase
              
 
             {"Illidari Council", new string[]{"Gathios the Shatterer", "High Nethermancer Zerevor", "Lady Malande", "Veras Darkshadow"}},
-        
+            {"Illidan Stormrage", new string[]{"Flame of Azzinoth", "Parasitic Shadowfiend", "Shadow Demon"}},
+               
             //Mount Hyjal
             {"Anetheron", new string[]{"Towering Infernal"}},
             {"Azgalor", new string[]{"Lesser Doomguard"}},
