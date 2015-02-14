@@ -386,7 +386,7 @@ namespace VF_RaidDamageDatabase
                         //Fixing UnitBuffs
 
                         //Fixing UnitDebuffs
-                        if (timeSlice.UnitBuffs != null)
+                        if (timeSlice.UnitDebuffs != null)
                         {
                             Dictionary<int, List<BuffInfo>> translatedUnitDebuffs = new Dictionary<int, List<BuffInfo>>();
                             foreach (var unitBuff in timeSlice.UnitDebuffs)
