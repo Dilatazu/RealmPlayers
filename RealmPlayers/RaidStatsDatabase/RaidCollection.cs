@@ -86,7 +86,7 @@ namespace VF_RaidDamageDatabase
                                 && VF_RealmPlayersDatabase.StaticValues.ConvertRealm(_Value.m_Fight.Realm) == realm
                                 && _Value.m_Fight.FightName != "Trash";
                         });
-                        if (raidDefineFight.Equals(default(KeyValuePair<int, Raid>)) == false)
+                        if (raidDefineFight != null && raidDefineFight.Equals(default(KeyValuePair<int, Raid>)) == false)
                             currRaid.RaidInstance = BossInformation.BossFights[raidDefineFight.m_Fight.FightName];
                         else
                             continue;//Skip this Trash!
