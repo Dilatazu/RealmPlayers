@@ -391,7 +391,7 @@ namespace VF_RaidDamageDatabase
 	        //{"Kiggler the Crazed", "VF_RS_MobType_Boss"}, //High King Maulgar ADD
 	        //{"Blindeye the Seer", "VF_RS_MobType_Boss"}, //High King Maulgar ADD
 	        //High King Maulgar
-	        {"Gruul", "Gruul's Lair"},
+	        {"Gruul the Dragonkiller", "Gruul's Lair"},
 	
 	        //Magtheridon's Lair
 	        {"Magtheridon", "Magtheridon's Lair"},
