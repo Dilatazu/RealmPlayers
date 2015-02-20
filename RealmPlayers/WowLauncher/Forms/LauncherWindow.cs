@@ -141,6 +141,9 @@ namespace VF_WoWLauncher
                 c_tRefreshNews.Enabled = false;
             }
 
+            c_tRefreshAddonUpdates.Interval = 1000 * 600; //Once every 10 minutes
+            c_tRefreshAddonUpdates.Enabled = true;
+
             //JumpListCustomCategory userActionsCategory = new JumpListCustomCategory("Actions");
             //string notepadPath = Path.Combine(Environment.SystemDirectory, "notepad.exe");
             //JumpListLink jlNotepad = new JumpListLink(notepadPath, "Notepad");
@@ -821,6 +824,25 @@ namespace VF_WoWLauncher
         private void c_tRefreshNews_Tick(object sender, EventArgs e)
         {
             GetLatestNews(false);
+        }
+
+        private void c_tRefreshAddonUpdates_Tick(object sender, EventArgs e)
+        {
+            (new System.Threading.Tasks.Task(() =>
+            {
+                try
+                {
+                    if (ServerComm.PeekAddonUpdates(15) == true)
+                    {
+                        GetLatestAddonUpdates();
+                        GetLatestUserIDAddons();
+                    }
+                }
+                catch(Exception ex)
+                {
+                    Logger.LogException(ex);
+                }
+            })).Start();
         }
     }
 }

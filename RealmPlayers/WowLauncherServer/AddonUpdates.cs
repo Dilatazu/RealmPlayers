@@ -15,7 +15,7 @@ namespace VF_WoWLauncherServer
     {
         public static string AddonUpdateFolder = "D:\\FTP\\WowLauncher\\AddonUpdates\\";
         public static string AddonUpdateDownloadFTPAddress = "ftp://realmplayers.com:5511/AddonUpdates/";
-        
+        public static DateTime g_LastAddonUpdateTimeUTC = DateTime.UtcNow;
 
         private static string GetLatestAddonPackageFilename(string _AddonName)
         {
@@ -240,6 +240,7 @@ namespace VF_WoWLauncherServer
             }
             if (System.IO.File.Exists(newAddonPackageFile) == false)
             {
+                g_LastAddonUpdateTimeUTC = DateTime.UtcNow;
                 VF_WoWLauncher.Utility.AssertFilePath(newAddonPackageFile);
                 System.IO.File.Copy(_AddonPackageFile, newAddonPackageFile);
             }

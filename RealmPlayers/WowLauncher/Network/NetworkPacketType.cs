@@ -13,6 +13,8 @@ namespace WowLauncherNetwork
         Upload_AddonData = 2,
         Upload_SuccessResponse = 3,
         Request_AddonUpdateInfoNew = 4,
+        Request_AddonUpdateInfoPeek = 5,
+        Response_AddonUpdateInfoPeek = 6,
 
         Request_SearchAddons = 102,
         Response_SearchAddons = 103,
@@ -38,6 +40,22 @@ namespace WowLauncherNetwork
         public VF_WoWLauncher.WowVersionEnum WowVersion = VF_WoWLauncher.WowVersionEnum.Vanilla;
         [ProtoMember(4)]
         public List<WLN_RequestPacket_AddonUpdateInfo> Addons = new List<WLN_RequestPacket_AddonUpdateInfo>();
+    }
+    [ProtoContract]
+    public class WLN_RequestPacket_AddonUpdateInfoPeek
+    {
+        [ProtoMember(1)]
+        public string UserID = "Unknown.123456";
+        [ProtoMember(2)]
+        public string LauncherVersion = "1.0";
+        [ProtoMember(3)]
+        public int MinutesSinceLastPeek;
+    }
+    [ProtoContract]
+    public class WLN_ResponsePacket_AddonUpdateInfoPeek
+    {
+        [ProtoMember(1)]
+        public List<string> AddonUpdatesAvailable = new List<string>();
     }
     [ProtoContract]
     public class WLN_ResponsePacket_AddonUpdateInfo

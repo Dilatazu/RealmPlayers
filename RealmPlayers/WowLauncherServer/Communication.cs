@@ -66,6 +66,19 @@ namespace VF_WoWLauncherServer
                                         response.WriteClass(result);
                                         m_Server.SendMessage(response);
                                     }
+                                    else if(packetType == WLN_PacketType.Request_AddonUpdateInfoPeek)
+                                    {
+                                        WLN_RequestPacket_AddonUpdateInfoPeek addonUpdateInfoRequest = msg.ReadClass<WLN_RequestPacket_AddonUpdateInfoPeek>();
+                                        WLN_ResponsePacket_AddonUpdateInfoPeek result = new WLN_ResponsePacket_AddonUpdateInfoPeek();
+                                        if(AddonUpdates.g_LastAddonUpdateTimeUTC > DateTime.UtcNow.AddMinutes(-addonUpdateInfoRequest.MinutesSinceLastPeek))
+                                        {
+                                            result.AddonUpdatesAvailable.Add("null");
+                                        }
+                                        var response = msg.CreateResponseMessage(-1);//.SenderConnection.SendPacket_VF(WLN_PacketType.Response_AddonUpdateInfo, result);
+                                        response.WriteByte((byte)WLN_PacketType.Response_AddonUpdateInfoPeek);
+                                        response.WriteClass(result);
+                                        m_Server.SendMessage(response);
+                                    }
                                     else if (packetType == WLN_PacketType.Upload_AddonData)
                                     {
                                         WLN_UploadPacket_AddonData uploadedAddonData = msg.ReadClass<WLN_UploadPacket_AddonData>();

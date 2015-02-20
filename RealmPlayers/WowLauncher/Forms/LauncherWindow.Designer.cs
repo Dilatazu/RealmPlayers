@@ -37,6 +37,7 @@
             this.c_btnManageAddons = new System.Windows.Forms.Button();
             this.c_dlAddons = new DetailedList.DetailedList();
             this.c_tRefreshNews = new System.Windows.Forms.Timer(this.components);
+            this.c_tRefreshAddonUpdates = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // c_btnLaunch
@@ -136,6 +137,10 @@
             // 
             this.c_tRefreshNews.Tick += new System.EventHandler(this.c_tRefreshNews_Tick);
             // 
+            // c_tRefreshAddonUpdates
+            // 
+            this.c_tRefreshAddonUpdates.Tick += new System.EventHandler(this.c_tRefreshAddonUpdates_Tick);
+            // 
             // LauncherWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -167,6 +172,7 @@
         private DetailedList.DetailedList c_dlAddons;
         private System.Windows.Forms.Button c_btnManageAddons;
         private System.Windows.Forms.Timer c_tRefreshNews;
+        private System.Windows.Forms.Timer c_tRefreshAddonUpdates;
     }
 }
 

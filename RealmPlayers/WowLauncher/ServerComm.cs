@@ -70,6 +70,32 @@ namespace VF_WoWLauncher
             public InstalledAddons.AddonInfo InstalledAddonInfo;
             public string MoreInfoSite = "";
         }
+        internal static bool PeekAddonUpdates(int _MinutesSinceLastPeek)
+        {
+            VF.NetworkClient netClient = new VF.NetworkClient(g_Host, g_Port);
+            
+            {
+                VF.NetworkOutgoingMessage newMessage = netClient.CreateMessage();
+                WLN_RequestPacket_AddonUpdateInfoPeek request = new WLN_RequestPacket_AddonUpdateInfoPeek();
+                request.UserID = Settings.UserID;
+                request.LauncherVersion = StaticValues.LauncherVersion;
+                request.MinutesSinceLastPeek = _MinutesSinceLastPeek;
+
+                newMessage.WriteByte((byte)WLN_PacketType.Request_AddonUpdateInfoPeek);
+                newMessage.WriteClass(request);
+                netClient.SendMessage(newMessage);
+            }
+            WLN_ResponsePacket_AddonUpdateInfoPeek response = new WLN_ResponsePacket_AddonUpdateInfoPeek();
+            if (netClient.RecvPacket_VF(WLN_PacketType.Response_AddonUpdateInfoPeek, out response) == true)
+            {
+                if(response.AddonUpdatesAvailable != null)
+                {
+                    return response.AddonUpdatesAvailable.Count > 0;
+                }
+            }
+            netClient.Disconnect();
+            return false;
+        }
         internal static List<AddonUpdateInfo> GetAddonUpdateInfos(List<string> _AddonNames, WowVersionEnum _WowVersion)
         {
             VF.NetworkClient netClient = new VF.NetworkClient(g_Host, g_Port);
