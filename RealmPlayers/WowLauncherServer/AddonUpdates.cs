@@ -141,7 +141,34 @@ namespace VF_WoWLauncherServer
                 addonUpdateInfo.ClearAccountSavedVariablesRequired = addonDescription.GetClearAccountSavedVariablesRequired(addonUpdateInfo.CurrentVersion);
                 addonUpdateInfo.ClearCharacterSavedVariablesRequired = addonDescription.GetClearCharacterSavedVariablesRequired(addonUpdateInfo.CurrentVersion);
                 addonUpdateInfo.UpdateImportance = addonDescription.GetUpdateImportance(addonUpdateInfo.CurrentVersion);
-
+                if(_Request.CurrentVersion == "0.0")
+                {
+                    if(addonName == "VF_RealmPlayers")
+                    {
+                        addonUpdateInfo.UpdateDescription = "Latest addon version for gathering data and contribute to the armory at realmplayers.com";
+                    }
+                    else if(addonName == "VF_RaidDamage" || addonName == "VF_RaidStats")
+                    {
+                        addonUpdateInfo.UpdateDescription = "Latest addon version for automatically logging data in raids. Logged raids will automatically be uploaded to RaidStats";
+                    }
+                    else if(addonName == "VF_BGStats")
+                    {
+                        addonUpdateInfo.UpdateDescription = "Latest addon version for automatically logging data in battlegrounds. Logged bgs will automatically be uploaded to BGStats";
+                    }
+                    else if(addonName == "VF_RealmPlayersTBC")
+                    {
+                        addonUpdateInfo.UpdateDescription = "Latest addon version for gathering data and contribute to the armory at realmplayers.com";
+                    }
+                    else if (addonName == "VF_RaidStatsTBC")
+                    {
+                        addonUpdateInfo.UpdateDescription = "Latest addon version for automatically logging data in raids. Logged raids will automatically be uploaded to RaidStats";
+                    }
+                    else if (addonName == "VF_BGStatsTBC")
+                    {
+                        addonUpdateInfo.UpdateDescription = "Latest addon version for automatically logging data in battlegrounds. Logged bgs will automatically be uploaded to BGStats";
+                    }
+                    addonUpdateInfo.UpdateImportance = ServerComm.UpdateImportance.Good;
+                }
                 if (addonUpdateInfo.UpdateVersion == "")
                 {
                     Logger.ConsoleWriteLine("AddonPackage \"" + latestAddonPackageFilename + "\" has invalid UpdateVersion, AddonPackage is not valid!");
