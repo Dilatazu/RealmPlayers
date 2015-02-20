@@ -13,7 +13,7 @@ namespace VF_RealmPlayersDatabase
             string m_ItemIcon;
             string m_ItemName;
             int m_ItemQuality;
-            ItemSlot m_ItemSlot;
+            //ItemSlot m_ItemSlot;
             int m_ItemModel;
             int m_ItemModelViewerID;
             int m_ItemModelViewerSlot;

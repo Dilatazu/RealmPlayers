@@ -66,7 +66,7 @@ namespace VF
                             if (m_Server.State == MongoServerState.Connected)
                                 m_Connected = true;
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         { }
                         m_TryingToReconnect = false;
                     })).Start();
