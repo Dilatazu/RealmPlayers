@@ -56,7 +56,7 @@ namespace VF_RPDatabase
         [ProtoMember(1)]
         public Dictionary<UInt64, ItemSummary> m_Items = new Dictionary<UInt64, ItemSummary>();
         [ProtoMember(2)]
-        public Dictionary<string, UInt64> m_PlayerIDs = new Dictionary<string, UInt64>();
+        private Dictionary<string, UInt64> m_PlayerIDs = new Dictionary<string, UInt64>();
 
         [ProtoMember(3)]
         public UInt64 m_EntityCounter_Emerald_Dream = 0L;
@@ -72,6 +72,8 @@ namespace VF_RPDatabase
         public UInt64 m_EntityCounter_Rebirth = 0L;
         [ProtoMember(9)]
         public UInt64 m_EntityCounter_Archangel = 0L;
+        [ProtoMember(10)]
+        public UInt64 m_EntityCounter_Nostalrius = 0L;
 
         private void CalcRealmBits(WowRealm _Realm, out UInt64 _BitMask, out UInt64 _RealmValue)
         {
@@ -99,6 +101,9 @@ namespace VF_RPDatabase
                     break;
                 case WowRealm.Archangel:
                     _RealmValue = 7UL << 56;
+                    break;
+                case WowRealm.Nostalrius:
+                    _RealmValue = 8UL << 56;
                     break;
 	        }
         }
@@ -135,7 +140,10 @@ namespace VF_RPDatabase
                 if ((itemOwner.Item1 & bitMask) == realmValue)
                 {
                     var player = m_PlayerIDs.First((_Value) => _Value.Value == itemOwner.Item1);
-                    retList.Add(Tuple.Create(itemOwner.Item2, player.Key.Substring(1)));
+                    if (player.Key.StartsWith("R"))
+                        retList.Add(Tuple.Create(itemOwner.Item2, player.Key.Substring(3)));
+                    else
+                        retList.Add(Tuple.Create(itemOwner.Item2, player.Key.Substring(1)));
                 }
             }
             return retList;
@@ -163,7 +171,10 @@ namespace VF_RPDatabase
         private UInt64 GetEntityID(WowRealm _Realm, string _PlayerName)
         {
             UInt64 entityID = UInt64.MaxValue;
-            string entityLinkStr = "" + (int)_Realm + _PlayerName;
+            int realmIndex = (int)_Realm;
+            string entityLinkStr = "" + realmIndex + _PlayerName;
+            if (realmIndex > 9)
+                entityLinkStr = "R" + realmIndex + _PlayerName;
             if(m_PlayerIDs.TryGetValue(entityLinkStr, out entityID) == true)
                 return entityID;
             
@@ -197,6 +208,10 @@ namespace VF_RPDatabase
                     entityID = (7UL << 56) | m_EntityCounter_Archangel++;
                     m_PlayerIDs.Add(entityLinkStr, entityID);
                     break;
+                case WowRealm.Nostalrius:
+                    entityID = (8UL << 56) | m_EntityCounter_Nostalrius++;
+                    m_PlayerIDs.Add(entityLinkStr, entityID);
+                    break;
             }
             return entityID;
         }
@@ -226,6 +241,8 @@ namespace VF_RPDatabase
                     return WowRealm.Rebirth;
                 case 7UL:
                     return WowRealm.Archangel;
+                case 8UL:
+                    return WowRealm.Nostalrius;
                 default:
                     VF_RealmPlayersDatabase.Logger.ConsoleWriteLine("Error GetPlayerRealm failed. Realm(" + realm + ") was not valid!!!");
                     return WowRealm.Unknown;
@@ -233,7 +250,11 @@ namespace VF_RPDatabase
         }
         public string GetPlayerName(UInt64 _EntityID)
         {
-            return m_PlayerIDs.First((_Value) => _Value.Value == _EntityID).Key.Substring(1);
+            var key = m_PlayerIDs.First((_Value) => _Value.Value == _EntityID).Key;
+            if (key.StartsWith("R"))
+                return key.Substring(3);
+            else
+                return key.Substring(1);
         }
         public void UpdateDatabase(RPPDatabase _Database)
         {

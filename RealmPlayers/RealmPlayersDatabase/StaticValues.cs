@@ -7,16 +7,18 @@ namespace VF_RealmPlayersDatabase
 {
     public enum WowRealm
     {
-        Unknown,
-        Emerald_Dream,
-        Al_Akir,
-        Warsong,
-        All,
-        Archangel,
-        VanillaGaming,
-        Valkyrie,
-        Rebirth,
-        Test_Server,
+        Unknown = 0,
+        Emerald_Dream = 1,
+        Al_Akir = 2,
+        Warsong = 3,
+        All = 4,
+        Archangel = 5,
+        VanillaGaming = 6,
+        Valkyrie = 7,
+        Rebirth = 8,
+        Test_Server = 9,
+        Nostalrius = 10,
+        Kronos = 11,
     }
     public enum WowVersionEnum
     {
@@ -494,6 +496,12 @@ namespace VF_RealmPlayersDatabase
             {"Rebirth", WowRealm.Rebirth},
             {"Test_Server", WowRealm.Test_Server},
             {"TestServer", WowRealm.Test_Server},
+            {"Nostalrius Begins PTR", WowRealm.Test_Server},
+            {"Nostalrius Begins", WowRealm.Nostalrius},
+            {"Nostalrius", WowRealm.Nostalrius},
+            {"NRB", WowRealm.Nostalrius},
+            {"NB", WowRealm.Nostalrius},
+            {"Kronos", WowRealm.Kronos},
         };
         public static WowRealm ConvertRealm(string _Realm)
         {
@@ -504,7 +512,8 @@ namespace VF_RealmPlayersDatabase
         public static WowVersionEnum GetWowVersion(WowRealm _Realm)
         {
             if (_Realm == WowRealm.Emerald_Dream || _Realm == WowRealm.Warsong || _Realm == WowRealm.Al_Akir
-                || _Realm == WowRealm.Rebirth || _Realm == WowRealm.Valkyrie || _Realm == WowRealm.VanillaGaming || _Realm == WowRealm.Test_Server)
+                || _Realm == WowRealm.Rebirth || _Realm == WowRealm.Valkyrie || _Realm == WowRealm.VanillaGaming || _Realm == WowRealm.Test_Server
+                || _Realm == WowRealm.Nostalrius || _Realm == WowRealm.Kronos)
             {
                 return WowVersionEnum.Vanilla;
             }
