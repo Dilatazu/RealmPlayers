@@ -146,26 +146,32 @@ namespace VF_WoWLauncherServer
                     if(addonName == "VF_RealmPlayers")
                     {
                         addonUpdateInfo.UpdateDescription = "Latest addon version for gathering data and contribute to the armory at realmplayers.com";
+                        addonUpdateInfo.UpdateSubmitter = "Dilatazu";
                     }
                     else if(addonName == "VF_RaidDamage" || addonName == "VF_RaidStats")
                     {
                         addonUpdateInfo.UpdateDescription = "Latest addon version for automatically logging data in raids. Logged raids will automatically be uploaded to RaidStats";
+                        addonUpdateInfo.UpdateSubmitter = "Dilatazu";
                     }
                     else if(addonName == "VF_BGStats")
                     {
                         addonUpdateInfo.UpdateDescription = "Latest addon version for automatically logging data in battlegrounds. Logged bgs will automatically be uploaded to BGStats";
+                        addonUpdateInfo.UpdateSubmitter = "Dilatazu";
                     }
                     else if(addonName == "VF_RealmPlayersTBC")
                     {
                         addonUpdateInfo.UpdateDescription = "Latest addon version for gathering data and contribute to the armory at realmplayers.com";
+                        addonUpdateInfo.UpdateSubmitter = "Dilatazu";
                     }
                     else if (addonName == "VF_RaidStatsTBC")
                     {
                         addonUpdateInfo.UpdateDescription = "Latest addon version for automatically logging data in raids. Logged raids will automatically be uploaded to RaidStats";
+                        addonUpdateInfo.UpdateSubmitter = "Dilatazu";
                     }
                     else if (addonName == "VF_BGStatsTBC")
                     {
                         addonUpdateInfo.UpdateDescription = "Latest addon version for automatically logging data in battlegrounds. Logged bgs will automatically be uploaded to BGStats";
+                        addonUpdateInfo.UpdateSubmitter = "Dilatazu";
                     }
                     addonUpdateInfo.UpdateImportance = ServerComm.UpdateImportance.Good;
                 }

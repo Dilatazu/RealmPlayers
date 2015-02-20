@@ -56,7 +56,7 @@ namespace VF_WoWLauncher
                     || oldWowTBCFolder != Settings.Instance._WowTBCDirectory)
                     {
                         GetLatestAddonUpdates();
-                        GetLatestUserIDAddons();
+                        //GetLatestUserIDAddons();
                     }
                 })));
                 fileMenu.MenuItems.Add(new MenuItem("Close", new EventHandler((o, ea) => Close())));
@@ -277,17 +277,70 @@ namespace VF_WoWLauncher
                     foreach (var wowVersion in new WowVersionEnum[] { WowVersionEnum.Vanilla, WowVersionEnum.TBC })
                     {
                         var installedAddons = InstalledAddons.GetInstalledAddons(wowVersion);
+
+                        if (RealmPlayersUploader.IsValidUserID(Settings.UserID) == true)
+                        {
+                            var userIDAddons = new List<string>();
+                            if (wowVersion == WowVersionEnum.Vanilla)
+                            {
+                                if (Settings.HaveClassic == true && InstalledAddons.GetAddonInfo("VF_RealmPlayers", WowVersionEnum.Vanilla) == null)
+                                {
+                                    installedAddons.Add("VF_RealmPlayers");
+                                }
+                                if (Settings.HaveClassic == true
+                                    && InstalledAddons.GetAddonInfo("VF_RaidDamage", WowVersionEnum.Vanilla) == null
+                                    && InstalledAddons.GetAddonInfo("VF_RaidStats", WowVersionEnum.Vanilla) == null)
+                                {
+                                    //if (InstalledAddons.GetAddonInfo("SW_Stats", WowVersion.Vanilla) != null && InstalledAddons.GetAddonInfo("KLHThreatMeter", WowVersion.Vanilla) != null)
+                                    //{
+                                    installedAddons.Add("VF_RaidDamage");
+                                    installedAddons.Add("VF_RaidStats");
+                                    //}
+                                }
+                            }
+                            else if (wowVersion == WowVersionEnum.TBC)
+                            {
+                                if (Settings.HaveTBC == true && InstalledAddons.GetAddonInfo("VF_RealmPlayersTBC", WowVersionEnum.TBC) == null)
+                                {
+                                    installedAddons.Add("VF_RealmPlayersTBC");
+                                }
+                                if (Settings.HaveTBC == true && InstalledAddons.GetAddonInfo("VF_RaidStatsTBC", WowVersionEnum.TBC) == null)
+                                {
+                                    installedAddons.Add("VF_RaidStatsTBC");
+                                }
+                            }
+                        }
                         var addonUpdateInfos = ServerComm.GetAddonUpdateInfos(installedAddons, wowVersion);
                         foreach (var addonUpdateInfo in addonUpdateInfos)
                         {
+                            string addonVersionTitle = addonUpdateInfo.AddonName;
+                            string updateOrInstallBy;
+                            string updateOrInstallSuccessfullMessage;
+                            string installFailedText;
+                            string updateButtonText;
+                            if (addonUpdateInfo.CurrentVersion != "0.0")
+                            {
+                                addonVersionTitle += " " + addonUpdateInfo.CurrentVersion + "->" + addonUpdateInfo.UpdateVersion;
+                                updateOrInstallBy = "Update by " + addonUpdateInfo.UpdateSubmitter;
+                                updateOrInstallSuccessfullMessage = "Addon Update " + addonUpdateInfo.UpdateVersion + " for addon " + addonUpdateInfo.AddonName + " was successfully installed!";
+                                installFailedText = "Could not install update for addon " + addonUpdateInfo.AddonName + "\r\nReason: Download of addon failed";
+                                updateButtonText = "Update";
+                            }
+                            else
+                            {
+                                updateOrInstallBy = "Made by " + addonUpdateInfo.UpdateSubmitter;
+                                updateOrInstallSuccessfullMessage = addonUpdateInfo.AddonName + " was successfully installed!";
+                                installFailedText = "Could not install " + addonUpdateInfo.AddonName + "\r\nReason: Download of addon failed";
+                                updateButtonText = "Install";
+                            }
                             System.Threading.Thread.Sleep(20);
                             c_dlAddons.BeginInvoke(new Action(() =>
                             {
                                 c_dlAddons.AddItem((int)addonUpdateInfo.UpdateImportance
                                     , GetAddonUpdateImage(addonUpdateInfo.UpdateImportance)
-                                    , addonUpdateInfo.AddonName + " " + addonUpdateInfo.CurrentVersion + "->" + addonUpdateInfo.UpdateVersion
-                                    , addonUpdateInfo.UpdateDescription, "Update by " + addonUpdateInfo.UpdateSubmitter
-                                    , new DetailedList.RightSideAddonUpdate((_ListItem, _SetProgressBarFunc) =>
+                                    , addonVersionTitle
+                                    , addonUpdateInfo.UpdateDescription, updateOrInstallBy
+                                    , new DetailedList.RightSideAddonUpdate(updateButtonText, (_ListItem, _SetProgressBarFunc) =>
                                     {
                                         _SetProgressBarFunc(0.0f);
                                         string addonPackageFile = ServerComm.DownloadAddonPackage(addonUpdateInfo.AddonPackageDownloadFTP, addonUpdateInfo.AddonPackageFileSize, (float _DownloadPercentage) => { _SetProgressBarFunc(0.5f * _DownloadPercentage); });
@@ -299,7 +352,7 @@ namespace VF_WoWLauncher
                                             if (updatedAddons != null && updatedAddons.Count > 0)
                                             {
                                                 _SetProgressBarFunc(1.0f);
-                                                Utility.MessageBoxShow("Addon Update " + addonUpdateInfo.UpdateVersion + " for addon " + addonUpdateInfo.AddonName + " was successfully installed!");
+                                                Utility.MessageBoxShow(updateOrInstallSuccessfullMessage);
                                                 c_dlAddons.BeginInvoke(new Action(() =>
                                                 {
                                                     c_dlAddons.RemoveItem(_ListItem);
@@ -308,7 +361,7 @@ namespace VF_WoWLauncher
                                         }
                                         else
                                         {
-                                            Utility.MessageBoxShow("Could not install update for addon " + addonUpdateInfo.AddonName + "\r\nReason: Download of addon failed");
+                                            Utility.MessageBoxShow(installFailedText);
                                         }
                                         //c_dlAddons.BeginInvoke(new Action(() =>
                                         //{
@@ -317,7 +370,7 @@ namespace VF_WoWLauncher
                                     }, () =>
                                     {
                                         if (addonUpdateInfo.MoreInfoSite == "") 
-                                            Utility.MessageBoxShow("Could not find more info for this addon update" + (addonUpdateInfo.AddonName.StartsWith("VF_") ? ", full changelog is always available on the forum: forum.realmplayers.com" : "."));
+                                            Utility.MessageBoxShow("Could not find more info for this addon" + (addonUpdateInfo.AddonName.StartsWith("VF_") ? ", full changelog is always available on the forum: forum.realmplayers.com" : "."));
                                         else if (addonUpdateInfo.MoreInfoSite.StartsWith("http://"))
                                             System.Diagnostics.Process.Start(addonUpdateInfo.MoreInfoSite);
                                         else
@@ -335,196 +388,196 @@ namespace VF_WoWLauncher
                 }
             })).Start();
         }
-        void GetLatestUserIDAddons()
-        {
-            if (RealmPlayersUploader.IsValidUserID(Settings.UserID) == true)
-            {
-                var userIDAddons = new List<string>();
-                if (Settings.HaveClassic == true && InstalledAddons.GetAddonInfo("VF_RealmPlayers", WowVersionEnum.Vanilla) == null)
-                {
-                    userIDAddons.Add("VF_RealmPlayers");
-                }
-                if (Settings.HaveClassic == true 
-                    && InstalledAddons.GetAddonInfo("VF_RaidDamage", WowVersionEnum.Vanilla) == null
-                    && InstalledAddons.GetAddonInfo("VF_RaidStats", WowVersionEnum.Vanilla) == null)
-                {
-                    //if (InstalledAddons.GetAddonInfo("SW_Stats", WowVersion.Vanilla) != null && InstalledAddons.GetAddonInfo("KLHThreatMeter", WowVersion.Vanilla) != null)
-                    //{
-                    userIDAddons.Add("VF_RaidDamage");
-                    userIDAddons.Add("VF_RaidStats");
-                    //}
-                }
-                if (Settings.HaveTBC == true && InstalledAddons.GetAddonInfo("VF_RealmPlayersTBC", WowVersionEnum.TBC) == null)
-                {
-                    userIDAddons.Add("VF_RealmPlayersTBC");
-                }
-                if (Settings.HaveTBC == true && InstalledAddons.GetAddonInfo("VF_RaidStatsTBC", WowVersionEnum.TBC) == null)
-                {
-                    userIDAddons.Add("VF_RaidStatsTBC");
-                }
-                if(userIDAddons.Count > 0)
-                {
-                    (new System.Threading.Tasks.Task(() =>
-                    {
-                        try
-                        {
-                            var addonUpdateInfosVanilla = ServerComm.GetAddonUpdateInfos(userIDAddons, WowVersionEnum.Vanilla);
-                            foreach (var addonUpdateInfo in addonUpdateInfosVanilla)
-                            {
-                                string addonDescription = "";
-                                int sortIndex = 0;
-                                if (addonUpdateInfo.AddonName == "VF_RealmPlayers")
-                                {
-                                    addonDescription = "Latest addon version for gathering data and contribute to the armory at realmplayers.com";
-                                    sortIndex = int.MaxValue - 1;
-                                }
-                                else if (addonUpdateInfo.AddonName == "VF_RaidDamage")
-                                {
-                                    addonDescription = "Latest addon version for automatically logging data in raids. Logged raids will automatically be uploaded to RaidStats";
-                                    sortIndex = int.MaxValue - 2;
-                                }
-                                else if (addonUpdateInfo.AddonName == "VF_RaidStats")
-                                {
-                                    addonDescription = "Latest addon version for automatically logging data in raids. Logged raids will automatically be uploaded to RaidStats";
-                                    sortIndex = int.MaxValue - 3;
-                                }
-                                else if (addonUpdateInfo.AddonName == "VF_BGStats")
-                                {
-                                    addonDescription = "Latest addon version for automatically logging data in battlegrounds. Logged bgs will automatically be uploaded to BGStats";
-                                    sortIndex = int.MaxValue - 4;
-                                }
-                                else
-                                {
-                                    continue;
-                                }
+        //void GetLatestUserIDAddons()
+        //{
+        //    if (RealmPlayersUploader.IsValidUserID(Settings.UserID) == true)
+        //    {
+        //        var userIDAddons = new List<string>();
+        //        if (Settings.HaveClassic == true && InstalledAddons.GetAddonInfo("VF_RealmPlayers", WowVersionEnum.Vanilla) == null)
+        //        {
+        //            userIDAddons.Add("VF_RealmPlayers");
+        //        }
+        //        if (Settings.HaveClassic == true 
+        //            && InstalledAddons.GetAddonInfo("VF_RaidDamage", WowVersionEnum.Vanilla) == null
+        //            && InstalledAddons.GetAddonInfo("VF_RaidStats", WowVersionEnum.Vanilla) == null)
+        //        {
+        //            //if (InstalledAddons.GetAddonInfo("SW_Stats", WowVersion.Vanilla) != null && InstalledAddons.GetAddonInfo("KLHThreatMeter", WowVersion.Vanilla) != null)
+        //            //{
+        //            userIDAddons.Add("VF_RaidDamage");
+        //            userIDAddons.Add("VF_RaidStats");
+        //            //}
+        //        }
+        //        if (Settings.HaveTBC == true && InstalledAddons.GetAddonInfo("VF_RealmPlayersTBC", WowVersionEnum.TBC) == null)
+        //        {
+        //            userIDAddons.Add("VF_RealmPlayersTBC");
+        //        }
+        //        if (Settings.HaveTBC == true && InstalledAddons.GetAddonInfo("VF_RaidStatsTBC", WowVersionEnum.TBC) == null)
+        //        {
+        //            userIDAddons.Add("VF_RaidStatsTBC");
+        //        }
+        //        if(userIDAddons.Count > 0)
+        //        {
+        //            (new System.Threading.Tasks.Task(() =>
+        //            {
+        //                try
+        //                {
+        //                    var addonUpdateInfosVanilla = ServerComm.GetAddonUpdateInfos(userIDAddons, WowVersionEnum.Vanilla);
+        //                    foreach (var addonUpdateInfo in addonUpdateInfosVanilla)
+        //                    {
+        //                        string addonDescription = "";
+        //                        int sortIndex = 0;
+        //                        if (addonUpdateInfo.AddonName == "VF_RealmPlayers")
+        //                        {
+        //                            addonDescription = "Latest addon version for gathering data and contribute to the armory at realmplayers.com";
+        //                            sortIndex = int.MaxValue - 1;
+        //                        }
+        //                        else if (addonUpdateInfo.AddonName == "VF_RaidDamage")
+        //                        {
+        //                            addonDescription = "Latest addon version for automatically logging data in raids. Logged raids will automatically be uploaded to RaidStats";
+        //                            sortIndex = int.MaxValue - 2;
+        //                        }
+        //                        else if (addonUpdateInfo.AddonName == "VF_RaidStats")
+        //                        {
+        //                            addonDescription = "Latest addon version for automatically logging data in raids. Logged raids will automatically be uploaded to RaidStats";
+        //                            sortIndex = int.MaxValue - 3;
+        //                        }
+        //                        else if (addonUpdateInfo.AddonName == "VF_BGStats")
+        //                        {
+        //                            addonDescription = "Latest addon version for automatically logging data in battlegrounds. Logged bgs will automatically be uploaded to BGStats";
+        //                            sortIndex = int.MaxValue - 4;
+        //                        }
+        //                        else
+        //                        {
+        //                            continue;
+        //                        }
 
-                                c_dlAddons.BeginInvoke(new Action(() =>
-                                {
-                                    c_dlAddons.AddItem(sortIndex
-                                        , GetAddonUpdateImage(ServerComm.UpdateImportance.Good)
-                                        , addonUpdateInfo.AddonName
-                                        , addonDescription, "Made by Dilatazu"
-                                        , new DetailedList.RightSideAddonUpdate("Install", (_ListItem, _SetProgressBarFunc) =>
-                                        {
-                                            _SetProgressBarFunc(0.0f);
-                                            string addonPackageFile = ServerComm.DownloadAddonPackage(addonUpdateInfo.AddonPackageDownloadFTP, addonUpdateInfo.AddonPackageFileSize, (float _DownloadPercentage) => { _SetProgressBarFunc(0.5f * _DownloadPercentage); });
-                                            _SetProgressBarFunc(0.5f);
-                                            if (addonPackageFile != "")
-                                            {
-                                                var updateAddons = InstalledAddons.GetAddonsInAddonPackage(addonPackageFile);
-                                                var updatedAddons = InstalledAddons.InstallAddonPackage(addonPackageFile, WowVersionEnum.Vanilla, (float _InstallPercentage) => { _SetProgressBarFunc(0.5f + 0.5f * _InstallPercentage); }, addonUpdateInfo.ClearAccountSavedVariablesRequired || addonUpdateInfo.ClearCharacterSavedVariablesRequired);
-                                                if (updatedAddons != null && updatedAddons.Count > 0)
-                                                {
-                                                    _SetProgressBarFunc(1.0f);
-                                                    Utility.MessageBoxShow(addonUpdateInfo.AddonName + " was successfully installed!");
-                                                    c_dlAddons.BeginInvoke(new Action(() =>
-                                                    {
-                                                        c_dlAddons.RemoveItem(_ListItem);
-                                                    }));
-                                                }
-                                            }
-                                            else
-                                            {
-                                                Utility.MessageBoxShow("Could not install " + addonUpdateInfo.AddonName + "\r\nReason: Download of addon failed");
-                                            }
-                                            //c_dlAddons.BeginInvoke(new Action(() =>
-                                            //{
-                                            //    c_dlAddons.RemoveItem(_ListItem);
-                                            //}));
-                                        }, () =>
-                                        {
-                                            if (addonUpdateInfo.MoreInfoSite == "")
-                                                Utility.MessageBoxShow("Could not find more info for this addon, Possibly more info and changelog on the forum: forum.realmplayers.com");
-                                            else if (addonUpdateInfo.MoreInfoSite.StartsWith("http://"))
-                                                System.Diagnostics.Process.Start(addonUpdateInfo.MoreInfoSite);
-                                            else
-                                                Utility.MessageBoxShow("Unknown \"More Info\" format, Your Launcher may be outdated.");
-                                        })
-                                    );
-                                }));
-                            }
+        //                        c_dlAddons.BeginInvoke(new Action(() =>
+        //                        {
+        //                            c_dlAddons.AddItem(sortIndex
+        //                                , GetAddonUpdateImage(ServerComm.UpdateImportance.Good)
+        //                                , addonUpdateInfo.AddonName
+        //                                , addonDescription, "Made by Dilatazu"
+        //                                , new DetailedList.RightSideAddonUpdate("Install", (_ListItem, _SetProgressBarFunc) =>
+        //                                {
+        //                                    _SetProgressBarFunc(0.0f);
+        //                                    string addonPackageFile = ServerComm.DownloadAddonPackage(addonUpdateInfo.AddonPackageDownloadFTP, addonUpdateInfo.AddonPackageFileSize, (float _DownloadPercentage) => { _SetProgressBarFunc(0.5f * _DownloadPercentage); });
+        //                                    _SetProgressBarFunc(0.5f);
+        //                                    if (addonPackageFile != "")
+        //                                    {
+        //                                        var updateAddons = InstalledAddons.GetAddonsInAddonPackage(addonPackageFile);
+        //                                        var updatedAddons = InstalledAddons.InstallAddonPackage(addonPackageFile, WowVersionEnum.Vanilla, (float _InstallPercentage) => { _SetProgressBarFunc(0.5f + 0.5f * _InstallPercentage); }, addonUpdateInfo.ClearAccountSavedVariablesRequired || addonUpdateInfo.ClearCharacterSavedVariablesRequired);
+        //                                        if (updatedAddons != null && updatedAddons.Count > 0)
+        //                                        {
+        //                                            _SetProgressBarFunc(1.0f);
+        //                                            Utility.MessageBoxShow(addonUpdateInfo.AddonName + " was successfully installed!");
+        //                                            c_dlAddons.BeginInvoke(new Action(() =>
+        //                                            {
+        //                                                c_dlAddons.RemoveItem(_ListItem);
+        //                                            }));
+        //                                        }
+        //                                    }
+        //                                    else
+        //                                    {
+        //                                        Utility.MessageBoxShow("Could not install " + addonUpdateInfo.AddonName + "\r\nReason: Download of addon failed");
+        //                                    }
+        //                                    //c_dlAddons.BeginInvoke(new Action(() =>
+        //                                    //{
+        //                                    //    c_dlAddons.RemoveItem(_ListItem);
+        //                                    //}));
+        //                                }, () =>
+        //                                {
+        //                                    if (addonUpdateInfo.MoreInfoSite == "")
+        //                                        Utility.MessageBoxShow("Could not find more info for this addon, Possibly more info and changelog on the forum: forum.realmplayers.com");
+        //                                    else if (addonUpdateInfo.MoreInfoSite.StartsWith("http://"))
+        //                                        System.Diagnostics.Process.Start(addonUpdateInfo.MoreInfoSite);
+        //                                    else
+        //                                        Utility.MessageBoxShow("Unknown \"More Info\" format, Your Launcher may be outdated.");
+        //                                })
+        //                            );
+        //                        }));
+        //                    }
 
-                            #region TBC Copy pasted
-                            var addonUpdateInfosTBC = ServerComm.GetAddonUpdateInfos(userIDAddons, WowVersionEnum.TBC);
-                            foreach (var addonUpdateInfo in addonUpdateInfosTBC)
-                            {
-                                string addonDescription = "";
-                                int sortIndex = 0;
-                                if (addonUpdateInfo.AddonName == "VF_RealmPlayersTBC")
-                                {
-                                    addonDescription = "Latest addon version for gathering data and contribute to the armory at realmplayers.com";
-                                    sortIndex = int.MaxValue - 1;
-                                }
-                                else if (addonUpdateInfo.AddonName == "VF_RaidStatsTBC")
-                                {
-                                    addonDescription = "Latest addon version for automatically logging data in raids. Logged raids will automatically be uploaded to RaidStats";
-                                    sortIndex = int.MaxValue - 1;
-                                }
-                                else if (addonUpdateInfo.AddonName == "VF_BGStatsTBC")
-                                {
-                                    addonDescription = "Latest addon version for automatically logging data in battlegrounds. Logged bgs will automatically be uploaded to BGStats";
-                                    sortIndex = int.MaxValue - 1;
-                                }
-                                else
-                                {
-                                    continue;
-                                }
+        //                    #region TBC Copy pasted
+        //                    var addonUpdateInfosTBC = ServerComm.GetAddonUpdateInfos(userIDAddons, WowVersionEnum.TBC);
+        //                    foreach (var addonUpdateInfo in addonUpdateInfosTBC)
+        //                    {
+        //                        string addonDescription = "";
+        //                        int sortIndex = 0;
+        //                        if (addonUpdateInfo.AddonName == "VF_RealmPlayersTBC")
+        //                        {
+        //                            addonDescription = "Latest addon version for gathering data and contribute to the armory at realmplayers.com";
+        //                            sortIndex = int.MaxValue - 1;
+        //                        }
+        //                        else if (addonUpdateInfo.AddonName == "VF_RaidStatsTBC")
+        //                        {
+        //                            addonDescription = "Latest addon version for automatically logging data in raids. Logged raids will automatically be uploaded to RaidStats";
+        //                            sortIndex = int.MaxValue - 1;
+        //                        }
+        //                        else if (addonUpdateInfo.AddonName == "VF_BGStatsTBC")
+        //                        {
+        //                            addonDescription = "Latest addon version for automatically logging data in battlegrounds. Logged bgs will automatically be uploaded to BGStats";
+        //                            sortIndex = int.MaxValue - 1;
+        //                        }
+        //                        else
+        //                        {
+        //                            continue;
+        //                        }
 
-                                c_dlAddons.BeginInvoke(new Action(() =>
-                                {
-                                    c_dlAddons.AddItem(sortIndex
-                                        , GetAddonUpdateImage(ServerComm.UpdateImportance.Good)
-                                        , addonUpdateInfo.AddonName
-                                        , addonDescription, "Made by Dilatazu"
-                                        , new DetailedList.RightSideAddonUpdate("Install", (_ListItem, _SetProgressBarFunc) =>
-                                        {
-                                            _SetProgressBarFunc(0.0f);
-                                            string addonPackageFile = ServerComm.DownloadAddonPackage(addonUpdateInfo.AddonPackageDownloadFTP, addonUpdateInfo.AddonPackageFileSize, (float _DownloadPercentage) => { _SetProgressBarFunc(0.5f * _DownloadPercentage); });
-                                            _SetProgressBarFunc(0.5f);
-                                            if (Settings.HaveTBC == true && addonPackageFile != "")
-                                            {
-                                                var updateAddons = InstalledAddons.GetAddonsInAddonPackage(addonPackageFile);
-                                                var updatedAddons = InstalledAddons.InstallAddonPackage(addonPackageFile, WowVersionEnum.TBC, (float _InstallPercentage) => { _SetProgressBarFunc(0.5f + 0.5f * _InstallPercentage); }, addonUpdateInfo.ClearAccountSavedVariablesRequired || addonUpdateInfo.ClearCharacterSavedVariablesRequired);
-                                                if (updatedAddons != null && updatedAddons.Count > 0)
-                                                {
-                                                    _SetProgressBarFunc(1.0f);
-                                                    Utility.MessageBoxShow(addonUpdateInfo.AddonName + " was successfully installed!");
-                                                    c_dlAddons.BeginInvoke(new Action(() =>
-                                                    {
-                                                        c_dlAddons.RemoveItem(_ListItem);
-                                                    }));
-                                                }
-                                            }
-                                            else
-                                            {
-                                                Utility.MessageBoxShow("Could not install " + addonUpdateInfo.AddonName + "\r\nReason: Download of addon failed");
-                                            }
-                                            //c_dlAddons.BeginInvoke(new Action(() =>
-                                            //{
-                                            //    c_dlAddons.RemoveItem(_ListItem);
-                                            //}));
-                                        }, () =>
-                                        {
-                                            if (addonUpdateInfo.MoreInfoSite == "")
-                                                Utility.MessageBoxShow("Could not find more info for this addon, Possibly more info and changelog on the forum: forum.realmplayers.com");
-                                            else if (addonUpdateInfo.MoreInfoSite.StartsWith("http://"))
-                                                System.Diagnostics.Process.Start(addonUpdateInfo.MoreInfoSite);
-                                            else
-                                                Utility.MessageBoxShow("Unknown \"More Info\" format, Your Launcher may be outdated.");
-                                        })
-                                    );
-                                }));
-                            }
-                            #endregion
-                        }
-                        catch (Exception ex)
-                        {
-                            Logger.LogException(ex);
-                        }
-                    })).Start();
-                }
-            }
-        }
+        //                        c_dlAddons.BeginInvoke(new Action(() =>
+        //                        {
+        //                            c_dlAddons.AddItem(sortIndex
+        //                                , GetAddonUpdateImage(ServerComm.UpdateImportance.Good)
+        //                                , addonUpdateInfo.AddonName
+        //                                , addonDescription, "Made by Dilatazu"
+        //                                , new DetailedList.RightSideAddonUpdate("Install", (_ListItem, _SetProgressBarFunc) =>
+        //                                {
+        //                                    _SetProgressBarFunc(0.0f);
+        //                                    string addonPackageFile = ServerComm.DownloadAddonPackage(addonUpdateInfo.AddonPackageDownloadFTP, addonUpdateInfo.AddonPackageFileSize, (float _DownloadPercentage) => { _SetProgressBarFunc(0.5f * _DownloadPercentage); });
+        //                                    _SetProgressBarFunc(0.5f);
+        //                                    if (Settings.HaveTBC == true && addonPackageFile != "")
+        //                                    {
+        //                                        var updateAddons = InstalledAddons.GetAddonsInAddonPackage(addonPackageFile);
+        //                                        var updatedAddons = InstalledAddons.InstallAddonPackage(addonPackageFile, WowVersionEnum.TBC, (float _InstallPercentage) => { _SetProgressBarFunc(0.5f + 0.5f * _InstallPercentage); }, addonUpdateInfo.ClearAccountSavedVariablesRequired || addonUpdateInfo.ClearCharacterSavedVariablesRequired);
+        //                                        if (updatedAddons != null && updatedAddons.Count > 0)
+        //                                        {
+        //                                            _SetProgressBarFunc(1.0f);
+        //                                            Utility.MessageBoxShow(addonUpdateInfo.AddonName + " was successfully installed!");
+        //                                            c_dlAddons.BeginInvoke(new Action(() =>
+        //                                            {
+        //                                                c_dlAddons.RemoveItem(_ListItem);
+        //                                            }));
+        //                                        }
+        //                                    }
+        //                                    else
+        //                                    {
+        //                                        Utility.MessageBoxShow("Could not install " + addonUpdateInfo.AddonName + "\r\nReason: Download of addon failed");
+        //                                    }
+        //                                    //c_dlAddons.BeginInvoke(new Action(() =>
+        //                                    //{
+        //                                    //    c_dlAddons.RemoveItem(_ListItem);
+        //                                    //}));
+        //                                }, () =>
+        //                                {
+        //                                    if (addonUpdateInfo.MoreInfoSite == "")
+        //                                        Utility.MessageBoxShow("Could not find more info for this addon, Possibly more info and changelog on the forum: forum.realmplayers.com");
+        //                                    else if (addonUpdateInfo.MoreInfoSite.StartsWith("http://"))
+        //                                        System.Diagnostics.Process.Start(addonUpdateInfo.MoreInfoSite);
+        //                                    else
+        //                                        Utility.MessageBoxShow("Unknown \"More Info\" format, Your Launcher may be outdated.");
+        //                                })
+        //                            );
+        //                        }));
+        //                    }
+        //                    #endregion
+        //                }
+        //                catch (Exception ex)
+        //                {
+        //                    Logger.LogException(ex);
+        //                }
+        //            })).Start();
+        //        }
+        //    }
+        //}
         void LauncherWindow_PostLoad(object sender, EventArgs e)
         {
             //Only run first time, sort of as a delayed Load
@@ -564,7 +617,7 @@ namespace VF_WoWLauncher
             GetLatestNews(true);
 
             GetLatestAddonUpdates();
-            GetLatestUserIDAddons();
+            //GetLatestUserIDAddons();
             //InstalledAddons.BackupAddon("VF_RealmPlayers");
 
             this.Activated += LauncherWindow_Activated;
@@ -851,7 +904,7 @@ namespace VF_WoWLauncher
                     if (ServerComm.PeekAddonUpdates(15) == true)
                     {
                         GetLatestAddonUpdates();
-                        GetLatestUserIDAddons();
+                        //GetLatestUserIDAddons();
                     }
                 }
                 catch(Exception ex)
