@@ -68,6 +68,10 @@ namespace VF_WoWLauncher
                 var linksMenu = new MenuItem("Links");
                 {
                     var feenixLinks = new MenuItem("Feenix Links");
+                    feenixLinks.MenuItems.Add(new MenuItem("Goto homepage", new EventHandler((o, ea) =>
+                    {
+                        System.Diagnostics.Process.Start("http://www.wow-one.com");
+                    })));
                     feenixLinks.MenuItems.Add(new MenuItem("Goto forum", new EventHandler((o, ea) =>
                     {
                         System.Diagnostics.Process.Start("http://www.wow-one.com/forum");
@@ -89,6 +93,18 @@ namespace VF_WoWLauncher
                         System.Diagnostics.Process.Start("http://database.wow-one.com/");
                     })));
                     linksMenu.MenuItems.Add(feenixLinks);
+                }
+                {
+                    var nostalriusLinks = new MenuItem("Nostalrius Links");
+                    nostalriusLinks.MenuItems.Add(new MenuItem("Goto homepage", new EventHandler((o, ea) =>
+                    {
+                        System.Diagnostics.Process.Start("http://en.nostalrius.org/");
+                    })));
+                    nostalriusLinks.MenuItems.Add(new MenuItem("Goto forum", new EventHandler((o, ea) =>
+                    {
+                        System.Diagnostics.Process.Start("http://forum.nostalrius.org/");
+                    })));
+                    linksMenu.MenuItems.Add(nostalriusLinks);
                 }
                 linksMenu.MenuItems.Add("-");
                 linksMenu.MenuItems.Add(new MenuItem("Goto RealmPlayers", new EventHandler((o, ea) =>
