@@ -25,6 +25,7 @@ namespace VF_WoWLauncher
             c_cbAutoRefresh.Checked = Settings.Instance.AutoRefreshNews;
             c_cbxRunNotAdmin.Checked = Settings.Instance.RunWoWNotAdmin;
             c_cbxAutoHide.Checked = Settings.Instance.AutoHideOldNews;
+            c_cbAutoUpdateVF.Checked = Settings.Instance.AutoUpdateVFAddons;
             //c_cbxWoWNoDelay.Checked = Settings.Instance.UseWoWNoDelay;
             if (Settings.HaveTBC == true)
             {
@@ -124,6 +125,7 @@ namespace VF_WoWLauncher
 
             Settings.Instance.RunWoWNotAdmin = c_cbxRunNotAdmin.Checked;
             Settings.Instance.AutoHideOldNews = c_cbxAutoHide.Checked;
+            Settings.Instance.AutoUpdateVFAddons = c_cbAutoUpdateVF.Checked;
             //Settings.Instance.UseWoWNoDelay = c_cbxWoWNoDelay.Checked;
             Close();
         }
@@ -273,6 +275,11 @@ namespace VF_WoWLauncher
         }
 
         private void c_cbxAutoHide_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void c_cbAutoUpdateVF_CheckedChanged(object sender, EventArgs e)
         {
 
         }

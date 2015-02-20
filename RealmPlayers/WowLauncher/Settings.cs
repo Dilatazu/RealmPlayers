@@ -42,6 +42,8 @@ namespace VF_WoWLauncher
         public bool RunWoWNotAdmin = false;
         [ProtoMember(16)]
         public bool AutoHideOldNews = true;
+        [ProtoMember(17)]
+        public bool AutoUpdateVFAddons = false;
 
         [ProtoContract]
         public class LaunchShortcut

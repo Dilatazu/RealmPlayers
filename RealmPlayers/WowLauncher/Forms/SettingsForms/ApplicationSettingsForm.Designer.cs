@@ -44,6 +44,7 @@
             this.c_cbAutoRefresh = new System.Windows.Forms.CheckBox();
             this.c_cbxRunNotAdmin = new System.Windows.Forms.CheckBox();
             this.c_cbxAutoHide = new System.Windows.Forms.CheckBox();
+            this.c_cbAutoUpdateVF = new System.Windows.Forms.CheckBox();
             this.c_gpbUploading.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -214,11 +215,24 @@
             this.c_cbxAutoHide.Visible = false;
             this.c_cbxAutoHide.CheckedChanged += new System.EventHandler(this.c_cbxAutoHide_CheckedChanged);
             // 
+            // c_cbAutoUpdateVF
+            // 
+            this.c_cbAutoUpdateVF.AutoSize = true;
+            this.c_cbAutoUpdateVF.Location = new System.Drawing.Point(10, 106);
+            this.c_cbAutoUpdateVF.Name = "c_cbAutoUpdateVF";
+            this.c_cbAutoUpdateVF.Size = new System.Drawing.Size(229, 17);
+            this.c_cbAutoUpdateVF.TabIndex = 16;
+            this.c_cbAutoUpdateVF.Text = "Automatically update RealmPlayers addons";
+            this.c_cbAutoUpdateVF.UseVisualStyleBackColor = true;
+            this.c_cbAutoUpdateVF.Visible = false;
+            this.c_cbAutoUpdateVF.CheckedChanged += new System.EventHandler(this.c_cbAutoUpdateVF_CheckedChanged);
+            // 
             // ApplicationSettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(413, 307);
+            this.Controls.Add(this.c_cbAutoUpdateVF);
             this.Controls.Add(this.c_cbxAutoHide);
             this.Controls.Add(this.c_cbxRunNotAdmin);
             this.Controls.Add(this.c_cbAutoRefresh);
@@ -261,6 +275,7 @@
         private System.Windows.Forms.CheckBox c_cbAutoRefresh;
         private System.Windows.Forms.CheckBox c_cbxRunNotAdmin;
         private System.Windows.Forms.CheckBox c_cbxAutoHide;
+        private System.Windows.Forms.CheckBox c_cbAutoUpdateVF;
 
     }
 }
