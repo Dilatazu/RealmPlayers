@@ -131,7 +131,7 @@ namespace VF_WoWLauncher
                         CreateAddonPackageForm newForm = new CreateAddonPackageForm();
                         newForm.ShowDialog();
                     })));
-                toolsMenu.MenuItems.Add(new MenuItem("Poll wow-one for News", new EventHandler((o, ea) => GetLatestNews(false))));
+                toolsMenu.MenuItems.Add(new MenuItem("Poll forums for News", new EventHandler((o, ea) => GetLatestNews(false))));
                 toolsMenu.MenuItems.Add("-");
                 toolsMenu.MenuItems.Add(new MenuItem("Show Log(Debug)", new EventHandler(c_btnShowLog_Click)));
                 this.Menu.MenuItems.Add(toolsMenu);
