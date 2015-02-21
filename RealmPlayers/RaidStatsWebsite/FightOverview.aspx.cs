@@ -358,6 +358,7 @@ namespace VF_RaidDamageWebsite
                         foreach (var timeSlice in interestingFight.GetFightData().TimeSlices)
                         {
                             int deltaTime = timeSlice.Time - prevTimeSliceTime;
+                            prevTimeSliceTime = timeSlice.Time;
                             if (timeSlice.UnitBuffs != null)
                             {
                                 foreach (var unitBuff in timeSlice.UnitBuffs)
