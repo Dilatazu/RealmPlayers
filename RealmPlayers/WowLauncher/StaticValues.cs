@@ -28,6 +28,7 @@ namespace VF_WoWLauncher
         public static string RealmListWTF_VanillaGaming = "set realmlist logon.vanillagaming.org\r\nset realmname \"VanillaGaming\"";
         public static string RealmListWTF_Valkyrie = "set realmlist logon.valkyrie-wow.com\r\nset realmname \"Valkyrie\"";
         public static string RealmListWTF_Rebirth = "set realmlist wow.therebirth.net\r\nset realmname \"Rebirth\"";
+        public static string RealmListWTF_Nostalrius = "set realmlist login.nostalrius.org\r\nset realmname \"Nostalrius Begins\"";
 
         public static string RunWowAndUploaderBatFileData = "start /b /WAIT /d %1 Wow.exe\r\nstart \"\" /d \"" + StaticValues.LauncherWorkDirectory + "\" \"" + StaticValues.LauncherExecuteFile + "\" /RealmPlayersUploader";
         public static string RunWowNotAdminAndUploaderBatFileData = "";//NotAdmin.exe "cmd.exe" ".\\" "/c \"\"D:\\QinarwTFS\\CppProjects\\VF_WoWLauncher\\VF_WoWLauncher\\bin\\Release\\VF_WowLauncherTools\\RunWowAndUploader.bat\" \"D:\Program\World of Warcraft Classic\\\" nowindow\"";

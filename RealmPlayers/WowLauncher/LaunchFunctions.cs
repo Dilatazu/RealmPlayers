@@ -56,6 +56,11 @@ namespace VF_WoWLauncher
                 realmListFile = StaticValues.RealmListWTF_Rebirth;
                 wowVersion = WowVersionEnum.Vanilla;
             }
+            else if(_RealmName == "Nostalrius")
+            {
+                realmListFile = StaticValues.RealmListWTF_Nostalrius;
+                wowVersion = WowVersionEnum.Vanilla;
+            }
             else if (_RealmName == "Archangel(TBC)")
             {
                 realmListFile = StaticValues.RealmListWTF_Archangel;

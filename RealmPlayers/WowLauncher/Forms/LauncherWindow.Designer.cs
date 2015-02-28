@@ -63,7 +63,8 @@
             "Al\'Akir",
             "VanillaGaming",
             "Valkyrie",
-            "Rebirth"});
+            "Rebirth",
+            "Nostalrius"});
             this.c_ddlRealm.Location = new System.Drawing.Point(378, 427);
             this.c_ddlRealm.Name = "c_ddlRealm";
             this.c_ddlRealm.Size = new System.Drawing.Size(179, 21);
