@@ -21,7 +21,7 @@ for /f %%d in (t4list.txt) do (
 set file_name=%%d
 set file_name=!file_name:~0,-3!.%extension%
 echo:  \--^> !file_name!    
-"C:\Program Files (x86)\Common Files\microsoft shared\TextTemplating\11.0\TextTransform.exe" -out !file_name! %%d
+"C:\Program Files (x86)\Common Files\microsoft shared\TextTemplating\12.0\TextTransform.exe" -out !file_name! %%d
 )
 
 echo transformation complete
