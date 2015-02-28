@@ -200,9 +200,11 @@ namespace RealmPlayersServer
         {
             return Hidden.ApplicationInstance.Instance.GetItemInfo(_ItemID, _WowVersion);
         }
-        public static Code.ContributorStatistics GetContributorStatistics()
+        public static Dictionary<VF_RealmPlayersDatabase.WowRealm, Dictionary<int, Code.ContributorStatisticItem>> GetContributorStatistics()
         {
-            Hidden.ApplicationInstance.Instance.GetRPPDatabase(true);
+            var db = Hidden.ApplicationInstance.Instance.GetRPPDatabase(false);
+            if (db == null)
+                return null;
             return Hidden.ApplicationInstance.Instance.GetContributorStatistics();
         }
         public static VF_RealmPlayersDatabase.ItemDropDatabase GetItemDropDatabase(System.Web.UI.Page _Page, WowVersionEnum _WowVersion, NotLoadedDecision _Decision = NotLoadedDecision.SpinWait)

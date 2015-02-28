@@ -159,6 +159,7 @@ namespace RealmPlayersServer
             }
             public UserActivityStats GetUserActivityStats()
             {
+                return null;//Currently Disabled
                 UserActivityStats stats = DynamicReloader.GetData<UserActivityStats>(() =>
                 {
                     lock (m_RealmPlayersMutex)
@@ -553,15 +554,10 @@ namespace RealmPlayersServer
                 ApplicationInstance.Instance.BackupItemInfos();
                 return rppDatabase;
             }
-            public Code.ContributorStatistics GetContributorStatistics()
+            public Dictionary<VF_RealmPlayersDatabase.WowRealm, Dictionary<int, Code.ContributorStatisticItem>> GetContributorStatistics()
             {
-                var contributorStatistics = m_ContributorStatistics;
-                if (contributorStatistics == null)
-                {
-                    contributorStatistics = new Code.ContributorStatistics(GetRPPDatabase());
-                    m_ContributorStatistics = contributorStatistics;
-                }
-                return contributorStatistics;
+                Code.ContributorStatistics.AssertInitialize(GetRPPDatabase());
+                return Code.ContributorStatistics.GetData();
             }
             public static ApplicationInstance Instance
             {

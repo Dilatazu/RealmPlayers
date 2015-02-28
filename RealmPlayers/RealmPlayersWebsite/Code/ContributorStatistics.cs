@@ -39,26 +39,45 @@ namespace RealmPlayersServer.Code
     }
     public class ContributorStatistics
     {
-        Dictionary<WowRealm, Dictionary<int, ContributorStatisticItem>> m_ContributorStatisticData = new Dictionary<WowRealm, Dictionary<int, ContributorStatisticItem>>();
-        System.Threading.Tasks.Task m_LoadTask;
-        public ContributorStatistics(RPPDatabase _Database)
+        static Dictionary<WowRealm, Dictionary<int, ContributorStatisticItem>> sm_ContributorStatisticData = new Dictionary<WowRealm, Dictionary<int, ContributorStatisticItem>>();
+        static System.Threading.Tasks.Task sm_LoadTask = null;
+        static object sm_LoadTaskMutex = new object();
+        public static void AssertInitialize(RPPDatabase _Database, bool _WaitUntilLoaded = false)
         {
-            m_LoadTask = new System.Threading.Tasks.Task(new Action(() => { Thread_GenerateData(_Database); }));
-            m_LoadTask.Start();
+            lock(sm_LoadTaskMutex)
+            {
+                if (sm_LoadTask == null)
+                {
+                    sm_LoadTask = new System.Threading.Tasks.Task(new Action(() => { Thread_GenerateData(_Database); }));
+                    sm_LoadTask.Start();
+                }
+            }
+            if (_WaitUntilLoaded == true)
+                sm_LoadTask.Wait();
         }
-        public void Thread_GenerateData(RPPDatabase _Database)
+        public static bool IsInitialized()
+        {
+            return sm_LoadTask != null && sm_LoadTask.IsCompleted;
+        }
+        public static Dictionary<WowRealm, Dictionary<int, ContributorStatisticItem>> GetData()
+        {
+            if(Code.ContributorStatistics.IsInitialized() == false)
+                return null;
+            return sm_ContributorStatisticData;
+        }
+        public static void Thread_GenerateData(RPPDatabase _Database)
         {
             for (int i = 0; i < 5; ++i)
             {
-                m_ContributorStatisticData = new Dictionary<WowRealm, Dictionary<int, ContributorStatisticItem>>();
+                sm_ContributorStatisticData = new Dictionary<WowRealm, Dictionary<int, ContributorStatisticItem>>();
                 try
                 {
                     ContributorStatisticItem lastUsedCSI = new ContributorStatisticItem();
                     foreach (var realm in _Database.GetRealms())
                     {
-                        if (m_ContributorStatisticData.ContainsKey(realm.Key) == false)
-                            m_ContributorStatisticData.Add(realm.Key, new Dictionary<int, ContributorStatisticItem>());
-                        var realmCSD = m_ContributorStatisticData[realm.Key];
+                        if (sm_ContributorStatisticData.ContainsKey(realm.Key) == false)
+                            sm_ContributorStatisticData.Add(realm.Key, new Dictionary<int, ContributorStatisticItem>());
+                        var realmCSD = sm_ContributorStatisticData[realm.Key];
 
                         foreach (var playerHistory in realm.Value.PlayersHistory)
                         {
@@ -86,21 +105,25 @@ namespace RealmPlayersServer.Code
                 }
             }
         }
-        public bool IsGenerationComplete() 
-        {
-            return m_LoadTask.IsCompleted;
-        }
-        public Dictionary<WowRealm, Dictionary<int, ContributorStatisticItem>> GetContributorStatisticsData()
-        {
-            if(IsGenerationComplete() == false)
-            {
-                m_LoadTask.Wait();
-                if(IsGenerationComplete() == false)
-                {
-                    throw new Exception("ContributorStatisticGeneration was not completed when it should have been");
-                }
-            }
-            return m_ContributorStatisticData;
-        }
+        //public bool IsGenerating()
+        //{
+        //    return sm_LoadTask != null;
+        //}
+        //public bool IsGenerationComplete() 
+        //{
+        //    return sm_LoadTask.IsCompleted;
+        //}
+        //public Dictionary<WowRealm, Dictionary<int, ContributorStatisticItem>> GetContributorStatisticsData()
+        //{
+        //    if(IsGenerationComplete() == false)
+        //    {
+        //        sm_LoadTask.Wait();
+        //        if(IsGenerationComplete() == false)
+        //        {
+        //            throw new Exception("ContributorStatisticGeneration was not completed when it should have been");
+        //        }
+        //    }
+        //    return m_ContributorStatisticData;
+        //}
     }
 }

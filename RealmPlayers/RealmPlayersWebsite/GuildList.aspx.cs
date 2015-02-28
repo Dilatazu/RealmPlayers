@@ -140,7 +140,7 @@ namespace RealmPlayersServer
 
             this.Title = "Guilds @ " + StaticValues.ConvertRealmParam(realm) + " | RealmPlayers";
 
-            var realmDB = DatabaseAccess.GetRealmPlayers(this, realm);
+            var realmDB = DatabaseAccess.GetRealmPlayers(this, realm, NotLoadedDecision.RedirectAndWait);
 
             var guildSummaryDB = Hidden.ApplicationInstance.Instance.GetGuildSummaryDatabase();
             //;// DatabaseAccess.GetRealmGuilds(this, realm, NotLoadedDecision.RedirectAndWait).Where((guild) => { return guild.Value.GetTotalPlayers() > 0; })

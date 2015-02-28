@@ -43,42 +43,50 @@ namespace RealmPlayersServer
                     string waitStr = Request.QueryString.Get("wait");
                     if (waitStr != null)
                     {
-                        string[] waitParts = waitStr.Split('-');
-                        var realm = StaticValues.ConvertRealm(waitParts[0]);
-                        if (realm != VF_RealmPlayersDatabase.WowRealm.Unknown)
+                        if(waitStr.Contains('-'))
                         {
-                            var realmDatabase = rppDatabase.GetRealm(realm);
-                            if (realmDatabase.IsPlayersLoadComplete() == false)
-                                return;
-                            if (waitParts.Length > 1)
+                            string[] waitParts = waitStr.Split('-');
+                            var realm = StaticValues.ConvertRealm(waitParts[0]);
+                            if (realm != VF_RealmPlayersDatabase.WowRealm.Unknown)
                             {
-                                if (waitParts[1] == "history")
+                                var realmDatabase = rppDatabase.GetRealm(realm);
+                                if (realmDatabase.IsPlayersLoadComplete() == false)
+                                    return;
+                                if (waitParts.Length > 1)
                                 {
-                                    if (realmDatabase.IsPlayersHistoryLoadComplete() == false)
-                                        return;
+                                    if (waitParts[1] == "history")
+                                    {
+                                        if (realmDatabase.IsPlayersHistoryLoadComplete() == false)
+                                            return;
+                                    }
+                                    //else if (waitParts[1] == "itemsused")
+                                    //{
+                                    //    if (realmDatabase.IsLoadComplete() == false)
+                                    //        return;
+                                    //    var cacheDB = realmDatabase.GetCacheDatabase(false, true);
+                                    //    if (cacheDB == null || cacheDB.IsItemsUsedLoaded() == false)
+                                    //        return;
+                                    //}
+                                    else if (waitParts[1] == "guilds")
+                                    {
+                                        if (realmDatabase.IsLoadComplete() == false)
+                                            return;
+                                    }
                                 }
-                                //else if (waitParts[1] == "itemsused")
-                                //{
-                                //    if (realmDatabase.IsLoadComplete() == false)
-                                //        return;
-                                //    var cacheDB = realmDatabase.GetCacheDatabase(false, true);
-                                //    if (cacheDB == null || cacheDB.IsItemsUsedLoaded() == false)
-                                //        return;
-                                //}
-                                else if (waitParts[1] == "guilds")
+                            }
+                            else
+                            {
+                                if (waitParts[0] == "itemdropdatabase")
                                 {
-                                    if (realmDatabase.IsLoadComplete() == false)
+                                    if (DatabaseAccess.GetItemDropDatabase(this, VF_RealmPlayersDatabase.WowVersionEnum.Vanilla, NotLoadedDecision.ReturnNull) == null)
                                         return;
                                 }
                             }
                         }
-                        else
+                        else if(waitStr == "contributors")
                         {
-                            if (waitParts[0] == "itemdropdatabase")
-                            {
-                                if (DatabaseAccess.GetItemDropDatabase(this, VF_RealmPlayersDatabase.WowVersionEnum.Vanilla, NotLoadedDecision.ReturnNull) == null)
-                                    return;
-                            }
+                            if(DatabaseAccess.GetContributorStatistics() == null)
+                                return;
                         }
                     }
                     Response.Redirect(returnStr);

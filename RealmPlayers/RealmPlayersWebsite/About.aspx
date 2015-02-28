@@ -24,21 +24,22 @@
                     I am always looking for more data contributors, the more we have the more accurate the website will be.
                     Using the addon and uploader is extremely easy and only requires a maximum of 2 minutes installation time and is bundled with various ways to run the uploader application without effort.
                     <p>If you are interested in helping out, <a href="http://forum.realmplayers.com/viewtopic.php?f=14&t=15">you can read more here</a></p>
-                <h4>Top Data Contributors</h4>
+                <h4>Top Data Contributors each realm:</h4>
                 <ul class="unstyled">
-                    <li><a class="team-member" href="/CharacterViewer.aspx?realm=ED&player=Sethzer">Sethzer</a><span class="team-info"> - Active ED(Alliance) since day one, collects data for all realms</span></li>
+                    <%--<li><a class="team-member" href="/CharacterViewer.aspx?realm=ED&player=Sethzer">Sethzer</a><span class="team-info"> - Active ED(Alliance) since day one, collects data for all realms</span></li>
                     <li><a class="team-member" href="/CharacterViewer.aspx?realm=ED&player=Tosicx">Tosicx</a><span class="team-info"> - Active ED(Horde) contributor since 2013-12-09</span></li>
                     <li><a class="team-member" href="/CharacterViewer.aspx?realm=ED&player=Azuros">Azuros</a><span class="team-info"> - Active ED(Alliance) contributor since 2013-09-09</span></li>
                     <li><a class="team-member" href="/CharacterViewer.aspx?realm=ED&player=Zey">Zey</a><span class="team-info"> - Active ED(Horde) contributor since 2013-08-31</span></li>
                     <li><a class="team-member" href="/CharacterViewer.aspx?realm=WSG&player=Meandawg">Meandawg</a><span class="team-info"> - Active WSG(Alliance) contributor since 2013-10-26</span></li>
                     <li><a class="team-member" href="/CharacterViewer.aspx?realm=ED&player=Shadyrules">Shadyrules</a><span class="team-info"> - Active ED(Horde) contributor since 2013-08-16</span></li>
-                    <li><a class="team-member" href="/CharacterViewer.aspx?realm=WSG&player=Gladys">Gladys</a><span class="team-info"> - Active ED(Horde) contributor since 2013-12-03</span></li>
+                    <li><a class="team-member" href="/CharacterViewer.aspx?realm=WSG&player=Gladys">Gladys</a><span class="team-info"> - Active WSG(Alliance) contributor since 2013-12-03</span></li>
                     <li><a class="team-member" href="/CharacterViewer.aspx?realm=WSG&player=Soge">Soge</a><span class="team-info"> - Active WSG(Alliance) contributor since 2013-09-07</span></li>
                     <li><a class="team-member" href="/CharacterViewer.aspx?realm=WSG&player=Bigfella">Bigfella</a><span class="team-info"> - Active WSG(Horde) contributor since 2013-12-03</span></li>
-                    <li><a class="team-member" href="/CharacterViewer.aspx?realm=ED&player=Oejesten">Oejesten</a><span class="team-info"> - Active ED(Horde) contributor since 2014-01-01</span></li>
+                    <li><a class="team-member" href="/CharacterViewer.aspx?realm=ED&player=Oejesten">Oejesten</a><span class="team-info"> - Active ED(Horde) contributor since 2014-01-01</span></li>--%>
                     <%--<li><a class="team-member" href="/CharacterViewer.aspx?realm=WSG&player=Virose">Lyq</a><span class="team-info"> - Active WSG(Alliance) contributor since 2013-11-04</span></li>
                     <li><a class="team-member" href="/CharacterViewer.aspx?realm=AlA&player=Goromi">Goromi</a><span class="team-info"> - Active AlA(Horde) contributor since 2013-08-29</span></li>--%>
-                    <li><a class="team-member" href="/Contributors.aspx">Everyone else</a><span class="team-info"> - Thanks all!</span></li>
+                    <%--<li><a class="team-member" href="/Contributors.aspx">Everyone else</a><span class="team-info"> - Thanks all!</span></li>--%>
+                    <li>Currently disabled. You can see a list of all active Contributors <a class="team-member" href="/Contributors.aspx">here</a><span class="team-info"> - Thanks all!</span></li>
                 </ul>
                 <h4>Extra thanks</h4>
                 <ul class="unstyled">

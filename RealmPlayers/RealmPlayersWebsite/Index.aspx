@@ -23,7 +23,7 @@
   </script>
     <div class="row index">
         <div class="span12 text-center">
-            <h1><span class="text-center">RealmPlayers</span><br /><span class='badge badge-inverse'>by Dilatazu</span></h1>
+            <h1><span class="text-center">RealmPlayers</span><%--<br /><span class='badge badge-inverse'>by Dilatazu</span>--%></h1>
             <div class="form-search text-center">
                 <%--<input type="text" class="span6" placeholder="Search a Guild or Player"/>--%>
                 <asp:Panel ID="SearchBox_Panel" runat="server" DefaultButton="SearchBox_Submit">
@@ -46,6 +46,7 @@
                                 <asp:ListItem Text="Warsong" Value="WSG"/>
                                 <asp:ListItem Text="Al'Akir" Value="AlA"/>
                                 <asp:ListItem Text="Rebirth" Value="REB"/>
+                                <asp:ListItem Text="Nostalrius" Value="NRB"/>
                                 <asp:ListItem Text="Archangel(TBC)" Value="ArA"/>
                             </asp:DropDownList>
                             <asp:DropDownList style="width:100px; margin: 10px 2.5px 0px 2.5px" ID="ddlRace" runat="server" onchange="this.style.color = this.options[this.selectedIndex].style.color;">
