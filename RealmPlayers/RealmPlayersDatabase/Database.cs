@@ -13,7 +13,7 @@ namespace VF_RealmPlayersDatabase
         {
             WowRealm[] loadRealms = _Realms;
             if (_Realms == null)
-                loadRealms = new WowRealm[] { WowRealm.Emerald_Dream, WowRealm.Warsong, WowRealm.Al_Akir, WowRealm.Valkyrie, WowRealm.VanillaGaming, WowRealm.Rebirth, WowRealm.Archangel };
+                loadRealms = new WowRealm[] { WowRealm.Nostalrius, WowRealm.Emerald_Dream, WowRealm.Warsong, WowRealm.Al_Akir, WowRealm.Valkyrie, WowRealm.VanillaGaming, WowRealm.Rebirth, WowRealm.Archangel };
             foreach (WowRealm loadRealm in loadRealms)
             {
                 try

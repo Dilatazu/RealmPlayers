@@ -69,6 +69,7 @@ namespace RealmPlayersServer.Code.Resources
 	        {WowRealm.VanillaGaming , "VG"},
 	        {WowRealm.Valkyrie , "VAL"},
 	        {WowRealm.Rebirth , "REB"},
+	        {WowRealm.Nostalrius , "NRB"},
 	        {WowRealm.Test_Server , "TSV"},
         };
         public static Dictionary<WowRealm, string> _RealmVisualString = new Dictionary<WowRealm, string>
@@ -82,6 +83,7 @@ namespace RealmPlayersServer.Code.Resources
 	        {WowRealm.VanillaGaming , "VanillaGaming"},
 	        {WowRealm.Valkyrie , "Valkyrie"},
 	        {WowRealm.Rebirth , "Rebirth"},
+	        {WowRealm.Nostalrius , "Nostalrius"},
 	        {WowRealm.Test_Server , "Test Server"},
         };
         public static Dictionary<int, string> _HordeRankVisualName = new Dictionary<int, string>

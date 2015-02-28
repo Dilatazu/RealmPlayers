@@ -38,6 +38,8 @@ namespace VF_RealmPlayersDatabase
                     return (3U << 24) + _ItemID;
                 case WowRealm.VanillaGaming:
                     return (4U << 24) + _ItemID;
+                case WowRealm.Nostalrius:
+                    return (5U << 24) + _ItemID;
                 default:
                     break;
             }

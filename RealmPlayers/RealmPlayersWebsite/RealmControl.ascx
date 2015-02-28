@@ -6,6 +6,7 @@
         <asp:ListItem Text="Warsong" Value="WSG" />
         <asp:ListItem Text="Al'Akir" Value="AlA" />
         <asp:ListItem Text="Rebirth" Value="REB" />
+        <asp:ListItem Text="Nostalrius" Value="REB" />
         <asp:ListItem Text="Archangel(TBC)" Value="ArA" />
     </asp:RadioButtonList>
 </div>
