@@ -31,25 +31,47 @@ namespace VF_RPDatabase
         public PVPSummary GetPVPSummary(WowRealm _Realm, string _Player)
         {
             PVPSummary retValue = null;
-            if (m_PVPSummaries.TryGetValue("" + (int)_Realm + _Player, out retValue) == false)
+            string realm = "" + (int)_Realm;
+            if (realm.Length > 1)
+            {
+                if ((int)_Realm > 99)
+                    throw new Exception("ERROR, REALM WAS INTENDED TO NEVER BE BIGGER THAN VALUE 99");
+                realm = "R" + (int)_Realm;
+            }
+
+            if (m_PVPSummaries.TryGetValue(realm + _Player, out retValue) == false)
                 return null;
 
             return retValue;
         }
         private void AddPVPSummary(WowRealm _Realm, string _Player, PVPSummary _PVPSummary)
         {
-            m_PVPSummaries.Add("" + (int)_Realm + _Player, _PVPSummary);
+            string realm = "" + (int)_Realm;
+            if (realm.Length > 1)
+            {
+                if ((int)_Realm > 99)
+                    throw new Exception("ERROR, REALM WAS INTENDED TO NEVER BE BIGGER THAN VALUE 99");
+                realm = "R" + (int)_Realm;
+            }
+            m_PVPSummaries.Add(realm + _Player, _PVPSummary);
         }
         public IEnumerable<KeyValuePair<string, PVPSummary>> GetPVPSummaries(WowRealm _Realm)
         {
             string realm = "" + (int)_Realm;
             if (realm.Length > 1)
-                throw new Exception("ERROR, REALM WAS INTENDED TO NEVER BE BIGGER THAN VALUE 9");
+            {
+                if ((int)_Realm > 99)
+                    throw new Exception("ERROR, REALM WAS INTENDED TO NEVER BE BIGGER THAN VALUE 99");
+                realm = "R" + (int)_Realm;
+            }
             return m_PVPSummaries.Where((_Value) => _Value.Key.StartsWith(realm));
         }
         public string GetPlayer(KeyValuePair<string, PVPSummary> _KeyValue)
         {
-            return _KeyValue.Key.Substring(1);
+            if (_KeyValue.Key.StartsWith("R"))
+                return _KeyValue.Key.Substring(3);
+            else
+                return _KeyValue.Key.Substring(1);
         }
 
         public PlayerSummaryDatabase()

@@ -19,14 +19,28 @@ namespace VF_RPDatabase
         public GuildSummary GetGuildSummary(WowRealm _Realm, string _GuildName)
         {
             GuildSummary retValue = null;
-            if (m_Guilds.TryGetValue("" + (int)_Realm + _GuildName, out retValue) == false)
+            string realm = "" + (int)_Realm;
+            if (realm.Length > 1)
+            {
+                if ((int)_Realm > 99)
+                    throw new Exception("ERROR, REALM WAS INTENDED TO NEVER BE BIGGER THAN VALUE 99");
+                realm = "R" + (int)_Realm;
+            }
+            if (m_Guilds.TryGetValue(realm + _GuildName, out retValue) == false)
                 return null;
 
             return retValue;
         }
         private void AddGuildSummary(GuildSummary _GuildSummary)
         {
-            m_Guilds.Add("" + (int)_GuildSummary.Realm + _GuildSummary.GuildName, _GuildSummary);
+            string realm = "" + (int)_GuildSummary.Realm;
+            if (realm.Length > 1)
+            {
+                if ((int)_GuildSummary.Realm > 99)
+                    throw new Exception("ERROR, REALM WAS INTENDED TO NEVER BE BIGGER THAN VALUE 99");
+                realm = "R" + (int)_GuildSummary.Realm;
+            }
+            m_Guilds.Add(realm + _GuildSummary.GuildName, _GuildSummary);
         }
 
         //public GuildSummary GetGuildSummary(string _GuildName)

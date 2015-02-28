@@ -175,6 +175,8 @@ namespace VF_RPDatabase
             string entityLinkStr = "" + realmIndex + _PlayerName;
             if (realmIndex > 9)
                 entityLinkStr = "R" + realmIndex + _PlayerName;
+            if (realmIndex > 99)
+                throw new Exception("ERROR, REALM WAS INTENDED TO NEVER BE BIGGER THAN VALUE 99");
             if(m_PlayerIDs.TryGetValue(entityLinkStr, out entityID) == true)
                 return entityID;
             
