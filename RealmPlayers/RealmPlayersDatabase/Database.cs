@@ -71,8 +71,16 @@ namespace VF_RealmPlayersDatabase
                 SavedVariablesParser.Document doc = new SavedVariablesParser.Document(_Contribution.GetFilename());
                 var xmlDoc = doc.ConvertToXMLDocument();
 
-                //Single addonVersion = Utility.ParseSingle(XMLUtility.GetChildValue(xmlDoc.DocumentElement, "VF_RealmPlayersVersion", ""));
-                
+                try
+                {
+                    string addonVersion = XMLUtility.GetChildValue(xmlDoc.DocumentElement, "VF_RealmPlayersVersion", "");
+                    if(Utility.ParseDouble(addonVersion) <= 1.58)
+                        return;
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogException(ex);
+                }
                 var dataNode = XMLUtility.GetChild(xmlDoc.DocumentElement, "VF_RealmPlayersData");
                 foreach (System.Xml.XmlNode playerNode in dataNode.ChildNodes)
                 {
