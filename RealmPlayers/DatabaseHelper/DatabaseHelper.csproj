@@ -43,13 +43,16 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="VF_RealmPlayersDatabase">
-      <HintPath>..\VF_RealmPlayersDatabase\bin\Release\VF_RealmPlayersDatabase.exe</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RealmPlayersDatabase\VF_RealmPlayersDatabase.csproj">
+      <Project>{ac235bce-181b-4b49-8abc-d1639d935373}</Project>
+      <Name>VF_RealmPlayersDatabase</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

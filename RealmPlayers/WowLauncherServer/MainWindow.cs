@@ -264,5 +264,22 @@ namespace VF_WoWLauncherServer
                 }
             }
         }
+
+        private void button10_Click(object sender, EventArgs e)
+        {
+            {
+                UploadID uploadID = new UploadID(245, new DateTime(635608414529980000L, DateTimeKind.Local));
+                Program.g_RPPDatabaseHandler.GetRealmDB(WowRealm.Nostalrius).PurgeGearContribution("Sultanen", uploadID);
+            }
+            {
+                UploadID uploadID = new UploadID(245, new DateTime(635608414529990000L, DateTimeKind.Local));
+                Program.g_RPPDatabaseHandler.GetRealmDB(WowRealm.Nostalrius).PurgeGearContribution("Sultanen", uploadID);
+            }
+            {
+                UploadID uploadID = new UploadID(245, new DateTime(635608414530000000L, DateTimeKind.Local));
+                Program.g_RPPDatabaseHandler.GetRealmDB(WowRealm.Nostalrius).PurgeGearContribution("Sultanen", uploadID);
+            }
+            Program.g_RPPDatabaseHandler.TriggerSaveDatabases();
+        }
     }
 }

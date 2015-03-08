@@ -49,6 +49,7 @@
             this.c_lsBetaUsers = new System.Windows.Forms.ListBox();
             this.c_cmsBetaUsers = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.button10 = new System.Windows.Forms.Button();
             this.c_cmsBetaUsers.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -242,11 +243,22 @@
             this.toolStripMenuItem1.Text = "Remove Beta Participant";
             this.toolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
             // 
+            // button10
+            // 
+            this.button10.Location = new System.Drawing.Point(13, 343);
+            this.button10.Name = "button10";
+            this.button10.Size = new System.Drawing.Size(120, 23);
+            this.button10.TabIndex = 18;
+            this.button10.Text = "Purge Sultanen";
+            this.button10.UseVisualStyleBackColor = true;
+            this.button10.Click += new System.EventHandler(this.button10_Click);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(533, 434);
+            this.Controls.Add(this.button10);
             this.Controls.Add(this.c_lsBetaUsers);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -297,6 +309,7 @@
         private System.Windows.Forms.ListBox c_lsBetaUsers;
         private System.Windows.Forms.ContextMenuStrip c_cmsBetaUsers;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
+        private System.Windows.Forms.Button button10;
     }
 }
 

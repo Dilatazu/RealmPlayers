@@ -198,6 +198,23 @@ namespace VF_RealmPlayersDatabase
                 PlayersHistory[playerData.Key].RollbackPlayer(playerData.Value, _Contributor);
             }
         }
+        public void PurgeGearContribution(string _Character, UploadID _UploadID)
+        {
+            try
+            {
+                var playerHistory = PlayersHistory[_Character];
+                var removeGearIndex = playerHistory.GearHistory.FindIndex((_Value) => _Value.Uploader.GetContributorID() == _UploadID.GetContributorID() && _Value.Uploader.GetTime() == _UploadID.GetTime());
+
+                if (removeGearIndex >= 0)
+                {
+                    playerHistory.GearHistory.RemoveAt(removeGearIndex);
+                    Logger.ConsoleWriteLine("Successfully removed Gear for Character: " + _Character, ConsoleColor.Cyan);
+                    Updated = true;
+                }
+            }
+            catch (Exception)
+            { }
+        }
         public void Rollback(DateTime _DateTime)
         {
             foreach (var playerData in Players)

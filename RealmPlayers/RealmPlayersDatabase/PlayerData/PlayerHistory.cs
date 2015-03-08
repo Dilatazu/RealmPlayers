@@ -160,6 +160,14 @@ namespace VF_RealmPlayersDatabase.PlayerData
             }
             return latestDateTime;
         }
+        public DateTime GetDateAtUploadNr(int _UploadNR, DateTime _DefaultValue)
+        {
+            var updates = GetUpdates();
+            if (updates.Count < _UploadNR)
+                _UploadNR = updates.Count - 1;
+
+            return updates[_UploadNR].GetTime();
+        }
         public PlayerHistory ExtractOldHistory(DateTime _NewestData, bool _RemoveOld)
         {
             PlayerHistory extractedHistory = new PlayerHistory();

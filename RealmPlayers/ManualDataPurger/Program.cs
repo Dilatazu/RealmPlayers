@@ -213,10 +213,17 @@ namespace ManualDataPurger
         }
         static void Main(string[] args)
         {
+#if true
+            FixDatabaseIntegrity("AlAkir", "Database\\Al_Akir\\PlayersHistoryData_Now.dat");
+#elif PURGE_PVP_2014_01_16
             DateTime betweenDate_MIN = new DateTime(2014, 1, 16, 1, 0, 0);
             DateTime betweenDate_HonorMAX = new DateTime(2014, 1, 16, 15, 0, 0);
             DateTime betweenDate_ItemMAX = new DateTime(2014, 1, 17, 1, 0, 0);
 
+            FixDatabaseIntegrity("EmeraldDream", "Database\\Emerald_Dream\\PlayersHistoryData_Now.dat");
+            FixDatabaseIntegrity("Warsong", "Database\\Warsong\\PlayersHistoryData_Now.dat");
+            FixDatabaseIntegrity("AlAkir", "Database\\Al_Akir\\PlayersHistoryData_Now.dat");
+#else
             //ItemDropDatabase itemDropDatabase = new ItemDropDatabase("Database\\");
             //VF_RealmPlayersDatabase.ContributorHandler.Initialize("Database\\");
 
@@ -228,12 +235,10 @@ namespace ManualDataPurger
             //PurgeDatabase("Warsong", "Database\\Warsong\\PlayersHistoryData_Now.dat", "***REMOVED***");
             //PurgeDatabase("AlAkir", "Database\\Al_Akir\\PlayersHistoryData_Now.dat", "***REMOVED***");
 
-            FixDatabaseIntegrity("EmeraldDream", "Database\\Emerald_Dream\\PlayersHistoryData_Now.dat");
-            FixDatabaseIntegrity("Warsong", "Database\\Warsong\\PlayersHistoryData_Now.dat");
-            FixDatabaseIntegrity("AlAkir", "Database\\Al_Akir\\PlayersHistoryData_Now.dat");
-
             //VF_RealmPlayersDatabase.ContributorHandler.RemoveContributor("***REMOVED***");
             //VF_RealmPlayersDatabase.ContributorHandler.Save("Database\\");
+#endif
+
         }
     }
 }

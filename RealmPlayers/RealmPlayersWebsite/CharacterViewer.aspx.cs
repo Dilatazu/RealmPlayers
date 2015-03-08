@@ -683,6 +683,7 @@ namespace RealmPlayersServer
         {
             string playerStr = PageUtility.GetQueryString(Request, "player");
             string dateStr = Request.QueryString.Get("date");
+            int uploadNR = PageUtility.GetQueryInt(Request, "uploadnumber", -1);
             DateTime date = DateTime.MaxValue;
             if (dateStr != null)
             {
@@ -706,6 +707,12 @@ namespace RealmPlayersServer
             if(DatabaseAccess.TryGetRealmPlayersHistory(this, realm) != null)
                 playerHistory = DatabaseAccess.FindRealmPlayerHistory(this, realm, playerStr);
             
+            string m_PageExtraInfo = "";
+
+            if (date == DateTime.MaxValue && uploadNR != -1)
+            {
+                date = playerHistory.GetDateAtUploadNr(uploadNR, DateTime.MaxValue);
+            }
             if (date == DateTime.MaxValue)
             {
                 player = DatabaseAccess.FindRealmPlayer(this, realm, playerStr, NotLoadedDecision.RedirectAndWait);
@@ -718,6 +725,11 @@ namespace RealmPlayersServer
                     PageUtility.RedirectErrorLoading(this, StaticValues.ConvertRealmParam(realm) + "-history");
                 if (playerHistory.GetPlayerAtTime(playerStr, realm, date, out player) == false)
                     return;
+                if(PageUtility.GetQueryString(Request, "gearuploadid") == "debug")
+                {
+                    var uploader = playerHistory.GetGearItemAtTime(date).Uploader;
+                    m_PageExtraInfo = "<br />UploadID(" + uploader.GetContributorID() + ", " + uploader.GetTime().Ticks.ToString() + " " + uploader.GetTime().Kind.ToString() + ")";
+                }
             }
 
             m_BreadCrumbHTML = new MvcHtmlString(PageUtility.BreadCrumb_AddHome() 
@@ -797,7 +809,7 @@ namespace RealmPlayersServer
                 + "<option value='Honor' " + ((graphStr == "Honor") ? "selected='selected'" : "") + ">Honor</option>"
                 + "</select>";
             }
-            m_ChartSection = new MvcHtmlString(chartSection);
+            m_ChartSection = new MvcHtmlString(chartSection + m_PageExtraInfo);
         }
     }
 }

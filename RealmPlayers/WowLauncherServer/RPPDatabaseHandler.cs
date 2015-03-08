@@ -114,6 +114,10 @@ namespace VF_WoWLauncherServer
                 return;
             UpdateSummaryDatabases();
         }
+        public void TriggerSaveDatabases()
+        {
+            m_Database.SaveRealmDatabases(m_RPPDBFolder + "Database\\");
+        }
         public static string g_AddonContributionsBackupFolder = VF_RealmPlayersDatabase.Utility.DefaultServerLocation + "VF_DataServer\\AddonContributionsBackup\\";
         void BackupRPPContribution(string _Filename)
         {

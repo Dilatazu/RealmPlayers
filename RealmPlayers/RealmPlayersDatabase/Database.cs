@@ -115,6 +115,11 @@ namespace VF_RealmPlayersDatabase
                 Logger.LogException(ex);
             }
         }
+        public void PurgeGearContribution(WowRealm _Realm, string _Character, UploadID _UploadID)
+        {
+            RealmDatabase realmDB = m_Realms[_Realm];
+            realmDB.PurgeGearContribution(_Character, _UploadID);
+        }
         public RealmDatabase GetRealm(WowRealm _Realm)
         {
             if (m_Realms.ContainsKey(_Realm) == false)
