@@ -19,5 +19,17 @@ namespace VF_RaidDamageDatabase
 
             return method + ":" + line;
         }
+
+        public static string GetRealmPreString(VF_RealmPlayersDatabase.WowRealm _Realm)
+        {
+            string realm = "" + (int)_Realm;
+            if (realm.Length > 1)
+            {
+                if ((int)_Realm > 99)
+                    throw new Exception("ERROR, REALM WAS INTENDED TO NEVER BE BIGGER THAN VALUE 99");
+                realm = "R" + (int)_Realm;
+            }
+            return realm;
+        }
     }
 }

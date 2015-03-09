@@ -61,7 +61,7 @@ namespace VF_RDDatabase
                                 {
                                     if (playerData.Item2.Deaths > 0 || playerData.Item2.Damage > 0 || playerData.Item2.RawHeal > 0)
                                     {//If check can be removed if SummaryDatabase is fresh generated after 2014-04-12. This check exists in BossFight.cs generation aswell
-                                        string playerKeyName = "" + (int)groupRC.Value.m_Realm + playerData.Item1;
+                                        string playerKeyName = Utility.GetRealmPreString(groupRC.Value.m_Realm) + playerData.Item1;
                                         if (m_PlayerSummaries.ContainsKey(playerKeyName) == false)
                                         {
                                             m_PlayerSummaries.Add(playerKeyName, new PlayerSummary(playerData.Item1, groupRC.Value.Realm));
@@ -80,7 +80,6 @@ namespace VF_RDDatabase
                 }
             }
         }
-
         public PlayerSummary GetPlayerSummary(string _Player, WowRealm _Realm)
         {
             if (m_PlayerSummaries.Count == 0)
@@ -88,7 +87,7 @@ namespace VF_RDDatabase
                 GeneratePlayerSummaries();
             }
             PlayerSummary retValue = null;
-            if (m_PlayerSummaries.TryGetValue("" + (int)_Realm + _Player, out retValue) == false)
+            if (m_PlayerSummaries.TryGetValue(Utility.GetRealmPreString(_Realm) + _Player, out retValue) == false)
                 return null;
 
             return retValue;
@@ -97,14 +96,14 @@ namespace VF_RDDatabase
         public GroupRaidCollection GetGroupRC(WowRealm _Realm, string _GroupName)
         {
             GroupRaidCollection retValue = null;
-            if (m_GroupRCs.TryGetValue("" + (int)_Realm + _GroupName, out retValue) == false)
+            if (m_GroupRCs.TryGetValue(Utility.GetRealmPreString(_Realm) + _GroupName, out retValue) == false)
                 return null;
 
             return retValue;
         }
         private void AddGroupRC(GroupRaidCollection _GroupRaidCollection)
         {
-            m_GroupRCs.Add("" + (int)_GroupRaidCollection.Realm + _GroupRaidCollection.GroupName, _GroupRaidCollection);
+            m_GroupRCs.Add(Utility.GetRealmPreString(_GroupRaidCollection.Realm) + _GroupRaidCollection.GroupName, _GroupRaidCollection);
         }
 
         public void UpdateDatabase(Old_RaidCollection _RaidCollection, Func<string, Old_FightDataCollection> _CachedGetFightDataCollectionFunc, Func<WowRealm, VF_RaidDamageDatabase.RealmDB> _GetRealmDB)

@@ -29,14 +29,14 @@ namespace VF_RDDatabase
         public GroupInfo GetGroupInfo(WowRealm _Realm, string _GroupName)
         {
             GroupInfo retValue = null;
-            if (m_GroupInfos.TryGetValue("" + (int)_Realm + _GroupName, out retValue) == false)
+            if (m_GroupInfos.TryGetValue(Utility.GetRealmPreString(_Realm) + _GroupName, out retValue) == false)
                 return null;
 
             return retValue;
         }
         private void AddGroupInfo(GroupInfo _GroupInfo)
         {
-            m_GroupInfos.Add("" + (int)_GroupInfo.Realm + _GroupInfo.GroupName, _GroupInfo);
+            m_GroupInfos.Add(Utility.GetRealmPreString(_GroupInfo.Realm) + _GroupInfo.GroupName, _GroupInfo);
         }
         public void UpdateDatabase(SummaryDatabase _SummaryDatabase)
         {

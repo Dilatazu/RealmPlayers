@@ -31,14 +31,7 @@ namespace VF_RPDatabase
         public PVPSummary GetPVPSummary(WowRealm _Realm, string _Player)
         {
             PVPSummary retValue = null;
-            string realm = "" + (int)_Realm;
-            if (realm.Length > 1)
-            {
-                if ((int)_Realm > 99)
-                    throw new Exception("ERROR, REALM WAS INTENDED TO NEVER BE BIGGER THAN VALUE 99");
-                realm = "R" + (int)_Realm;
-            }
-
+            string realm = VF_RealmPlayersDatabase.Utility.GetRealmPreString(_Realm);
             if (m_PVPSummaries.TryGetValue(realm + _Player, out retValue) == false)
                 return null;
 
@@ -46,24 +39,11 @@ namespace VF_RPDatabase
         }
         private void AddPVPSummary(WowRealm _Realm, string _Player, PVPSummary _PVPSummary)
         {
-            string realm = "" + (int)_Realm;
-            if (realm.Length > 1)
-            {
-                if ((int)_Realm > 99)
-                    throw new Exception("ERROR, REALM WAS INTENDED TO NEVER BE BIGGER THAN VALUE 99");
-                realm = "R" + (int)_Realm;
-            }
-            m_PVPSummaries.Add(realm + _Player, _PVPSummary);
+            m_PVPSummaries.Add(VF_RealmPlayersDatabase.Utility.GetRealmPreString(_Realm) + _Player, _PVPSummary);
         }
         public IEnumerable<KeyValuePair<string, PVPSummary>> GetPVPSummaries(WowRealm _Realm)
         {
-            string realm = "" + (int)_Realm;
-            if (realm.Length > 1)
-            {
-                if ((int)_Realm > 99)
-                    throw new Exception("ERROR, REALM WAS INTENDED TO NEVER BE BIGGER THAN VALUE 99");
-                realm = "R" + (int)_Realm;
-            }
+            string realm = VF_RealmPlayersDatabase.Utility.GetRealmPreString(_Realm);
             return m_PVPSummaries.Where((_Value) => _Value.Key.StartsWith(realm));
         }
         public string GetPlayer(KeyValuePair<string, PVPSummary> _KeyValue)

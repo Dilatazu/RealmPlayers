@@ -171,12 +171,8 @@ namespace VF_RPDatabase
         private UInt64 GetEntityID(WowRealm _Realm, string _PlayerName)
         {
             UInt64 entityID = UInt64.MaxValue;
-            int realmIndex = (int)_Realm;
-            string entityLinkStr = "" + realmIndex + _PlayerName;
-            if (realmIndex > 9)
-                entityLinkStr = "R" + realmIndex + _PlayerName;
-            if (realmIndex > 99)
-                throw new Exception("ERROR, REALM WAS INTENDED TO NEVER BE BIGGER THAN VALUE 99");
+            
+            string entityLinkStr = VF_RealmPlayersDatabase.Utility.GetRealmPreString(_Realm) + _PlayerName;
             if(m_PlayerIDs.TryGetValue(entityLinkStr, out entityID) == true)
                 return entityID;
             

@@ -11,6 +11,18 @@ namespace VF_RealmPlayersDatabase
 {
     public class Utility
     {
+        public static string GetRealmPreString(WowRealm _Realm)
+        {
+            string realm = "" + (int)_Realm;
+            if (realm.Length > 1)
+            {
+                if ((int)_Realm > 99)
+                    throw new Exception("ERROR, REALM WAS INTENDED TO NEVER BE BIGGER THAN VALUE 99");
+                realm = "R" + (int)_Realm;
+            }
+            return realm;
+        }
+
         public static string DefaultServerLocation = "R:\\";
         public static string DefaultDebugLocation = "D:\\";
 
