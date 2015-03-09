@@ -278,6 +278,10 @@ namespace VF_WoWLauncherServer
             {
                 UploadID uploadID = new UploadID(245, new DateTime(635608414530000000L, DateTimeKind.Local));
                 Program.g_RPPDatabaseHandler.GetRealmDB(WowRealm.Nostalrius).PurgeGearContribution("Sultanen", uploadID);
+                Program.g_RPPDatabaseHandler.GetRealmDB(WowRealm.Nostalrius).PurgeGearContribution("Sultanen", uploadID);//Do this command twice since there are 2 entries
+            }
+            {
+                Program.g_RPPDatabaseHandler.GetRealmDB(WowRealm.Nostalrius).PurgeExtraDataBefore("Sultanen", new DateTime(2015, 3, 8));
             }
             Program.g_RPPDatabaseHandler.TriggerSaveDatabases();
         }

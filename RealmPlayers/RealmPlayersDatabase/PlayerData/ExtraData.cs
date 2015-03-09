@@ -187,5 +187,66 @@ namespace VF_RealmPlayersDatabase.PlayerData
             catch (Exception)
             { }
         }
+        public bool PurgeBefore(DateTime _PurgeDate)
+        {
+            bool purgeResult = false;
+            for(int i = 0; i < Companions.Count; ++i)
+            {
+                for(int u = 0; u < Companions[i].Uploaders.Count; ++u)
+                {
+                    if(Companions[i].Uploaders[u].GetTime() < _PurgeDate)
+                    {
+                        Companions[i].Uploaders.RemoveAt(u);
+                        --u;
+                    }
+                }
+                if(Companions[i].Uploaders.Count <= 0)
+                {
+                    Logger.ConsoleWriteLine("Removed Companion: " + Companions[i].Name, ConsoleColor.Cyan);
+                    purgeResult = true;
+                    Companions.RemoveAt(i);
+                    --i;
+                }
+            }
+
+            for (int i = 0; i < Pets.Count; ++i)
+            {
+                for (int u = 0; u < Pets[i].Uploaders.Count; ++u)
+                {
+                    if (Pets[i].Uploaders[u].GetTime() < _PurgeDate)
+                    {
+                        Pets[i].Uploaders.RemoveAt(u);
+                        --u;
+                    }
+                }
+                if (Pets[i].Uploaders.Count <= 0)
+                {
+                    Logger.ConsoleWriteLine("Removed Pet: " + Pets[i].Name, ConsoleColor.Cyan);
+                    purgeResult = true;
+                    Pets.RemoveAt(i);
+                    --i;
+                }
+            }
+
+            for (int i = 0; i < Mounts.Count; ++i)
+            {
+                for (int u = 0; u < Mounts[i].Uploaders.Count; ++u)
+                {
+                    if (Mounts[i].Uploaders[u].GetTime() < _PurgeDate)
+                    {
+                        Mounts[i].Uploaders.RemoveAt(u);
+                        --u;
+                    }
+                }
+                if (Mounts[i].Uploaders.Count <= 0)
+                {
+                    Logger.ConsoleWriteLine("Removed Mount: " + Mounts[i].Mount, ConsoleColor.Cyan);
+                    purgeResult = true;
+                    Mounts.RemoveAt(i);
+                    --i;
+                }
+            }
+            return purgeResult;
+        }
     }
 }

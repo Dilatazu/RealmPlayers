@@ -215,6 +215,12 @@ namespace VF_RealmPlayersDatabase
             catch (Exception)
             { }
         }
+        public void PurgeExtraDataBefore(string _Character, DateTime _PurgeDate)
+        {
+            var extraData = m_PlayersExtraData[_Character];
+            if (extraData.PurgeBefore(_PurgeDate) == true)
+                Updated = true;
+        }
         public void Rollback(DateTime _DateTime)
         {
             foreach (var playerData in Players)
