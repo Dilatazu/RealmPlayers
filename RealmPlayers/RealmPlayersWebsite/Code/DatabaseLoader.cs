@@ -20,10 +20,13 @@ namespace RealmPlayersServer
             var lastDatabaseUpdateTime = System.IO.File.GetLastWriteTimeUtc(Constants.RPPDbDir + "Database\\Emerald_Dream\\PlayersData.dat");
             var wsgUpdateTime = System.IO.File.GetLastWriteTimeUtc(Constants.RPPDbDir + "Database\\Warsong\\PlayersData.dat");
             var aaUpdateTime = System.IO.File.GetLastWriteTimeUtc(Constants.RPPDbDir + "Database\\Al_Akir\\PlayersData.dat");
+            var nosUpdateTime = System.IO.File.GetLastWriteTimeUtc(Constants.RPPDbDir + "Database\\Nostalrius\\PlayersData.dat");
             if (wsgUpdateTime > lastDatabaseUpdateTime)
                 lastDatabaseUpdateTime = wsgUpdateTime;
             if (aaUpdateTime > lastDatabaseUpdateTime)
                 lastDatabaseUpdateTime = aaUpdateTime;
+            if (nosUpdateTime > lastDatabaseUpdateTime)
+                lastDatabaseUpdateTime = nosUpdateTime;
             return lastDatabaseUpdateTime;
         }
         public static RPPDatabase LoadRPPDatabase(bool _FirstTimeLoading = false)

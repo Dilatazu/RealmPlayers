@@ -77,7 +77,7 @@ namespace RealmPlayersServer
                 foreach (var inspection in statsNRB.m_PlayerInspects) inspectsNRB += inspection.Value;
                 foreach (var inspection in statsArA.m_PlayerInspects) inspectsArA += inspection.Value;
 
-                int totalInspects = inspectsED + inspectsWSG + inspectsAlA + inspectsREB + inspectsArA;
+                int totalInspects = inspectsED + inspectsWSG + inspectsAlA + inspectsREB + inspectsNRB + inspectsArA;
                 DateTime earliestActive = statsED.m_EarliestActiveUTC;
                 earliestActive = (statsWSG.m_EarliestActiveUTC < earliestActive ? statsWSG.m_EarliestActiveUTC : earliestActive);
                 earliestActive = (statsAlA.m_EarliestActiveUTC < earliestActive ? statsAlA.m_EarliestActiveUTC : earliestActive);
