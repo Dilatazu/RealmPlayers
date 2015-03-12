@@ -40,19 +40,21 @@ namespace RealmPlayersServer.Code
     public class ContributorStatistics
     {
         static Dictionary<WowRealm, Dictionary<int, ContributorStatisticItem>> sm_ContributorStatisticData = new Dictionary<WowRealm, Dictionary<int, ContributorStatisticItem>>();
+        static DateTime sm_LastGenerationTime = DateTime.MinValue;
         static System.Threading.Tasks.Task sm_LoadTask = null;
         static object sm_LoadTaskMutex = new object();
         public static void AssertInitialize(RPPDatabase _Database, bool _WaitUntilLoaded = false)
         {
             lock(sm_LoadTaskMutex)
             {
-                if (sm_LoadTask == null)
+                if (sm_LoadTask == null || (DateTime.UtcNow - sm_LastGenerationTime).TotalMinutes > 600) //10 hours
                 {
+                    sm_LastGenerationTime = DateTime.UtcNow;
                     sm_LoadTask = new System.Threading.Tasks.Task(new Action(() => { Thread_GenerateData(_Database); }));
                     sm_LoadTask.Start();
                 }
             }
-            if (_WaitUntilLoaded == true)
+            if (_WaitUntilLoaded == true && sm_LoadTask.IsCompleted == false)
                 sm_LoadTask.Wait();
         }
         public static bool IsInitialized()
@@ -69,15 +71,15 @@ namespace RealmPlayersServer.Code
         {
             for (int i = 0; i < 5; ++i)
             {
-                sm_ContributorStatisticData = new Dictionary<WowRealm, Dictionary<int, ContributorStatisticItem>>();
+                var generatedContributorStatisticData = new Dictionary<WowRealm, Dictionary<int, ContributorStatisticItem>>();
                 try
                 {
                     ContributorStatisticItem lastUsedCSI = new ContributorStatisticItem();
                     foreach (var realm in _Database.GetRealms())
                     {
-                        if (sm_ContributorStatisticData.ContainsKey(realm.Key) == false)
-                            sm_ContributorStatisticData.Add(realm.Key, new Dictionary<int, ContributorStatisticItem>());
-                        var realmCSD = sm_ContributorStatisticData[realm.Key];
+                        if (generatedContributorStatisticData.ContainsKey(realm.Key) == false)
+                            generatedContributorStatisticData.Add(realm.Key, new Dictionary<int, ContributorStatisticItem>());
+                        var realmCSD = generatedContributorStatisticData[realm.Key];
 
                         foreach (var playerHistory in realm.Value.PlayersHistory)
                         {
@@ -95,6 +97,7 @@ namespace RealmPlayersServer.Code
                             }
                         }
                     }
+                    sm_ContributorStatisticData = generatedContributorStatisticData;
                     break;
                 }
                 catch (Exception ex)
