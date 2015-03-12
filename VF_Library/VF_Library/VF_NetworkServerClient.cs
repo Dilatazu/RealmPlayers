@@ -165,6 +165,18 @@ namespace VF
                     m_CurrentReceiving = false;
                 }
             }
+            catch(System.Net.Sockets.SocketException ex)
+            {
+                m_CurrentReceiving = false;
+                if (ex.NativeErrorCode.Equals(10054)) //WSAECONNRESET "An existing connection was forcibly closed by the remote host"
+                {
+                    //Do nothing. just shutdown connection
+                }
+                else
+                {
+                    m_Exceptions.Enqueue(ex);
+                }
+            }
             catch (Exception ex)
             {
                 m_Exceptions.Enqueue(ex);

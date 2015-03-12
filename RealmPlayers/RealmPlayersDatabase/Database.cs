@@ -54,7 +54,7 @@ namespace VF_RealmPlayersDatabase
             {
                 foreach (var purgeTask in purgeTasks)
                 {
-                    purgeTask.Wait(120 * 1000);//120 sekunder(2 minuter)
+                    purgeTask.Wait(1200 * 1000);//1200 sekunder(20 minuter)
                 }
             }
         }
