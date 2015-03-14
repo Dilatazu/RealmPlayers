@@ -214,15 +214,15 @@ namespace VF_WoWLauncher
             catch (Exception ex) { Logger.LogException(ex); }
             return "";
         }
-        public static List<string> GetAddonsChangedSince(DateTime _LastCheckTime)
-        {
-            List<string> retValue = new List<string>();
+        //public static List<string> GetAddonsChangedSince(DateTime _LastCheckTime)
+        //{
+        //    List<string> retValue = new List<string>();
 
-            retValue.Add("VF_RealmPlayers");
-            retValue.Add("VF_RaidDamage");
-            retValue.Add("VF_HealingInformation");
-            return null;
-        }
+        //    retValue.Add("VF_RealmPlayers");
+        //    retValue.Add("VF_RaidDamage");
+        //    retValue.Add("VF_HealingInformation");
+        //    return null;
+        //}
         internal static List<string> SendAddonData(string _UserID, string _AddonName, WowVersionEnum _WowVersion, string _ClearLuaVariableName, int _LuaVariableDataLengthThreshold, out bool _SentAll)
         {
             var savedVariableFiles = WowUtility.GetSavedVariableFilePaths(_AddonName, _WowVersion);//For Accounts only
