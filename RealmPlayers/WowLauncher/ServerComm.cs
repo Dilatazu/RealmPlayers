@@ -73,79 +73,90 @@ namespace VF_WoWLauncher
         internal static bool PeekAddonUpdates(int _MinutesSinceLastPeek)
         {
             VF.NetworkClient netClient = new VF.NetworkClient(g_Host, g_Port);
-            
-            {
-                VF.NetworkOutgoingMessage newMessage = netClient.CreateMessage();
-                WLN_RequestPacket_AddonUpdateInfoPeek request = new WLN_RequestPacket_AddonUpdateInfoPeek();
-                request.UserID = Settings.UserID;
-                request.LauncherVersion = StaticValues.LauncherVersion;
-                request.MinutesSinceLastPeek = _MinutesSinceLastPeek;
 
-                newMessage.WriteByte((byte)WLN_PacketType.Request_AddonUpdateInfoPeek);
-                newMessage.WriteClass(request);
-                netClient.SendMessage(newMessage);
-            }
-            WLN_ResponsePacket_AddonUpdateInfoPeek response = new WLN_ResponsePacket_AddonUpdateInfoPeek();
-            if (netClient.RecvPacket_VF(WLN_PacketType.Response_AddonUpdateInfoPeek, out response) == true)
+            try
             {
-                if(response.AddonUpdatesAvailable != null)
                 {
-                    return response.AddonUpdatesAvailable.Count > 0;
+                    VF.NetworkOutgoingMessage newMessage = netClient.CreateMessage();
+                    WLN_RequestPacket_AddonUpdateInfoPeek request = new WLN_RequestPacket_AddonUpdateInfoPeek();
+                    request.UserID = Settings.UserID;
+                    request.LauncherVersion = StaticValues.LauncherVersion;
+                    request.MinutesSinceLastPeek = _MinutesSinceLastPeek;
+
+                    newMessage.WriteByte((byte)WLN_PacketType.Request_AddonUpdateInfoPeek);
+                    newMessage.WriteClass(request);
+                    netClient.SendMessage(newMessage);
+                }
+                WLN_ResponsePacket_AddonUpdateInfoPeek response = new WLN_ResponsePacket_AddonUpdateInfoPeek();
+                if (netClient.RecvPacket_VF(WLN_PacketType.Response_AddonUpdateInfoPeek, out response) == true)
+                {
+                    if (response.AddonUpdatesAvailable != null)
+                    {
+                        return response.AddonUpdatesAvailable.Count > 0;
+                    }
                 }
             }
-            netClient.Disconnect();
+            finally
+            {
+                netClient.Disconnect();
+            }
             return false;
         }
         internal static List<AddonUpdateInfo> GetAddonUpdateInfos(List<string> _AddonNames, WowVersionEnum _WowVersion)
         {
             VF.NetworkClient netClient = new VF.NetworkClient(g_Host, g_Port);
-
-            //VF.NetworkIncommingMessage msg;
-            {
-                VF.NetworkOutgoingMessage newMessage = netClient.CreateMessage();
-                WLN_RequestPacket_AddonUpdateInfoNew request = new WLN_RequestPacket_AddonUpdateInfoNew();
-                request.UserID = Settings.UserID;
-                request.LauncherVersion = StaticValues.LauncherVersion;
-                request.WowVersion = _WowVersion;
-                for (int i = 0; i < _AddonNames.Count; ++i)
-                {
-                    var addonUpdateInfo = new WLN_RequestPacket_AddonUpdateInfo();
-                    addonUpdateInfo.AddonName = _AddonNames[i];
-                    var addonInfo = InstalledAddons.GetAddonInfo(_AddonNames[i], _WowVersion);
-                    if (addonInfo != null)
-                        addonUpdateInfo.CurrentVersion = addonInfo.m_VersionString;
-                    else
-                        addonUpdateInfo.CurrentVersion = "0.0";
-                    request.Addons.Add(addonUpdateInfo);
-                }
-                newMessage.WriteByte((byte)WLN_PacketType.Request_AddonUpdateInfoNew);
-                newMessage.WriteClass(request);
-                netClient.SendMessage(newMessage);
-            }
-            List<WLN_ResponsePacket_AddonUpdateInfo> recvAddonUpdateInfos = null;
-
             List<AddonUpdateInfo> retList = new List<AddonUpdateInfo>();
-            if (netClient.RecvPacket_VF(WLN_PacketType.Response_AddonUpdateInfo, out recvAddonUpdateInfos) == true)
+            try
             {
-                foreach (var recvAddonUpdateInfo in recvAddonUpdateInfos)
+                //VF.NetworkIncommingMessage msg;
                 {
-                    if (recvAddonUpdateInfo.AddonName == "null")
-                        continue;
-                    AddonUpdateInfo addonUpdateInfo = new AddonUpdateInfo();
-                    addonUpdateInfo.AddonName = recvAddonUpdateInfo.AddonName;
-                    addonUpdateInfo.InstalledAddonInfo = InstalledAddons.GetAddonInfo(recvAddonUpdateInfo.AddonName, _WowVersion);
-                    addonUpdateInfo.CurrentVersion = recvAddonUpdateInfo.CurrentVersion;
-                    addonUpdateInfo.UpdateVersion = recvAddonUpdateInfo.UpdateVersion;
-                    addonUpdateInfo.UpdateDescription = recvAddonUpdateInfo.UpdateDescription;
-                    addonUpdateInfo.AddonPackageDownloadFTP = recvAddonUpdateInfo.AddonPackageDownloadFTP;
-                    addonUpdateInfo.ClearAccountSavedVariablesRequired = recvAddonUpdateInfo.ClearAccountSavedVariablesRequired;
-                    addonUpdateInfo.UpdateSubmitter = recvAddonUpdateInfo.UpdateSubmitter;
-                    addonUpdateInfo.UpdateImportance = recvAddonUpdateInfo.UpdateImportance;
-                    addonUpdateInfo.MoreInfoSite = recvAddonUpdateInfo.MoreInfoSite;
-                    retList.Add(addonUpdateInfo);
+                    VF.NetworkOutgoingMessage newMessage = netClient.CreateMessage();
+                    WLN_RequestPacket_AddonUpdateInfoNew request = new WLN_RequestPacket_AddonUpdateInfoNew();
+                    request.UserID = Settings.UserID;
+                    request.LauncherVersion = StaticValues.LauncherVersion;
+                    request.WowVersion = _WowVersion;
+                    for (int i = 0; i < _AddonNames.Count; ++i)
+                    {
+                        var addonUpdateInfo = new WLN_RequestPacket_AddonUpdateInfo();
+                        addonUpdateInfo.AddonName = _AddonNames[i];
+                        var addonInfo = InstalledAddons.GetAddonInfo(_AddonNames[i], _WowVersion);
+                        if (addonInfo != null)
+                            addonUpdateInfo.CurrentVersion = addonInfo.m_VersionString;
+                        else
+                            addonUpdateInfo.CurrentVersion = "0.0";
+                        request.Addons.Add(addonUpdateInfo);
+                    }
+                    newMessage.WriteByte((byte)WLN_PacketType.Request_AddonUpdateInfoNew);
+                    newMessage.WriteClass(request);
+                    netClient.SendMessage(newMessage);
+                }
+                List<WLN_ResponsePacket_AddonUpdateInfo> recvAddonUpdateInfos = null;
+
+                if (netClient.RecvPacket_VF(WLN_PacketType.Response_AddonUpdateInfo, out recvAddonUpdateInfos) == true)
+                {
+                    foreach (var recvAddonUpdateInfo in recvAddonUpdateInfos)
+                    {
+                        if (recvAddonUpdateInfo.AddonName == "null")
+                            continue;
+                        AddonUpdateInfo addonUpdateInfo = new AddonUpdateInfo();
+                        addonUpdateInfo.AddonName = recvAddonUpdateInfo.AddonName;
+                        addonUpdateInfo.InstalledAddonInfo = InstalledAddons.GetAddonInfo(recvAddonUpdateInfo.AddonName, _WowVersion);
+                        addonUpdateInfo.CurrentVersion = recvAddonUpdateInfo.CurrentVersion;
+                        addonUpdateInfo.UpdateVersion = recvAddonUpdateInfo.UpdateVersion;
+                        addonUpdateInfo.UpdateDescription = recvAddonUpdateInfo.UpdateDescription;
+                        addonUpdateInfo.AddonPackageDownloadFTP = recvAddonUpdateInfo.AddonPackageDownloadFTP;
+                        addonUpdateInfo.ClearAccountSavedVariablesRequired = recvAddonUpdateInfo.ClearAccountSavedVariablesRequired;
+                        addonUpdateInfo.UpdateSubmitter = recvAddonUpdateInfo.UpdateSubmitter;
+                        addonUpdateInfo.UpdateImportance = recvAddonUpdateInfo.UpdateImportance;
+                        addonUpdateInfo.MoreInfoSite = recvAddonUpdateInfo.MoreInfoSite;
+                        retList.Add(addonUpdateInfo);
+                    }
                 }
             }
-            netClient.Disconnect();
+            finally
+            {
+                netClient.Disconnect();
+            }
             return retList;
         }
         public static string DownloadAddonPackage(string _FTPDownloadAddress, int _AddonPackageFileSize, Action<float> _DownloadProgress = null)
