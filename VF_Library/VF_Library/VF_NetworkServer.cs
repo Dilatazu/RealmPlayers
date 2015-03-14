@@ -87,7 +87,24 @@ namespace VF
                 {
                     m_Clients.Add(serverClient);
                 }
-                serverClient._StartReceive();
+                try
+                {
+                    serverClient._StartReceive();
+                }
+                catch (Exception ex)
+                {
+                    try
+                    {
+                        serverClient.Disconnect();
+                    }
+                    catch (Exception)
+                    {
+                    }
+                    lock (m_Clients)
+                    {
+                        m_Clients.Remove(serverClient);
+                    }
+                }
                 m_ListenerSocket.BeginAccept(new AsyncCallback(AcceptCallback), this);
             }
             catch (Exception ex)
