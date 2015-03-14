@@ -71,11 +71,20 @@ namespace VF_RealmPlayersDatabase
                 SavedVariablesParser.Document doc = new SavedVariablesParser.Document(_Contribution.GetFilename());
                 var xmlDoc = doc.ConvertToXMLDocument();
 
+                WowVersionEnum wowVersion = WowVersionEnum.Unknown;
                 try
                 {
-                    string addonVersion = XMLUtility.GetChildValue(xmlDoc.DocumentElement, "VF_RealmPlayersVersion", "");
-                    if(Utility.ParseDouble(addonVersion) <= 1.58)
-                        return;
+                    string addonVersion = XMLUtility.GetChildValue(xmlDoc.DocumentElement, "VF_RealmPlayersVersion", "0.0");
+                    if (addonVersion.Split('.').Length == 2) //VF_RealmPlayers
+                    {
+                        if (Utility.ParseDouble(addonVersion) <= 1.58)
+                            return;
+                        wowVersion = WowVersionEnum.Vanilla;
+                    }
+                    else //VF_RealmPlayersTBC
+                    {
+                        wowVersion = WowVersionEnum.TBC;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -90,6 +99,14 @@ namespace VF_RealmPlayersDatabase
                         {
                             string realmStr = PlayerData.DataParser.ParseRealm(playerNode);
                             WowRealm realm = StaticValues.ConvertRealm(realmStr);
+                            if(realm == WowRealm.Archangel || wowVersion == WowVersionEnum.TBC)
+                            {
+                                if(realm != WowRealm.Archangel || wowVersion != WowVersionEnum.TBC)
+                                {
+                                    Logger.ConsoleWriteLine("RealmPlayers WoWversion guess was wrong!!!", ConsoleColor.Red);
+                                }
+                            }
+
                             if (realm == WowRealm.Unknown || m_Realms.ContainsKey(realm) == false)
                             {
                                 Logger.ConsoleWriteLine("RealmStr: \"" + realmStr + "\" was not recognized as a realm");
