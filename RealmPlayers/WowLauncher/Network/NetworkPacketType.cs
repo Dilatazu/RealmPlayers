@@ -198,7 +198,7 @@ namespace WowLauncherNetwork
         }
         public static bool RecvPacket_VF<T_Data>(this VF.NetworkClient _Client, WLN_PacketType _PacketType, out T_Data _RetData)
         {
-            return RecvPacket_VF(_Client, _PacketType, out _RetData, TimeSpan.FromSeconds(20));
+            return RecvPacket_VF(_Client, _PacketType, out _RetData, TimeSpan.FromSeconds(30));
         }
     }
     public class WLN_Network
