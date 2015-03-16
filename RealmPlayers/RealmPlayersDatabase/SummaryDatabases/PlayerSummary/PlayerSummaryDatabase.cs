@@ -93,7 +93,7 @@ namespace VF_RPDatabase
                             {
                                 if (honorHistory.Data.LastWeekStanding > 0)
                                 {
-                                    currPVPWeek = StaticValues.CalculateLastRankUpdadeDateUTC(honorHistory.Uploader.GetTime()).AddDays(7);
+                                    currPVPWeek = StaticValues.CalculateLastRankUpdadeDateUTC(realmDB.Key, honorHistory.Uploader.GetTime()).AddDays(7);
                                     playerSummary.m_ActivePVPWeeks += 1;
                                 }
                             }

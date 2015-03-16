@@ -91,8 +91,8 @@ namespace RealmPlayersServer
                 + PageUtility.BreadCrumb_AddFinish(_PVPSection));
 
             string charListInfo
-                = "<h1>" + _PVPSection + "<span class='badge badge-inverse'>" + _CharCount + " Characters</span></h1>"
-                + "<p>" + _PageExplanation + "</p>";
+                = "<h1>" + _PVPSection /*+ "<span class='badge badge-inverse'>" + _CharCount + " Characters</span>"*/
+                + "</h1><p>" + _PageExplanation + "</p>";
 
             m_CharListInfoHTML = new MvcHtmlString(charListInfo);
         }
@@ -113,8 +113,8 @@ namespace RealmPlayersServer
             };
             var playerArray = DatabaseAccess.GetRealmPlayers(this, _Realm, NotLoadedDecision.RedirectAndWait).OrderBy(sortLambda);
 
-            DateTime lastRankUpdateDateUTC = StaticValues.CalculateLastRankUpdadeDateUTC();
-
+            DateTime lastRankUpdateDateUTC = StaticValues.CalculateLastRankUpdadeDateUTC(_Realm);
+           
             int hordeCount = 0;
             int allianceCount = 0;
             foreach (var player in playerArray)
@@ -241,7 +241,21 @@ namespace RealmPlayersServer
                 this.Title = "Standings @ " + StaticValues.ConvertRealmParam(realm) + " | RealmPlayers";
 
                 m_PageHTML = new MvcHtmlString(CreateStandingsTable(realm, count, (player) => { return player.ReceivedStandingLastWeek(); }));
-                GeneratePageDetails("Standings", count * 2, "PVP Standings for players. Only lists players who received standing last week.");
+
+                if (realm == WowRealm.Nostalrius)
+                {
+                    DateTime lowerValue = StaticValues.CalculateLastRankUpdadeDateUTC(realm);
+                    GeneratePageDetails("Standings", count * 2, "Last weeks standings for players. Only shows players who received a standing last week. This list resets when the realm calculates new standings for players every wednesday 11:59~ servertime.");
+                }
+                else if(wowVersion == VF_RealmPlayersDatabase.WowVersionEnum.TBC)
+                {
+                    GeneratePageDetails("Standings", count * 2, "TBC works with a different PVP system so there are no standings.");
+                }
+                else
+                {
+                    DateTime lowerValue = StaticValues.CalculateLastRankUpdadeDateUTC(realm);
+                    GeneratePageDetails("Standings", count * 2, "Last weeks standings for players. Only shows players who received a standing last week. This list resets when the realm calculates new standings for players every saturday 23:59~ servertime.");
+                }
             }
             else if (sectionStr == "twink_ranks")
             {
@@ -316,17 +330,40 @@ namespace RealmPlayersServer
                     pageIndex = (nr - 1) / count;
                     Response.Redirect(PageUtility.CreateUrlWithNewQueryValue(Request, "page", (pageIndex + 1).ToString()));
                 }
-                m_PageHTML = new MvcHtmlString(table);
                 //////////////////////////////////
-                GeneratePageDetails("Highest Ranks", count, "Highest achieved PVP Ranks for players, sorted by date of achievment");
+                if (realm == WowRealm.Nostalrius)
+                {
+                    m_PageHTML = new MvcHtmlString(table);
+                    GeneratePageDetails("Highest Ranks", count, "Highest lifetime achieved PVP Ranks for players, sorted by date of achievment<br /><br /><font color='red'>Currently the realm \"Nostalrius Begins\" has an inspection bug which among other things makes people look like they have higher \"lifetime highest rank\" than they should. So the data below will be incorrect until Nostalrius development team has solved this bug for the realm.</font>");
+                }
+                else
+                {
+                    m_PageHTML = new MvcHtmlString(table);
+                    GeneratePageDetails("Highest Ranks", count, "Highest lifetime achieved PVP Ranks for players, sorted by date of achievment");
+                }
             }
             else// if (sectionStr == "ranks")
             {
                 this.Title = "Ranks @ " + StaticValues.ConvertRealmParam(realm) + " | RealmPlayers";
 
+                if (realm == WowRealm.Nostalrius)
+                {
+                    rankShowLambda = (Player _Player) =>
+                    {
+                        return (_Player.LastSeen - DateTime.UtcNow).TotalDays < 14;
+                    };
+                    GeneratePageDetails("Ranks", count, "Highest PVP Ranks for active players.");
+                }
+                else if(wowVersion == VF_RealmPlayersDatabase.WowVersionEnum.TBC)
+                {
+                    GeneratePageDetails("Arena Ranking", count, "Shows the highest rated arena teams, sorted by a sum of the total rating for 5v5, 3v3 and 2v2.");
+                }
+                else
+                {
+                    GeneratePageDetails("Ranks", count, "Highest PVP Ranks for players. Only lists players who received standing last week. This is because no rank decay would make the list extremely boring(filled with players that dont even pvp).");
+                }
                 m_PageHTML = new MvcHtmlString(CreatePVPTable(realm, count, rankColumns
                     , rankSorterLambda, rankShowLambda));
-                GeneratePageDetails("Ranks", count, "PVP Ranks for players. Only lists players who received standing last week. This is because no rank decay would make the list extremely boring(filled with players that dont even pvp).");
             }
             //href='javascript:navigateWithNewQuery(\"page\",\"1\")'
             int pageNr = PageUtility.GetQueryInt(Request, "page", 1);

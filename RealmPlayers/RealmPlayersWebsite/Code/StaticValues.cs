@@ -87,7 +87,7 @@ namespace RealmPlayersServer
         }
         public static float CalculateRankChange(Player _Player, PlayerHistory _PlayerHistory)
         {
-            DateTime beforeLastRankUpdate = CalculateLastRankUpdadeDateUTC(_Player.LastSeen).AddHours(-1.0);
+            DateTime beforeLastRankUpdate = CalculateLastRankUpdadeDateUTC(_Player.Realm, _Player.LastSeen).AddHours(-1.0);
             var lastweekHonorData = _PlayerHistory.GetHonorItemAtTime(beforeLastRankUpdate).Data;
             if (lastweekHonorData != null)
             {
@@ -99,11 +99,11 @@ namespace RealmPlayersServer
 
         internal static int CalculateHKChange(Player _Player, PlayerHistory _PlayerHistory)
         {
-            DateTime beforeLastRankUpdate = CalculateLastRankUpdadeDateUTC(_Player.LastSeen).AddHours(-1.0);
+            DateTime beforeLastRankUpdate = CalculateLastRankUpdadeDateUTC(_Player.Realm, _Player.LastSeen).AddHours(-1.0);
             var lastweekHonorEntry = _PlayerHistory.GetHonorItemAtTime(beforeLastRankUpdate);
 
             var lastweekHonorData = lastweekHonorEntry.Data;
-            if (lastweekHonorEntry.Uploader.GetTime() < CalculateLastRankUpdadeDateUTC(_Player.LastSeen).AddDays(-6.5))
+            if (lastweekHonorEntry.Uploader.GetTime() < CalculateLastRankUpdadeDateUTC(_Player.Realm, _Player.LastSeen).AddDays(-6.5))
                 return -1;
 
             return (_Player.Honor.LifetimeHK - _Player.Honor.ThisWeekHK) - (lastweekHonorData.LifetimeHK - lastweekHonorData.ThisWeekHK);

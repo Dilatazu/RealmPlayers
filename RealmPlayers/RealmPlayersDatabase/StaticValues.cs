@@ -545,8 +545,18 @@ namespace VF_RealmPlayersDatabase
 
             return PlayerFaction.Unknown;
         }
-
-        public static DateTime CalculateLastRankUpdadeDateUTC(DateTime? _NowUTC = null)
+        public static DateTime CalculateLastRankUpdadeDateUTC(WowRealm _Realm, DateTime? _NowUTC = null)
+        {
+            if(_Realm == WowRealm.Nostalrius)
+            {
+                return CalculateLastRankUpdadeDateUTC_WednesdayMidday(_NowUTC);
+            }
+            else
+            {
+                return CalculateLastRankUpdadeDateUTC_Sunday(_NowUTC);
+            }
+        }
+        public static DateTime CalculateLastRankUpdadeDateUTC_Sunday(DateTime? _NowUTC = null)
         {
             DateTime rankDate = DateTime.Now;
             if (_NowUTC.HasValue)
@@ -555,6 +565,18 @@ namespace VF_RealmPlayersDatabase
             rankDate = rankDate.AddMinutes(-rankDate.Minute);
             rankDate = rankDate.AddDays(DayOfWeek.Sunday - rankDate.DayOfWeek);
             rankDate = rankDate.ToUniversalTime();
+            return rankDate;
+        }
+        public static DateTime CalculateLastRankUpdadeDateUTC_WednesdayMidday(DateTime? _NowUTC = null)
+        {
+            DateTime rankDate = DateTime.Now;
+            if (_NowUTC.HasValue)
+                rankDate = _NowUTC.Value.ToLocalTime();
+            rankDate = rankDate.AddHours(-rankDate.Hour);
+            rankDate = rankDate.AddMinutes(-rankDate.Minute);
+            rankDate = rankDate.AddDays((DayOfWeek.Wednesday - rankDate.DayOfWeek) - 7);
+            rankDate = rankDate.ToUniversalTime();
+            rankDate = rankDate.AddHours(12);
             return rankDate;
         }
     }
