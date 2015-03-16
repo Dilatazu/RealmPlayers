@@ -105,6 +105,13 @@ namespace VF
                         m_Clients.Remove(serverClient);
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                VF.Logger.LogException(ex);
+            }
+            try
+            {
                 m_ListenerSocket.BeginAccept(new AsyncCallback(AcceptCallback), this);
             }
             catch (Exception ex)
