@@ -280,66 +280,73 @@ namespace RealmPlayersServer
             {
                 this.Title = "Highest Ranks @ " + StaticValues.ConvertRealmParam(realm) + " | RealmPlayers";
 
-                var playerSummaryDB = Hidden.ApplicationInstance.Instance.GetPlayerSummaryDatabase();
-                var pvpSummaries = playerSummaryDB.GetPVPSummaries(realm);
-                DateTime referenceDateTime = new DateTime(2010, 1, 1);
-                var orderedPVPSummaries = pvpSummaries.OrderByDescending((_Value) => ((int)_Value.Value.m_HighestRank.Key) * 100000 - (_Value.Value.m_HighestRank.Value != DateTime.MinValue ? (int)((_Value.Value.m_HighestRank.Value - referenceDateTime).TotalDays) : 0));
-                //////////////////////////////////
-                int pageIndex = PageUtility.GetQueryInt(Request, "page", 1) - 1;//Change range from 0 to * instead of 1 to *
-
-                PlayerColumn[] playerColumns = new PlayerColumn[]{
-                    PlayerColumn.Number,
-                    PlayerColumn.Character_And_Guild,
-                    PlayerColumn.Race_And_Class,
-                    PlayerColumn.Total_HKs,
-                    PlayerColumn.LastSeen,
-                };
-                Dictionary<PlayerColumn, string[]> extraColumns = new Dictionary<PlayerColumn, string[]>();
-
-                extraColumns[PlayerColumn.Number] = new string[] { "Rank", "Date Achieved" };
-                //extraColumns[PlayerColumn.Total_HKs] = new string[] { "Weeks with standing" };
-
-                string table = "<table class='table'>";
-                table += "<thead>" + PageUtility.CreatePlayerTableHeaderRow(playerColumns, extraColumns) + "</thead>";
-                table += "<tbody>";
-                var playerArray = DatabaseAccess.GetRealmPlayers(this, realm, NotLoadedDecision.RedirectAndWait);
-                int nr = 0;
-                foreach (var pvpSummary in orderedPVPSummaries)
+                if(wowVersion == VF_RealmPlayersDatabase.WowVersionEnum.TBC)
                 {
-                    nr++;
-                    if (nr > pageIndex * count && nr <= (pageIndex + 1) * count)
-                    {
-                        Player playerData = null;
-                        if (playerArray.TryGetValue(playerSummaryDB.GetPlayer(pvpSummary), out playerData) == true)
-                        {
-                            VF_RealmPlayersDatabase.PlayerFaction playerFaction = StaticValues.GetFaction(playerData.Character.Race);
-                            int rank = (int)pvpSummary.Value.m_HighestRank.Key;
-                            float rankProgress = pvpSummary.Value.m_HighestRank.Key - (float)rank;
-                            extraColumns[PlayerColumn.Number] = new string[] { PageUtility.CreatePlayerRankDiv(rank, rankProgress, playerFaction), pvpSummary.Value.m_HighestRank.Value.ToString("yyyy-MM-dd") };
-                            //extraColumns[PlayerColumn.Total_HKs] = new string[] { pvpSummary.Value.m_ActivePVPWeeks.ToString() };
-                            table += PageUtility.CreatePlayerRow(nr, realm, playerData, playerColumns, null, extraColumns);
-                        }
-                    }
-                    if (nr >= (pageIndex + 1) * count)
-                        break;
-                }
-                table += "</tbody></table>";
-
-                if (nr != 0 && nr <= pageIndex * count)
-                {
-                    pageIndex = (nr - 1) / count;
-                    Response.Redirect(PageUtility.CreateUrlWithNewQueryValue(Request, "page", (pageIndex + 1).ToString()));
-                }
-                //////////////////////////////////
-                if (realm == WowRealm.Nostalrius)
-                {
-                    m_PageHTML = new MvcHtmlString(table);
-                    GeneratePageDetails("Highest Ranks", count, "Highest lifetime achieved PVP Ranks for players, sorted by date of achievment<br /><br /><font color='red'>Currently the realm \"Nostalrius Begins\" has an inspection bug which among other things makes people look like they have higher \"lifetime highest rank\" than they should. So the data below will be incorrect until Nostalrius development team has solved this bug for the realm.</font>");
+                    m_PageHTML = new MvcHtmlString("");
+                    GeneratePageDetails("Highest Ranks", count, "TBC works with a different PVP system so there are no lifetime highest ranks.");
                 }
                 else
-                {
+                { 
+                    var playerSummaryDB = Hidden.ApplicationInstance.Instance.GetPlayerSummaryDatabase();
+                    var pvpSummaries = playerSummaryDB.GetPVPSummaries(realm);
+                    DateTime referenceDateTime = new DateTime(2010, 1, 1);
+                    var orderedPVPSummaries = pvpSummaries.OrderByDescending((_Value) => ((int)_Value.Value.m_HighestRank.Key) * 100000 - (_Value.Value.m_HighestRank.Value != DateTime.MinValue ? (int)((_Value.Value.m_HighestRank.Value - referenceDateTime).TotalDays) : 0));
+                    //////////////////////////////////
+                    int pageIndex = PageUtility.GetQueryInt(Request, "page", 1) - 1;//Change range from 0 to * instead of 1 to *
+
+                    PlayerColumn[] playerColumns = new PlayerColumn[]{
+                        PlayerColumn.Number,
+                        PlayerColumn.Character_And_Guild,
+                        PlayerColumn.Race_And_Class,
+                        PlayerColumn.Total_HKs,
+                        PlayerColumn.LastSeen,
+                    };
+                    Dictionary<PlayerColumn, string[]> extraColumns = new Dictionary<PlayerColumn, string[]>();
+
+                    extraColumns[PlayerColumn.Number] = new string[] { "Rank", "Date Achieved" };
+                    //extraColumns[PlayerColumn.Total_HKs] = new string[] { "Weeks with standing" };
+
+                    string table = "<table class='table'>";
+                    table += "<thead>" + PageUtility.CreatePlayerTableHeaderRow(playerColumns, extraColumns) + "</thead>";
+                    table += "<tbody>";
+                    var playerArray = DatabaseAccess.GetRealmPlayers(this, realm, NotLoadedDecision.RedirectAndWait);
+                    int nr = 0;
+                    foreach (var pvpSummary in orderedPVPSummaries)
+                    {
+                        nr++;
+                        if (nr > pageIndex * count && nr <= (pageIndex + 1) * count)
+                        {
+                            Player playerData = null;
+                            if (playerArray.TryGetValue(playerSummaryDB.GetPlayer(pvpSummary), out playerData) == true)
+                            {
+                                VF_RealmPlayersDatabase.PlayerFaction playerFaction = StaticValues.GetFaction(playerData.Character.Race);
+                                int rank = (int)pvpSummary.Value.m_HighestRank.Key;
+                                float rankProgress = pvpSummary.Value.m_HighestRank.Key - (float)rank;
+                                extraColumns[PlayerColumn.Number] = new string[] { PageUtility.CreatePlayerRankDiv(rank, rankProgress, playerFaction), pvpSummary.Value.m_HighestRank.Value.ToString("yyyy-MM-dd") };
+                                //extraColumns[PlayerColumn.Total_HKs] = new string[] { pvpSummary.Value.m_ActivePVPWeeks.ToString() };
+                                table += PageUtility.CreatePlayerRow(nr, realm, playerData, playerColumns, null, extraColumns);
+                            }
+                        }
+                        if (nr >= (pageIndex + 1) * count)
+                            break;
+                    }
+                    table += "</tbody></table>";
+
+                    if (nr != 0 && nr <= pageIndex * count)
+                    {
+                        pageIndex = (nr - 1) / count;
+                        Response.Redirect(PageUtility.CreateUrlWithNewQueryValue(Request, "page", (pageIndex + 1).ToString()));
+                    }
                     m_PageHTML = new MvcHtmlString(table);
-                    GeneratePageDetails("Highest Ranks", count, "Highest lifetime achieved PVP Ranks for players, sorted by date of achievment");
+                    //////////////////////////////////
+                    if (realm == WowRealm.Nostalrius)
+                    {
+                        GeneratePageDetails("Highest Ranks", count, "Highest lifetime achieved PVP Ranks for players, sorted by date of achievment<br /><br /><font color='red'>Currently the realm \"Nostalrius Begins\" has an inspection bug which among other things makes people look like they have higher \"lifetime highest rank\" than they should. So the data below will be incorrect until Nostalrius development team has solved this bug for the realm.</font>");
+                    }
+                    else
+                    {
+                        GeneratePageDetails("Highest Ranks", count, "Highest lifetime achieved PVP Ranks for players, sorted by date of achievment");
+                    }
                 }
             }
             else// if (sectionStr == "ranks")
