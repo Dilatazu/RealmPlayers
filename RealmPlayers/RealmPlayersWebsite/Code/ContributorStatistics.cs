@@ -47,7 +47,7 @@ namespace RealmPlayersServer.Code
         {
             lock(sm_LoadTaskMutex)
             {
-                if (sm_LoadTask == null || (DateTime.UtcNow - sm_LastGenerationTime).TotalMinutes > 600) //10 hours
+                if (sm_LoadTask == null || (DateTime.UtcNow - sm_LastGenerationTime).TotalMinutes > 300) //5 hours
                 {
                     sm_LastGenerationTime = DateTime.UtcNow;
                     sm_LoadTask = new System.Threading.Tasks.Task(new Action(() => { Thread_GenerateData(_Database); }));
@@ -77,6 +77,8 @@ namespace RealmPlayersServer.Code
                     ContributorStatisticItem lastUsedCSI = new ContributorStatisticItem();
                     foreach (var realm in _Database.GetRealms())
                     {
+                        realm.Value.WaitForLoad(RealmDatabase.LoadStatus.EverythingLoaded);
+
                         if (generatedContributorStatisticData.ContainsKey(realm.Key) == false)
                             generatedContributorStatisticData.Add(realm.Key, new Dictionary<int, ContributorStatisticItem>());
                         var realmCSD = generatedContributorStatisticData[realm.Key];
