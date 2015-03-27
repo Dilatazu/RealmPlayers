@@ -7,13 +7,15 @@ namespace VF_RealmPlayersDatabase
 {
     public class Database
     {
+        public static WowRealm[] ALL_REALMS = new WowRealm[] { WowRealm.Kronos, WowRealm.NostalGeek, WowRealm.Nostalrius, WowRealm.Emerald_Dream, WowRealm.Warsong, WowRealm.Al_Akir, WowRealm.Valkyrie, WowRealm.VanillaGaming, WowRealm.Rebirth, WowRealm.Archangel };
+
         Dictionary<WowRealm, RealmDatabase> m_Realms = new Dictionary<WowRealm, RealmDatabase>();
 
         public Database(string _RootPath, DateTime? _HistoryEarliestTime = null, WowRealm[] _Realms = null)
         {
             WowRealm[] loadRealms = _Realms;
             if (_Realms == null)
-                loadRealms = new WowRealm[] { WowRealm.Nostalrius, WowRealm.Emerald_Dream, WowRealm.Warsong, WowRealm.Al_Akir, WowRealm.Valkyrie, WowRealm.VanillaGaming, WowRealm.Rebirth, WowRealm.Archangel };
+                loadRealms = ALL_REALMS;
             foreach (WowRealm loadRealm in loadRealms)
             {
                 try

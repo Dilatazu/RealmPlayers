@@ -216,9 +216,9 @@ namespace VF_WoWLauncherServer
             GC.Collect();
         }
 
-        private void _UpdateItemSummaryDatabase(Database _Database)
+        private void _UpdateItemSummaryDatabase(Database _Database, bool _UpdateAllHistory = false) //false means it only updates last 8 days
         {
-            VF_RPDatabase.ItemSummaryDatabase.UpdateSummaryDatabase(m_RPPDBFolder, _Database);
+            VF_RPDatabase.ItemSummaryDatabase.UpdateSummaryDatabase(m_RPPDBFolder, _Database, _UpdateAllHistory);
             m_LastSummaryDatabaseUpdateTime = DateTime.UtcNow;
         }
         public void CreateItemSummaryDatabase()
@@ -226,10 +226,15 @@ namespace VF_WoWLauncherServer
             lock (m_LockObject)
             {
                 var timer = System.Diagnostics.Stopwatch.StartNew();
-                Database fullDatabase = new Database(m_RPPDBFolder + "Database\\", new DateTime(2012, 5, 1, 0, 0, 0));
-                fullDatabase.PurgeRealmDBs(true, true);
-
-                _UpdateItemSummaryDatabase(fullDatabase);
+                int realmIndex = 1;
+                foreach(var realm in Database.ALL_REALMS)
+                {
+                    var realmTimer = System.Diagnostics.Stopwatch.StartNew();
+                    Database fullDatabase = new Database(m_RPPDBFolder + "Database\\", new DateTime(2012, 5, 1, 0, 0, 0), new WowRealm[]{ realm });
+                    fullDatabase.PurgeRealmDBs(true, true, true);
+                    _UpdateItemSummaryDatabase(fullDatabase, true);
+                    Logger.ConsoleWriteLine("Item Summary Database Generation " + (realmIndex++) + " / " + Database.ALL_REALMS.Length + ", Done with " + realm.ToString() + " it took " + (realmTimer.ElapsedMilliseconds / 1000) + " seconds", ConsoleColor.Cyan);
+                }
                 Logger.ConsoleWriteLine("Done Creating Item Summary Database, it took " + (timer.ElapsedMilliseconds / 1000) + " seconds", ConsoleColor.Green);
             }
             GC.Collect();
