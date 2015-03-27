@@ -13,7 +13,7 @@ namespace VF_WoWLauncher
         [ProtoMember(1)]
         public string DefaultConfig = "Active Wow Config";
         [ProtoMember(2)]
-        public string DefaultRealm = "Emerald Dream";
+        public string DefaultRealm = "Nostalrius";
         [ProtoMember(3)]
         public bool ClearWDB = false;
         [ProtoMember(4)]
@@ -44,6 +44,27 @@ namespace VF_WoWLauncher
         public bool AutoHideOldNews = true;
         [ProtoMember(17)]
         public bool AutoUpdateVFAddons = false;
+        [ProtoMember(18)]
+        public Dictionary<string, RealmInfo> RealmLists = new Dictionary<string, RealmInfo>{
+            {"Emerald Dream", new RealmInfo{RealmListWTF = StaticValues.RealmListWTF_EmeraldDream, WowVersion = WowVersionEnum.Vanilla}},
+            {"Warsong", new RealmInfo{RealmListWTF = StaticValues.RealmListWTF_Warsong, WowVersion = WowVersionEnum.Vanilla}},
+            {"Al'Akir", new RealmInfo{RealmListWTF = StaticValues.RealmListWTF_AlAkir, WowVersion = WowVersionEnum.Vanilla}},
+            {"Archangel(TBC)", new RealmInfo{RealmListWTF = StaticValues.RealmListWTF_Archangel, WowVersion = WowVersionEnum.TBC}},
+            {"VanillaGaming", new RealmInfo{RealmListWTF = StaticValues.RealmListWTF_VanillaGaming, WowVersion = WowVersionEnum.Vanilla}},
+            {"Valkyrie", new RealmInfo{RealmListWTF = StaticValues.RealmListWTF_Valkyrie, WowVersion = WowVersionEnum.Vanilla}},
+            {"Rebirth", new RealmInfo{RealmListWTF = StaticValues.RealmListWTF_Rebirth, WowVersion = WowVersionEnum.Vanilla}},
+            {"Nostalrius", new RealmInfo{RealmListWTF = StaticValues.RealmListWTF_Nostalrius, WowVersion = WowVersionEnum.Vanilla}},
+            {"Kronos", new RealmInfo{RealmListWTF = StaticValues.RealmListWTF_Kronos, WowVersion = WowVersionEnum.Vanilla}},
+        };
+        
+        [ProtoContract]
+        public class RealmInfo
+        {
+            [ProtoMember(1)]
+            public string RealmListWTF = "";
+            [ProtoMember(2)]
+            public WowVersionEnum WowVersion = WowVersionEnum.Vanilla;
+        }
 
         [ProtoContract]
         public class LaunchShortcut

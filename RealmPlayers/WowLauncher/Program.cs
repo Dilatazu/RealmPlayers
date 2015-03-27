@@ -80,10 +80,6 @@ namespace VF_WoWLauncher
         public void HandleJumpListCommands(LauncherWindow _LauncherWindow, CMDArguments _Args)
         {
             IntPtr otherProcessPtr = IntPtr.Zero;
-            if (_LauncherWindow == null)
-            {
-                otherProcessPtr = Program.FocusOtherProcess();
-            }
             if (_Args["ResetWindowPosition"] != null)
             {
                 if (_LauncherWindow != null)
@@ -98,6 +94,10 @@ namespace VF_WoWLauncher
                         SendMessage(otherProcessPtr, m_MESSAGEID_ResetWindowPosition, IntPtr.Zero, IntPtr.Zero);
                     }
                 }
+            }
+            if (_LauncherWindow == null)
+            {
+                otherProcessPtr = Program.FocusOtherProcess();
             }
         }
     }
@@ -198,22 +198,24 @@ namespace VF_WoWLauncher
                             useConfigProfile = StaticValues.StartupArguments["ConfigProfile"];
 
                         System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-                        
-                        var wowVersion = WowVersionEnum.Vanilla;
-                        if (useRealm == "Archangel(TBC)")
+
+                        if (Settings.Instance.RealmLists.ContainsKey(useRealm) == false)
+                            return;
+
+                        var realmInfo = Settings.Instance.RealmLists[useRealm];
+                        if (realmInfo.WowVersion == WowVersionEnum.TBC)
                         {
                             useConfigProfile = "Active Wow Config";
-                            wowVersion = WowVersionEnum.TBC;
                             if (Settings.Instance.ClearWDB == true)
                             {
-                                Utility.DeleteDirectory(Settings.GetWowDirectory(wowVersion) + "Cache");
+                                Utility.DeleteDirectory(Settings.GetWowDirectory(realmInfo.WowVersion) + "Cache");
                             }
                         }
                         else
                         {
                             if (Settings.Instance.ClearWDB == true)
                             {
-                                Utility.DeleteDirectory(Settings.GetWowDirectory(wowVersion) + "WDB");
+                                Utility.DeleteDirectory(Settings.GetWowDirectory(realmInfo.WowVersion) + "WDB");
                             }
                         }
 
@@ -234,7 +236,7 @@ namespace VF_WoWLauncher
                                 startInfo.FileName = StaticValues.LauncherToolsDirectory + "RunWowAndUploader.bat";
                                 //startInfo.FileName = Settings.WowDirectory + "22VF_RealmPlayersUploader 1.5\\RunWoWAndUploaderNoCMDWindow.vbs";
                                 //startInfo.WorkingDirectory = Settings.WowDirectory + "22VF_RealmPlayersUploader 1.5\\";
-                                startInfo.Arguments = "\"" + Settings.GetWowDirectory(wowVersion) + "\"";
+                                startInfo.Arguments = "\"" + Settings.GetWowDirectory(realmInfo.WowVersion) + "\"";
                             }
                             else
                             {
@@ -246,7 +248,7 @@ namespace VF_WoWLauncher
                                     + "\"/c "
                                         + snuff
                                             + snuff + StaticValues.LauncherWorkDirectory.Replace("\\", slash) + "/" + StaticValues.LauncherToolsDirectory.Replace("\\", slash) + "RunWowAndUploader.bat" + snuff
-                                            + " " + snuff + Settings.GetWowDirectory(wowVersion) + "\\" + snuff
+                                            + " " + snuff + Settings.GetWowDirectory(realmInfo.WowVersion) + "\\" + snuff
                                         + snuff
                                     + "\" nowindow";
                             }
@@ -256,8 +258,8 @@ namespace VF_WoWLauncher
                         }
                         else
                         {
-                            startInfo.FileName = Settings.GetWowDirectory(wowVersion) + "WoW.exe";
-                            startInfo.WorkingDirectory = Settings.GetWowDirectory(wowVersion);
+                            startInfo.FileName = Settings.GetWowDirectory(realmInfo.WowVersion) + "WoW.exe";
+                            startInfo.WorkingDirectory = Settings.GetWowDirectory(realmInfo.WowVersion);
                         }
                         Logger.ConsoleWriteLine("Starting to Launch WoW for realm: \"" + useRealm + "\", with ConfigProfile: \"" + useConfigProfile + "\"", ConsoleColor.Green);
                         LaunchFunctions.LaunchWow(useConfigProfile, useRealm, startInfo);

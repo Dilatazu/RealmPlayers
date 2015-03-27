@@ -30,16 +30,28 @@ namespace VF_WoWLauncher
                     ApplicationSettings.ShowApplicationSettings();
                     if (Settings.HaveTBC == true)
                     {
-                        if (c_ddlRealm.Items.Contains("Archangel(TBC)") == false)
-                            c_ddlRealm.Items.Add("Archangel(TBC)");
+                        foreach(var realmInfo in Settings.Instance.RealmLists)
+                        {
+                            if(realmInfo.Value.WowVersion == WowVersionEnum.TBC)
+                            {
+                                if (c_ddlRealm.Items.Contains(realmInfo.Key) == false)
+                                    c_ddlRealm.Items.Add(realmInfo.Key);
+                            }
+                        }
                     }
                     else
                     {
-                        if (c_ddlRealm.Items.Contains("Archangel(TBC)") == true)
+                        foreach (var realmInfo in Settings.Instance.RealmLists)
                         {
-                            if ((string)c_ddlRealm.SelectedItem == "Archangel(TBC)")
-                                c_ddlRealm.SelectedItem = "Emerald Dream";
-                            c_ddlRealm.Items.Remove("Archangel(TBC)");
+                            if (realmInfo.Value.WowVersion == WowVersionEnum.TBC)
+                            {
+                                if (c_ddlRealm.Items.Contains(realmInfo.Key) == true)
+                                {
+                                    if ((string)c_ddlRealm.SelectedItem == realmInfo.Key)
+                                        c_ddlRealm.SelectedItem = "Nostalrius";
+                                    c_ddlRealm.Items.Remove(realmInfo.Key);
+                                }
+                            }
                         }
                     }
                     if (Settings.Instance.AutoRefreshNews == true)
@@ -105,6 +117,19 @@ namespace VF_WoWLauncher
                         System.Diagnostics.Process.Start("http://forum.nostalrius.org/");
                     })));
                     linksMenu.MenuItems.Add(nostalriusLinks);
+                }
+                linksMenu.MenuItems.Add("-");
+                {
+                    var kronosLinks = new MenuItem("Kronos Links");
+                    kronosLinks.MenuItems.Add(new MenuItem("Goto homepage", new EventHandler((o, ea) =>
+                    {
+                        System.Diagnostics.Process.Start("http://www.kronos-wow.com/");
+                    })));
+                    kronosLinks.MenuItems.Add(new MenuItem("Goto forum", new EventHandler((o, ea) =>
+                    {
+                        System.Diagnostics.Process.Start("http://forum.twinstar.cz/");
+                    })));
+                    linksMenu.MenuItems.Add(kronosLinks);
                 }
                 linksMenu.MenuItems.Add("-");
                 linksMenu.MenuItems.Add(new MenuItem("Goto RealmPlayers", new EventHandler((o, ea) =>
@@ -698,7 +723,16 @@ namespace VF_WoWLauncher
             this.Text = "VF_WoWLauncher " + StaticValues.LauncherVersion;
             //this.TopMost = true;
             if (Settings.HaveTBC == true)
-                c_ddlRealm.Items.Add("Archangel(TBC)");
+            {
+                foreach (var realmInfo in Settings.Instance.RealmLists)
+                {
+                    if (realmInfo.Value.WowVersion == WowVersionEnum.TBC)
+                    {
+                        if (c_ddlRealm.Items.Contains(realmInfo.Key) == false)
+                            c_ddlRealm.Items.Add(realmInfo.Key);
+                    }
+                }
+            }
             c_ddlRealm.SelectedItem = Settings.Instance.DefaultRealm;
             c_cbClearWDB.Checked = Settings.Instance.ClearWDB;
             InitializeConfigDDL(Settings.Instance.DefaultConfig);
@@ -731,21 +765,24 @@ namespace VF_WoWLauncher
             c_btnLaunch.Enabled = false;
 
             System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-            
-            var wowVersion = WowVersionEnum.Vanilla;
-            if ((string)c_ddlRealm.SelectedItem == "Archangel(TBC)")
+
+            if (Settings.Instance.RealmLists.ContainsKey((string)c_ddlRealm.SelectedItem) == false)
+                return;
+
+            var realmInfo = Settings.Instance.RealmLists[(string)c_ddlRealm.SelectedItem];
+
+            if (realmInfo.WowVersion == WowVersionEnum.TBC)
             {
-                wowVersion = WowVersionEnum.TBC;
                 if (c_cbClearWDB.Checked == true)
                 {
-                    Utility.DeleteDirectory(Settings.GetWowDirectory(wowVersion) + "Cache");
+                    Utility.DeleteDirectory(Settings.GetWowDirectory(realmInfo.WowVersion) + "Cache");
                 }
             }
             else
             {
                 if (c_cbClearWDB.Checked == true)
                 {
-                    string[] files = System.IO.Directory.GetFiles(Settings.GetWowDirectory(wowVersion) + "WDB\\");
+                    string[] files = System.IO.Directory.GetFiles(Settings.GetWowDirectory(realmInfo.WowVersion) + "WDB\\");
                     foreach (var file in files)
                     {
                         System.IO.File.Delete(file);
@@ -771,7 +808,7 @@ namespace VF_WoWLauncher
                     startInfo.FileName = StaticValues.LauncherToolsDirectory + "RunWowAndUploader.bat";
                     //startInfo.FileName = Settings.WowDirectory + "22VF_RealmPlayersUploader 1.5\\RunWoWAndUploaderNoCMDWindow.vbs";
                     //startInfo.WorkingDirectory = Settings.WowDirectory + "22VF_RealmPlayersUploader 1.5\\";
-                    startInfo.Arguments = "\"" + Settings.GetWowDirectory(wowVersion) + "\"";
+                    startInfo.Arguments = "\"" + Settings.GetWowDirectory(realmInfo.WowVersion) + "\"";
                 }
                 else
                 {
@@ -783,7 +820,7 @@ namespace VF_WoWLauncher
                         + "\"/c " 
                             + snuff
                                 + snuff + StaticValues.LauncherWorkDirectory.Replace("\\", slash) + "/" + StaticValues.LauncherToolsDirectory.Replace("\\", slash) + "RunWowAndUploader.bat" + snuff
-                                + " " + snuff + Settings.GetWowDirectory(wowVersion) + "\\" + snuff
+                                + " " + snuff + Settings.GetWowDirectory(realmInfo.WowVersion) + "\\" + snuff
                             + snuff 
                         + "\" nowindow";
                 }
@@ -796,8 +833,8 @@ namespace VF_WoWLauncher
             }
             else
             {
-                startInfo.FileName = Settings.GetWowDirectory(wowVersion) + "WoW.exe";
-                startInfo.WorkingDirectory = Settings.GetWowDirectory(wowVersion);
+                startInfo.FileName = Settings.GetWowDirectory(realmInfo.WowVersion) + "WoW.exe";
+                startInfo.WorkingDirectory = Settings.GetWowDirectory(realmInfo.WowVersion);
             }
 
             LaunchFunctions.LaunchWow((string)c_ddlConfigProfile.SelectedItem, (string)c_ddlRealm.SelectedItem, startInfo);
@@ -826,7 +863,13 @@ namespace VF_WoWLauncher
         private void c_ddlRealm_SelectedIndexChanged(object sender, EventArgs e)
         {
             Settings.Instance.DefaultRealm = (string)c_ddlRealm.SelectedItem;
-            if (Settings.Instance.DefaultRealm == "Archangel(TBC)")
+
+            if (Settings.Instance.RealmLists.ContainsKey(Settings.Instance.DefaultRealm) == false)
+                return;
+
+            var realmInfo = Settings.Instance.RealmLists[Settings.Instance.DefaultRealm];
+
+            if (realmInfo.WowVersion == WowVersionEnum.TBC)
             {
                 c_ddlConfigProfile.SelectedItem = "Active Wow Config";
                 c_ddlConfigProfile.Enabled = false;

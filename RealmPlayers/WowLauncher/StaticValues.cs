@@ -29,6 +29,8 @@ namespace VF_WoWLauncher
         public static string RealmListWTF_Valkyrie = "set realmlist logon.valkyrie-wow.com\r\nset realmname \"Valkyrie\"";
         public static string RealmListWTF_Rebirth = "set realmlist wow.therebirth.net\r\nset realmname \"Rebirth\"";
         public static string RealmListWTF_Nostalrius = "set realmlist login.nostalrius.org\r\nset realmname \"Nostalrius Begins\"";
+        public static string RealmListWTF_Kronos = "set realmlist wow.twinstar.cz\r\nset realmname \"Kronos\"";
+        //public static string RealmListWTF_NostalGeek = "set realmlist login.nostalrius.org\r\nset realmname \"NostalGeek 1.12\"";
 
         public static string RunWowAndUploaderBatFileData = "start /b /WAIT /d %1 Wow.exe\r\nstart \"\" /d \"" + StaticValues.LauncherWorkDirectory + "\" \"" + StaticValues.LauncherExecuteFile + "\" /RealmPlayersUploader";
         public static string RunWowNotAdminAndUploaderBatFileData = "";//NotAdmin.exe "cmd.exe" ".\\" "/c \"\"D:\\QinarwTFS\\CppProjects\\VF_WoWLauncher\\VF_WoWLauncher\\bin\\Release\\VF_WowLauncherTools\\RunWowAndUploader.bat\" \"D:\Program\World of Warcraft Classic\\\" nowindow\"";
@@ -114,6 +116,8 @@ namespace VF_WoWLauncher
             {"Al'Akir [instant 60] Blizzlike", "Al'Akir"},
             {"Emerald Dream [1x] Blizzlike", "Emerald Dream"},
             {"Archangel [14x] Blizzlike", "Archangel(TBC)"},
+            {"NostalGeek 1.12", "NostalGeek"},
+            {"Nostalrius Begins", "Nostalrius"},
         };
     }
 }

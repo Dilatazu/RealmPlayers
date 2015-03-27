@@ -26,45 +26,11 @@ namespace VF_WoWLauncher
 
             WowVersionEnum wowVersion = WowVersionEnum.Vanilla;
             string realmListFile = "";
-            if (_RealmName == "Emerald Dream")
+            if(Settings.Instance.RealmLists.ContainsKey(_RealmName) == true)
             {
-                realmListFile = StaticValues.RealmListWTF_EmeraldDream;
-                wowVersion = WowVersionEnum.Vanilla;
-            }
-            else if (_RealmName == "Warsong")
-            {
-                realmListFile = StaticValues.RealmListWTF_Warsong;
-                wowVersion = WowVersionEnum.Vanilla;
-            }
-            else if (_RealmName == "Al'Akir")
-            {
-                realmListFile = StaticValues.RealmListWTF_AlAkir;
-                wowVersion = WowVersionEnum.Vanilla;
-            }
-            else if (_RealmName == "VanillaGaming")
-            {
-                realmListFile = StaticValues.RealmListWTF_VanillaGaming;
-                wowVersion = WowVersionEnum.Vanilla;
-            }
-            else if (_RealmName == "Valkyrie")
-            {
-                realmListFile = StaticValues.RealmListWTF_Valkyrie;
-                wowVersion = WowVersionEnum.Vanilla;
-            }
-            else if (_RealmName == "Rebirth")
-            {
-                realmListFile = StaticValues.RealmListWTF_Rebirth;
-                wowVersion = WowVersionEnum.Vanilla;
-            }
-            else if(_RealmName == "Nostalrius")
-            {
-                realmListFile = StaticValues.RealmListWTF_Nostalrius;
-                wowVersion = WowVersionEnum.Vanilla;
-            }
-            else if (_RealmName == "Archangel(TBC)")
-            {
-                realmListFile = StaticValues.RealmListWTF_Archangel;
-                wowVersion = WowVersionEnum.TBC;
+                var realmList = Settings.Instance.RealmLists[_RealmName];
+                realmListFile = realmList.RealmListWTF;
+                wowVersion = realmList.WowVersion;
             }
             else
             {
