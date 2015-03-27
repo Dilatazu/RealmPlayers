@@ -163,7 +163,7 @@ namespace VF_RealmPlayersDatabase.PlayerData
         public DateTime GetDateAtUploadNr(int _UploadNR, DateTime _DefaultValue)
         {
             var updates = GetUpdates();
-            if (updates.Count < _UploadNR)
+            if (_UploadNR >= updates.Count)
                 _UploadNR = updates.Count - 1;
 
             return updates[_UploadNR].GetTime();
