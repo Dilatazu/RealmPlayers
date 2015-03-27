@@ -74,6 +74,10 @@ namespace VF_RPDatabase
         public UInt64 m_EntityCounter_Archangel = 0L;
         [ProtoMember(10)]
         public UInt64 m_EntityCounter_Nostalrius = 0L;
+        [ProtoMember(11)]
+        public UInt64 m_EntityCounter_Kronos = 0L;
+        [ProtoMember(12)]
+        public UInt64 m_EntityCounter_NostalGeek = 0L;
 
         private void CalcRealmBits(WowRealm _Realm, out UInt64 _BitMask, out UInt64 _RealmValue)
         {
@@ -104,6 +108,12 @@ namespace VF_RPDatabase
                     break;
                 case WowRealm.Nostalrius:
                     _RealmValue = 8UL << 56;
+                    break;
+                case WowRealm.Kronos:
+                    _RealmValue = 9UL << 56;
+                    break;
+                case WowRealm.NostalGeek:
+                    _RealmValue = 10UL << 56;
                     break;
 	        }
         }
@@ -210,6 +220,14 @@ namespace VF_RPDatabase
                     entityID = (8UL << 56) | m_EntityCounter_Nostalrius++;
                     m_PlayerIDs.Add(entityLinkStr, entityID);
                     break;
+                case WowRealm.Kronos:
+                    entityID = (9UL << 56) | m_EntityCounter_Kronos++;
+                    m_PlayerIDs.Add(entityLinkStr, entityID);
+                    break;
+                case WowRealm.NostalGeek:
+                    entityID = (10UL << 56) | m_EntityCounter_NostalGeek++;
+                    m_PlayerIDs.Add(entityLinkStr, entityID);
+                    break;
             }
             return entityID;
         }
@@ -241,6 +259,10 @@ namespace VF_RPDatabase
                     return WowRealm.Archangel;
                 case 8UL:
                     return WowRealm.Nostalrius;
+                case 9UL:
+                    return WowRealm.Kronos;
+                case 10UL:
+                    return WowRealm.NostalGeek;
                 default:
                     VF_RealmPlayersDatabase.Logger.ConsoleWriteLine("Error GetPlayerRealm failed. Realm(" + realm + ") was not valid!!!");
                     return WowRealm.Unknown;
@@ -263,6 +285,7 @@ namespace VF_RPDatabase
             var realmDBs = _Database.GetRealms();
             foreach (var realmDB in realmDBs)
             {
+                realmDB.Value.WaitForLoad(VF_RealmPlayersDatabase.RealmDatabase.LoadStatus.PlayersHistoryLoaded);
                 foreach (var playerHistory in realmDB.Value.PlayersHistory)
                 {
                     try
@@ -346,7 +369,7 @@ namespace VF_RPDatabase
             //}
             return database;
         }
-        public static void UpdateSummaryDatabase(string _RootDirectory, RPPDatabase _Database)
+        public static void UpdateSummaryDatabase(string _RootDirectory, RPPDatabase _Database, bool _UpdateAllHistory = false)
         {
             ItemSummaryDatabase database = null;
             string databaseFile = _RootDirectory + "\\SummaryDatabase\\ItemSummaryDatabase.dat";
@@ -369,7 +392,14 @@ namespace VF_RPDatabase
             }
             else
             {
-                database.UpdateDatabase(_Database, DateTime.UtcNow.AddDays(-8));
+                if (_UpdateAllHistory == true)
+                {
+                    database.UpdateDatabase(_Database);
+                }
+                else
+                {
+                    database.UpdateDatabase(_Database, DateTime.UtcNow.AddDays(-8));
+                }
             }
             VF.Utility.SaveSerialize(databaseFile, database);
         }
