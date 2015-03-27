@@ -267,6 +267,8 @@ namespace VF_WoWLauncherServer
 
         private void button10_Click(object sender, EventArgs e)
         {
+            /*
+             * //SULTANEN NOSTALRIUS PURGE
             {
                 UploadID uploadID = new UploadID(245, new DateTime(635608414529980000L, DateTimeKind.Local));
                 Program.g_RPPDatabaseHandler.GetRealmDB(WowRealm.Nostalrius).PurgeGearContribution("Sultanen", uploadID);
@@ -282,6 +284,33 @@ namespace VF_WoWLauncherServer
             }
             {
                 Program.g_RPPDatabaseHandler.GetRealmDB(WowRealm.Nostalrius).PurgeExtraDataBefore("Sultanen", new DateTime(2015, 3, 8));
+            }*/
+
+            //ROOBY, PREDICTABLE, SLEZMINATOR WARSONG PTR PURGE
+            {
+                UploadID uploadID = new UploadID(192, new DateTime(635630003200000000L, DateTimeKind.Local));
+                Program.g_RPPDatabaseHandler.GetRealmDB(WowRealm.Warsong).PurgeGearContribution("Rooby", uploadID);
+            }
+            {
+                UploadID uploadID = new UploadID(192, new DateTime(635629925260000000L, DateTimeKind.Local));
+                Program.g_RPPDatabaseHandler.GetRealmDB(WowRealm.Warsong).PurgeGearContribution("Predictable", uploadID);
+            }
+            {
+                UploadID uploadID = new UploadID(192, new DateTime(635630000780000000L, DateTimeKind.Local));
+                Program.g_RPPDatabaseHandler.GetRealmDB(WowRealm.Warsong).PurgeGearContribution("Predictable", uploadID);
+                Program.g_RPPDatabaseHandler.GetRealmDB(WowRealm.Warsong).PurgeGearContribution("Predictable", uploadID);//Do this command twice since there are 2 entries
+            }
+            {
+                UploadID uploadID = new UploadID(192, new DateTime(635629901570000000L, DateTimeKind.Local));
+                Program.g_RPPDatabaseHandler.GetRealmDB(WowRealm.Warsong).PurgeGearContribution("Slezminator", uploadID);
+            }
+            {
+                UploadID uploadID = new UploadID(192, new DateTime(635629923940000000L, DateTimeKind.Local));
+                Program.g_RPPDatabaseHandler.GetRealmDB(WowRealm.Warsong).PurgeGearContribution("Casiie", uploadID);
+            }
+            {
+                UploadID uploadID = new UploadID(192, new DateTime(635629924730000000L, DateTimeKind.Local));
+                Program.g_RPPDatabaseHandler.GetRealmDB(WowRealm.Warsong).PurgeGearContribution("Opilol", uploadID);
             }
             Program.g_RPPDatabaseHandler.TriggerSaveDatabases();
         }

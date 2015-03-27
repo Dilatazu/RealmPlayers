@@ -249,7 +249,7 @@
             this.button10.Name = "button10";
             this.button10.Size = new System.Drawing.Size(120, 23);
             this.button10.TabIndex = 18;
-            this.button10.Text = "Purge Sultanen";
+            this.button10.Text = "Purge RealmPlayers";
             this.button10.UseVisualStyleBackColor = true;
             this.button10.Click += new System.EventHandler(this.button10_Click);
             // 

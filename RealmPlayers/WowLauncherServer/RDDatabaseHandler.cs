@@ -298,7 +298,7 @@ namespace VF_WoWLauncherServer
         {
             lock (m_LockObject)
             {
-                int[] buggedRaidIDs = { 6436 };//2353, 2168, 1840, 2234, 1489, 2106 };
+                int[] buggedRaidIDs = { 9137 };//2353, 2168, 1840, 2234, 1489, 2106 };
                 List<RaidCollection.Raid> buggedRaids = new List<RaidCollection.Raid>();
                 foreach (var raid in m_RaidCollection.m_Raids)
                 {
