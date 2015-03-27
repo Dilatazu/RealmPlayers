@@ -18,7 +18,6 @@ namespace VF_WoWLauncher
             c_btnDisableAllAddons.Click += c_btnDisableAllAddons_Click;
             c_btnEnableAllAddons.Click += c_btnEnableAllAddons_Click;
             c_btnReset.Click += c_btnReset_Click;
-            c_lbAddons.SelectedIndexChanged += c_lbAddons_SelectedIndexChanged;
         }
 
         AddonsWTF m_AddonsWTF = null;
@@ -40,6 +39,10 @@ namespace VF_WoWLauncher
                             c_lbAddons.SelectedIndex = 0;
                     }));
                 }
+                c_lbAddons.BeginInvoke(new Action(() => { 
+                    c_lbAddons.SelectedIndexChanged += c_lbAddons_SelectedIndexChanged;
+                    c_lbAddons.Enabled = true;
+                }));
             })).Start();
             c_btnSaveAllChanges.Enabled = false;
         }
