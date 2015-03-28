@@ -34,7 +34,7 @@ namespace VF_WoWLauncher
             c_txtNewConfigName.Text = "Configuration Name";
             c_txtNewRealmName.Text = "Exact Realm Name";
             c_txtNewRealmListURL.Text = "Realmlist URL";
-            c_cbxWowVersion.SelectedIndex = c_cbxWowVersion.Items.Count - 1;
+            c_cbxWowVersion.SelectedIndex = 0;
         }
 
         private void button3_Click(object sender, EventArgs e)

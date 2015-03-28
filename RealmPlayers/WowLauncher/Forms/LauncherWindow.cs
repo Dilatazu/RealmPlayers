@@ -28,32 +28,7 @@ namespace VF_WoWLauncher
                     var oldWowFolder = Settings.Instance._WowDirectory;
                     var oldWowTBCFolder = Settings.Instance._WowTBCDirectory;
                     ApplicationSettings.ShowApplicationSettings();
-                    if (Settings.HaveTBC == true)
-                    {
-                        foreach(var realmInfo in Settings.Instance.RealmLists)
-                        {
-                            if(realmInfo.Value.WowVersion == WowVersionEnum.TBC)
-                            {
-                                if (c_ddlRealm.Items.Contains(realmInfo.Key) == false)
-                                    c_ddlRealm.Items.Add(realmInfo.Key);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        foreach (var realmInfo in Settings.Instance.RealmLists)
-                        {
-                            if (realmInfo.Value.WowVersion == WowVersionEnum.TBC)
-                            {
-                                if (c_ddlRealm.Items.Contains(realmInfo.Key) == true)
-                                {
-                                    if ((string)c_ddlRealm.SelectedItem == realmInfo.Key)
-                                        c_ddlRealm.SelectedItem = "Nostalrius";
-                                    c_ddlRealm.Items.Remove(realmInfo.Key);
-                                }
-                            }
-                        }
-                    }
+                    UpdatePossibleRealmConfigurations();
                     if (Settings.Instance.AutoRefreshNews == true)
                     {
                         c_tRefreshNews.Interval = 1000 * 3600; //Once every hour
@@ -150,7 +125,11 @@ namespace VF_WoWLauncher
                 var toolsMenu = new MenuItem("Tools");
                 //toolsMenu.MenuItems.Add(new MenuItem("Addons Settings(Experimental)", new EventHandler((o, ea) => AccountSettings.ShowAccountSettings())));
                 toolsMenu.MenuItems.Add(new MenuItem("Addons Manager", new EventHandler((o, ea) => AddonsSettings.ShowAddonsSettings())));
-                toolsMenu.MenuItems.Add(new MenuItem("RealmList Manager", new EventHandler((o, ea) => RealmListSettings.ShowRealmListSettings())));
+                toolsMenu.MenuItems.Add(new MenuItem("RealmList Manager", new EventHandler((o, ea) => 
+                {
+                    RealmListSettings.ShowRealmListSettings();
+                    UpdatePossibleRealmConfigurations();
+                })));
                 toolsMenu.MenuItems.Add("-");
                 toolsMenu.MenuItems.Add(new MenuItem("Create AddonPackage(Experimental)", 
                     new EventHandler((o, ea) => {
@@ -199,6 +178,44 @@ namespace VF_WoWLauncher
             //list.Refresh();
 
             Program.g_LauncherApp.InitiateJumpList();
+        }
+
+        private void UpdatePossibleRealmConfigurations()
+        {
+            if (Settings.HaveTBC == true)
+            {
+                foreach (var realmInfo in Settings.Instance.RealmLists)
+                {
+                    if (realmInfo.Value.WowVersion == WowVersionEnum.TBC)
+                    {
+                        if (c_ddlRealm.Items.Contains(realmInfo.Key) == false)
+                            c_ddlRealm.Items.Add(realmInfo.Key);
+                    }
+                }
+            }
+            else
+            {
+                foreach (var realmInfo in Settings.Instance.RealmLists)
+                {
+                    if (realmInfo.Value.WowVersion == WowVersionEnum.TBC)
+                    {
+                        if (c_ddlRealm.Items.Contains(realmInfo.Key) == true)
+                        {
+                            if ((string)c_ddlRealm.SelectedItem == realmInfo.Key)
+                                c_ddlRealm.SelectedIndex = 0;
+                            c_ddlRealm.Items.Remove(realmInfo.Key);
+                        }
+                    }
+                }
+            }
+            foreach (var realmInfo in Settings.Instance.RealmLists)
+            {
+                if (realmInfo.Value.WowVersion == WowVersionEnum.Vanilla)
+                {
+                    if (c_ddlRealm.Items.Contains(realmInfo.Key) == false)
+                        c_ddlRealm.Items.Add(realmInfo.Key);
+                }
+            }
         }
 
         //void FilterNews()
@@ -585,17 +602,8 @@ namespace VF_WoWLauncher
             })).Start();
             this.Text = "VF_WoWLauncher " + StaticValues.LauncherVersion;
             //this.TopMost = true;
-            if (Settings.HaveTBC == true)
-            {
-                foreach (var realmInfo in Settings.Instance.RealmLists)
-                {
-                    if (realmInfo.Value.WowVersion == WowVersionEnum.TBC)
-                    {
-                        if (c_ddlRealm.Items.Contains(realmInfo.Key) == false)
-                            c_ddlRealm.Items.Add(realmInfo.Key);
-                    }
-                }
-            }
+
+            UpdatePossibleRealmConfigurations();
             c_ddlRealm.SelectedItem = Settings.Instance.DefaultRealm;
             c_cbClearWDB.Checked = Settings.Instance.ClearWDB;
             InitializeConfigDDL(Settings.Instance.DefaultConfig);

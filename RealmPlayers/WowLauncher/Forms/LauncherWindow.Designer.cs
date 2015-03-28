@@ -57,14 +57,6 @@
             this.c_ddlRealm.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.c_ddlRealm.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.c_ddlRealm.FormattingEnabled = true;
-            this.c_ddlRealm.Items.AddRange(new object[] {
-            "Emerald Dream",
-            "Warsong",
-            "Al\'Akir",
-            "VanillaGaming",
-            "Valkyrie",
-            "Rebirth",
-            "Nostalrius"});
             this.c_ddlRealm.Location = new System.Drawing.Point(378, 427);
             this.c_ddlRealm.Name = "c_ddlRealm";
             this.c_ddlRealm.Size = new System.Drawing.Size(179, 21);
