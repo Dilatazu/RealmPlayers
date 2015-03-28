@@ -26,6 +26,8 @@ namespace VF_WoWLauncher
             c_cbxRunNotAdmin.Checked = Settings.Instance.RunWoWNotAdmin;
             c_cbxAutoHide.Checked = Settings.Instance.AutoHideOldNews;
             c_cbAutoUpdateVF.Checked = Settings.Instance.AutoUpdateVFAddons;
+            c_cbxFeenixNews.Checked = Settings.Instance.NewsSources_Feenix;
+            c_cbxNostalriusNews.Checked = Settings.Instance.NewsSources_Nostalrius;
             //c_cbxWoWNoDelay.Checked = Settings.Instance.UseWoWNoDelay;
             if (Settings.HaveTBC == true)
             {
@@ -127,6 +129,9 @@ namespace VF_WoWLauncher
             Settings.Instance.AutoHideOldNews = c_cbxAutoHide.Checked;
             Settings.Instance.AutoUpdateVFAddons = c_cbAutoUpdateVF.Checked;
             //Settings.Instance.UseWoWNoDelay = c_cbxWoWNoDelay.Checked;
+            Settings.Instance.AutoRefreshNews = c_cbAutoRefresh.Checked;
+            Settings.Instance.NewsSources_Feenix = c_cbxFeenixNews.Checked;
+            Settings.Instance.NewsSources_Nostalrius = c_cbxNostalriusNews.Checked;
             Close();
         }
 
@@ -260,7 +265,7 @@ namespace VF_WoWLauncher
 
         private void c_cbAutoRefresh_CheckedChanged(object sender, EventArgs e)
         {
-            Settings.Instance.AutoRefreshNews = c_cbAutoRefresh.Checked;
+
         }
 
         private void c_cbxRunNotAdmin_CheckedChanged(object sender, EventArgs e)
@@ -280,6 +285,21 @@ namespace VF_WoWLauncher
         }
 
         private void c_cbAutoUpdateVF_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void c_cbxGetFeenixNews_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void c_cbxNostalriusNews_CheckedChanged(object sender, EventArgs e)
         {
 
         }

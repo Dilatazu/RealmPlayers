@@ -45,12 +45,16 @@
             this.c_cbxRunNotAdmin = new System.Windows.Forms.CheckBox();
             this.c_cbxAutoHide = new System.Windows.Forms.CheckBox();
             this.c_cbAutoUpdateVF = new System.Windows.Forms.CheckBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.c_cbxFeenixNews = new System.Windows.Forms.CheckBox();
+            this.c_cbxNostalriusNews = new System.Windows.Forms.CheckBox();
             this.c_gpbUploading.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // c_btnClose
             // 
-            this.c_btnClose.Location = new System.Drawing.Point(329, 275);
+            this.c_btnClose.Location = new System.Drawing.Point(330, 320);
             this.c_btnClose.Name = "c_btnClose";
             this.c_btnClose.Size = new System.Drawing.Size(75, 23);
             this.c_btnClose.TabIndex = 3;
@@ -61,7 +65,7 @@
             // c_lblWowDirectory
             // 
             this.c_lblWowDirectory.AutoSize = true;
-            this.c_lblWowDirectory.Location = new System.Drawing.Point(6, 143);
+            this.c_lblWowDirectory.Location = new System.Drawing.Point(7, 188);
             this.c_lblWowDirectory.Name = "c_lblWowDirectory";
             this.c_lblWowDirectory.Size = new System.Drawing.Size(122, 13);
             this.c_lblWowDirectory.TabIndex = 6;
@@ -69,7 +73,7 @@
             // 
             // c_btnWowDirectoryBrowse
             // 
-            this.c_btnWowDirectoryBrowse.Location = new System.Drawing.Point(341, 159);
+            this.c_btnWowDirectoryBrowse.Location = new System.Drawing.Point(342, 204);
             this.c_btnWowDirectoryBrowse.Name = "c_btnWowDirectoryBrowse";
             this.c_btnWowDirectoryBrowse.Size = new System.Drawing.Size(63, 36);
             this.c_btnWowDirectoryBrowse.TabIndex = 5;
@@ -79,7 +83,7 @@
             // 
             // c_txtWowDirectory
             // 
-            this.c_txtWowDirectory.Location = new System.Drawing.Point(9, 159);
+            this.c_txtWowDirectory.Location = new System.Drawing.Point(10, 204);
             this.c_txtWowDirectory.Multiline = true;
             this.c_txtWowDirectory.Name = "c_txtWowDirectory";
             this.c_txtWowDirectory.Size = new System.Drawing.Size(326, 34);
@@ -129,7 +133,7 @@
             // c_cbxWoWNoDelay
             // 
             this.c_cbxWoWNoDelay.AutoSize = true;
-            this.c_cbxWoWNoDelay.Location = new System.Drawing.Point(175, 279);
+            this.c_cbxWoWNoDelay.Location = new System.Drawing.Point(176, 324);
             this.c_cbxWoWNoDelay.Name = "c_cbxWoWNoDelay";
             this.c_cbxWoWNoDelay.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.c_cbxWoWNoDelay.Size = new System.Drawing.Size(148, 17);
@@ -142,7 +146,7 @@
             // c_lblTBCWowDirectory
             // 
             this.c_lblTBCWowDirectory.AutoSize = true;
-            this.c_lblTBCWowDirectory.Location = new System.Drawing.Point(7, 204);
+            this.c_lblTBCWowDirectory.Location = new System.Drawing.Point(8, 249);
             this.c_lblTBCWowDirectory.Name = "c_lblTBCWowDirectory";
             this.c_lblTBCWowDirectory.Size = new System.Drawing.Size(110, 13);
             this.c_lblTBCWowDirectory.TabIndex = 11;
@@ -150,7 +154,7 @@
             // 
             // c_btnTBCWowDirectoryBrowse
             // 
-            this.c_btnTBCWowDirectoryBrowse.Location = new System.Drawing.Point(342, 220);
+            this.c_btnTBCWowDirectoryBrowse.Location = new System.Drawing.Point(343, 265);
             this.c_btnTBCWowDirectoryBrowse.Name = "c_btnTBCWowDirectoryBrowse";
             this.c_btnTBCWowDirectoryBrowse.Size = new System.Drawing.Size(63, 36);
             this.c_btnTBCWowDirectoryBrowse.TabIndex = 10;
@@ -160,7 +164,7 @@
             // 
             // c_txtTBCWowDirectory
             // 
-            this.c_txtTBCWowDirectory.Location = new System.Drawing.Point(10, 220);
+            this.c_txtTBCWowDirectory.Location = new System.Drawing.Point(11, 265);
             this.c_txtTBCWowDirectory.Multiline = true;
             this.c_txtTBCWowDirectory.Name = "c_txtTBCWowDirectory";
             this.c_txtTBCWowDirectory.Size = new System.Drawing.Size(326, 34);
@@ -171,7 +175,7 @@
             // c_cbxEnableTBC
             // 
             this.c_cbxEnableTBC.AutoSize = true;
-            this.c_cbxEnableTBC.Location = new System.Drawing.Point(115, 203);
+            this.c_cbxEnableTBC.Location = new System.Drawing.Point(116, 248);
             this.c_cbxEnableTBC.Name = "c_cbxEnableTBC";
             this.c_cbxEnableTBC.Size = new System.Drawing.Size(59, 17);
             this.c_cbxEnableTBC.TabIndex = 12;
@@ -182,7 +186,7 @@
             // c_cbAutoRefresh
             // 
             this.c_cbAutoRefresh.AutoSize = true;
-            this.c_cbAutoRefresh.Location = new System.Drawing.Point(10, 83);
+            this.c_cbAutoRefresh.Location = new System.Drawing.Point(10, 68);
             this.c_cbAutoRefresh.Name = "c_cbAutoRefresh";
             this.c_cbAutoRefresh.Size = new System.Drawing.Size(173, 17);
             this.c_cbAutoRefresh.TabIndex = 13;
@@ -193,7 +197,7 @@
             // c_cbxRunNotAdmin
             // 
             this.c_cbxRunNotAdmin.AutoSize = true;
-            this.c_cbxRunNotAdmin.Location = new System.Drawing.Point(10, 279);
+            this.c_cbxRunNotAdmin.Location = new System.Drawing.Point(11, 324);
             this.c_cbxRunNotAdmin.Name = "c_cbxRunNotAdmin";
             this.c_cbxRunNotAdmin.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.c_cbxRunNotAdmin.Size = new System.Drawing.Size(143, 17);
@@ -206,7 +210,7 @@
             // 
             this.c_cbxAutoHide.AutoSize = true;
             this.c_cbxAutoHide.Enabled = false;
-            this.c_cbxAutoHide.Location = new System.Drawing.Point(12, 290);
+            this.c_cbxAutoHide.Location = new System.Drawing.Point(13, 335);
             this.c_cbxAutoHide.Name = "c_cbxAutoHide";
             this.c_cbxAutoHide.Size = new System.Drawing.Size(116, 17);
             this.c_cbxAutoHide.TabIndex = 15;
@@ -218,7 +222,7 @@
             // c_cbAutoUpdateVF
             // 
             this.c_cbAutoUpdateVF.AutoSize = true;
-            this.c_cbAutoUpdateVF.Location = new System.Drawing.Point(10, 106);
+            this.c_cbAutoUpdateVF.Location = new System.Drawing.Point(10, 156);
             this.c_cbAutoUpdateVF.Name = "c_cbAutoUpdateVF";
             this.c_cbAutoUpdateVF.Size = new System.Drawing.Size(229, 17);
             this.c_cbAutoUpdateVF.TabIndex = 16;
@@ -227,15 +231,49 @@
             this.c_cbAutoUpdateVF.Visible = false;
             this.c_cbAutoUpdateVF.CheckedChanged += new System.EventHandler(this.c_cbAutoUpdateVF_CheckedChanged);
             // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.c_cbxNostalriusNews);
+            this.groupBox1.Controls.Add(this.c_cbxFeenixNews);
+            this.groupBox1.Location = new System.Drawing.Point(10, 91);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(394, 45);
+            this.groupBox1.TabIndex = 17;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Realm Forum news from sources";
+            // 
+            // c_cbxFeenixNews
+            // 
+            this.c_cbxFeenixNews.AutoSize = true;
+            this.c_cbxFeenixNews.Location = new System.Drawing.Point(6, 19);
+            this.c_cbxFeenixNews.Name = "c_cbxFeenixNews";
+            this.c_cbxFeenixNews.Size = new System.Drawing.Size(106, 17);
+            this.c_cbxFeenixNews.TabIndex = 14;
+            this.c_cbxFeenixNews.Text = "Feenix(wow-one)";
+            this.c_cbxFeenixNews.UseVisualStyleBackColor = true;
+            this.c_cbxFeenixNews.CheckedChanged += new System.EventHandler(this.c_cbxGetFeenixNews_CheckedChanged);
+            // 
+            // c_cbxNostalriusNews
+            // 
+            this.c_cbxNostalriusNews.AutoSize = true;
+            this.c_cbxNostalriusNews.Location = new System.Drawing.Point(118, 19);
+            this.c_cbxNostalriusNews.Name = "c_cbxNostalriusNews";
+            this.c_cbxNostalriusNews.Size = new System.Drawing.Size(72, 17);
+            this.c_cbxNostalriusNews.TabIndex = 15;
+            this.c_cbxNostalriusNews.Text = "Nostalrius";
+            this.c_cbxNostalriusNews.UseVisualStyleBackColor = true;
+            this.c_cbxNostalriusNews.CheckedChanged += new System.EventHandler(this.c_cbxNostalriusNews_CheckedChanged);
+            // 
             // ApplicationSettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(413, 307);
+            this.ClientSize = new System.Drawing.Size(412, 353);
+            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.c_cbAutoRefresh);
             this.Controls.Add(this.c_cbAutoUpdateVF);
             this.Controls.Add(this.c_cbxAutoHide);
             this.Controls.Add(this.c_cbxRunNotAdmin);
-            this.Controls.Add(this.c_cbAutoRefresh);
             this.Controls.Add(this.c_cbxEnableTBC);
             this.Controls.Add(this.c_lblTBCWowDirectory);
             this.Controls.Add(this.c_btnTBCWowDirectoryBrowse);
@@ -252,6 +290,8 @@
             this.Load += new System.EventHandler(this.ApplicationSettingsForm_Load);
             this.c_gpbUploading.ResumeLayout(false);
             this.c_gpbUploading.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -276,6 +316,9 @@
         private System.Windows.Forms.CheckBox c_cbxRunNotAdmin;
         private System.Windows.Forms.CheckBox c_cbxAutoHide;
         private System.Windows.Forms.CheckBox c_cbAutoUpdateVF;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.CheckBox c_cbxFeenixNews;
+        private System.Windows.Forms.CheckBox c_cbxNostalriusNews;
 
     }
 }

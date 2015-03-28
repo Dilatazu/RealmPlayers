@@ -271,11 +271,22 @@ namespace VF_WoWLauncher
                             }));
                         }
                     };
-                    ForumReader.GetLatestPosts(new string[]{"http://www.wow-one.com/forum/117-server-updates/"
+                    if(Settings.Instance.NewsSources_Feenix == true)
+                    {
+                        ForumReader.GetLatestPosts(new string[]{"http://www.wow-one.com/forum/117-server-updates/"
                         , "http://www.wow-one.com/forum/192-information-and-releases/"
                         , "http://www.wow-one.com/forum/3-news-and-announcements/"
                         , "http://www.wow-one.com/forum/32-1121-changelogs/"}
-                        , newPostLambda, ForumReader.ForumType.FeenixForum, onlyNewest);
+                            , newPostLambda, ForumReader.ForumType.FeenixForum, onlyNewest);
+                    }
+                    if (Settings.Instance.NewsSources_Nostalrius == true)
+                    {
+                        //ForumReader.GetLatestPosts(new string[]{"http://www.wow-one.com/forum/117-server-updates/"
+                        //, "http://www.wow-one.com/forum/192-information-and-releases/"
+                        //, "http://www.wow-one.com/forum/3-news-and-announcements/"
+                        //, "http://www.wow-one.com/forum/32-1121-changelogs/"}
+                        //    , newPostLambda, ForumReader.ForumType.FeenixForum, onlyNewest);
+                    }
 
                     ForumReader.GetLatestPosts(new string[]{"http://forum.realmplayers.com/viewforum.php?f=14"
                         , "http://forum.realmplayers.com/viewforum.php?f=15"
