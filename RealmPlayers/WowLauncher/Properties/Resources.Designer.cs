@@ -133,9 +133,29 @@ namespace VF_WoWLauncher.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap topic_read_nos {
+            get {
+                object obj = ResourceManager.GetObject("topic_read_nos", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap topic_unread {
             get {
                 object obj = ResourceManager.GetObject("topic_unread", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap topic_unread_nos {
+            get {
+                object obj = ResourceManager.GetObject("topic_unread_nos", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

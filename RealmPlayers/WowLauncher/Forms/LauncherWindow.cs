@@ -230,6 +230,12 @@ namespace VF_WoWLauncher
                             if (_NewPost.m_PosterName != "Dilatazu")
                                 return;
                         }
+                        else if(_NewPost.m_PostURL.Contains("forum.nostalrius.org") == true)
+                        {
+                            forumType = ForumReader.ForumType.NostalriusForum;
+                            if (_NewPost.m_PosterName != "Viper" && _NewPost.m_PosterName != "Daemon")
+                                return;
+                        }
                         string threadNameLower = _NewPost.m_ThreadName.ToLower();
                         if (forumType == ForumReader.ForumType.FeenixForum && Settings.HaveTBC == false && (threadNameLower.Contains("archangel") || threadNameLower.Contains("2.4.3") || threadNameLower.Contains("area 52")))
                         {
@@ -248,13 +254,50 @@ namespace VF_WoWLauncher
                         {
                             c_dlAddons.BeginInvoke(new Action(() =>
                             {
-                                var image = (forumType == ForumReader.ForumType.FeenixForum ? Properties.Resources.f_icon_read : Properties.Resources.topic_read);
+                                Image image;
+
                                 if (_NewPost.m_State == ForumReader.ForumPost.State.NewThisSession || (DateTime.Now - _NewPost.m_PostDate).TotalHours < 48)
                                 {
                                     _NewPost.m_State = ForumReader.ForumPost.State.Unread;
-                                    image = (forumType == ForumReader.ForumType.FeenixForum ? Properties.Resources.f_icon : Properties.Resources.topic_unread);
+
+                                    if (forumType == ForumReader.ForumType.FeenixForum)
+                                    {
+                                        image = Properties.Resources.f_icon;
+                                    }
+                                    else if (forumType == ForumReader.ForumType.RealmPlayersForum)
+                                    {
+                                        image = Properties.Resources.topic_unread;
+                                    }
+                                    else if (forumType == ForumReader.ForumType.NostalriusForum)
+                                    {
+                                        image = Properties.Resources.topic_unread_nos;
+                                    }
+                                    else
+                                    {
+                                        image = Properties.Resources.topic_unread;
+                                    }
                                     ForumReader.TriggerSaveForumCache();
                                 }
+                                else
+                                {
+                                    if (forumType == ForumReader.ForumType.FeenixForum)
+                                    {
+                                        image = Properties.Resources.f_icon_read;
+                                    }
+                                    else if (forumType == ForumReader.ForumType.RealmPlayersForum)
+                                    {
+                                        image = Properties.Resources.topic_read;
+                                    }
+                                    else if (forumType == ForumReader.ForumType.NostalriusForum)
+                                    {
+                                        image = Properties.Resources.topic_read_nos;
+                                    }
+                                    else
+                                    {
+                                        image = Properties.Resources.topic_read;
+                                    }
+                                }
+
                                 c_dlAddons.AddItem(int.MinValue + (int)((_NewPost.m_PostDate - minDate).TotalMinutes)
                                     , image
                                     , _NewPost.m_ThreadName, (_NewPost.m_PostContent.Length > 1200 ? "This post is long! Click \"Goto thread\" to read the full post on the forum.\r\n\r\n" + _NewPost.m_PostContent.Substring(0, 1024) + "..." : _NewPost.m_PostContent), _NewPost.m_PostDate.ToString("yyyy-MM-dd HH:mm:ss") + " by " + _NewPost.m_PosterName
@@ -281,11 +324,9 @@ namespace VF_WoWLauncher
                     }
                     if (Settings.Instance.NewsSources_Nostalrius == true)
                     {
-                        //ForumReader.GetLatestPosts(new string[]{"http://www.wow-one.com/forum/117-server-updates/"
-                        //, "http://www.wow-one.com/forum/192-information-and-releases/"
-                        //, "http://www.wow-one.com/forum/3-news-and-announcements/"
-                        //, "http://www.wow-one.com/forum/32-1121-changelogs/"}
-                        //    , newPostLambda, ForumReader.ForumType.FeenixForum, onlyNewest);
+                        ForumReader.GetLatestPosts(new string[]{"http://forum.nostalrius.org/viewforum.php?f=2"
+                        , "http://forum.nostalrius.org/viewforum.php?f=14"}
+                            , newPostLambda, ForumReader.ForumType.NostalriusForum, onlyNewest);
                     }
 
                     ForumReader.GetLatestPosts(new string[]{"http://forum.realmplayers.com/viewforum.php?f=14"

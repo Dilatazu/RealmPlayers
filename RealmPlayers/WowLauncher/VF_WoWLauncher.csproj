@@ -357,6 +357,8 @@
     <None Include="Resources\VF_RealmPlayersIcon64.png" />
     <None Include="Resources\topic_read.gif" />
     <None Include="Resources\topic_unread.gif" />
+    <None Include="Resources\topic_read_nos.png" />
+    <None Include="Resources\topic_unread_nos.png" />
     <Content Include="VF_WL_ICON.ico" />
     <Content Include="wow_icon.ico" />
     <None Include="Resources\update-critical32.png" />
