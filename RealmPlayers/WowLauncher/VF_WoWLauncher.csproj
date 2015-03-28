@@ -32,7 +32,7 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -170,6 +170,12 @@
     <Compile Include="Forms\CreateAddonPackageForm.Designer.cs">
       <DependentUpon>CreateAddonPackageForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\SettingsForms\RealmListSettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SettingsForms\RealmListSettingsForm.Designer.cs">
+      <DependentUpon>RealmListSettingsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\SettingsForms\ApplicationSettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -294,6 +300,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SettingsForms\AddonsSettingsForm.resx">
       <DependentUpon>AddonsSettingsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SettingsForms\RealmListSettingsForm.resx">
+      <DependentUpon>RealmListSettingsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SettingsForms\ConfigSettingsForm.resx">
       <DependentUpon>ConfigSettingsForm.cs</DependentUpon>

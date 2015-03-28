@@ -12,15 +12,46 @@ namespace VF_WoWLauncher
 {
     class WoWLauncherApp : System.Windows.Application
     {
+        [DllImport("user32")]
+        static extern bool SetForegroundWindow(IntPtr hWnd);
+        [DllImport("user32")]
+        static extern int ShowWindow(IntPtr hWnd, uint swCommand);
+        [DllImport("user32")]
+        static extern bool IsIconic(IntPtr hWnd);
+
+        private const uint SW_RESTORE = 0x09;
+
         [DllImport("user32.dll")]
         private static extern int RegisterWindowMessage(string msgName);
 
+        [DllImport("user32.dll")]
+        private static extern int ChangeWindowMessageFilter(int msg, UInt32 dwFlag);
+
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        private static extern int SendMessage(IntPtr hWnd, int wMsg, IntPtr wParam, IntPtr lParam);
+        private static extern int PostMessage(IntPtr hWnd, int wMsg, IntPtr wParam, IntPtr lParam);
+
+        //[DllImport("user32.dll", CharSet = CharSet.Auto)]
+        //private static extern int SendMessage(IntPtr hWnd, int wMsg, IntPtr wParam, IntPtr lParam);
+
+        [DllImport("user32.dll")]
+        static extern bool SendMessage(int hWnd, int hMsg, int wParam, int lParam);
+
+        [DllImport("user32.dll")]
+        static extern bool SendNotifyMessage(int hWnd, int hMsg, int wParam, int lParam);
 
         public void InitiateMessageIDs()
         {
             m_MESSAGEID_ResetWindowPosition = RegisterWindowMessage("WoWLauncherApp.ResetWindowPosition");
+            if(ChangeWindowMessageFilter(m_MESSAGEID_ResetWindowPosition, 1) != 1)
+            {
+                MessageBox.Show("ChangeWindowMessageFilter(m_MESSAGEID_ResetWindowPosition) failed");
+            }
+
+            m_MESSAGEID_FocusWindow = RegisterWindowMessage("WoWLauncherApp.FocusWindow");
+            if (ChangeWindowMessageFilter(m_MESSAGEID_FocusWindow, 1) != 1)
+            {
+                MessageBox.Show("ChangeWindowMessageFilter(m_MESSAGEID_FocusWindow) failed");
+            }
         }
         private JumpList m_JumpList = null;
         public void InitiateJumpList()
@@ -49,7 +80,7 @@ namespace VF_WoWLauncher
                 m_JumpList.Apply();
             }
         }
-        public void AddJumpListLaunchCommand(Settings.LaunchShortcut _LaunchShortcut)
+        public void AddJumpListLaunchCommand(LaunchShortcut _LaunchShortcut)
         {
             var jumpItem = new JumpTask();
             jumpItem.Title = _LaunchShortcut.ShortcutName;
@@ -62,6 +93,7 @@ namespace VF_WoWLauncher
             m_JumpList.JumpItems.Add(jumpItem);
             m_JumpList.Apply();
         }
+        private int m_MESSAGEID_FocusWindow = 0;
         private int m_MESSAGEID_ResetWindowPosition = 0;
         
         public bool HandleJumpListMessages(LauncherWindow _LauncherWindow, ref System.Windows.Forms.Message _Message)
@@ -75,29 +107,51 @@ namespace VF_WoWLauncher
                 _LauncherWindow.Left = Screen.PrimaryScreen.WorkingArea.Width / 2 - _LauncherWindow.Width / 2;
                 return true;
             }
+            else if(_Message.Msg == m_MESSAGEID_FocusWindow)
+            {
+                (new System.Threading.Tasks.Task(new Action(() =>
+                {
+                    System.Threading.Thread.Sleep(1000);
+                    _LauncherWindow.BeginInvoke(new Action(() =>
+                    {
+                        if(_LauncherWindow.WindowState == FormWindowState.Minimized)
+                        {
+                            ShowWindow(_LauncherWindow.Handle, SW_RESTORE);
+                        }
+                        _LauncherWindow.Activate();
+                        _LauncherWindow.Focus();
+                    }));
+                }))).Start();
+                return true;
+            }
             return false;
         }
         public void HandleJumpListCommands(LauncherWindow _LauncherWindow, CMDArguments _Args)
         {
             IntPtr otherProcessPtr = IntPtr.Zero;
+            if (_LauncherWindow == null)
+            {
+                if (SendMessage(0xffff, m_MESSAGEID_FocusWindow, 0, 0) != true)
+                {
+                    MessageBox.Show("PostMessage failed!");
+                }
+            }
             if (_Args["ResetWindowPosition"] != null)
             {
                 if (_LauncherWindow != null)
                 {
                     Settings.Instance.LauncherWindow_Left = -1;
                     Settings.Instance.LauncherWindow_Top = -1;
+                    _LauncherWindow.Top = Screen.PrimaryScreen.WorkingArea.Height / 2 - _LauncherWindow.Height / 2;
+                    _LauncherWindow.Left = Screen.PrimaryScreen.WorkingArea.Width / 2 - _LauncherWindow.Width / 2;
                 }
                 else
                 {
-                    if (otherProcessPtr != IntPtr.Zero)
+                    if (SendMessage(0xffff, m_MESSAGEID_ResetWindowPosition, 0, 0) != true)
                     {
-                        SendMessage(otherProcessPtr, m_MESSAGEID_ResetWindowPosition, IntPtr.Zero, IntPtr.Zero);
+                        MessageBox.Show("PostMessage failed!");
                     }
                 }
-            }
-            if (_LauncherWindow == null)
-            {
-                otherProcessPtr = Program.FocusOtherProcess();
             }
         }
     }
@@ -322,49 +376,6 @@ namespace VF_WoWLauncher
                 g_AppMutex.ReleaseMutex();
                 g_AppMutex = null;
             }
-        }
-
-
-        [DllImport("user32")]
-        static extern bool SetForegroundWindow(IntPtr hWnd);
-        [DllImport("user32")]
-        static extern int ShowWindow(IntPtr hWnd, int swCommand);
-        [DllImport("user32")]
-        static extern bool IsIconic(IntPtr hWnd);
-
-        public static IntPtr FocusOtherProcess()
-        {
-            Process proc = Process.GetCurrentProcess();
-
-            // Using Process.ProcessName does not function properly when
-            // the actual name exceeds 15 characters. Using the assembly 
-            // name takes care of this quirk and is more accurate than 
-            // other work arounds.
-
-            string assemblyName = Assembly.GetExecutingAssembly().GetName().Name;
-
-            foreach (Process otherProc in Process.GetProcessesByName(assemblyName))
-            {
-                //ignore "this" process, and ignore wyUpdate with a different filename
-
-                if (proc.Id != otherProc.Id
-                        && otherProc.MainModule != null && proc.MainModule != null
-                        && proc.MainModule.FileName == otherProc.MainModule.FileName)
-                {
-                    // Found a "same named process".
-                    // Assume it is the one we want brought to the foreground.
-                    // Use the Win32 API to bring it to the foreground.
-
-                    IntPtr hWnd = otherProc.MainWindowHandle;
-
-                    if (IsIconic(hWnd))
-                        ShowWindow(hWnd, 9); //SW_RESTORE
-
-                    SetForegroundWindow(hWnd);
-                    return hWnd;
-                }
-            }
-            return IntPtr.Zero;
         }
     }
 }
