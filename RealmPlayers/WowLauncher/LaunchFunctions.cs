@@ -29,7 +29,7 @@ namespace VF_WoWLauncher
             if(Settings.Instance.RealmLists.ContainsKey(_RealmName) == true)
             {
                 var realmList = Settings.Instance.RealmLists[_RealmName];
-                realmListFile = realmList.RealmListWTF;
+                realmListFile = realmList.GetRealmListWTF();
                 wowVersion = realmList.WowVersion;
             }
             else
