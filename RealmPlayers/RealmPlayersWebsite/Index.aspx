@@ -47,6 +47,7 @@
                                 <asp:ListItem Text="Al'Akir" Value="AlA"/>
                                 <asp:ListItem Text="Rebirth" Value="REB"/>
                                 <asp:ListItem Text="Nostalrius" Value="NRB"/>
+                                <asp:ListItem Text="Kronos" Value="KRO"/>
                                 <asp:ListItem Text="Archangel(TBC)" Value="ArA"/>
                             </asp:DropDownList>
                             <asp:DropDownList style="width:100px; margin: 10px 2.5px 0px 2.5px" ID="ddlRace" runat="server" onchange="this.style.color = this.options[this.selectedIndex].style.color;">
