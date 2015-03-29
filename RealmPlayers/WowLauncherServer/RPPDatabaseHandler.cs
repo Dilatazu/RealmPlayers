@@ -197,9 +197,9 @@ namespace VF_WoWLauncherServer
             GC.Collect();
         }
 
-        private void _UpdateGuildSummaryDatabase(Database _Database)
+        private void _UpdateGuildSummaryDatabase(Database _Database, bool _UpdateAllHistory = false)
         {
-            VF_RPDatabase.GuildSummaryDatabase.UpdateSummaryDatabase(m_RPPDBFolder, _Database);
+            VF_RPDatabase.GuildSummaryDatabase.UpdateSummaryDatabase(m_RPPDBFolder, _Database, _UpdateAllHistory);
             m_LastSummaryDatabaseUpdateTime = DateTime.UtcNow;
         }
         public void CreateGuildSummaryDatabase()
@@ -207,10 +207,16 @@ namespace VF_WoWLauncherServer
             lock (m_LockObject)
             {
                 var timer = System.Diagnostics.Stopwatch.StartNew();
-                Database fullDatabase = new Database(m_RPPDBFolder + "Database\\", new DateTime(2012, 5, 1, 0, 0, 0));
-                fullDatabase.PurgeRealmDBs(true, true);
+                int realmIndex = 1;
+                foreach(var realm in Database.ALL_REALMS)
+                {
+                    var realmTimer = System.Diagnostics.Stopwatch.StartNew();
+                    Database fullDatabase = new Database(m_RPPDBFolder + "Database\\", new DateTime(2012, 5, 1, 0, 0, 0), new WowRealm[] { realm });
+                    fullDatabase.PurgeRealmDBs(true, true, true);
 
-                _UpdateGuildSummaryDatabase(fullDatabase);
+                    _UpdateGuildSummaryDatabase(fullDatabase, true);
+                    Logger.ConsoleWriteLine("Guild Summary Database Generation " + (realmIndex++) + " / " + Database.ALL_REALMS.Length + ", Done with " + realm.ToString() + " it took " + (realmTimer.ElapsedMilliseconds / 1000) + " seconds", ConsoleColor.Cyan);
+                }
                 Logger.ConsoleWriteLine("Done Creating Guild Summary Database, it took " + (timer.ElapsedMilliseconds / 1000) + " seconds", ConsoleColor.Green);
             }
             GC.Collect();
