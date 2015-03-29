@@ -298,10 +298,12 @@ namespace VF_RPDatabase
                             playerGuildHistory.InitCache(this);
                             m_Players.Add(_PlayerName, playerGuildHistory);
 
-                            if (m_Faction == Faction.Unknown)
+                            if (m_Faction == Faction.Unknown || (DateTime.UtcNow - guildHistory.Uploader.GetTime()).TotalDays < 14)
                             {
-                                if(_PlayerData.CharacterHistory.Count > 0)
+                                if (_PlayerData.CharacterHistory.Count > 0)
+                                {
                                     m_Faction = VF_RealmPlayersDatabase.StaticValues.GetFaction(_PlayerData.GetCharacterItemAtTime(guildHistory.Uploader.GetTime()).Data.Race);
+                                }
                             }
                         }
                     }

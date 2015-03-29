@@ -117,7 +117,7 @@ namespace VF_RPDatabase
             }
             return database;
         }
-        public static void UpdateSummaryDatabase(string _RootDirectory, RPPDatabase _Database)
+        public static void UpdateSummaryDatabase(string _RootDirectory, RPPDatabase _Database, bool _UpdateAllHistory = false)
         {
             GuildSummaryDatabase database = null;
             string databaseFile = _RootDirectory + "\\SummaryDatabase\\GuildSummaryDatabase.dat";
@@ -140,7 +140,14 @@ namespace VF_RPDatabase
             }
             else
             {
-                database.UpdateDatabase(_Database, DateTime.UtcNow.AddDays(-8));
+                if (_UpdateAllHistory == true)
+                {
+                    database.UpdateDatabase(_Database);
+                }
+                else
+                {
+                    database.UpdateDatabase(_Database, DateTime.UtcNow.AddDays(-8));
+                }
             }
             Utility.SaveSerialize(databaseFile, database);
         }
