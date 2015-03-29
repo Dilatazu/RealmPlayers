@@ -93,7 +93,6 @@ namespace VF_WoWLauncher
                     })));
                     linksMenu.MenuItems.Add(nostalriusLinks);
                 }
-                linksMenu.MenuItems.Add("-");
                 {
                     var kronosLinks = new MenuItem("Kronos Links");
                     kronosLinks.MenuItems.Add(new MenuItem("Goto homepage", new EventHandler((o, ea) =>

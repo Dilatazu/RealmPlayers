@@ -46,8 +46,8 @@
             this.c_cbxAutoHide = new System.Windows.Forms.CheckBox();
             this.c_cbAutoUpdateVF = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.c_cbxFeenixNews = new System.Windows.Forms.CheckBox();
             this.c_cbxNostalriusNews = new System.Windows.Forms.CheckBox();
+            this.c_cbxFeenixNews = new System.Windows.Forms.CheckBox();
             this.c_gpbUploading.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -240,18 +240,7 @@
             this.groupBox1.Size = new System.Drawing.Size(394, 45);
             this.groupBox1.TabIndex = 17;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Realm Forum news from sources";
-            // 
-            // c_cbxFeenixNews
-            // 
-            this.c_cbxFeenixNews.AutoSize = true;
-            this.c_cbxFeenixNews.Location = new System.Drawing.Point(6, 19);
-            this.c_cbxFeenixNews.Name = "c_cbxFeenixNews";
-            this.c_cbxFeenixNews.Size = new System.Drawing.Size(106, 17);
-            this.c_cbxFeenixNews.TabIndex = 14;
-            this.c_cbxFeenixNews.Text = "Feenix(wow-one)";
-            this.c_cbxFeenixNews.UseVisualStyleBackColor = true;
-            this.c_cbxFeenixNews.CheckedChanged += new System.EventHandler(this.c_cbxGetFeenixNews_CheckedChanged);
+            this.groupBox1.Text = "Private server forum news from sources";
             // 
             // c_cbxNostalriusNews
             // 
@@ -263,6 +252,17 @@
             this.c_cbxNostalriusNews.Text = "Nostalrius";
             this.c_cbxNostalriusNews.UseVisualStyleBackColor = true;
             this.c_cbxNostalriusNews.CheckedChanged += new System.EventHandler(this.c_cbxNostalriusNews_CheckedChanged);
+            // 
+            // c_cbxFeenixNews
+            // 
+            this.c_cbxFeenixNews.AutoSize = true;
+            this.c_cbxFeenixNews.Location = new System.Drawing.Point(6, 19);
+            this.c_cbxFeenixNews.Name = "c_cbxFeenixNews";
+            this.c_cbxFeenixNews.Size = new System.Drawing.Size(106, 17);
+            this.c_cbxFeenixNews.TabIndex = 14;
+            this.c_cbxFeenixNews.Text = "Feenix(wow-one)";
+            this.c_cbxFeenixNews.UseVisualStyleBackColor = true;
+            this.c_cbxFeenixNews.CheckedChanged += new System.EventHandler(this.c_cbxGetFeenixNews_CheckedChanged);
             // 
             // ApplicationSettingsForm
             // 
