@@ -39,25 +39,39 @@ namespace VF_WoWLauncher
         [DllImport("user32.dll")]
         static extern bool SendNotifyMessage(int hWnd, int hMsg, int wParam, int lParam);
 
+        public static bool IS_WINDOWSVISTA()
+        {
+            if (Environment.OSVersion.Version.Major > 6 //6 == Vista och Windows 7
+            || (Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor >= 1)) // 6.1 == Windows 7
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
         public void InitiateMessageIDs()
         {
             m_MESSAGEID_ResetWindowPosition = RegisterWindowMessage("WoWLauncherApp.ResetWindowPosition");
-            if(ChangeWindowMessageFilter(m_MESSAGEID_ResetWindowPosition, 1) != 1)
-            {
-                MessageBox.Show("ChangeWindowMessageFilter(m_MESSAGEID_ResetWindowPosition) failed");
-            }
-
             m_MESSAGEID_FocusWindow = RegisterWindowMessage("WoWLauncherApp.FocusWindow");
-            if (ChangeWindowMessageFilter(m_MESSAGEID_FocusWindow, 1) != 1)
+
+            if (IS_WINDOWSVISTA() == true)
             {
-                MessageBox.Show("ChangeWindowMessageFilter(m_MESSAGEID_FocusWindow) failed");
+                if (ChangeWindowMessageFilter(m_MESSAGEID_ResetWindowPosition, 1) != 1)
+                {
+                    MessageBox.Show("ChangeWindowMessageFilter(m_MESSAGEID_ResetWindowPosition) failed");
+                }
+                if (ChangeWindowMessageFilter(m_MESSAGEID_FocusWindow, 1) != 1)
+                {
+                    MessageBox.Show("ChangeWindowMessageFilter(m_MESSAGEID_FocusWindow) failed");
+                }
             }
         }
         private JumpList m_JumpList = null;
         public void InitiateJumpList()
         {
-            if (Environment.OSVersion.Version.Major > 6 //6 == Vista och Windows 7
-            || (Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor >= 1)) // 6.1 == Windows 7
+            if (IS_WINDOWSVISTA() == true)
             {
                 m_JumpList = new JumpList();
                 {
