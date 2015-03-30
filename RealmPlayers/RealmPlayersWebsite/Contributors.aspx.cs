@@ -8,6 +8,9 @@ using System.Web.Mvc;
 
 using ContributorDB = VF_RealmPlayersDatabase.ContributorDB;
 using UploadID = VF_RealmPlayersDatabase.UploadID;
+
+using WowRealm = VF_RealmPlayersDatabase.WowRealm;
+
 namespace RealmPlayersServer
 {
     public partial class Contributors : System.Web.UI.Page
@@ -27,24 +30,21 @@ namespace RealmPlayersServer
             }
             m_BreadCrumbHTML = new MvcHtmlString(PageUtility.BreadCrumb_AddHome() + PageUtility.BreadCrumb_AddFinish("Contributors"));
 
-            var dataED = statisticsData[VF_RealmPlayersDatabase.WowRealm.Emerald_Dream];
-            var dataWSG = statisticsData[VF_RealmPlayersDatabase.WowRealm.Warsong];
-            var dataAlA = statisticsData[VF_RealmPlayersDatabase.WowRealm.Al_Akir];
-            var dataREB = statisticsData[VF_RealmPlayersDatabase.WowRealm.Rebirth];
-            var dataNRB = statisticsData[VF_RealmPlayersDatabase.WowRealm.Nostalrius];
-            var dataKRO = statisticsData[VF_RealmPlayersDatabase.WowRealm.Kronos];
-            var dataArA = statisticsData[VF_RealmPlayersDatabase.WowRealm.Archangel];
+            var statsRealms = new WowRealm[] { WowRealm.Emerald_Dream, WowRealm.Warsong, WowRealm.Al_Akir, WowRealm.Rebirth, WowRealm.Nostalrius, WowRealm.Kronos, WowRealm.Archangel };
+
+            Dictionary<WowRealm, int> totalRealmInspects = new Dictionary<WowRealm, int>();
+
+            string realmInspectsHeaderColumns = "";
+            foreach(var statsRealm in statsRealms)
+            {
+                realmInspectsHeaderColumns += PageUtility.CreateTableColumnHead(StaticValues.ConvertRealmViewing(statsRealm));
+                totalRealmInspects.Add(statsRealm, 0);
+            }
 
             m_TableHeadHTML = new MvcHtmlString(PageUtility.CreateTableRow("", PageUtility.CreateTableColumnHead("#Nr") 
                 + PageUtility.CreateTableColumnHead("Name") 
-                + PageUtility.CreateTableColumnHead("Total inspects") 
-                + PageUtility.CreateTableColumnHead("Emerald Dream")
-                + PageUtility.CreateTableColumnHead("Warsong")
-                + PageUtility.CreateTableColumnHead("Al'Akir")
-                + PageUtility.CreateTableColumnHead("Rebirth")
-                + PageUtility.CreateTableColumnHead("Nostalrius")
-                + PageUtility.CreateTableColumnHead("Kronos") 
-                + PageUtility.CreateTableColumnHead("Archangel(TBC)")
+                + PageUtility.CreateTableColumnHead("Total inspects")
+                + realmInspectsHeaderColumns
                 + PageUtility.CreateTableColumnHead("Active since") 
                 + PageUtility.CreateTableColumnHead("Last active")));
 
@@ -54,50 +54,29 @@ namespace RealmPlayersServer
             var contributors = ContributorDB.GetAllTrustWorthyContributors();
             foreach (var data in contributors)
             {
-                Code.ContributorStatisticItem statsED = null;
-                Code.ContributorStatisticItem statsWSG = null;
-                Code.ContributorStatisticItem statsAlA = null;
-                Code.ContributorStatisticItem statsREB = null;
-                Code.ContributorStatisticItem statsNRB = null;
-                Code.ContributorStatisticItem statsKRO = null;
-                Code.ContributorStatisticItem statsArA = null;
-                if (dataED.TryGetValue(data.ContributorID, out statsED) == false) statsED = new Code.ContributorStatisticItem(-1);
-                if (dataWSG.TryGetValue(data.ContributorID, out statsWSG) == false) statsWSG = new Code.ContributorStatisticItem(-1);
-                if (dataAlA.TryGetValue(data.ContributorID, out statsAlA) == false) statsAlA = new Code.ContributorStatisticItem(-1);
-                if (dataREB.TryGetValue(data.ContributorID, out statsREB) == false) statsREB = new Code.ContributorStatisticItem(-1);
-                if (dataNRB.TryGetValue(data.ContributorID, out statsNRB) == false) statsNRB = new Code.ContributorStatisticItem(-1);
-                if (dataKRO.TryGetValue(data.ContributorID, out statsKRO) == false) statsKRO = new Code.ContributorStatisticItem(-1);
-                if (dataArA.TryGetValue(data.ContributorID, out statsArA) == false) statsArA = new Code.ContributorStatisticItem(-1);
-                int inspectsED = 0;
-                int inspectsWSG = 0;
-                int inspectsAlA = 0;
-                int inspectsREB = 0;
-                int inspectsNRB = 0;
-                int inspectsKRO = 0;
-                int inspectsArA = 0;
-                foreach (var inspection in statsED.m_PlayerInspects) inspectsED += inspection.Value;
-                foreach (var inspection in statsWSG.m_PlayerInspects) inspectsWSG += inspection.Value;
-                foreach (var inspection in statsAlA.m_PlayerInspects) inspectsAlA += inspection.Value;
-                foreach (var inspection in statsREB.m_PlayerInspects) inspectsREB += inspection.Value;
-                foreach (var inspection in statsNRB.m_PlayerInspects) inspectsNRB += inspection.Value;
-                foreach (var inspection in statsKRO.m_PlayerInspects) inspectsKRO += inspection.Value;
-                foreach (var inspection in statsArA.m_PlayerInspects) inspectsArA += inspection.Value;
+                DateTime earliestActive = DateTime.MaxValue;
+                DateTime latestActive = DateTime.MinValue;
+                int totalInspects = 0;
+                string realmInspectsColumns = "";
+                foreach(var statRealm in statsRealms)
+                {
+                    int inspects = 0;
+                    Code.ContributorStatisticItem stats = null;
+                    if (statisticsData[statRealm].TryGetValue(data.ContributorID, out stats) == false)
+                    {
+                        stats = new Code.ContributorStatisticItem(-1);
+                    }
+                    earliestActive = (stats.m_EarliestActiveUTC < earliestActive ? stats.m_EarliestActiveUTC : earliestActive);
+                    latestActive = (stats.m_LatestActiveUTC > latestActive ? stats.m_LatestActiveUTC : latestActive);
 
-                int totalInspects = inspectsED + inspectsWSG + inspectsAlA + inspectsREB + inspectsNRB + inspectsKRO + inspectsArA;
-                DateTime earliestActive = statsED.m_EarliestActiveUTC;
-                earliestActive = (statsWSG.m_EarliestActiveUTC < earliestActive ? statsWSG.m_EarliestActiveUTC : earliestActive);
-                earliestActive = (statsAlA.m_EarliestActiveUTC < earliestActive ? statsAlA.m_EarliestActiveUTC : earliestActive);
-                earliestActive = (statsREB.m_EarliestActiveUTC < earliestActive ? statsREB.m_EarliestActiveUTC : earliestActive);
-                earliestActive = (statsNRB.m_EarliestActiveUTC < earliestActive ? statsNRB.m_EarliestActiveUTC : earliestActive);
-                earliestActive = (statsKRO.m_EarliestActiveUTC < earliestActive ? statsKRO.m_EarliestActiveUTC : earliestActive);
-                earliestActive = (statsArA.m_EarliestActiveUTC < earliestActive ? statsArA.m_EarliestActiveUTC : earliestActive);
-                DateTime latestActive = statsED.m_LatestActiveUTC;
-                latestActive = (statsWSG.m_LatestActiveUTC > latestActive ? statsWSG.m_LatestActiveUTC : latestActive);
-                latestActive = (statsAlA.m_LatestActiveUTC > latestActive ? statsAlA.m_LatestActiveUTC : latestActive);
-                latestActive = (statsREB.m_LatestActiveUTC > latestActive ? statsREB.m_LatestActiveUTC : latestActive);
-                latestActive = (statsNRB.m_LatestActiveUTC > latestActive ? statsNRB.m_LatestActiveUTC : latestActive);
-                latestActive = (statsKRO.m_LatestActiveUTC > latestActive ? statsKRO.m_LatestActiveUTC : latestActive);
-                latestActive = (statsArA.m_LatestActiveUTC > latestActive ? statsArA.m_LatestActiveUTC : latestActive);
+                    foreach (var inspection in stats.m_PlayerInspects)
+                    {
+                        inspects += inspection.Value;
+                    }
+                    totalInspects += inspects;
+                    totalRealmInspects[statRealm] += inspects;
+                    realmInspectsColumns += PageUtility.CreateTableColumn(inspects.ToString());
+                }
 
                 if (totalInspects > 0 && data.Name != "Unknown" 
                     && ((DateTime.UtcNow - latestActive).TotalDays < 15 
@@ -106,19 +85,27 @@ namespace RealmPlayersServer
                     int keyToUse = int.MaxValue - totalInspects * 100;
                     while (tableRows.ContainsKey(keyToUse) == true)
                         keyToUse += 1;
+
+
                     tableRows.Add(keyToUse, PageUtility.CreateTableColumn(data.Name)
                         + PageUtility.CreateTableColumn(totalInspects.ToString())
-                        + PageUtility.CreateTableColumn(inspectsED.ToString())
-                        + PageUtility.CreateTableColumn(inspectsWSG.ToString())
-                        + PageUtility.CreateTableColumn(inspectsAlA.ToString())
-                        + PageUtility.CreateTableColumn(inspectsREB.ToString())
-                        + PageUtility.CreateTableColumn(inspectsNRB.ToString())
-                        + PageUtility.CreateTableColumn(inspectsKRO.ToString())
-                        + PageUtility.CreateTableColumn(inspectsArA.ToString())
+                        + realmInspectsColumns
                         + PageUtility.CreateTableColumn(earliestActive.ToString("yyy-MM-dd"))
                         + PageUtility.CreateTableColumn(StaticValues.GetTimeSinceLastSeenUTC(latestActive)));
                 }
             }
+            int totalALLInspects = 0;
+            string totalRealmInspectsColumn = "";
+            foreach (var statRealm in statsRealms)
+            {
+                totalRealmInspectsColumn += PageUtility.CreateTableColumn(totalRealmInspects[statRealm].ToString());
+                totalALLInspects += totalRealmInspects[statRealm];
+            }
+            tableBody += PageUtility.CreateTableRow("", PageUtility.CreateTableColumn("#ALL") + PageUtility.CreateTableColumn("TOTAL")
+                        + PageUtility.CreateTableColumn(totalALLInspects.ToString())
+                        + totalRealmInspectsColumn
+                        + PageUtility.CreateTableColumn("-")
+                        + PageUtility.CreateTableColumn("-"));
             int i = 1;
             foreach (var tableRow in tableRows)
             {
