@@ -17,10 +17,7 @@
         <div class="row">
           <div class="span12">
             <div class="fame">
-    <header class="page-header">  
-              <%= m_FightOverviewInfoHTML %>
-    </header>
-                <%= m_GraphSection %>
+                <%= m_FightOverviewInfoHTML %>
             </div>
           </div>
           </div>
