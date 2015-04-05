@@ -198,7 +198,7 @@ namespace VF_RaidDamageDatabase
                                         {
                                             if (lastFightData2TimeSlice != null)
                                             {
-                                                if (FightData._DetectActivity(bossUnitIDs, lastFightData1TimeSlice, TimeSlices[u]) == true)
+                                                if (FightData._DetectActivity(bossUnitIDs, lastFightData2TimeSlice, TimeSlices[u]) == true)
                                                 {
                                                     ++lastFightData2Score;
                                                 }
