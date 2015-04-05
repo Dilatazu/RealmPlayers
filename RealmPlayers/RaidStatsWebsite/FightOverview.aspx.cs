@@ -31,6 +31,8 @@ namespace VF_RaidDamageWebsite
 
             string bossNumberStr = PageUtility.GetQueryString(Request, "Fight", "-1");
             string trashNumberStr = PageUtility.GetQueryString(Request, "Trash", "-1");
+            int fightVersion = PageUtility.GetQueryInt(Request, "Version", -1);
+
             if (bossNumberStr == "-1" && trashNumberStr == "-1")
                 Response.Redirect("RaidOverview.aspx?Raid=" + uniqueRaidID);
 
@@ -55,6 +57,12 @@ namespace VF_RaidDamageWebsite
                 else
                 {
                     interestingFight = ApplicationInstance.Instance.GetRaidBossFight(uniqueRaidID, int.Parse(bossNumberStr));
+                }
+                if (fightVersion >= 1)// && fightVersion > interestingFight.GetExtraFightVersionCount())
+                {
+                    interestingFight = interestingFight.GetExtraFightVersion(fightVersion - 1);
+                    if (interestingFight == null)
+                        Response.Redirect(PageUtility.CreateUrlWithNewQueryValue(Request, "Version", "0"));
                 }
                 GenerateBossFightPage(DEBUG_Website, filteredData, uniqueRaidID, interestingFight);
             }

@@ -23,6 +23,17 @@ namespace VF_RaidDamageDatabase
                 m_ExtraFightDataVersions = _ExtraFightDataVersions;
         }
 
+        public int GetExtraFightVersionCount()
+        {
+            return m_ExtraFightDataVersions.Count;
+        }
+        public RaidBossFight GetExtraFightVersion(int _VersionNumber)
+        {
+            if (m_ExtraFightDataVersions == null || _VersionNumber < 0 || _VersionNumber >= m_ExtraFightDataVersions.Count)
+                return null;
+
+            return new RaidBossFight(m_Raid, 0x10000 * _VersionNumber + m_RaidBossFightIndex, m_ExtraFightDataVersions[_VersionNumber]);
+        }
         public FightData GetFightData()
         {
             return m_FightData.m_Fight;
