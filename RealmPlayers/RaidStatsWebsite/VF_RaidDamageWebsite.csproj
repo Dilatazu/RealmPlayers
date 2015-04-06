@@ -148,6 +148,7 @@
     <Compile Include="Code\FightOverallOverviewGenerator.cs" />
     <Compile Include="Code\FightOverviewGenerator.cs" />
     <Compile Include="Code\Logger.cs" />
+    <Compile Include="Code\LootGenerator.cs" />
     <Compile Include="Code\StaticValues.cs" />
     <Compile Include="FightOverallOverview.aspx.cs">
       <DependentUpon>FightOverallOverview.aspx</DependentUpon>

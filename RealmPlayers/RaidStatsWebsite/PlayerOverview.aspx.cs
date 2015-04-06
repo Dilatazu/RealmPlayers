@@ -8,9 +8,9 @@ using System.Web.Mvc;
 
 using PlayerClass = VF_RealmPlayersDatabase.PlayerClass;
 using PlayerData = VF_RealmPlayersDatabase.PlayerData.Player;
-using AverageStats = VF_RaidDamageWebsite.AverageOverview.AverageStats;
+using AverageStats = VF.RaidDamageWebsite.AverageOverview.AverageStats;
 
-namespace VF_RaidDamageWebsite
+namespace VF.RaidDamageWebsite
 {
     public partial class PlayerOverview : System.Web.UI.Page
     {

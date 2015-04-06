@@ -7,7 +7,7 @@ using System.Web.UI.WebControls;
 using System.Web.Mvc;
 
 using FightDataCollection = VF_RaidDamageDatabase.FightDataCollection;
-namespace VF_RaidDamageWebsite
+namespace VF.RaidDamageWebsite
 {
     public partial class ViewFights : System.Web.UI.Page
     {

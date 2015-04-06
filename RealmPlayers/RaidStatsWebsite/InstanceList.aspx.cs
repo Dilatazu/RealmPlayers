@@ -8,7 +8,7 @@ using System.Web.Mvc;
 
 using VF_RaidDamageDatabase;
 
-namespace VF_RaidDamageWebsite
+namespace VF.RaidDamageWebsite
 {
     public partial class InstanceList : System.Web.UI.Page
     {

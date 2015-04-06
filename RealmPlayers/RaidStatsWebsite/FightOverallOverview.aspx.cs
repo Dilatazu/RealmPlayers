@@ -15,7 +15,7 @@ using PlayerFaction = VF_RealmPlayersDatabase.PlayerFaction;
 using WowRealm = VF_RealmPlayersDatabase.WowRealm;
 
 
-namespace VF_RaidDamageWebsite
+namespace VF.RaidDamageWebsite
 {
     public partial class FightOverallOverview : System.Web.UI.Page
     {
@@ -143,7 +143,7 @@ namespace VF_RaidDamageWebsite
                 {
                     includePlayers = new List<string> { andPlayer };
                 }
-                m_GraphSection = new MvcHtmlString(Code.FightOverallOverviewGenerator.Generate(fightInstances, ApplicationInstance.Instance.GetRPPDatabase(), new Code.FightOverallOverviewGenerator.GenerateDetails { ClassFilter = classLimits, EntriesCount = showEntriesCount, ShowMultipleEntries = showMultipleEntries, RealmFilter = realm, GuildFilter = guildLimit, FactionFilter = factionFilter, IncludePlayers = includePlayers }));
+                m_GraphSection = new MvcHtmlString(VF.FightOverallOverviewGenerator.Generate(fightInstances, ApplicationInstance.Instance.GetRPPDatabase(), new VF.FightOverallOverviewGenerator.GenerateDetails { ClassFilter = classLimits, EntriesCount = showEntriesCount, ShowMultipleEntries = showMultipleEntries, RealmFilter = realm, GuildFilter = guildLimit, FactionFilter = factionFilter, IncludePlayers = includePlayers }));
             }
         }
     }

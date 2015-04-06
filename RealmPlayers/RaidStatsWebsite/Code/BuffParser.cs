@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace VF_RaidDamageWebsite.Code
+namespace VF
 {
     public class BuffParser
     {

@@ -12,7 +12,7 @@ using PlayerData = VF_RealmPlayersDatabase.PlayerData.Player;
 using TotalPlayerBossStats = VF_RDDatabase.TotalPlayerBossStats;
 using WowRealm = VF_RealmPlayersDatabase.WowRealm;
 
-namespace VF_RaidDamageWebsite
+namespace VF.RaidDamageWebsite
 {
     public partial class AverageOverview : System.Web.UI.Page
     {

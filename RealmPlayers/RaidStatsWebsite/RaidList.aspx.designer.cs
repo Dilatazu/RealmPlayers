@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace VF_RaidDamageWebsite {
+namespace VF.RaidDamageWebsite {
     
     
     public partial class RaidList {
@@ -19,7 +19,7 @@ namespace VF_RaidDamageWebsite {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::VF_RaidDamageWebsite.RealmControl RealmControl;
+        protected global::VF.RaidDamageWebsite.RealmControl RealmControl;
         
         /// <summary>
         /// InstanceControl control.
@@ -28,6 +28,6 @@ namespace VF_RaidDamageWebsite {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::VF_RaidDamageWebsite.InstanceControl InstanceControl;
+        protected global::VF.RaidDamageWebsite.InstanceControl InstanceControl;
     }
 }

@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/RaidDamageMasterFrame.Master" AutoEventWireup="true" CodeBehind="InstanceList.aspx.cs" Inherits="VF_RaidDamageWebsite.InstanceList" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/RaidDamageMasterFrame.Master" AutoEventWireup="true" CodeBehind="InstanceList.aspx.cs" Inherits="VF.RaidDamageWebsite.InstanceList" %>
 
 <%@ Register Src="RealmControl.ascx" TagPrefix="uc1" TagName="RealmControl" %>
 

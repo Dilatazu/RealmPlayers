@@ -1,1 +1,1 @@
-﻿<%@ Application Codebehind="Global.asax.cs" Inherits="VF_RaidDamageWebsite.Global" Language="C#" %>
+﻿<%@ Application Codebehind="Global.asax.cs" Inherits="VF.RaidDamageWebsite.Global" Language="C#" %>

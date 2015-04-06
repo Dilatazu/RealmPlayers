@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace VF_RaidDamageWebsite {
+namespace VF.RaidDamageWebsite {
     
     
     public partial class Ranking {
@@ -19,7 +19,7 @@ namespace VF_RaidDamageWebsite {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::VF_RaidDamageWebsite.BossesControl BossesControl;
+        protected global::VF.RaidDamageWebsite.BossesControl BossesControl;
         
         /// <summary>
         /// RealmControl control.
@@ -28,7 +28,7 @@ namespace VF_RaidDamageWebsite {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::VF_RaidDamageWebsite.RealmControl RealmControl;
+        protected global::VF.RaidDamageWebsite.RealmControl RealmControl;
         
         /// <summary>
         /// ClassControl control.
@@ -37,6 +37,6 @@ namespace VF_RaidDamageWebsite {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::VF_RaidDamageWebsite.ClassControl ClassControl;
+        protected global::VF.RaidDamageWebsite.ClassControl ClassControl;
     }
 }

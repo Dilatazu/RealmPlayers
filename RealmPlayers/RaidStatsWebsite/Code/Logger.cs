@@ -6,7 +6,7 @@ using System.Threading;
 
 using Utility = VF_RealmPlayersDatabase.Utility;
 
-namespace VF_RaidDamageWebsite
+namespace VF.RaidDamageWebsite
 {
     public class Logger
     {

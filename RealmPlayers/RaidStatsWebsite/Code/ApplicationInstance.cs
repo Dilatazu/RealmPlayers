@@ -18,7 +18,7 @@ using RaidBossFight = VF_RaidDamageDatabase.RaidBossFight;
 
 using ItemInfo = RealmPlayersServer.ItemInfo;
 
-namespace VF_RaidDamageWebsite
+namespace VF.RaidDamageWebsite
 {
     public class ApplicationInstance
     {

@@ -8,7 +8,7 @@ using RaidBossFight = VF_RaidDamageDatabase.RaidBossFight;
 using AttemptType = VF_RaidDamageDatabase.FightData.AttemptType;
 using RaidSummary = VF_RDDatabase.Raid;
 
-namespace VF_RaidDamageWebsite.Code
+namespace VF
 {
     public class FightOverviewGenerator
     {
@@ -19,6 +19,8 @@ namespace VF_RaidDamageWebsite.Code
             public string DebugBuff;
             public string FilterSpikesURL;
             public string NoFilterSpikesURL;
+            public VF_RPDatabase.ItemSummaryDatabase ItemSummaryDatabase;
+            public Func<int, VF_RealmPlayersDatabase.WowVersionEnum, RealmPlayersServer.ItemInfo> GetItemInfoFunc;
         }
         public static string Generate(RealmDB _RealmDB, RaidSummary _RaidSummary, RaidBossFight _Fight, GenerateDetails _Details)
         {
@@ -261,7 +263,7 @@ namespace VF_RaidDamageWebsite.Code
             if (attemptType == VF_RaidDamageDatabase.FightData.AttemptType.KillAttempt)
             {
                 lootDropped = "<h3>Boss Loot:</h3>";
-                lootDropped += RaidOverview.CreateLootDroppedData(_Fight.GetItemDrops(), _RealmDB);
+                lootDropped += LootGenerator.CreateLootDroppedData(_Fight.GetItemDrops(),_RealmDB, _Details.ItemSummaryDatabase, _Details.GetItemInfoFunc);
             }
             ///////////////////////
 

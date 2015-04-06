@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="ItemTooltip.aspx.cs" Inherits="VF_RaidDamageWebsite.ItemTooltip" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="ItemTooltip.aspx.cs" Inherits="VF.RaidDamageWebsite.ItemTooltip" %>
 
 <!DOCTYPE html>
 

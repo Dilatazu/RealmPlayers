@@ -7,7 +7,7 @@ using System.Web.UI.WebControls;
 
 using WowRealm = VF_RealmPlayersDatabase.WowRealm;
 
-namespace VF_RaidDamageWebsite
+namespace VF.RaidDamageWebsite
 {
     public partial class RealmControl : System.Web.UI.UserControl
     {

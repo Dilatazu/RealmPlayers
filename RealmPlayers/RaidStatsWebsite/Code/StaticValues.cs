@@ -5,7 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Collections.Concurrent;
 
-namespace VF_RaidDamageWebsite
+namespace VF
 {
     public class StaticValues : RealmPlayersServer.StaticValues
     {

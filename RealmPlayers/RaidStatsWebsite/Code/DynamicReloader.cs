@@ -6,7 +6,7 @@ using System.Threading;
 
 using MultithreadTask = System.Threading.Tasks.Task;
 
-namespace VF_RaidDamageWebsite
+namespace VF.RaidDamageWebsite
 {
     public class DynamicReloader
     {

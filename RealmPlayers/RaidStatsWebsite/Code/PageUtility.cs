@@ -7,7 +7,7 @@ using WowRealm = VF_RealmPlayersDatabase.WowRealm;
 using PlayerData = VF_RealmPlayersDatabase.PlayerData.Player;
 using PlayerFaction = VF_RealmPlayersDatabase.PlayerFaction;
 
-namespace VF_RaidDamageWebsite
+namespace VF
 {
     public enum RPColor
     {

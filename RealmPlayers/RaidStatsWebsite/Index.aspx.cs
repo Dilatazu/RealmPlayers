@@ -8,7 +8,7 @@ using System.Web.Mvc;
 
 using DamageDataSession = VF_RaidDamageDatabase.DamageDataSession;
 
-namespace VF_RaidDamageWebsite
+namespace VF.RaidDamageWebsite
 {
     public partial class Default : System.Web.UI.Page
     {

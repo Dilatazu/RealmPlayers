@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="ClassControl.ascx.cs" Inherits="VF_RaidDamageWebsite.ClassControl" %>
+﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="ClassControl.ascx.cs" Inherits="VF.RaidDamageWebsite.ClassControl" %>
 
 <style>
     .ccclcbx .checkbox label {

@@ -11,7 +11,7 @@ using FightCacheData = VF_RaidDamageDatabase.FightDataCollection.FightCacheData;
 using RaidCollection = VF_RaidDamageDatabase.RaidCollection;
 using RaidBossFight = VF_RaidDamageDatabase.RaidBossFight;
 
-namespace VF_RaidDamageWebsite
+namespace VF.RaidDamageWebsite
 {
     public partial class BossList : System.Web.UI.Page
     {

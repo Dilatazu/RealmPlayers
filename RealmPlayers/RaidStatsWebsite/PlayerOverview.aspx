@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/RaidDamageMasterFrame.Master" AutoEventWireup="true" CodeBehind="PlayerOverview.aspx.cs" Inherits="VF_RaidDamageWebsite.PlayerOverview" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/RaidDamageMasterFrame.Master" AutoEventWireup="true" CodeBehind="PlayerOverview.aspx.cs" Inherits="VF.RaidDamageWebsite.PlayerOverview" %>
 
 <%@OutputCache Duration="600" VaryByParam="*" %>
 

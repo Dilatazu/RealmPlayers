@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace VF_RaidDamageWebsite {
+namespace VF.RaidDamageWebsite {
     
     
     public partial class InstanceList {
@@ -19,6 +19,6 @@ namespace VF_RaidDamageWebsite {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::VF_RaidDamageWebsite.RealmControl RealmControl;
+        protected global::VF.RaidDamageWebsite.RealmControl RealmControl;
     }
 }

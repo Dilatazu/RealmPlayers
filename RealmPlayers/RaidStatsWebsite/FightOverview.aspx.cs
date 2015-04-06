@@ -9,7 +9,7 @@ using System.Web.Mvc;
 using RaidBossFight = VF_RaidDamageDatabase.RaidBossFight;
 using AttemptType = VF_RaidDamageDatabase.FightData.AttemptType;
 
-namespace VF_RaidDamageWebsite
+namespace VF.RaidDamageWebsite
 {
     public partial class FightOverview : System.Web.UI.Page
     {
@@ -100,13 +100,15 @@ namespace VF_RaidDamageWebsite
                     + PageUtility.BreadCrumb_AddFinish(interestingFight.GetBossName()));
 
                 var raidSummary = ApplicationInstance.Instance.GetSummaryDatabase().GetRaid(uniqueRaidID);
-                m_FightOverviewInfoHTML = new MvcHtmlString(Code.FightOverviewGenerator.Generate(realmDB, raidSummary, interestingFight
-                    , new Code.FightOverviewGenerator.GenerateDetails 
+                m_FightOverviewInfoHTML = new MvcHtmlString(FightOverviewGenerator.Generate(realmDB, raidSummary, interestingFight
+                    , new FightOverviewGenerator.GenerateDetails 
                         { FilterSpikes = filteredData
                         , DebugInfo = DEBUG_Website
                         , DebugBuff = PageUtility.GetQueryString(Request, "DebugBuff", null)
                         , FilterSpikesURL = PageUtility.CreateUrlWithNewQueryValue(Request, "Filtered", "true")
-                        , NoFilterSpikesURL = PageUtility.CreateUrlWithNewQueryValue(Request, "Filtered", "false") 
+                        , NoFilterSpikesURL = PageUtility.CreateUrlWithNewQueryValue(Request, "Filtered", "false")
+                        , ItemSummaryDatabase = ApplicationInstance.Instance.GetItemSummaryDatabase()
+                        , GetItemInfoFunc = ApplicationInstance.Instance.GetItemInfo
                     }));
 
             }

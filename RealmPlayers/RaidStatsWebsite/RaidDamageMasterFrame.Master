@@ -1,4 +1,4 @@
-﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="RaidDamageMasterFrame.master.cs" Inherits="VF_RaidDamageWebsite.RaidDamageMasterFrame" %>
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="RaidDamageMasterFrame.master.cs" Inherits="VF.RaidDamageWebsite.RaidDamageMasterFrame" %>
 
 <!DOCTYPE html>
 

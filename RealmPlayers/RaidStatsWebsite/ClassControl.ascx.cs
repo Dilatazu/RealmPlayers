@@ -8,7 +8,7 @@ using System.Web.UI.WebControls;
 using PlayerClass = VF_RealmPlayersDatabase.PlayerClass;
 using PlayerFaction = VF_RealmPlayersDatabase.PlayerFaction;
 
-namespace VF_RaidDamageWebsite
+namespace VF.RaidDamageWebsite
 {
     public partial class ClassControl : System.Web.UI.UserControl
     {

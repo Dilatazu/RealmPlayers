@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/RaidDamageMasterFrame.Master" AutoEventWireup="true" CodeBehind="ViewFights.aspx.cs" Inherits="VF_RaidDamageWebsite.ViewFights" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/RaidDamageMasterFrame.Master" AutoEventWireup="true" CodeBehind="ViewFights.aspx.cs" Inherits="VF.RaidDamageWebsite.ViewFights" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeaderContent" runat="server">
     <script src="assets/js/jquery-1.10.2.min.js"></script>
     <script src='assets/js/charts/raphael-min.js'></script>

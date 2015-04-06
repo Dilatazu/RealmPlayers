@@ -13,7 +13,7 @@ using PlayerFaction = VF_RealmPlayersDatabase.PlayerFaction;
 
 using RPPDatabase = VF_RaidDamageDatabase.RPPDatabase;
 
-namespace VF_RaidDamageWebsite.Code
+namespace VF
 {
     public class FightOverallOverviewGenerator
     {
