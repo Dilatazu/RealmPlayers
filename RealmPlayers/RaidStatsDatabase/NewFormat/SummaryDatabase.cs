@@ -80,6 +80,42 @@ namespace VF_RDDatabase
                 }
             }
         }
+        public List<BossFight> GetHSElligibleBossFights(string _BossName, string _GuildFilter = null)
+        {
+            List<BossFight> fightInstances = new List<BossFight>();
+
+            DateTime earliestCompatibleDate = new DateTime(2013, 10, 23, 0, 0, 0);
+
+            double highestPrecision = 0;
+            double totalPrecision = 0;
+            foreach (var groupRC in GroupRCs)
+            {
+                if (_GuildFilter != null && _GuildFilter != groupRC.Value.GroupName)
+                    continue;
+
+                foreach (var raid in groupRC.Value.Raids)
+                {
+                    foreach (var bossFight in raid.Value.BossFights)
+                    {
+                        if (bossFight.BossName == _BossName && bossFight.IsQualityHigh()
+                        && bossFight.StartDateTime > earliestCompatibleDate)
+                        {
+                            double precision = bossFight.DataDetails.FightPrecision;// fight.CalculatePrecision(realmDB.RD_IsPlayer);
+                            fightInstances.Add(bossFight);
+
+                            if (precision > highestPrecision)
+                                highestPrecision = precision;
+                            totalPrecision += precision;
+                        }
+                    }
+                }
+            }
+            double averagePrecision = totalPrecision / fightInstances.Count;
+            double acceptablePrecisionMin = averagePrecision - 0.05;
+
+            fightInstances.RemoveAll((_Value) => { return _Value.DataDetails.FightPrecision < acceptablePrecisionMin; });
+            return fightInstances;
+        }
         public PlayerSummary GetPlayerSummary(string _Player, WowRealm _Realm)
         {
             if (m_PlayerSummaries.Count == 0)

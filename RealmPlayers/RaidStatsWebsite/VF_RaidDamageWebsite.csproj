@@ -145,6 +145,7 @@
       <DependentUpon>ClassControl.ascx</DependentUpon>
     </Compile>
     <Compile Include="Code\BuffParser.cs" />
+    <Compile Include="Code\FightOverallOverviewGenerator.cs" />
     <Compile Include="Code\FightOverviewGenerator.cs" />
     <Compile Include="Code\Logger.cs" />
     <Compile Include="Code\StaticValues.cs" />

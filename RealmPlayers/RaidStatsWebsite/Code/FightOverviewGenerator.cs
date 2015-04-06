@@ -6,6 +6,7 @@ using System.Web;
 using RealmDB = VF_RaidDamageDatabase.RealmDB;
 using RaidBossFight = VF_RaidDamageDatabase.RaidBossFight;
 using AttemptType = VF_RaidDamageDatabase.FightData.AttemptType;
+using RaidSummary = VF_RDDatabase.Raid;
 
 namespace VF_RaidDamageWebsite.Code
 {
@@ -19,7 +20,7 @@ namespace VF_RaidDamageWebsite.Code
             public string FilterSpikesURL;
             public string NoFilterSpikesURL;
         }
-        public static string Generate(RealmDB _RealmDB, VF_RDDatabase.Raid _RaidSummary, RaidBossFight _Fight, GenerateDetails _Details)
+        public static string Generate(RealmDB _RealmDB, RaidSummary _RaidSummary, RaidBossFight _Fight, GenerateDetails _Details)
         {
             var attemptType = _Fight.GetFightData().GetAttemptType();
             string attemptStr = "";

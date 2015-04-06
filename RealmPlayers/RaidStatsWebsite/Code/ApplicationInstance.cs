@@ -133,6 +133,10 @@ namespace VF_RaidDamageWebsite
         {
             return m_RPPDatabase.GetRealmDB(_Realm);
         }
+        public RPPDatabase GetRPPDatabase()
+        {
+            return m_RPPDatabase;
+        }
         public Player GetRealmPlayer(string _Player, WowRealm _Realm)
         {
             return m_RPPDatabase.GetRealmDB(_Realm).FindPlayer(_Player);
