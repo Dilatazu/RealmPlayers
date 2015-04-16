@@ -59,6 +59,7 @@ namespace VF_RPDatabase
 
         public PlayerSummaryDatabase(RPPDatabase _Database)
         {
+            DateTime nostalrius_HighestRank_FixDate = new DateTime(2015, 4, 16);//Apparently not fixed yet...
             var realmDBs = _Database.GetRealms();
             foreach (var realmDB in realmDBs)
             {
@@ -74,7 +75,7 @@ namespace VF_RPDatabase
                         DateTime currPVPWeek = DateTime.MinValue;
                         foreach (var honorHistory in playerHistory.Value.HonorHistory)
                         {
-                            if (honorHistory.Data.LifetimeHighestRank > playerSummary.m_HighestRank.Key && honorHistory.Data.LifetimeHighestRank > honorHistory.Data.CurrentRank)
+                            if (honorHistory.Data.LifetimeHighestRank > playerSummary.m_HighestRank.Key && honorHistory.Data.LifetimeHighestRank > honorHistory.Data.CurrentRank/* && (realmDB.Key != WowRealm.Nostalrius || (realmDB.Key == WowRealm.Nostalrius && honorHistory.Uploader.GetTime() > nostalrius_HighestRank_FixDate))*/)
                             {
                                 playerSummary.m_HighestRank = new KeyValuePair<float, DateTime>(honorHistory.Data.LifetimeHighestRank, honorHistory.Uploader.GetTime());
                             }
