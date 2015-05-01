@@ -284,12 +284,26 @@ namespace VF_RaidDamageDatabase
                 return AttemptType.TrashAttempt;
             string deadBossString = "Dead " + FightName;
             string wipeBossString = "Wipe " + FightName;
+            int wipeSlice = -1;
             for (int i = TimeSlices.Count - 1; i >= 0; --i)
             {
-                if (TimeSlices[i].Event.StartsWith("Dead"))
+                if (TimeSlices[i].Event.StartsWith("Dead_C=" + FightName))
+                    return AttemptType.KillAttempt;
+                else if (TimeSlices[i].Event.StartsWith("Dead_Y=" + FightName))
+                    return AttemptType.KillAttempt;
+                else if (TimeSlices[i].Event.StartsWith("Dead") && wipeSlice == -1)
                     return AttemptType.KillAttempt;
                 else if (TimeSlices[i].Event.StartsWith("Wipe"))
+                    wipeSlice = i;
+
+                if (wipeSlice > i + 5)
+                {
                     return AttemptType.WipeAttempt;
+                }
+            }
+            if (wipeSlice != -1)
+            {
+                return AttemptType.WipeAttempt;
             }
             return AttemptType.UnknownAttempt;
         }
