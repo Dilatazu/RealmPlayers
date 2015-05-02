@@ -29,7 +29,7 @@ namespace VF
 
         private void ServerThread()
         {
-            m_ListenerSocket.Listen(100);
+            m_ListenerSocket.Listen(10);
             m_ListenerSocket.BeginAccept(new AsyncCallback(AcceptCallback), this);
             while (m_ListenerSocket != null)
             {
