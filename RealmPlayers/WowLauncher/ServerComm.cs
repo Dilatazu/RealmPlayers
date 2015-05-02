@@ -275,7 +275,7 @@ namespace VF_WoWLauncher
                         var newMessage = netClient.CreateMessage();
                         newMessage.WriteByte((byte)WLN_PacketType.Upload_AddonData);
                         newMessage.WriteClass(addonData);
-                        netClient.WaitForConnect(new TimeSpan(10000));
+                        netClient.WaitForConnect(TimeSpan.FromSeconds(60));
                         netClient.SendMessage(newMessage);
                         Logger.ConsoleWriteLine("Sent SavedVariables file \"" + luaFilePath + "\". Waiting for Response...", ConsoleColor.Gray);
                         WLN_UploadPacket_SuccessResponse response;
