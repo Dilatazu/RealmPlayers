@@ -73,7 +73,7 @@ namespace VF_WoWLauncher
         internal static bool PeekAddonUpdates(int _MinutesSinceLastPeek)
         {
             VF.NetworkClient netClient = new VF.NetworkClient(g_Host, g_Port);
-
+            netClient.WaitForConnect(TimeSpan.FromSeconds(60));
             try
             {
                 {
@@ -99,6 +99,7 @@ namespace VF_WoWLauncher
             finally
             {
                 netClient.Disconnect();
+                netClient = null;
             }
             return false;
         }
@@ -234,13 +235,18 @@ namespace VF_WoWLauncher
         //    retValue.Add("VF_HealingInformation");
         //    return null;
         //}
+        internal static VF.NetworkClient sm_Client = null;
         internal static List<string> SendAddonData(string _UserID, string _AddonName, WowVersionEnum _WowVersion, string _ClearLuaVariableName, int _LuaVariableDataLengthThreshold, out bool _SentAll)
         {
             var savedVariableFiles = WowUtility.GetSavedVariableFilePaths(_AddonName, _WowVersion);//For Accounts only
 
             _LuaVariableDataLengthThreshold = _LuaVariableDataLengthThreshold + 12/*newlines = {} osv osv*/ + _ClearLuaVariableName.Length;
-            VF.NetworkClient netClient = null;
-
+            VF.NetworkClient netClient = sm_Client;
+            if (netClient != null && netClient.IsConnected() == false)
+            {
+                netClient.Disconnect();
+                netClient = null;
+            }
             List<string> sentAddonFiles = new List<string>();
             _SentAll = true;//Default läge
             try
@@ -301,10 +307,25 @@ namespace VF_WoWLauncher
             }
             finally
             {
-                if (netClient != null)
-                    netClient.Disconnect();
+                if (_SentAll == false)
+                {
+                    if (netClient != null)
+                    {
+                        netClient.Disconnect();
+                        netClient = null;
+                    }
+                }
+                sm_Client = netClient;
             }
             return sentAddonFiles;
+        }
+        internal static void SendAddonData_Dispose()
+        {
+            if (sm_Client != null)
+            {
+                sm_Client.Disconnect();
+                sm_Client = null;
+            }
         }
     }
 }

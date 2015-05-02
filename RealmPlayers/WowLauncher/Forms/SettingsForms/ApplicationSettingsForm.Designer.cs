@@ -48,6 +48,7 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.c_cbxNostalriusNews = new System.Windows.Forms.CheckBox();
             this.c_cbxFeenixNews = new System.Windows.Forms.CheckBox();
+            this.c_cbxKronosNews = new System.Windows.Forms.CheckBox();
             this.c_gpbUploading.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -233,6 +234,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.c_cbxKronosNews);
             this.groupBox1.Controls.Add(this.c_cbxNostalriusNews);
             this.groupBox1.Controls.Add(this.c_cbxFeenixNews);
             this.groupBox1.Location = new System.Drawing.Point(10, 91);
@@ -263,6 +265,16 @@
             this.c_cbxFeenixNews.Text = "Feenix(wow-one)";
             this.c_cbxFeenixNews.UseVisualStyleBackColor = true;
             this.c_cbxFeenixNews.CheckedChanged += new System.EventHandler(this.c_cbxGetFeenixNews_CheckedChanged);
+            // 
+            // c_cbxKronosNews
+            // 
+            this.c_cbxKronosNews.AutoSize = true;
+            this.c_cbxKronosNews.Location = new System.Drawing.Point(196, 19);
+            this.c_cbxKronosNews.Name = "c_cbxKronosNews";
+            this.c_cbxKronosNews.Size = new System.Drawing.Size(59, 17);
+            this.c_cbxKronosNews.TabIndex = 16;
+            this.c_cbxKronosNews.Text = "Kronos";
+            this.c_cbxKronosNews.UseVisualStyleBackColor = true;
             // 
             // ApplicationSettingsForm
             // 
@@ -319,6 +331,7 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.CheckBox c_cbxFeenixNews;
         private System.Windows.Forms.CheckBox c_cbxNostalriusNews;
+        private System.Windows.Forms.CheckBox c_cbxKronosNews;
 
     }
 }

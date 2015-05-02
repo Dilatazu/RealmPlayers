@@ -38,6 +38,9 @@ namespace VF_WoWLauncher
             FeenixForum,
             RealmPlayersForum,
             NostalriusForum,
+            KronosForum,
+            RSS_RealmPlayersForum,
+            RSS_NostalriusForum,
         }
         [ProtoContract]
         public class ForumPost
@@ -218,37 +221,7 @@ namespace VF_WoWLauncher
                         }
                         string postContent = websitePart[i].SplitVF("<div class=\"content\">", 2).Last().SplitVF("<dl class", 2).First();
 
-                        string[] postContentParts = postContent.Replace("<br />", "\r\n").Split('<');
-
-                        string realContent = "";
-                        try
-                        {
-                            foreach (var postContentPart in postContentParts)
-                            {
-                                if (postContentPart.Contains('>'))
-                                {
-                                    if (postContentPart.StartsWith("li>") == true)
-                                        realContent += "\n*";
-                                    realContent += postContentPart.Substring(postContentPart.IndexOf('>') + 1);
-                                }
-                                else
-                                    realContent += postContentPart;
-                            }
-                        }
-                        catch (Exception)
-                        {
-                            realContent += "\n!!!COULD NOT READ REST OF THE POST!!!";
-                        }
-                        realContent = System.Net.WebUtility.HtmlDecode(realContent);
-                        realContent = realContent.Replace("\t", "");
-
-                        string[] cn = realContent.Split(new string[]{"\r\n", "\n"}, StringSplitOptions.RemoveEmptyEntries);
-
-                        realContent = "";
-                        foreach (var c in cn)
-                        {
-                            realContent += c + "\n";
-                        }
+                        string realContent = ParsePostHTMLContent(postContent);
                         var newForumPost = new ForumPost { m_ThreadName = threadName, m_ThreadURL = _ThreadURL, m_PostURL = postURL, m_PosterName = posterName, m_PosterImageURL = posterImageURL, m_PostContent = realContent, m_PostDate = postDate };
                         threadPosts.Add(newForumPost);
                     }
@@ -257,6 +230,42 @@ namespace VF_WoWLauncher
                 }
                 return threadPosts;
             }
+        }
+
+        private static string ParsePostHTMLContent(string postContent)
+        {
+            string[] postContentParts = postContent.Replace("<br />", "\r\n").Split('<');
+
+            string realContent = "";
+            try
+            {
+                foreach (var postContentPart in postContentParts)
+                {
+                    if (postContentPart.Contains('>'))
+                    {
+                        if (postContentPart.StartsWith("li>") == true)
+                            realContent += "\n*";
+                        realContent += postContentPart.Substring(postContentPart.IndexOf('>') + 1);
+                    }
+                    else
+                        realContent += postContentPart;
+                }
+            }
+            catch (Exception)
+            {
+                realContent += "\n!!!COULD NOT READ REST OF THE POST!!!";
+            }
+            realContent = System.Net.WebUtility.HtmlDecode(realContent);
+            realContent = realContent.Replace("\t", "");
+
+            string[] cn = realContent.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+            realContent = "";
+            foreach (var c in cn)
+            {
+                realContent += c + "\n";
+            }
+            return realContent;
         }
         [ProtoContract]
         public class ForumSection
@@ -298,6 +307,34 @@ namespace VF_WoWLauncher
                         }
 
                         m_LastUpdatedThreads[_ThreadURL] = _LatestPost;
+                        m_DataUpdated = true;
+                    }
+                    catch (Exception)
+                    { }
+                }
+            }
+            public void UpdateThread(ForumPost _Post, Action<ForumPost> _RetPosts, ForumType _ForumType)
+            {
+                if (m_LastUpdatedThreads.ContainsKey(_Post.m_ThreadURL) == false)
+                    m_LastUpdatedThreads.Add(_Post.m_ThreadURL, DateTime.MinValue.AddDays(10));
+
+                if (m_LastUpdatedThreads[_Post.m_ThreadURL] < _Post.m_PostDate)
+                {
+                    try
+                    {
+                        if (m_ForumPosts.FirstOrDefault((_Value) => _Value.m_PostDate == _Post.m_PostDate && _Value.m_PostContent == _Post.m_PostContent) == default(ForumPost))
+                        {
+                            //Post doesnt allready exist, add it!
+                            m_ForumPosts.Add(_Post);
+                            try
+                            {
+                                _RetPosts(_Post);
+                            }
+                            catch (Exception)
+                            { }
+                        }
+
+                        m_LastUpdatedThreads[_Post.m_ThreadURL] = _Post.m_PostDate;
                         m_DataUpdated = true;
                     }
                     catch (Exception)
@@ -463,6 +500,123 @@ namespace VF_WoWLauncher
 
                     //topics.Add(Tuple.Create(System.Net.WebUtility.HtmlDecode(topicName), topicLink));
                 }
+            }
+            else if(_ForumType == ForumType.KronosForum)
+            {
+                //Kronos forum is through RSS feed example: http://forum.twinstar.cz/external.php?type=RSS2&forumids=969
+                try
+                {
+                    System.Xml.XmlDocument xmlDocument = new System.Xml.XmlDocument();
+                    xmlDocument.LoadXml(website);
+                    var rssNode = xmlDocument.DocumentElement;
+                    if (rssNode.Name == "rss")
+                    {
+                        var channelNode = rssNode.FirstChild;
+                        if(channelNode.Name == "channel")
+                        {
+                            for (int i = 0; i < channelNode.ChildNodes.Count; ++i)
+                            {
+                                if(channelNode.ChildNodes[i].Name == "item")
+                                {
+                                    ForumPost fPost = new ForumPost();
+                                    fPost.m_PosterImageURL = "";
+                                    var postNode = channelNode.ChildNodes[i];
+                                    foreach(System.Xml.XmlElement node in postNode.ChildNodes)
+                                    {
+                                        if(node.Name == "title")
+                                        {
+                                            fPost.m_ThreadName = node.InnerText;
+                                        }
+                                        else if (node.Name == "content:encoded")
+                                        {
+                                            fPost.m_PostContent = ParsePostHTMLContent(node.InnerText.Replace("<![CDATA[", "").Replace("]]>", ""));
+                                        }
+                                        else if (node.Name == "link")
+                                        {
+                                            fPost.m_PostURL = node.InnerText.Replace("?goto=newpost", "");
+                                            fPost.m_ThreadURL = fPost.m_PostURL;
+                                        }
+                                        else if (node.Name == "pubDate")
+                                        {
+                                            fPost.m_PostDate = ParseDateString(node.InnerText, DateTime.MinValue);
+                                        }
+                                        else if (node.Name == "dc:creator")
+                                        {
+                                            fPost.m_PosterName = node.InnerText;
+                                        }
+                                    }
+
+                                    if (fPost.m_ThreadName != "" && fPost.m_PostContent != "" 
+                                        && fPost.m_ThreadURL != "" && fPost.m_PosterName != "" && fPost.m_PostDate != DateTime.MinValue)
+                                    {
+                                        _ForumSection.UpdateThread(fPost, _RetPosts, _ForumType);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception)
+                {}
+            }
+            else if (_ForumType == ForumType.RSS_RealmPlayersForum || _ForumType == ForumType.RSS_NostalriusForum)
+            {
+                //RSS example: http://realmplayers.com:5555/feed.php?f=14
+                //https://www.phpbb.com/support/docs/en/3.1/kb/article/faq-phpbb-atom-feeds/
+                try
+                {
+                    System.Xml.XmlDocument xmlDocument = new System.Xml.XmlDocument();
+                    xmlDocument.LoadXml(website);
+                    var rssNode = xmlDocument.DocumentElement;
+                    if (rssNode.Name == "feed")
+                    {
+                        for (int i = 0; i < rssNode.ChildNodes.Count; ++i)
+                        {
+                            if(rssNode.ChildNodes[i].Name == "entry")
+                            {
+                                var entryNode = rssNode.ChildNodes[i];
+
+                                ForumPost fPost = new ForumPost();
+                                foreach (System.Xml.XmlElement node in entryNode.ChildNodes)
+                                {
+                                    if(node.Name == "author")
+                                    {
+                                        if (node.FirstChild.Name == "name")
+                                        {
+                                            fPost.m_PosterName = node.FirstChild.InnerText.Replace("<![CDATA[", "").Replace("]]>", "");
+                                        }
+                                    }
+                                    else if(node.Name == "published")
+                                    {
+                                        fPost.m_PostDate = ParseDateString(node.InnerText, DateTime.MinValue);
+                                    }
+                                    else if(node.Name == "link")
+                                    {
+                                        fPost.m_PostURL = node.Attributes["href"].Value;
+                                        fPost.m_ThreadURL = fPost.m_PostURL;
+                                    }
+                                    else if (node.Name == "title")
+                                    {
+                                        fPost.m_ThreadName = node.InnerText.Replace("<![CDATA[", "").Replace("]]>", "");
+                                        fPost.m_ThreadName = fPost.m_ThreadName.SplitVF(" • ").Last();
+                                    }
+                                    else if (node.Name == "content")
+                                    {
+                                        fPost.m_PostContent = ParsePostHTMLContent(node.InnerText.Replace("<![CDATA[", "").Replace("]]>", ""));
+                                    }
+                                }
+
+                                if (fPost.m_ThreadName != "" && fPost.m_PostContent != ""
+                                    && fPost.m_ThreadURL != "" && fPost.m_PosterName != "" && fPost.m_PostDate != DateTime.MinValue)
+                                {
+                                    _ForumSection.UpdateThread(fPost, _RetPosts, _ForumType);
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception)
+                { }
             }
             else
             {

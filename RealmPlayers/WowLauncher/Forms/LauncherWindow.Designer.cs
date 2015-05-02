@@ -128,10 +128,12 @@
             // 
             // c_tRefreshNews
             // 
+            this.c_tRefreshNews.Interval = 100000;
             this.c_tRefreshNews.Tick += new System.EventHandler(this.c_tRefreshNews_Tick);
             // 
             // c_tRefreshAddonUpdates
             // 
+            this.c_tRefreshAddonUpdates.Interval = 100000;
             this.c_tRefreshAddonUpdates.Tick += new System.EventHandler(this.c_tRefreshAddonUpdates_Tick);
             // 
             // LauncherWindow

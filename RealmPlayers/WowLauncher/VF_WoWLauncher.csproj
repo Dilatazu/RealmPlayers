@@ -190,6 +190,11 @@
     <Compile Include="FTPUtility.cs" />
     <Compile Include="Network\NetworkPacketType.cs" />
     <Compile Include="NotAdminCCode.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Testing\FlickerFreeListBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -321,14 +326,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
     <EmbeddedResource Include="Forms\PopupForms\SaveConfigProfileForm.resx">
       <DependentUpon>SaveConfigProfileForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -356,12 +356,14 @@
     <None Include="Resources\wow_icon_small.ico" />
     <None Include="Resources\VF_WL_ICON.ico" />
     <None Include="Resources\VF_WL_ICON_32.ico" />
+    <None Include="Resources\newkronosthread32x33.png" />
     <Content Include="Resources\NotAdmin.exe" />
     <None Include="Resources\VF_RealmPlayersIcon64.png" />
     <None Include="Resources\topic_read.gif" />
     <None Include="Resources\topic_unread.gif" />
     <None Include="Resources\topic_read_nos.png" />
     <None Include="Resources\topic_unread_nos.png" />
+    <None Include="Resources\oldkronosthread32x33.png" />
     <Content Include="VF_WL_ICON.ico" />
     <Content Include="wow_icon.ico" />
     <None Include="Resources\update-critical32.png" />

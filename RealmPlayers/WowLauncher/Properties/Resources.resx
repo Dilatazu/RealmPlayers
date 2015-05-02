@@ -172,4 +172,10 @@
   <data name="topic_unread_nos" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\topic_unread_nos.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="newkronosthread32x33" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\newkronosthread32x33.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="oldkronosthread32x33" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\oldkronosthread32x33.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

@@ -101,12 +101,32 @@ namespace VF_WoWLauncher.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap newkronosthread32x33 {
+            get {
+                object obj = ResourceManager.GetObject("newkronosthread32x33", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
         internal static byte[] NotAdmin {
             get {
                 object obj = ResourceManager.GetObject("NotAdmin", resourceCulture);
                 return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap oldkronosthread32x33 {
+            get {
+                object obj = ResourceManager.GetObject("oldkronosthread32x33", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         

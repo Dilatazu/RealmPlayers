@@ -74,9 +74,11 @@ namespace VF_WoWLauncher
         [ProtoMember(18)]
         public Dictionary<string, RealmInfo> RealmLists = new Dictionary<string, RealmInfo>();
         [ProtoMember(19)]
-        public bool NewsSources_Feenix = true;
+        public bool NewsSources_Feenix = false;
         [ProtoMember(20)]
         public bool NewsSources_Nostalrius = true;
+        [ProtoMember(21)]
+        public bool NewsSources_Kronos = true;
 
         public void AddLaunchShortcut(string _Profile, string _Realm)
         {

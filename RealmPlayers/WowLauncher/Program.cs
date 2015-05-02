@@ -247,6 +247,7 @@ namespace VF_WoWLauncher
                                     InstalledAddons.ModifyInstalledAddon("VF_RaidStatsTBC", WowVersionEnum.TBC, "VF_RS_LastUploadedData", "\"" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "\"");
                                 }
                             }
+                            ServerComm.SendAddonData_Dispose();
                         }
                         else
                         {

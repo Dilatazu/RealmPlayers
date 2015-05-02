@@ -236,21 +236,69 @@ namespace VF_WoWLauncher
                 m_PollingForNews = true;
                 try
                 {
-                    DateTime minDate = DateTime.Now.AddDays(-14);
+                    DateTime absoluteMinDate = DateTime.Now.AddDays(-30);
                     Action<ForumReader.ForumPost> newPostLambda = (ForumReader.ForumPost _NewPost) =>
                     {
+                        DateTime minDate = DateTime.Now.AddDays(-14);
                         ForumReader.ForumType forumType = ForumReader.ForumType.FeenixForum;
                         if (_NewPost.m_PostURL.Contains("forum.realmplayers.com") == true)
                         {
+                            minDate = DateTime.Now.AddDays(-28);
                             forumType = ForumReader.ForumType.RealmPlayersForum;
                             if (_NewPost.m_PosterName != "Dilatazu")
                                 return;
                         }
-                        else if(_NewPost.m_PostURL.Contains("forum.nostalrius.org") == true)
+                        else if (_NewPost.m_PostURL.Contains("forum.nostalrius.org") == true)
                         {
+                            minDate = DateTime.Now.AddDays(-28);
                             forumType = ForumReader.ForumType.NostalriusForum;
                             if (_NewPost.m_PosterName != "Viper" && _NewPost.m_PosterName != "Daemon")
                                 return;
+                        }
+                        else if (_NewPost.m_PostURL.Contains("forum.twinstar.cz") == true)
+                        {
+                            minDate = DateTime.Now.AddDays(-28);
+                            forumType = ForumReader.ForumType.KronosForum;
+                            //Not needed for Kronos forum
+                            //if (_NewPost.m_PosterName != "Chero")
+                            //    return;
+                        }
+                        else if (_NewPost.m_PostURL.Contains("wow-one.com") == true)
+                        {
+                            minDate = DateTime.Now.AddDays(-14);
+                            forumType = ForumReader.ForumType.FeenixForum;
+                            if (_NewPost.m_PosterName != "Athairne"
+                                && _NewPost.m_PosterName != "PermaFrost"
+                                && _NewPost.m_PosterName != "Feenixes"
+                                && _NewPost.m_PosterName != "VSupport"
+                                && _NewPost.m_PosterName != "Forcy"
+                                && _NewPost.m_PosterName != "Danut"
+                                && _NewPost.m_PosterName != "ender"
+                                && _NewPost.m_PosterName != "Aidas"
+                                && _NewPost.m_PosterName != "voldemort"
+                                && _NewPost.m_PosterName != "Thetruecrow"
+                                && _NewPost.m_PosterName != "Emphar"
+                                && _NewPost.m_PosterName != "Mardant"
+                                && _NewPost.m_PosterName != "technique"
+                                && _NewPost.m_PosterName != "Sideways"
+                                && _NewPost.m_PosterName != "Bronson"
+                                && _NewPost.m_PosterName != "Neforai"
+                                && _NewPost.m_PosterName != "Database"
+                                && _NewPost.m_PosterName != "zeroxas"
+                                && _NewPost.m_PosterName != "anaaz"
+                                && _NewPost.m_PosterName != "Doxis"
+                                && _NewPost.m_PosterName != "Mr.Justice"
+                                && _NewPost.m_PosterName != "TheDoctor"
+                                && _NewPost.m_PosterName != "Ribbit"
+                                && _NewPost.m_PosterName != "Vidotrieth"
+                                && _NewPost.m_PosterName != "Tyale"
+                                && _NewPost.m_PosterName != "64bytes"
+                                && _NewPost.m_PosterName != "programuotojas")
+                                return;
+                        }
+                        else
+                        {
+                            return;//Unknown forum type
                         }
                         string threadNameLower = _NewPost.m_ThreadName.ToLower();
                         if (forumType == ForumReader.ForumType.FeenixForum && Settings.HaveTBC == false && (threadNameLower.Contains("archangel") || threadNameLower.Contains("2.4.3") || threadNameLower.Contains("area 52")))
@@ -288,6 +336,10 @@ namespace VF_WoWLauncher
                                     {
                                         image = Properties.Resources.topic_unread_nos;
                                     }
+                                    else if (forumType == ForumReader.ForumType.KronosForum)
+                                    {
+                                        image = Properties.Resources.newkronosthread32x33;
+                                    }
                                     else
                                     {
                                         image = Properties.Resources.topic_unread;
@@ -308,13 +360,17 @@ namespace VF_WoWLauncher
                                     {
                                         image = Properties.Resources.topic_read_nos;
                                     }
+                                    else if (forumType == ForumReader.ForumType.KronosForum)
+                                    {
+                                        image = Properties.Resources.oldkronosthread32x33;
+                                    }
                                     else
                                     {
                                         image = Properties.Resources.topic_read;
                                     }
                                 }
 
-                                c_dlAddons.AddItem(int.MinValue + (int)((_NewPost.m_PostDate - minDate).TotalMinutes)
+                                c_dlAddons.AddItem(int.MinValue + (int)((_NewPost.m_PostDate - absoluteMinDate).TotalMinutes)
                                     , image
                                     , _NewPost.m_ThreadName, (_NewPost.m_PostContent.Length > 1200 ? "This post is long! Click \"Goto thread\" to read the full post on the forum.\r\n\r\n" + _NewPost.m_PostContent.Substring(0, 1024) + "..." : _NewPost.m_PostContent), _NewPost.m_PostDate.ToString("yyyy-MM-dd HH:mm:ss") + " by " + _NewPost.m_PosterName
                                     , new DetailedList.RightSideForumPost(() =>
@@ -330,6 +386,11 @@ namespace VF_WoWLauncher
                             }));
                         }
                     };
+                    if (Settings.Instance.NewsSources_Kronos == true)
+                    {
+                        ForumReader.GetLatestPosts(new string[]{"http://forum.twinstar.cz/external.php?type=RSS2&forumids=969"}
+                            , newPostLambda, ForumReader.ForumType.KronosForum, onlyNewest);
+                    }
                     if(Settings.Instance.NewsSources_Feenix == true)
                     {
                         ForumReader.GetLatestPosts(new string[]{"http://www.wow-one.com/forum/117-server-updates/"
@@ -814,7 +875,7 @@ namespace VF_WoWLauncher
             {
                 try
                 {
-                    if (ServerComm.PeekAddonUpdates(15) == true)
+                    if (ServerComm.PeekAddonUpdates(15/*15 is for a reason even though the interval this timer ticks at is 10 minutes*/) == true)
                     {
                         GetLatestAddonUpdates();
                         //GetLatestUserIDAddons();
