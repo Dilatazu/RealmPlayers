@@ -29,6 +29,25 @@ namespace VF_WoWLauncher
             c_cbxFeenixNews.Checked = Settings.Instance.NewsSources_Feenix;
             c_cbxNostalriusNews.Checked = Settings.Instance.NewsSources_Nostalrius;
             c_cbxKronosNews.Checked = Settings.Instance.NewsSources_Kronos;
+
+            if (RealmPlayersUploader.IsValidUserID(Settings.UserID) == true)
+            {
+                c_cbContributeRealmPlayers.Enabled = true;
+                c_cbContributeRealmPlayers.Checked = Settings.Instance.ContributeRealmPlayers;
+                c_cbContributeRaidStats.Enabled = true;
+                c_cbContributeRaidStats.Checked = Settings.Instance.ContributeRaidStats;
+                c_cbxWait5Seconds.Enabled = true;
+                c_cbxWait5Seconds.Checked = Settings.Instance.Wait5SecondsAfterUpload;
+            }
+            else
+            {
+                c_cbContributeRealmPlayers.Enabled = false;
+                c_cbContributeRaidStats.Enabled = false;
+                c_cbxWait5Seconds.Enabled = false;
+                c_cbContributeRealmPlayers.Checked = false;
+                c_cbContributeRaidStats.Checked = false;
+                c_cbxWait5Seconds.Checked = false;
+            }
             //c_cbxWoWNoDelay.Checked = Settings.Instance.UseWoWNoDelay;
             if (Settings.HaveTBC == true)
             {
@@ -52,6 +71,15 @@ namespace VF_WoWLauncher
             {
                 SetupUserID.ShowSetupUserID();
                 c_txtUserID.Text = Settings.UserID;
+                if (RealmPlayersUploader.IsValidUserID(Settings.UserID) == true)
+                {
+                    c_cbContributeRealmPlayers.Enabled = true;
+                    c_cbContributeRealmPlayers.Checked = Settings.Instance.ContributeRealmPlayers;
+                    c_cbContributeRaidStats.Enabled = true;
+                    c_cbContributeRaidStats.Checked = Settings.Instance.ContributeRaidStats;
+                    c_cbxWait5Seconds.Enabled = true;
+                    c_cbxWait5Seconds.Checked = Settings.Instance.Wait5SecondsAfterUpload;
+                }
             }
             else
             {
@@ -134,6 +162,13 @@ namespace VF_WoWLauncher
             Settings.Instance.NewsSources_Feenix = c_cbxFeenixNews.Checked;
             Settings.Instance.NewsSources_Nostalrius = c_cbxNostalriusNews.Checked;
             Settings.Instance.NewsSources_Kronos = c_cbxKronosNews.Checked;
+
+            if (RealmPlayersUploader.IsValidUserID(Settings.UserID) == true)
+            {
+                Settings.Instance.ContributeRealmPlayers = c_cbContributeRealmPlayers.Checked;
+                Settings.Instance.ContributeRaidStats = c_cbContributeRaidStats.Checked;
+                Settings.Instance.Wait5SecondsAfterUpload = c_cbxWait5Seconds.Checked;
+            }
             Close();
         }
 
@@ -304,6 +339,17 @@ namespace VF_WoWLauncher
         private void c_cbxNostalriusNews_CheckedChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void c_cbContributeRealmPlayers_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Settings.Instance.ContributeRealmPlayers == true && c_cbContributeRealmPlayers.Checked == false)
+            {
+                if (Utility.MessageBoxShow("Please note that without people contributing to RealmPlayers the Armory will not be able to stay up to date and the quality of the service will worsen.\r\nThe addon and uploading is very lightweight and should not affect your gameplay.\r\n\r\nAre you sure you do not want to contribute?", "Are you sure you do not want to contribute?", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.No)
+                {
+                    c_cbContributeRealmPlayers.Checked = true;
+                }
+            }
         }
     }
     public class ApplicationSettings

@@ -440,28 +440,40 @@ namespace VF_WoWLauncher
                             {
                                 if (Settings.HaveClassic == true && InstalledAddons.GetAddonInfo("VF_RealmPlayers", WowVersionEnum.Vanilla) == null)
                                 {
-                                    installedAddons.Add("VF_RealmPlayers");
+                                    if (Settings.Instance.ContributeRealmPlayers == true)
+                                    {
+                                        installedAddons.Add("VF_RealmPlayers");
+                                    }
                                 }
                                 if (Settings.HaveClassic == true
                                     && InstalledAddons.GetAddonInfo("VF_RaidDamage", WowVersionEnum.Vanilla) == null
                                     && InstalledAddons.GetAddonInfo("VF_RaidStats", WowVersionEnum.Vanilla) == null)
                                 {
-                                    //if (InstalledAddons.GetAddonInfo("SW_Stats", WowVersion.Vanilla) != null && InstalledAddons.GetAddonInfo("KLHThreatMeter", WowVersion.Vanilla) != null)
-                                    //{
-                                    installedAddons.Add("VF_RaidDamage");
-                                    installedAddons.Add("VF_RaidStats");
-                                    //}
+                                    if (Settings.Instance.ContributeRaidStats == true)
+                                    {
+                                        //if (InstalledAddons.GetAddonInfo("SW_Stats", WowVersion.Vanilla) != null && InstalledAddons.GetAddonInfo("KLHThreatMeter", WowVersion.Vanilla) != null)
+                                        //{
+                                        installedAddons.Add("VF_RaidDamage");
+                                        installedAddons.Add("VF_RaidStats");
+                                        //}
+                                    }
                                 }
                             }
                             else if (wowVersion == WowVersionEnum.TBC)
                             {
                                 if (Settings.HaveTBC == true && InstalledAddons.GetAddonInfo("VF_RealmPlayersTBC", WowVersionEnum.TBC) == null)
                                 {
-                                    installedAddons.Add("VF_RealmPlayersTBC");
+                                    if (Settings.Instance.ContributeRealmPlayers == true)
+                                    {
+                                        installedAddons.Add("VF_RealmPlayersTBC");
+                                    }
                                 }
                                 if (Settings.HaveTBC == true && InstalledAddons.GetAddonInfo("VF_RaidStatsTBC", WowVersionEnum.TBC) == null)
                                 {
-                                    installedAddons.Add("VF_RaidStatsTBC");
+                                    if (Settings.Instance.ContributeRaidStats == true)
+                                    {
+                                        installedAddons.Add("VF_RaidStatsTBC");
+                                    }
                                 }
                             }
                         }

@@ -33,6 +33,9 @@
             this.c_btnWowDirectoryBrowse = new System.Windows.Forms.Button();
             this.c_txtWowDirectory = new System.Windows.Forms.TextBox();
             this.c_gpbUploading = new System.Windows.Forms.GroupBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.c_cbContributeRaidStats = new System.Windows.Forms.CheckBox();
+            this.c_cbContributeRealmPlayers = new System.Windows.Forms.CheckBox();
             this.c_lblUserID = new System.Windows.Forms.Label();
             this.c_btnChangeUserID = new System.Windows.Forms.Button();
             this.c_txtUserID = new System.Windows.Forms.TextBox();
@@ -46,9 +49,10 @@
             this.c_cbxAutoHide = new System.Windows.Forms.CheckBox();
             this.c_cbAutoUpdateVF = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.c_cbxKronosNews = new System.Windows.Forms.CheckBox();
             this.c_cbxNostalriusNews = new System.Windows.Forms.CheckBox();
             this.c_cbxFeenixNews = new System.Windows.Forms.CheckBox();
-            this.c_cbxKronosNews = new System.Windows.Forms.CheckBox();
+            this.c_cbxWait5Seconds = new System.Windows.Forms.CheckBox();
             this.c_gpbUploading.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -94,20 +98,54 @@
             // 
             // c_gpbUploading
             // 
+            this.c_gpbUploading.Controls.Add(this.c_cbxWait5Seconds);
+            this.c_gpbUploading.Controls.Add(this.label1);
+            this.c_gpbUploading.Controls.Add(this.c_cbContributeRaidStats);
+            this.c_gpbUploading.Controls.Add(this.c_cbContributeRealmPlayers);
             this.c_gpbUploading.Controls.Add(this.c_lblUserID);
             this.c_gpbUploading.Controls.Add(this.c_btnChangeUserID);
             this.c_gpbUploading.Controls.Add(this.c_txtUserID);
             this.c_gpbUploading.Location = new System.Drawing.Point(10, 12);
             this.c_gpbUploading.Name = "c_gpbUploading";
-            this.c_gpbUploading.Size = new System.Drawing.Size(394, 50);
+            this.c_gpbUploading.Size = new System.Drawing.Size(394, 77);
             this.c_gpbUploading.TabIndex = 7;
             this.c_gpbUploading.TabStop = false;
             this.c_gpbUploading.Text = "Data Uploading";
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(6, 55);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(70, 13);
+            this.label1.TabIndex = 8;
+            this.label1.Text = "Contribute to:";
+            // 
+            // c_cbContributeRaidStats
+            // 
+            this.c_cbContributeRaidStats.AutoSize = true;
+            this.c_cbContributeRaidStats.Location = new System.Drawing.Point(178, 55);
+            this.c_cbContributeRaidStats.Name = "c_cbContributeRaidStats";
+            this.c_cbContributeRaidStats.Size = new System.Drawing.Size(72, 17);
+            this.c_cbContributeRaidStats.TabIndex = 7;
+            this.c_cbContributeRaidStats.Text = "RaidStats";
+            this.c_cbContributeRaidStats.UseVisualStyleBackColor = true;
+            // 
+            // c_cbContributeRealmPlayers
+            // 
+            this.c_cbContributeRealmPlayers.AutoSize = true;
+            this.c_cbContributeRealmPlayers.Location = new System.Drawing.Point(82, 55);
+            this.c_cbContributeRealmPlayers.Name = "c_cbContributeRealmPlayers";
+            this.c_cbContributeRealmPlayers.Size = new System.Drawing.Size(90, 17);
+            this.c_cbContributeRealmPlayers.TabIndex = 6;
+            this.c_cbContributeRealmPlayers.Text = "RealmPlayers";
+            this.c_cbContributeRealmPlayers.UseVisualStyleBackColor = true;
+            this.c_cbContributeRealmPlayers.CheckedChanged += new System.EventHandler(this.c_cbContributeRealmPlayers_CheckedChanged);
+            // 
             // c_lblUserID
             // 
             this.c_lblUserID.AutoSize = true;
-            this.c_lblUserID.Location = new System.Drawing.Point(127, 25);
+            this.c_lblUserID.Location = new System.Drawing.Point(6, 25);
             this.c_lblUserID.Name = "c_lblUserID";
             this.c_lblUserID.Size = new System.Drawing.Size(46, 13);
             this.c_lblUserID.TabIndex = 5;
@@ -115,9 +153,9 @@
             // 
             // c_btnChangeUserID
             // 
-            this.c_btnChangeUserID.Location = new System.Drawing.Point(324, 19);
+            this.c_btnChangeUserID.Location = new System.Drawing.Point(203, 20);
             this.c_btnChangeUserID.Name = "c_btnChangeUserID";
-            this.c_btnChangeUserID.Size = new System.Drawing.Size(64, 23);
+            this.c_btnChangeUserID.Size = new System.Drawing.Size(52, 23);
             this.c_btnChangeUserID.TabIndex = 4;
             this.c_btnChangeUserID.Text = "Change";
             this.c_btnChangeUserID.UseVisualStyleBackColor = true;
@@ -125,7 +163,7 @@
             // 
             // c_txtUserID
             // 
-            this.c_txtUserID.Location = new System.Drawing.Point(179, 22);
+            this.c_txtUserID.Location = new System.Drawing.Point(58, 22);
             this.c_txtUserID.Name = "c_txtUserID";
             this.c_txtUserID.ReadOnly = true;
             this.c_txtUserID.Size = new System.Drawing.Size(139, 20);
@@ -187,7 +225,7 @@
             // c_cbAutoRefresh
             // 
             this.c_cbAutoRefresh.AutoSize = true;
-            this.c_cbAutoRefresh.Location = new System.Drawing.Point(10, 68);
+            this.c_cbAutoRefresh.Location = new System.Drawing.Point(10, 95);
             this.c_cbAutoRefresh.Name = "c_cbAutoRefresh";
             this.c_cbAutoRefresh.Size = new System.Drawing.Size(173, 17);
             this.c_cbAutoRefresh.TabIndex = 13;
@@ -223,7 +261,7 @@
             // c_cbAutoUpdateVF
             // 
             this.c_cbAutoUpdateVF.AutoSize = true;
-            this.c_cbAutoUpdateVF.Location = new System.Drawing.Point(10, 156);
+            this.c_cbAutoUpdateVF.Location = new System.Drawing.Point(10, 168);
             this.c_cbAutoUpdateVF.Name = "c_cbAutoUpdateVF";
             this.c_cbAutoUpdateVF.Size = new System.Drawing.Size(229, 17);
             this.c_cbAutoUpdateVF.TabIndex = 16;
@@ -237,12 +275,22 @@
             this.groupBox1.Controls.Add(this.c_cbxKronosNews);
             this.groupBox1.Controls.Add(this.c_cbxNostalriusNews);
             this.groupBox1.Controls.Add(this.c_cbxFeenixNews);
-            this.groupBox1.Location = new System.Drawing.Point(10, 91);
+            this.groupBox1.Location = new System.Drawing.Point(10, 118);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(394, 45);
             this.groupBox1.TabIndex = 17;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Private server forum news from sources";
+            // 
+            // c_cbxKronosNews
+            // 
+            this.c_cbxKronosNews.AutoSize = true;
+            this.c_cbxKronosNews.Location = new System.Drawing.Point(196, 19);
+            this.c_cbxKronosNews.Name = "c_cbxKronosNews";
+            this.c_cbxKronosNews.Size = new System.Drawing.Size(59, 17);
+            this.c_cbxKronosNews.TabIndex = 16;
+            this.c_cbxKronosNews.Text = "Kronos";
+            this.c_cbxKronosNews.UseVisualStyleBackColor = true;
             // 
             // c_cbxNostalriusNews
             // 
@@ -266,15 +314,14 @@
             this.c_cbxFeenixNews.UseVisualStyleBackColor = true;
             this.c_cbxFeenixNews.CheckedChanged += new System.EventHandler(this.c_cbxGetFeenixNews_CheckedChanged);
             // 
-            // c_cbxKronosNews
+            // c_cbxWait5Seconds
             // 
-            this.c_cbxKronosNews.AutoSize = true;
-            this.c_cbxKronosNews.Location = new System.Drawing.Point(196, 19);
-            this.c_cbxKronosNews.Name = "c_cbxKronosNews";
-            this.c_cbxKronosNews.Size = new System.Drawing.Size(59, 17);
-            this.c_cbxKronosNews.TabIndex = 16;
-            this.c_cbxKronosNews.Text = "Kronos";
-            this.c_cbxKronosNews.UseVisualStyleBackColor = true;
+            this.c_cbxWait5Seconds.Location = new System.Drawing.Point(278, 41);
+            this.c_cbxWait5Seconds.Name = "c_cbxWait5Seconds";
+            this.c_cbxWait5Seconds.Size = new System.Drawing.Size(110, 30);
+            this.c_cbxWait5Seconds.TabIndex = 9;
+            this.c_cbxWait5Seconds.Text = "Wait 5 seconds after data upload";
+            this.c_cbxWait5Seconds.UseVisualStyleBackColor = true;
             // 
             // ApplicationSettingsForm
             // 
@@ -332,6 +379,10 @@
         private System.Windows.Forms.CheckBox c_cbxFeenixNews;
         private System.Windows.Forms.CheckBox c_cbxNostalriusNews;
         private System.Windows.Forms.CheckBox c_cbxKronosNews;
+        private System.Windows.Forms.CheckBox c_cbContributeRaidStats;
+        private System.Windows.Forms.CheckBox c_cbContributeRealmPlayers;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.CheckBox c_cbxWait5Seconds;
 
     }
 }

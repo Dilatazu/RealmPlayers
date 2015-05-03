@@ -79,6 +79,12 @@ namespace VF_WoWLauncher
         public bool NewsSources_Nostalrius = true;
         [ProtoMember(21)]
         public bool NewsSources_Kronos = true;
+        [ProtoMember(22)]
+        public bool ContributeRealmPlayers = true;
+        [ProtoMember(23)]
+        public bool ContributeRaidStats = true;
+        [ProtoMember(24)]
+        public bool Wait5SecondsAfterUpload = true;
 
         public void AddLaunchShortcut(string _Profile, string _Realm)
         {
