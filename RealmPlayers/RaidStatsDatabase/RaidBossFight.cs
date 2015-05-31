@@ -12,17 +12,23 @@ namespace VF_RaidDamageDatabase
         int m_RaidBossFightIndex = 0;
         FightDataCollection.FightCacheData m_FightData = null;
         List<FightDataCollection.FightCacheData> m_ExtraFightDataVersions = new List<FightDataCollection.FightCacheData>();
+        bool m_IsExtraDataVersion = false;
         ThreadSafeCache m_Cache = new ThreadSafeCache();
 
-        public RaidBossFight(RaidCollection.Raid _Raid, int _RaidBossFightIndex, FightDataCollection.FightCacheData _FightData, List<FightDataCollection.FightCacheData> _ExtraFightDataVersions = null)
+        public RaidBossFight(RaidCollection.Raid _Raid, int _RaidBossFightIndex, FightDataCollection.FightCacheData _FightData, List<FightDataCollection.FightCacheData> _ExtraFightDataVersions = null, bool _IsExtraDataVersion = false)
         {
             m_Raid = _Raid;
             m_RaidBossFightIndex = _RaidBossFightIndex;
             m_FightData = _FightData;
             if (_ExtraFightDataVersions != null)
                 m_ExtraFightDataVersions = _ExtraFightDataVersions;
+            m_IsExtraDataVersion = _IsExtraDataVersion;
         }
 
+        public bool IsExtraFightDataVersion()
+        {
+            return m_IsExtraDataVersion;
+        }
         public int GetExtraFightVersionCount()
         {
             return m_ExtraFightDataVersions.Count;
@@ -31,8 +37,15 @@ namespace VF_RaidDamageDatabase
         {
             if (m_ExtraFightDataVersions == null || _VersionNumber < 0 || _VersionNumber >= m_ExtraFightDataVersions.Count)
                 return null;
+            
+            List<FightDataCollection.FightCacheData> otherFightDataVersions = new List<FightDataCollection.FightCacheData>();
+            otherFightDataVersions.Add(m_FightData);
+            foreach(var dataVersion in m_ExtraFightDataVersions)
+            {
+                otherFightDataVersions.Add(dataVersion);
+            }
 
-            return new RaidBossFight(m_Raid, 0x10000 * _VersionNumber + m_RaidBossFightIndex, m_ExtraFightDataVersions[_VersionNumber]);
+            return new RaidBossFight(m_Raid, 0x10000 * _VersionNumber + (m_RaidBossFightIndex & 0xFFFF), m_ExtraFightDataVersions[_VersionNumber], otherFightDataVersions, true);
         }
         public FightData GetFightData()
         {

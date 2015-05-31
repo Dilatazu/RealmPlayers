@@ -19,6 +19,7 @@ namespace VF
             public string DebugBuff;
             public string FilterSpikesURL;
             public string NoFilterSpikesURL;
+            public string VersionChangeURL;
             public VF_RPDatabase.ItemSummaryDatabase ItemSummaryDatabase;
             public Func<int, VF_RealmPlayersDatabase.WowVersionEnum, RealmPlayersServer.ItemInfo> GetItemInfoFunc;
         }
@@ -63,6 +64,30 @@ namespace VF
                 recordedByStr = "<font color='#CCCCCC'>" + _Fight.GetFightData().RecordedByPlayer + "</font>";
             }
             fightOverViewInfo += "<p>Fight was recorded by " + recordedByStr + " using addon version " + "<font color='#00FF00'>" + _Fight.GetFightData().AddonVersion + "</font></p>";
+            
+            if(_Fight.GetExtraFightVersionCount() > 0)
+            {
+                int indexSkew = 0;
+                if (_Fight.IsExtraFightDataVersion() == true)
+                {
+                    fightOverViewInfo += "<p>Fight was also recorded by ";
+                    indexSkew = 0;
+                }
+                else
+                {
+                    fightOverViewInfo += "<p>Fight was also recorded(possibly less accurately) by ";
+                    indexSkew = 1;
+                }
+                for (int i = 0; i < _Fight.GetExtraFightVersionCount(); ++i)
+                {
+                    var extraFight = _Fight.GetExtraFightVersion(i);
+                    if (extraFight != null && extraFight.GetFightCacheData() != _Fight.GetFightCacheData())
+                    {
+                        fightOverViewInfo += "<a href='" + _Details.VersionChangeURL.Replace("versionchangeid", (i + indexSkew).ToString()) + "'>" + PageUtility.CreateColorCodedName(_RealmDB.GetPlayer(extraFight.GetFightData().RecordedByPlayer)) + "</a>, ";
+                    }
+                }
+                fightOverViewInfo += "</p>";
+            }
 
             string enemyUnits = "<h3>Enemy units:</h3>";
             {

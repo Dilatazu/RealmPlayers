@@ -107,6 +107,7 @@ namespace VF.RaidDamageWebsite
                         , DebugBuff = PageUtility.GetQueryString(Request, "DebugBuff", null)
                         , FilterSpikesURL = PageUtility.CreateUrlWithNewQueryValue(Request, "Filtered", "true")
                         , NoFilterSpikesURL = PageUtility.CreateUrlWithNewQueryValue(Request, "Filtered", "false")
+                        , VersionChangeURL = PageUtility.CreateUrlWithNewQueryValue(Request, "Version", "versionchangeid")
                         , ItemSummaryDatabase = ApplicationInstance.Instance.GetItemSummaryDatabase()
                         , GetItemInfoFunc = ApplicationInstance.Instance.GetItemInfo
                     }));
