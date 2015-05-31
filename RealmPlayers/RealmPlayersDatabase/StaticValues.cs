@@ -20,6 +20,7 @@ namespace VF_RealmPlayersDatabase
         Nostalrius = 10,
         Kronos = 11,
         NostalGeek = 12,
+        Nefarian = 13,
     }
     public enum WowVersionEnum
     {
@@ -503,6 +504,8 @@ namespace VF_RealmPlayersDatabase
             {"NRB", WowRealm.Nostalrius},
             {"NB", WowRealm.Nostalrius},
             {"Kronos", WowRealm.Kronos},
+            {"Nefarian", WowRealm.Nefarian},
+            {"NEF", WowRealm.Nefarian},
             {"KRO", WowRealm.Kronos},
             {"NostalGeek 1.12", WowRealm.NostalGeek},
             //{"NostalGeek", WowRealm.NostalGeek},
@@ -518,9 +521,10 @@ namespace VF_RealmPlayersDatabase
         {
             if (_Realm == WowRealm.Emerald_Dream || _Realm == WowRealm.Warsong || _Realm == WowRealm.Al_Akir
                 || _Realm == WowRealm.Rebirth || _Realm == WowRealm.Valkyrie || _Realm == WowRealm.VanillaGaming || _Realm == WowRealm.Test_Server
-                || _Realm == WowRealm.Nostalrius 
+                || _Realm == WowRealm.Nostalrius
                 || _Realm == WowRealm.Kronos
-                || _Realm == WowRealm.NostalGeek)
+                || _Realm == WowRealm.NostalGeek
+                || _Realm == WowRealm.Nefarian)
             {
                 return WowVersionEnum.Vanilla;
             }

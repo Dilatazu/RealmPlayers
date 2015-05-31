@@ -72,6 +72,7 @@ namespace RealmPlayersServer.Code.Resources
 	        {WowRealm.Nostalrius , "NRB"},
 	        {WowRealm.Kronos , "KRO"},
 	        {WowRealm.NostalGeek , "NG"},
+	        {WowRealm.Nefarian , "NEF"},
 	        {WowRealm.Test_Server , "TSV"},
         };
         public static Dictionary<WowRealm, string> _RealmVisualString = new Dictionary<WowRealm, string>
@@ -88,6 +89,7 @@ namespace RealmPlayersServer.Code.Resources
 	        {WowRealm.Nostalrius , "Nostalrius"},
 	        {WowRealm.Kronos , "Kronos"},
 	        {WowRealm.NostalGeek , "NostalGeek"},
+	        {WowRealm.Nefarian , "Nefarian"},
 	        {WowRealm.Test_Server , "Test Server"},
         };
         public static Dictionary<int, string> _HordeRankVisualName = new Dictionary<int, string>

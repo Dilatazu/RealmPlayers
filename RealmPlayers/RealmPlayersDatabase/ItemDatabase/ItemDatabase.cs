@@ -44,6 +44,8 @@ namespace VF_RealmPlayersDatabase
                     return (6U << 24) + _ItemID;
                 case WowRealm.NostalGeek:
                     return (7U << 24) + _ItemID;
+                case WowRealm.Nefarian:
+                    return (8U << 24) + _ItemID;
                 default:
                     break;
             }
