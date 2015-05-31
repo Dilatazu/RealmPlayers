@@ -136,11 +136,6 @@ namespace RealmPlayersServer
                 if (_Realm != WowRealm.All && _Realm != _RealmDB.Key)
                     continue;
 
-                if (_RealmDB.Key == WowRealm.Valkyrie && _Realm != WowRealm.Valkyrie)
-                    continue;
-                if (_RealmDB.Key == WowRealm.VanillaGaming && _Realm != WowRealm.VanillaGaming)
-                    continue;
-
                 foreach (var player in _RealmDB.Value.Players)
                 {
                     if (races != null && races.Contains(player.Value.Character.Race) == false)

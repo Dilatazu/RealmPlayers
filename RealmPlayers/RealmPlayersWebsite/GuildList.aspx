@@ -17,10 +17,10 @@
 
     <header class="page-header">  
         <div class="row">
-          <div class="span10">
+          <div class="span9">
               <%= m_GuildListInfoHTML %>
           </div>
-          <div class="span2">
+          <div class="span3">
               <uc1:RealmControl runat="server" ID="RealmControl" />
           </div>
         </div>
