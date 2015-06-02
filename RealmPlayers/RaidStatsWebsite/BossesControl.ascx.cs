@@ -10,19 +10,19 @@ namespace VF.RaidDamageWebsite
 {
     public partial class BossesControl : System.Web.UI.UserControl
     {
-        const string MC_ALL = "00010203040506070809";
-        const string ONY_ALL = "0A";
-        const string BWL_ALL = "0B0C0D0E0F0G0H0I";
-        const string ZG_ALL = "0J0K0L0M0N0O0P0Q";
-        const string AQ20_ALL = "0W0X0Y0Z1A1B";
-        const string AQ40_ALL = "1C1D1E1F1G1H1I1J1K";
-        const string AQ40_NOOPTIONAL = "1C1D1E1F1G1H";
-        const string NAXX_ALL = "1L1M1N1O1P1Q1R1S1T1U1V1W1X1Y1Z";
-        const string NAXX_ALL_QUARTERS = "1L1M1N1O1P1Q1R1S1T1U1V1W1X";
-        const string NAXX_ARACHNID_QUARTERS = "1L1M1N";
-        const string NAXX_CONSTRUCT_QUARTERS = "1O1P1Q1R";
-        const string NAXX_PLAGUE_QUARTERS = "1S1T1U";
-        const string NAXX_MILITARY_QUARTERS = "1V1W1X";
+        public const string MC_ALL = "00010203040506070809";
+        public const string ONY_ALL = "0A";
+        public const string BWL_ALL = "0B0C0D0E0F0G0H0I";
+        public const string ZG_ALL = "0J0K0L0M0N0O0P0Q";
+        public const string AQ20_ALL = "0W0X0Y0Z1A1B";
+        public const string AQ40_ALL = "1C1D1E1F1G1H1I1J1K";
+        public const string AQ40_NOOPTIONAL = "1C1D1E1F1G1H";
+        public const string NAXX_ALL = "1L1M1N1O1P1Q1R1S1T1U1V1W1X1Y1Z";
+        public const string NAXX_ALL_QUARTERS = "1L1M1N1O1P1Q1R1S1T1U1V1W1X";
+        public const string NAXX_ARACHNID_QUARTERS = "1L1M1N";
+        public const string NAXX_CONSTRUCT_QUARTERS = "1O1P1Q1R";
+        public const string NAXX_PLAGUE_QUARTERS = "1S1T1U";
+        public const string NAXX_MILITARY_QUARTERS = "1V1W1X";
 
         public static Dictionary<string, string> InstanceFilterConverter = new Dictionary<string, string>
         {
