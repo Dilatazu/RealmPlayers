@@ -119,7 +119,7 @@ namespace VF.RaidDamageWebsite
             string tableBody = "";
             foreach (var boss in BossInformation.BossFights)
             {
-                var bossFights = summaryDatabase.GetHSElligibleBossFights(boss.Key, guildLimit == "null" ? null : guildLimit, playerLimit == "null" ? null : playerLimit);
+                var bossFights = summaryDatabase.GetHSElligibleBossFights(boss.Key, realm, guildLimit == "null" ? null : guildLimit, playerLimit == "null" ? null : playerLimit);
                 if (bossFights.Count > 0)
                 {
                     //averagePrecision /= bossFights.Count;

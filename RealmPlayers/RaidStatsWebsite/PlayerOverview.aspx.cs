@@ -292,7 +292,7 @@ namespace VF.RaidDamageWebsite
                 page += "</tbody></table>";
             }
 
-            string averagePageData = ""; 
+            string averagePageData = "<p><h3>Active Ranking in " + _Instance + "</h3>"; 
             { 
                 var bwlDataSet = AverageOverview.GenerateAverageDataSet(_Instance, null, null, _Realm, _GuildLimit);
 
@@ -304,7 +304,6 @@ namespace VF.RaidDamageWebsite
 
                 if (bwlDPS != 0.0f || bwlHPS != 0.0f)
                 {
-                    averagePageData += "<p><h3>Active Ranking in " + _Instance + "</h3>";
                     if (_Instance == "Molten Core")
                     {
                         bwlDPSRank = PageUtility.CreateLink("Ranking.aspx?Bosses=" + BossesControl.MC_ALL + "&realm=" + realmStr + "&andplayer=" + _Player.Name, PageUtility.CreateColorString("#" + bwlDPSRank, RPColor.Red));

@@ -80,7 +80,7 @@ namespace VF_RDDatabase
                 }
             }
         }
-        public List<BossFight> GetHSElligibleBossFights(string _BossName, string _GuildFilter = null, string _PlayerFilter = null)
+        public List<BossFight> GetHSElligibleBossFights(string _BossName, WowRealm _Realm = WowRealm.All, string _GuildFilter = null, string _PlayerFilter = null)
         {
             List<BossFight> fightInstances = new List<BossFight>();
 
@@ -90,6 +90,9 @@ namespace VF_RDDatabase
             double totalPrecision = 0;
             foreach (var groupRC in GroupRCs)
             {
+                if (_Realm != WowRealm.All && _Realm != groupRC.Value.Realm)
+                    continue;
+
                 if (_GuildFilter != null && _GuildFilter != groupRC.Value.GroupName)
                     continue;
 

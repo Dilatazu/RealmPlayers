@@ -54,7 +54,7 @@ namespace VF.RaidDamageWebsite
             {
                 this.Title = fightName + " Highscore | RaidStats";
             }
-            var fightInstances = summaryDatabase.GetHSElligibleBossFights(fightName, guildLimit);
+            var fightInstances = summaryDatabase.GetHSElligibleBossFights(fightName, realm, guildLimit);
             //Remove fights that have too low precision
             if (fightInstances.Count > 0)
             {
