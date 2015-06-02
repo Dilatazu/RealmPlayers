@@ -80,7 +80,7 @@ namespace VF_RDDatabase
                 }
             }
         }
-        public List<BossFight> GetHSElligibleBossFights(string _BossName, string _GuildFilter = null)
+        public List<BossFight> GetHSElligibleBossFights(string _BossName, string _GuildFilter = null, string _PlayerFilter = null)
         {
             List<BossFight> fightInstances = new List<BossFight>();
 
@@ -100,6 +100,14 @@ namespace VF_RDDatabase
                         if (bossFight.BossName == _BossName && bossFight.IsQualityHigh()
                         && bossFight.StartDateTime > earliestCompatibleDate)
                         {
+                            if (_PlayerFilter != null)
+                            {
+                                int playerIndex = bossFight.PlayerFightData.FindIndex((_Value) => { return _Value.Item1 == _PlayerFilter; });
+                                if (playerIndex <= 0)
+                                {
+                                    continue;
+                                }
+                            }
                             double precision = bossFight.DataDetails.FightPrecision;// fight.CalculatePrecision(realmDB.RD_IsPlayer);
                             fightInstances.Add(bossFight);
 
