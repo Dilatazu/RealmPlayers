@@ -128,7 +128,12 @@ namespace VF_RDDatabase
 
             public float FightPrecision
             {
-                get { return m_FightPrecision; }
+                get { 
+                    if (m_FightPrecision > 0.0f && m_FightPrecision <= 1.0f) 
+                        return m_FightPrecision; 
+                    else 
+                        return 0.0f; 
+                }
             }
             public bool HasResetsMidFight
             {
