@@ -277,7 +277,19 @@ namespace VF.RaidDamageWebsite
                 //    averageStats.m_HPS = playerSummary.Value.GenerateTotalAverageData(10, getEffectiveHPSFunc, null, activePlayerDateTimeLimit);
                 //}
                 //else 
-                if (instanceName == "BWL" || instanceName == "Blackwing Lair")
+                if (instanceName == "Naxxramas - All Quarters")
+                {
+                    Func<string, bool> includeBossFunc = (_Value) => { return VF_RaidDamageDatabase.BossInformation.BossFights[_Value] == "Naxxramas" && _Value != "Sapphiron" && _Value != "Kel'Thuzad"; };
+                    averageStats.m_DPS = playerSummary.Value.GenerateTotalAverageData(13, getDPSFunc, includeBossFunc);
+                    averageStats.m_HPS = playerSummary.Value.GenerateTotalAverageData(13, getEffectiveHPSFunc, includeBossFunc);
+                }
+                else if (instanceName == "AQ40" || instanceName == "Ahn'Qiraj Temple")
+                {
+                    Func<string, bool> includeBossFunc = (_Value) => { return VF_RaidDamageDatabase.BossInformation.BossFights[_Value] == "Ahn'Qiraj Temple"; };
+                    averageStats.m_DPS = playerSummary.Value.GenerateTotalAverageData(9, getDPSFunc, includeBossFunc);
+                    averageStats.m_HPS = playerSummary.Value.GenerateTotalAverageData(9, getEffectiveHPSFunc, includeBossFunc);
+                }
+                else if (instanceName == "BWL" || instanceName == "Blackwing Lair")
                 {
                     Func<string, bool> includeBossFunc = (_Value) => { return VF_RaidDamageDatabase.BossInformation.BossFights[_Value] == "Blackwing Lair"; };
                     averageStats.m_DPS = playerSummary.Value.GenerateTotalAverageData(8, getDPSFunc, includeBossFunc);
