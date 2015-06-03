@@ -296,10 +296,10 @@ namespace VF_RaidDamageDatabase
                 else if (TimeSlices[i].Event.StartsWith("Wipe"))
                     wipeSlice = i;
 
-                if (wipeSlice > i + 5)
-                {
-                    return AttemptType.WipeAttempt;
-                }
+                //if (wipeSlice > i + 5)
+                //{
+                //    return AttemptType.WipeAttempt;
+                //}
             }
             if (wipeSlice != -1)
             {
