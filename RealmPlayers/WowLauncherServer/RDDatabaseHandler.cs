@@ -298,11 +298,12 @@ namespace VF_WoWLauncherServer
         {
             lock (m_LockObject)
             {
-                int[] buggedRaidIDs = { 9723 };//2353, 2168, 1840, 2234, 1489, 2106 };
+                int[] buggedRaidIDs = { 10933, 10970, 10797 };//2353, 2168, 1840, 2234, 1489, 2106 };
                 List<RaidCollection.Raid> buggedRaids = new List<RaidCollection.Raid>();
                 foreach (var raid in m_RaidCollection.m_Raids)
                 {
-                    if (raid.Value.Realm == VF_RealmPlayersDatabase.WowRealm.Nostalrius)// buggedRaidIDs.Contains(raid.Value.UniqueRaidID))
+                    if (raid.Value.Realm == VF_RealmPlayersDatabase.WowRealm.Nostalrius)// 
+                    //if(buggedRaidIDs.Contains(raid.Value.UniqueRaidID))
                     {
                         //raid.Value.Realm = VF_RealmPlayersDatabase.WowRealm.Test_Server;
                         buggedRaids.Add(raid.Value);
