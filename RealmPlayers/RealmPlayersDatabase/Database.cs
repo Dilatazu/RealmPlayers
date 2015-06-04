@@ -28,7 +28,97 @@ namespace VF_RealmPlayersDatabase
                 }
             }
         }
+        public bool IsDBFilesUpdated(string _RootPath, object _SynchronizationLockObject)
+        {
+            if(_SynchronizationLockObject == null)
+                _SynchronizationLockObject = new object();
+            
+            lock(_SynchronizationLockObject)
+            {
+                foreach (var realm in m_Realms)
+                {
+                    if (realm.Value.IsDBFileUpdated(_RootPath + realm.Key.ToString() + "\\") == true)
+                        return true;
+                }
+            }
+            return false;
+        }
+        public bool ReloadAllRealmDBs(string _RootPath, bool _PurgeRealmDB = true, object _SynchronizationLockObject = null, DateTime? _HistoryEarliestTime = null)
+        {
+            bool reloadedAnyRealm = false;
+            WowRealm[] realms = m_Realms.Keys.ToArray<WowRealm>();
+            foreach(WowRealm realm in realms)
+            {
+                reloadedAnyRealm = ReloadRealmDB(realm, _RootPath, _PurgeRealmDB, _SynchronizationLockObject, _HistoryEarliestTime) || reloadedAnyRealm;
+            }
+            return reloadedAnyRealm;
+        }
+        public bool ReloadRealmDB(WowRealm _Realm, string _RootPath, bool _PurgeRealmDB = true, object _SynchronizationLockObject = null, DateTime? _HistoryEarliestTime = null)
+        {
+            if (_SynchronizationLockObject == null)
+                _SynchronizationLockObject = new object();
 
+            try
+            {
+                if(m_Realms.ContainsKey(_Realm) == true)
+                {
+                    RealmDatabase oldRealm;
+                    lock (_SynchronizationLockObject)
+                    {
+                        oldRealm = m_Realms[_Realm];
+                    }
+                    if(oldRealm.IsDBFileUpdated(_RootPath + _Realm.ToString() + "\\") == true)
+                    {
+                        var reloadedRealm = new RealmDatabase(_Realm);
+                        reloadedRealm.LoadDatabase(_RootPath + _Realm.ToString() + "\\", _HistoryEarliestTime);
+                        if (_PurgeRealmDB == true)
+                        {
+                            var purgeTask = new System.Threading.Tasks.Task(() =>
+                            {
+                                reloadedRealm.RemoveUnknowns();
+                                reloadedRealm.RemoveGMs();
+                                GC.Collect();
+                            });
+                            purgeTask.Start();
+                            purgeTask.Wait(1200 * 1000);//1200 sekunder(20 minuter)
+                        }
+                        reloadedRealm.WaitForLoad(RealmDatabase.LoadStatus.EverythingLoaded);
+                        if (reloadedRealm.IsLoadComplete() == false)
+                        {
+                            Logger.ConsoleWriteLine("Failed to reload database " + _Realm + ", it took too long", ConsoleColor.Red);
+                            return false;
+                        }
+                        lock (_SynchronizationLockObject)
+                        {
+                            m_Realms[_Realm] = reloadedRealm;
+                        }
+                        GC.Collect();
+                        return true;
+                    }
+                }
+                else
+                {
+                    Logger.ConsoleWriteLine("Realm was not loaded when requesting reload, this is unoptimal solution due to unnecessary locking for a long time!", ConsoleColor.Red);
+                    try
+                    {
+                        lock (_SynchronizationLockObject)
+                        {
+                            LoadRealmDatabase(_RootPath, _Realm, _HistoryEarliestTime);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.LogException(ex);
+                    }
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.LogException(ex);
+            }
+            return false;
+        }
         public void PurgeRealmDBs(bool _PurgeUnknowns, bool _PurgeGMs, bool _WaitForComplete = true)
         {
             List<System.Threading.Tasks.Task> purgeTasks = new List<System.Threading.Tasks.Task>();

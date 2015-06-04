@@ -15,20 +15,6 @@ namespace RealmPlayersServer
 {
     public class DatabaseLoader
     {
-        public static DateTime GetLastDatabaseUpdateTimeUTC()
-        {
-            var lastDatabaseUpdateTime = System.IO.File.GetLastWriteTimeUtc(Constants.RPPDbDir + "Database\\Emerald_Dream\\PlayersData.dat");
-            var wsgUpdateTime = System.IO.File.GetLastWriteTimeUtc(Constants.RPPDbDir + "Database\\Warsong\\PlayersData.dat");
-            var aaUpdateTime = System.IO.File.GetLastWriteTimeUtc(Constants.RPPDbDir + "Database\\Al_Akir\\PlayersData.dat");
-            var nosUpdateTime = System.IO.File.GetLastWriteTimeUtc(Constants.RPPDbDir + "Database\\Nostalrius\\PlayersData.dat");
-            if (wsgUpdateTime > lastDatabaseUpdateTime)
-                lastDatabaseUpdateTime = wsgUpdateTime;
-            if (aaUpdateTime > lastDatabaseUpdateTime)
-                lastDatabaseUpdateTime = aaUpdateTime;
-            if (nosUpdateTime > lastDatabaseUpdateTime)
-                lastDatabaseUpdateTime = nosUpdateTime;
-            return lastDatabaseUpdateTime;
-        }
         public static RPPDatabase LoadRPPDatabase(bool _FirstTimeLoading = false)
         {
             GC.Collect();
@@ -37,6 +23,14 @@ namespace RealmPlayersServer
             database.PurgeRealmDBs(true, true, (_FirstTimeLoading == false));
             GC.Collect();
             return database;
+        }
+        public static bool ReloadRPPDatabase(RPPDatabase _RPPDatabase, object _SynchronizationLockObject)
+        {
+            GC.Collect();
+            bool reloadResult = _RPPDatabase.ReloadAllRealmDBs(Constants.RPPDbDir + "Database\\"
+                , true, _SynchronizationLockObject, new DateTime(2012, 5, 1, 0, 0, 0));
+            GC.Collect();
+            return reloadResult;
         }
     }
 }

@@ -313,6 +313,18 @@ namespace VF_RealmPlayersDatabase
 
             return loadedPlayersHistory;
         }
+        private DateTime m_LoadedDBFileDateTime = DateTime.MinValue;
+        public bool IsDBFileUpdated(string _RealmPath)
+        {
+            if (System.IO.File.Exists(_RealmPath + "\\PlayersData.dat") == true)
+            {
+                if (System.IO.File.GetLastWriteTimeUtc(_RealmPath + "\\PlayersData.dat") > m_LoadedDBFileDateTime)
+                    return true;
+                else
+                    return false;
+            }
+            return true;
+        }
         private void Thread_LoadDatabase(string _RealmPath, DateTime? _HistoryEarliestDateTime = null)
         {
             try
@@ -321,6 +333,7 @@ namespace VF_RealmPlayersDatabase
                 Logger.ConsoleWriteLine("Started Loading Database " + Realm.ToString(), ConsoleColor.Green);
                 if (System.IO.File.Exists(_RealmPath + "\\PlayersData.dat") == true)
                 {
+                    m_LoadedDBFileDateTime = System.IO.File.GetLastWriteTimeUtc(_RealmPath + "\\PlayersData.dat");
                     Dictionary<string, PlayerData.Player> loadedPlayers = null;
                     Utility.LoadSerialize<Dictionary<string, PlayerData.Player>>(_RealmPath + "\\PlayersData.dat", out loadedPlayers);
 

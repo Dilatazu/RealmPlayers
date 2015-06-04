@@ -110,8 +110,7 @@ namespace RealmPlayersServer
             public DateTime m_StartTime = DateTime.Now;
             public object m_RealmPlayersMutex = new object();
             volatile RPPDatabase m_RPPDatabase;
-            public DateTime m_LastLoadedDateTime;
-            public DateTime m_LastDatabaseUpdateTime;
+            public DateTime m_LastLoadedDateTime = DateTime.MinValue;
             public Code.ContributorStatistics m_ContributorStatistics = null;
             System.Threading.Thread m_LoadRealmPlayersThread = null;
 
@@ -189,16 +188,28 @@ namespace RealmPlayersServer
                     GC.Collect();
                     bool firstTimeLoading = (m_RPPDatabase == null);
                     DateTime startLoadTime = DateTime.UtcNow;
-                    RPPDatabase rppDatabase = DatabaseLoader.LoadRPPDatabase(firstTimeLoading);
-                    lock(m_RealmPlayersMutex)
+                    if(firstTimeLoading == true)
                     {
-                        m_RPPDatabase = rppDatabase;
-                        m_ContributorStatistics = null;
-                        m_LastLoadedDateTime = DateTime.UtcNow;
+                        RPPDatabase rppDatabase = DatabaseLoader.LoadRPPDatabase(firstTimeLoading);
+                        lock (m_RealmPlayersMutex)
+                        {
+                            m_RPPDatabase = rppDatabase;
+                            m_ContributorStatistics = null;
+                            m_LastLoadedDateTime = DateTime.UtcNow;
+                        }
+                        m_ThreadSafeCache.ClearCache("FindPlayersMatching");
                     }
-                    Logger.ConsoleWriteLine("LoadRPPDatabase(): Reloaded database, it took: " + (int)(DateTime.UtcNow - startLoadTime).TotalSeconds + " seconds", ConsoleColor.Green);
+                    else
+                    {
+                        if (DatabaseLoader.ReloadRPPDatabase(m_RPPDatabase, m_RealmPlayersMutex) == true)
+                        {
+                            m_ContributorStatistics = null;
+                            m_ThreadSafeCache.ClearCache("FindPlayersMatching");
+                            m_LastLoadedDateTime = DateTime.UtcNow;
+                        }
+                    }
                     m_LoadRealmPlayersThread = null;
-                    m_ThreadSafeCache.ClearCache("FindPlayersMatching");
+                    Logger.ConsoleWriteLine("LoadRPPDatabase(): Reloaded database, it took: " + (int)(DateTime.UtcNow - startLoadTime).TotalSeconds + " seconds", ConsoleColor.Green);
                     GC.Collect();
                 }
                 catch (Exception ex)
@@ -521,7 +532,6 @@ namespace RealmPlayersServer
                     {
                         m_LoadRealmPlayersThread = new System.Threading.Thread(ReloadRealmPlayers);
                         m_LoadRealmPlayersThread.Start();
-                        m_LastDatabaseUpdateTime = DatabaseLoader.GetLastDatabaseUpdateTimeUTC();
                     }
                     if (_WaitUntilLoaded == false)
                     {
@@ -536,21 +546,18 @@ namespace RealmPlayersServer
                         rppDatabase = m_RPPDatabase;
                     }
                 }
-                else if ((DateTime.UtcNow - m_LastLoadedDateTime).TotalMinutes > 30)
+                else if ((DateTime.UtcNow - m_LastLoadedDateTime).TotalMinutes > 10)
                 {
                     if (m_LoadRealmPlayersThread == null)
                     {
-                        DateTime lastDatabaseUpdateTime = DatabaseLoader.GetLastDatabaseUpdateTimeUTC();
-                        if (lastDatabaseUpdateTime != m_LastDatabaseUpdateTime 
-                            && (DateTime.UtcNow - lastDatabaseUpdateTime).TotalMinutes > 5) //Wait atleast 5 minutes after last database save
+                        if (m_RPPDatabase.IsDBFilesUpdated(Constants.RPPDbDir + "Database\\", m_RealmPlayersMutex) == true)
                         {
-                            m_LastDatabaseUpdateTime = lastDatabaseUpdateTime;
                             m_LoadRealmPlayersThread = new System.Threading.Thread(ReloadRealmPlayers);
                             m_LoadRealmPlayersThread.Start();
                         }
                         else
                         {
-                            m_LastLoadedDateTime = DateTime.UtcNow.AddMinutes(-24);
+                            m_LastLoadedDateTime = DateTime.UtcNow.AddMinutes(-5);
                         }
                     }
                 }
