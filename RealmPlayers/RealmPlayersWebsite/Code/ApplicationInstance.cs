@@ -243,30 +243,34 @@ namespace RealmPlayersServer
                 if (m_ItemInfoUpdated == true && (m_ItemInfoCacheVanilla != null || m_ItemInfoCacheTBC != null))
                 {
                     m_ItemInfoUpdated = false;
-                    Logger.ConsoleWriteLine("BackupItemInfos(): \"Saving\" ItemInfos due to being updated (SAVING IS DISABLED ATM)", ConsoleColor.Yellow);
-                    return;
-                    lock(m_ItemInfoLock)
+                    if (DateTime.Now > m_ItemInfoLastSaveTime.AddMinutes(15))
                     {
-                        if (m_ItemInfoCacheVanilla != null)
+                        Logger.ConsoleWriteLine("BackupItemInfos(): \"Saving\" ItemInfos due to being updated", ConsoleColor.Yellow);
+                        lock(m_ItemInfoLock)
                         {
-                            try
+                            if (m_ItemInfoCacheVanilla != null)
                             {
-                                VF_RealmPlayersDatabase.Utility.SaveSerialize(Constants.RPPDbWriteDir + "VF_ItemInfoCache.dat", m_ItemInfoCacheVanilla);
-                                m_ItemInfoUpdated = false;
+                                try
+                                {
+                                    VF_RealmPlayersDatabase.Utility.SaveSerialize(Constants.RPPDbWriteDir + "VF_ItemInfoCache.dat", m_ItemInfoCacheVanilla);
+                                    m_ItemInfoUpdated = false;
+                                }
+                                catch (Exception)
+                                { }
                             }
-                            catch (Exception)
-                            { }
-                        }
-                        if (m_ItemInfoCacheTBC != null)
-                        {
-                            try
+                            if (m_ItemInfoCacheTBC != null)
                             {
-                                VF_RealmPlayersDatabase.Utility.SaveSerialize(Constants.RPPDbWriteDir + "VF_ItemInfoCacheTBC.dat", m_ItemInfoCacheTBC);
-                                m_ItemInfoUpdated = false;
+                                try
+                                {
+                                    VF_RealmPlayersDatabase.Utility.SaveSerialize(Constants.RPPDbWriteDir + "VF_ItemInfoCacheTBC.dat", m_ItemInfoCacheTBC);
+                                    m_ItemInfoUpdated = false;
+                                }
+                                catch (Exception)
+                                { }
                             }
-                            catch (Exception)
-                            { }
                         }
+                        Logger.ConsoleWriteLine("BackupItemInfos(): Done saving items!", ConsoleColor.Green);
+                        m_ItemInfoLastSaveTime = DateTime.Now;
                     }
                 }
             }
@@ -281,6 +285,7 @@ namespace RealmPlayersServer
             volatile Dictionary<int, ItemInfo> m_ItemInfoCacheTBC = null;
             ItemDropDatabase m_ItemDropDatabase = null;
             public volatile bool m_ItemInfoUpdated = false;
+            private DateTime m_ItemInfoLastSaveTime = DateTime.Now;
             System.Net.CookieContainer m_DatabaseWowOneCookieContainer = null;
             DateTime m_DatabaseWowOneCookieContainerCookieCreationTime = DateTime.UtcNow;
 
@@ -333,13 +338,13 @@ namespace RealmPlayersServer
                                 if (m_ItemDropDatabase == null)
                                     m_ItemDropDatabase = new ItemDropDatabase(Constants.RPPDbDir + "Database\\");
                             }
+                            if (m_ItemInfoCacheVanilla == null)
+                                m_ItemInfoCacheVanilla = new Dictionary<int, ItemInfo>();
                         }
                         catch (Exception ex)
                         {
                             Logger.LogException(ex);
                         }
-                        if (m_ItemInfoCacheVanilla == null)
-                            m_ItemInfoCacheVanilla = new Dictionary<int, ItemInfo>();
                         Monitor.Exit(m_ItemInfoLock);
                         return m_ItemInfoCacheVanilla;
                     }
@@ -374,13 +379,13 @@ namespace RealmPlayersServer
                                 if(m_ItemDropDatabase == null)
                                     m_ItemDropDatabase = new ItemDropDatabase(Constants.RPPDbDir + "Database\\");
                             }
+                            if (m_ItemInfoCacheTBC == null)
+                                m_ItemInfoCacheTBC = new Dictionary<int, ItemInfo>();
                         }
                         catch (Exception ex)
                         {
                             Logger.LogException(ex);
                         }
-                        if (m_ItemInfoCacheTBC == null)
-                            m_ItemInfoCacheTBC = new Dictionary<int, ItemInfo>();
                         Monitor.Exit(m_ItemInfoLock);
                         return m_ItemInfoCacheTBC;
                     }
