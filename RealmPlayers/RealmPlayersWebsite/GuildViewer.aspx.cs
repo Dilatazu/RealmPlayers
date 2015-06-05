@@ -73,7 +73,8 @@ namespace RealmPlayersServer
                     + StaticValues.GetFactionCSSName(guild.Faction) + "-color'>" + guild.GuildName
                     + "</span><span class='badge badge-inverse'>" + membersArray.Count + " Members</span></h1>"
                     + "<p>Guild on the server " + StaticValues.ConvertRealmViewing(realm) + "</p>"
-                    + "<p><a href='/GuildViewer.aspx?realm=" + StaticValues.ConvertRealmParam(realm) + "&guild=" + guildStr + "&view=latestevents'>View Latest Events</a></p>");
+                    + "<p><a href='/GuildViewer.aspx?realm=" + StaticValues.ConvertRealmParam(realm) + "&guild=" + guildStr + "&view=latestevents'>View Latest Events</a></p>"
+                    + "<p><a href='/RaidStats/RaidList.aspx?realm=" + StaticValues.ConvertRealmParam(realm) + "&guild=" + guildStr + "'>View recorded raids on RaidStats</a></p>");
 
                 string page = "";
                 foreach (var player in orderedPlayersArray)
@@ -96,7 +97,8 @@ namespace RealmPlayersServer
                     + StaticValues.GetFactionCSSName(guild.Faction) + "-color'>" + guild.GuildName
                     + "</span><span class='badge badge-inverse'>" + membersArray.Count + " Members</span></h1>"
                     + "<p>Guild on the server " + StaticValues.ConvertRealmViewing(realm) + "</p>"
-                    + "<p><a href='/GuildViewer.aspx?realm=" + StaticValues.ConvertRealmParam(realm) + "&guild=" + guildStr + "'>View Members</a></p>");
+                    + "<p><a href='/GuildViewer.aspx?realm=" + StaticValues.ConvertRealmParam(realm) + "&guild=" + guildStr + "'>View Members</a></p>"
+                    + "<p><a href='/RaidStats/RaidList.aspx?realm=" + StaticValues.ConvertRealmParam(realm) + "&guild=" + guildStr + "'>View recorded raids on RaidStats</a></p>");
             }
             else if (pageView == "latestitems")
             {
@@ -111,7 +113,8 @@ namespace RealmPlayersServer
                     + StaticValues.GetFactionCSSName(guild.Faction) + "-color'>" + guild.GuildName
                     + "</span><span class='badge badge-inverse'>" + membersArray.Count + " Members</span></h1>"
                     + "<p>Guild on the server " + StaticValues.ConvertRealmViewing(realm) + "</p>"
-                    + "<p><a href='/GuildViewer.aspx?realm=" + StaticValues.ConvertRealmParam(realm) + "&guild=" + guildStr + "'>View Members</a></p>");
+                    + "<p><a href='/GuildViewer.aspx?realm=" + StaticValues.ConvertRealmParam(realm) + "&guild=" + guildStr + "'>View Members</a></p>"
+                    + "<p><a href='/RaidStats/RaidList.aspx?realm=" + StaticValues.ConvertRealmParam(realm) + "&guild=" + guildStr + "'>View recorded raids on RaidStats</a></p>");
             }
             else if (pageView == "latestevents")
             {
@@ -126,7 +129,8 @@ namespace RealmPlayersServer
                     + StaticValues.GetFactionCSSName(guild.Faction) + "-color'>" + guild.GuildName
                     + "</span><span class='badge badge-inverse'>" + membersArray.Count + " Members</span></h1>"
                     + "<p>Guild on the server " + StaticValues.ConvertRealmViewing(realm) + "</p>"
-                    + "<p><a href='/GuildViewer.aspx?realm=" + StaticValues.ConvertRealmParam(realm) + "&guild=" + guildStr + "'>View Members</a></p>");
+                    + "<p><a href='/GuildViewer.aspx?realm=" + StaticValues.ConvertRealmParam(realm) + "&guild=" + guildStr + "'>View Members</a></p>"
+                    + "<p><a href='/RaidStats/RaidList.aspx?realm=" + StaticValues.ConvertRealmParam(realm) + "&guild=" + guildStr + "'>View recorded raids on RaidStats</a></p>");
             }
 
             if (pageView == "latestmembers" || pageView == "latestevents")
