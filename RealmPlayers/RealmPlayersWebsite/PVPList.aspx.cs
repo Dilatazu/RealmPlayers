@@ -357,7 +357,7 @@ namespace RealmPlayersServer
                 {
                     rankShowLambda = (Player _Player) =>
                     {
-                        return (_Player.LastSeen - DateTime.UtcNow).TotalDays < 14;
+                        return (DateTime.UtcNow - _Player.LastSeen).TotalDays < 14;
                     };
                     GeneratePageDetails("Ranks", count, "Highest PVP Ranks for active players.");
                 }
