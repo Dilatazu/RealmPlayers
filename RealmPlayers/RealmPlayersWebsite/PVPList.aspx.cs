@@ -245,7 +245,7 @@ namespace RealmPlayersServer
                 if (realm == WowRealm.Nostalrius)
                 {
                     DateTime lowerValue = StaticValues.CalculateLastRankUpdadeDateUTC(realm);
-                    GeneratePageDetails("Standings", count * 2, "Last weeks standings for players. Only shows players who received a standing last week. This list resets when the realm calculates new standings for players every wednesday 11:59~ servertime.");
+                    GeneratePageDetails("Standings", count * 2, "Last weeks standings for players. Only shows players who received a standing last week. This list resets when the realm calculates new standings for players every wednesday 13:59~ servertime.");
                 }
                 else if(wowVersion == VF_RealmPlayersDatabase.WowVersionEnum.TBC)
                 {
