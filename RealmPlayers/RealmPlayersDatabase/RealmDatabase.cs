@@ -17,6 +17,7 @@ namespace VF_RealmPlayersDatabase
             PlayersHistoryLoaded = 3,
             PlayersExtraDataLoaded = 4,
             EverythingLoaded = 5,
+            Load_Failed = 6,
         }
         public WowRealm Realm = WowRealm.Unknown;
         public WowVersionEnum WowVersion = WowVersionEnum.Unknown;
@@ -48,6 +49,8 @@ namespace VF_RealmPlayersDatabase
                     }
                 }
             }
+            if (_LoadStatus == LoadStatus.Load_Failed)
+                return false;
             return true;
         }
         public Dictionary<string, PlayerData.Player> Players
@@ -384,6 +387,7 @@ namespace VF_RealmPlayersDatabase
             }
             catch (Exception ex)
             {
+                m_LoadStatus = LoadStatus.Load_Failed;
                 Logger.LogException(ex);
             }
         }

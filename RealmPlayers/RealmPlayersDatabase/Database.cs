@@ -80,7 +80,7 @@ namespace VF_RealmPlayersDatabase
                                 GC.Collect();
                             });
                             purgeTask.Start();
-                            purgeTask.Wait(1200 * 1000);//1200 sekunder(20 minuter)
+                            purgeTask.Wait(300 * 1000);//300 sekunder(5 minuter)
                         }
                         reloadedRealm.WaitForLoad(RealmDatabase.LoadStatus.EverythingLoaded);
                         if (reloadedRealm.IsLoadComplete() == false)
