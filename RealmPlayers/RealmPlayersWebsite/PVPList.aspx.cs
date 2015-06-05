@@ -339,14 +339,8 @@ namespace RealmPlayersServer
                     }
                     m_PageHTML = new MvcHtmlString(table);
                     //////////////////////////////////
-                    if (realm == WowRealm.Nostalrius)
-                    {
-                        GeneratePageDetails("Highest Ranks", count, "Highest lifetime achieved PVP Ranks for players, sorted by date of achievment<br /><br /><font color='red'>Currently the realm \"Nostalrius Begins\" has an inspection bug which among other things makes people look like they have higher \"lifetime highest rank\" than they should. So the data below will be incorrect until Nostalrius development team has solved this bug for the realm.</font>");
-                    }
-                    else
-                    {
-                        GeneratePageDetails("Highest Ranks", count, "Highest lifetime achieved PVP Ranks for players, sorted by date of achievment");
-                    }
+                    
+                    GeneratePageDetails("Highest Ranks", count, "Highest lifetime achieved PVP Ranks for players, sorted by date of achievment");
                 }
             }
             else// if (sectionStr == "ranks")
