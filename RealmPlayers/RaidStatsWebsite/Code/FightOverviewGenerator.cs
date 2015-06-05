@@ -54,27 +54,18 @@ namespace VF
                 fightOverViewInfo += "</h1><p>Trash between " + _Fight.GetStartDateTime().ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss") + " and " + _Fight.GetFightData().GetEndDateTime().ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss") + "</p>";
             }
 
-            string recordedByStr = "#CCCCCC";
-            try
-            {
-                recordedByStr = PageUtility.CreateColorCodedName(_RealmDB.GetPlayer(_Fight.GetFightData().RecordedByPlayer));
-            }
-            catch (Exception)
-            {
-                recordedByStr = "<font color='#CCCCCC'>" + _Fight.GetFightData().RecordedByPlayer + "</font>";
-            }
-            fightOverViewInfo += "<p>Fight was recorded by " + recordedByStr + " using addon version " + "<font color='#00FF00'>" + _Fight.GetFightData().AddonVersion + "</font></p>";
-            
             if(_Fight.GetExtraFightVersionCount() > 0)
             {
                 int indexSkew = 0;
                 if (_Fight.IsExtraFightDataVersion() == true)
                 {
+                    fightOverViewInfo += "<p>This alternative version was recorded by " + CreateColorCodedPlayer(_RealmDB, _Fight.GetFightData().RecordedByPlayer) + " using addon version " + "<font color='#00FF00'>" + _Fight.GetFightData().AddonVersion + "</font></p>";
                     fightOverViewInfo += "<p>Fight was also recorded by ";
                     indexSkew = 0;
                 }
                 else
                 {
+                    fightOverViewInfo += "<p>Most accurate version was recorded by " + CreateColorCodedPlayer(_RealmDB, _Fight.GetFightData().RecordedByPlayer) + " using addon version " + "<font color='#00FF00'>" + _Fight.GetFightData().AddonVersion + "</font></p>";
                     fightOverViewInfo += "<p>Fight was also recorded(possibly less accurately) by ";
                     indexSkew = 1;
                 }
@@ -83,10 +74,14 @@ namespace VF
                     var extraFight = _Fight.GetExtraFightVersion(i);
                     if (extraFight != null && extraFight.GetFightCacheData() != _Fight.GetFightCacheData())
                     {
-                        fightOverViewInfo += "<a href='" + _Details.VersionChangeURL.Replace("versionchangeid", (i + indexSkew).ToString()) + "'>" + PageUtility.CreateColorCodedName(_RealmDB.GetPlayer(extraFight.GetFightData().RecordedByPlayer)) + "</a>, ";
+                        fightOverViewInfo += "<a href='" + _Details.VersionChangeURL.Replace("versionchangeid", (i + indexSkew).ToString()) + "'>" + CreateColorCodedPlayer(_RealmDB, extraFight.GetFightData().RecordedByPlayer) + ((_Fight.IsExtraFightDataVersion() == true && i == 0) ? "(most accurate)" : "") + "</a>, ";
                     }
                 }
                 fightOverViewInfo += "</p>";
+            }
+            else
+            {
+                fightOverViewInfo += "<p>Fight was recorded by " + CreateColorCodedPlayer(_RealmDB, _Fight.GetFightData().RecordedByPlayer) + " using addon version " + "<font color='#00FF00'>" + _Fight.GetFightData().AddonVersion + "</font></p>";
             }
 
             string enemyUnits = "<h3>Enemy units:</h3>";
@@ -616,6 +611,18 @@ namespace VF
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
             return "<header class='page-header'>" + fightOverViewInfo + playersAttendingStr + buffInfo + lootDropped + enemyUnits + playerDeaths + unrealisticPlayerSpikes + "</header>" + graphSection;
+        }
+
+        private static string CreateColorCodedPlayer(RealmDB _RealmDB, string _Playername)
+        {
+            try
+            {
+                return PageUtility.CreateColorCodedName(_RealmDB.GetPlayer(_Playername));
+            }
+            catch (Exception)
+            {
+                return  "<font color='#CCCCCC'>" + _Playername + "</font>";
+            }
         }
 
 
