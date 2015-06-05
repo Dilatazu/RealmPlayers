@@ -36,9 +36,10 @@ namespace VF.RaidDamageWebsite
                     + PageUtility.BreadCrumb_AddRealm(realm)
                     + PageUtility.BreadCrumb_AddFinish(guildStr)
                     + PageUtility.BreadCrumb_AddFinish("Raids"));
-                m_RaidListInfoHTML = new MvcHtmlString("<h1>Recorded raids for " + guildStr + "</h1><p>Sorted by the time the raid ended</p>"
-                    + PageUtility.CreateLink("InstanceList.aspx?Realm=" + RealmPlayersServer.StaticValues.ConvertRealmParam(realm) + "&Guild=" + guildStr, "Instances statistics by guild") + "<br />"
-                    + PageUtility.CreateLink("BossList.aspx?Realm=" + RealmPlayersServer.StaticValues.ConvertRealmParam(realm) + "&Guild=" + guildStr, "Bosses statistics by guild"));
+                m_RaidListInfoHTML = new MvcHtmlString("<h1>Recorded raids for " + guildStr + "</h1><p>Sorted by the time the raid ended</p><p>"
+                    + PageUtility.CreateLink("InstanceList.aspx?Realm=" + RealmPlayersServer.StaticValues.ConvertRealmParam(realm) + "&Guild=" + guildStr, "Instances statistics by guild") + "</p><p>"
+                    + PageUtility.CreateLink("BossList.aspx?Realm=" + RealmPlayersServer.StaticValues.ConvertRealmParam(realm) + "&Guild=" + guildStr, "Bosses statistics by guild") + "</p><p>"
+                    + (guildStr != "PUG" ? PageUtility.CreateLink(PageUtility.HOSTURL_Armory + "GuildViewer.aspx?Realm=" + RealmPlayersServer.StaticValues.ConvertRealmParam(realm) + "&Guild=" + guildStr, "View guild on RealmPlayers(Armory)") : "") + "</p>");
             }
             else
             {
