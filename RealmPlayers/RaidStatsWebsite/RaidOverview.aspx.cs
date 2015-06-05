@@ -231,7 +231,76 @@ namespace VF.RaidDamageWebsite
                 + "<p>Fights recorded" + recordedByString + " between " + startRecordTime.ToString("yyy-MM-dd HH:mm:ss") + " and "
                 + endRecordTime.ToString("yyy-MM-dd HH:mm:ss") + totalRecordTime + "</p>" + playersAttendingStr;
 
-            string graphSection = "<style>" + PageUtility.CreateStatsBars_HTML_CSSCode() + "</style>";
+            string graphStyle = "<style>" + PageUtility.CreateStatsBars_HTML_CSSCode() + "</style>";
+            string totalBossMeters = "<h2>Damage/Healing total(only bosses)</h2>" +
+                "<p>Total for all boss fights";
+            string totalTrashMeters = "<h2>Damage/Healing total(only trash)</h2>" +
+                "<p>Total for all trash fights";
+
+            if (filteredData == true)
+            {
+                totalBossMeters += ", unrealistic dmg/heal spikes are filtered. <a href='"
+                    + PageUtility.CreateUrlWithNewQueryValue(Request, "Filtered", "false")
+                    + "'>View Unfiltered</a></p><br />";
+                totalTrashMeters += ", unrealistic dmg/heal spikes are filtered. <a href='"
+                    + PageUtility.CreateUrlWithNewQueryValue(Request, "Filtered", "false")
+                    + "'>View Unfiltered</a></p><br />";
+            }
+            else
+            {
+                totalBossMeters += ", unrealistic dmg/heal spikes are not filtered. <a href='"
+                    + PageUtility.CreateUrlWithNewQueryValue(Request, "Filtered", "true")
+                    + "'>View Filtered</a></p><br />";
+                totalTrashMeters += ", unrealistic dmg/heal spikes are not filtered. <a href='"
+                    + PageUtility.CreateUrlWithNewQueryValue(Request, "Filtered", "true")
+                    + "'>View Filtered</a></p><br />";
+            }
+
+            totalBossMeters += GenerateTotalMeters(filteredData, orderedFights, realmDB, attendingRaidPlayers);
+            totalTrashMeters += GenerateTotalMeters(filteredData, orderedTrashFights, realmDB, attendingRaidPlayers);
+
+            m_GraphSection = new MvcHtmlString(graphStyle + "<div class='blackframe'>" + totalBossMeters + "</div><br/><div class='blackframe'>" + totalTrashMeters + "</div>");
+
+            //TRASH HANDLING
+            {
+                if (orderedTrashFights.Count > 0)
+                {
+                    System.Text.StringBuilder trashSection = new System.Text.StringBuilder(4000);
+
+                    trashSection.Append("<div class='row'><div class='span12'><table class='table'><thead>");
+                    trashSection.Append(PageUtility.CreateTableRow("",
+                        PageUtility.CreateTableColumnHead("Trash") +
+                        PageUtility.CreateTableColumnHead("Players") +
+                        PageUtility.CreateTableColumnHead("Player Deaths") +
+                        PageUtility.CreateTableColumnHead("Trash Duration")));
+
+                    trashSection.Append("</thead><tbody>");
+
+                    foreach (var fight in orderedTrashFights)
+                    {
+                        var attendingFightPlayers = fight.GetAttendingUnits((_Name) => { return realmDB.RD_IsPlayer(_Name, attendingRaidPlayers); });
+
+                        var endTime = fight.GetStartDateTime().AddSeconds(fight.GetFightData().GetFightRecordDuration());
+                        trashSection.Append(PageUtility.CreateTableRow("",
+                                PageUtility.CreateTableColumn(PageUtility.CreateLink("FightOverview.aspx?Raid=" + uniqueRaidID + "&Trash=" + fight.GetRaidBossFightIndex(), "<font color='#f70002'>" + fight.GetStartDateTime().ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss") + " to " + endTime.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss") + "</font>")) +
+                                PageUtility.CreateTableColumn(attendingFightPlayers.Count.ToString()) +
+                                PageUtility.CreateTableColumn(((int)fight.GetTotal((_Value) => { return _Value.I.Death; }
+                                        , (_Value) => { return realmDB.RD_IsPlayer(_Value.Item1, attendingRaidPlayers) && _Value.Item2.I.Death > 0; })).ToString()) +
+                                PageUtility.CreateTableColumn((int)(endTime - fight.GetStartDateTime()).TotalMinutes + " min")
+                            ));
+                    }
+
+                    trashSection.Append("</tbody></table></div></div>");
+
+                    m_TrashHTML = new MvcHtmlString(trashSection.ToString());
+                }
+            }
+
+        }
+
+        private static string GenerateTotalMeters(bool filteredData, List<VF_RaidDamageDatabase.RaidBossFight> orderedFights, VF_RaidDamageDatabase.RealmDB realmDB, List<string> attendingRaidPlayers)
+        {
+            string graphSection = "";
             List<Tuple<string, VF_RaidDamageDatabase.UnitData>> fullUnitDatas = new List<Tuple<string, VF_RaidDamageDatabase.UnitData>>();
             {
                 PageUtility.StatsBarStyle statsBarStyle = new PageUtility.StatsBarStyle
@@ -411,66 +480,13 @@ namespace VF.RaidDamageWebsite
                     }
                 }
                 dmgThreatSection += "</div>";
-                healSection += "</div";
-                graphSection += "<div class='row'>" + dmgThreatSection;// +"<div class='span4'></div>";// +"<div class='span1' style='min-width: 50px;'></div>";
-                graphSection += healSection + "</div>";
+                healSection += "</div>";
+                graphSection += "<div class='row'>" + dmgThreatSection + healSection + "</div>";
             }
-            string graphSectionHeader = "<h2>Damage/Healing/Threat total(only bosses)</h2>" +
-                "<p>Total for all boss fights";
-
-            if (filteredData == true)
-            {
-                graphSectionHeader += ", unrealistic dmg/heal spikes are filtered. <a href='"
-                    + PageUtility.CreateUrlWithNewQueryValue(Request, "Filtered", "false")
-                    + "'>View Unfiltered</a></p><br />";
-            }
-            else
-            {
-                graphSectionHeader += ", unrealistic dmg/heal spikes are not filtered. <a href='"
-                    + PageUtility.CreateUrlWithNewQueryValue(Request, "Filtered", "true")
-                    + "'>View Filtered</a></p><br />";
-            }
-
-            m_GraphSection = new MvcHtmlString(GeneratePlayerDeaths(realmDB, fullUnitDatas) + graphSectionHeader + graphSection);
-
-            //TRASH HANDLING
-            {
-                if (orderedTrashFights.Count > 0)
-                {
-                    System.Text.StringBuilder trashSection = new System.Text.StringBuilder(4000);
-
-                    trashSection.Append("<div class='row'><div class='span12'><table class='table'><thead>");
-                    trashSection.Append(PageUtility.CreateTableRow("",
-                        PageUtility.CreateTableColumnHead("Trash") +
-                        PageUtility.CreateTableColumnHead("Players") +
-                        PageUtility.CreateTableColumnHead("Player Deaths") +
-                        PageUtility.CreateTableColumnHead("Trash Duration")));
-
-                    trashSection.Append("</thead><tbody>");
-
-                    foreach (var fight in orderedTrashFights)
-                    {
-                        var attendingFightPlayers = fight.GetAttendingUnits((_Name) => { return realmDB.RD_IsPlayer(_Name, attendingRaidPlayers); });
-
-                        var endTime = fight.GetStartDateTime().AddSeconds(fight.GetFightData().GetFightRecordDuration());
-                        trashSection.Append(PageUtility.CreateTableRow("",
-                                PageUtility.CreateTableColumn(PageUtility.CreateLink("FightOverview.aspx?Raid=" + uniqueRaidID + "&Trash=" + fight.GetRaidBossFightIndex(), "<font color='#f70002'>" + fight.GetStartDateTime().ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss") + " to " + endTime.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss") + "</font>")) +
-                                PageUtility.CreateTableColumn(attendingFightPlayers.Count.ToString()) +
-                                PageUtility.CreateTableColumn(((int)fight.GetTotal((_Value) => { return _Value.I.Death; }
-                                        , (_Value) => { return realmDB.RD_IsPlayer(_Value.Item1, attendingRaidPlayers) && _Value.Item2.I.Death > 0; })).ToString()) +
-                                PageUtility.CreateTableColumn((int)(endTime - fight.GetStartDateTime()).TotalMinutes + " min")
-                            ));
-                    }
-
-                    trashSection.Append("</tbody></table></div></div>");
-
-                    m_TrashHTML = new MvcHtmlString(trashSection.ToString());
-                }
-            }
-
+            return GeneratePlayerDeaths(realmDB, fullUnitDatas) + "<br/><br/>" + graphSection;
         }
 
-        private string GeneratePlayerDeaths(VF_RaidDamageDatabase.RealmDB realmDB, List<Tuple<string, VF_RaidDamageDatabase.UnitData>> fullUnitDatas)
+        private static string GeneratePlayerDeaths(VF_RaidDamageDatabase.RealmDB realmDB, List<Tuple<string, VF_RaidDamageDatabase.UnitData>> fullUnitDatas)
         {
             string playerDeathsStr = "";
             var playerDeaths = new List<Tuple<int, string>>();

@@ -245,6 +245,14 @@ form.login input {
 	list-style: none outside none;
 	padding: 8px 15px;
 }
+.blackframe {
+    background: rgba(0, 0, 0, 0.298);
+	border: 0px none currentColor;
+	box-shadow: rgba(255, 255, 255, 0.102) 0px 1px 0px, rgba(0, 0, 0, 0.804) 0px 1px 7px 0px inset;
+	border-radius: 4px;
+	list-style: none outside none;
+	padding: 8px 15px;
+}
 .servers, .fame {
 	margin: 0px 0px 20px;
 }
