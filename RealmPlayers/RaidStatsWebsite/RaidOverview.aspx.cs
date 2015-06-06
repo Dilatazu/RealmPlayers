@@ -488,7 +488,6 @@ namespace VF.RaidDamageWebsite
 
         private static string GeneratePlayerDeaths(VF_RaidDamageDatabase.RealmDB realmDB, List<Tuple<string, VF_RaidDamageDatabase.UnitData>> fullUnitDatas)
         {
-            string playerDeathsStr = "";
             var playerDeaths = new List<Tuple<int, string>>();
             foreach (var data in fullUnitDatas)
             {
@@ -497,22 +496,26 @@ namespace VF.RaidDamageWebsite
                     playerDeaths.Add(Tuple.Create(data.Item2.I.Death, data.Item1));
                 }
             }
-            playerDeathsStr += "<h3>Player deaths(total " + playerDeaths.Sum((_Value) => _Value.Item1) + ")</h3>";
+            int totalPlayerDeaths = 0;
+            string playerDeathsStr = "";
             var orderedPlayerDeaths = playerDeaths.OrderByDescending((_Value) => _Value.Item1);
             int lastDeathCount = orderedPlayerDeaths.First().Item1;
             playerDeathsStr += lastDeathCount.ToString() + " Deaths: ";
             foreach (var playerDeath in orderedPlayerDeaths)
             {
-                if (lastDeathCount != playerDeath.Item1)
-                {
-                    playerDeathsStr += "<br/>" + playerDeath.Item1.ToString() + " Deaths: ";
-                    lastDeathCount = playerDeath.Item1;
-                }
                 var playerData = realmDB.FindPlayer(playerDeath.Item2);
-                if(playerData != null)
+                if (playerData != null)
+                {
+                    if (lastDeathCount != playerDeath.Item1)
+                    {
+                        playerDeathsStr += "<br/>" + playerDeath.Item1.ToString() + " Deaths: ";
+                        lastDeathCount = playerDeath.Item1;
+                    }
                     playerDeathsStr += PageUtility.CreateColorCodedName(playerData) + ", ";
+                    totalPlayerDeaths += playerDeath.Item1;
+                }
             }
-            return playerDeathsStr;
+            return "<h3>Player deaths(total " + totalPlayerDeaths + ")</h3>" + playerDeathsStr;
         }
     }
 }
