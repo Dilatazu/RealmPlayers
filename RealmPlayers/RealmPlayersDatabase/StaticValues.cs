@@ -585,9 +585,10 @@ namespace VF_RealmPlayersDatabase
                 rankDate = _NowUTC.Value.ToLocalTime();
             rankDate = rankDate.AddHours(-rankDate.Hour);
             rankDate = rankDate.AddMinutes(-rankDate.Minute);
-            rankDate = rankDate.AddDays(DayOfWeek.Wednesday - rankDate.DayOfWeek);
+            rankDate = rankDate.AddDays((DayOfWeek.Wednesday - rankDate.DayOfWeek));
             rankDate = rankDate.ToUniversalTime();
             rankDate = rankDate.AddHours(13);
+            if ((rankDate > DateTime.UtcNow)) rankDate = rankDate.AddDays(-7);
             return rankDate;
         }
     }
