@@ -246,6 +246,7 @@
     <Compile Include="CharacterDesigner.aspx.designer.cs">
       <DependentUpon>CharacterDesigner.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Code\Authentication.cs" />
     <Compile Include="Code\DynamicReloader.cs" />
     <Compile Include="Code\PerformanceStatistics.cs" />
     <Compile Include="Code\ApplicationInstance.cs" />

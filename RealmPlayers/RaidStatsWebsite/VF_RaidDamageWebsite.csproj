@@ -104,6 +104,7 @@
     <Content Include="InstanceList.aspx" />
     <Content Include="ItemTooltip.aspx" />
     <Content Include="Log.aspx" />
+    <Content Include="UserPage.aspx" />
     <Content Include="PlayerOverview.aspx" />
     <Content Include="AverageOverview.aspx" />
     <Content Include="RaidList.aspx" />
@@ -147,6 +148,7 @@
     <Compile Include="Code\BuffParser.cs" />
     <Compile Include="Code\FightOverallOverviewGenerator.cs" />
     <Compile Include="Code\FightOverviewGenerator.cs" />
+    <Compile Include="Code\Authentication.cs" />
     <Compile Include="Code\Logger.cs" />
     <Compile Include="Code\LootGenerator.cs" />
     <Compile Include="Code\StaticValues.cs" />
@@ -205,6 +207,13 @@
     </Compile>
     <Compile Include="Log.aspx.designer.cs">
       <DependentUpon>Log.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UserPage.aspx.cs">
+      <DependentUpon>UserPage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UserPage.aspx.designer.cs">
+      <DependentUpon>UserPage.aspx</DependentUpon>
     </Compile>
     <Compile Include="PlayerOverview.aspx.cs">
       <DependentUpon>PlayerOverview.aspx</DependentUpon>
@@ -305,6 +314,7 @@
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -332,6 +342,7 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

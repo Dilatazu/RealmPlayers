@@ -187,19 +187,22 @@ namespace VF_RealmPlayersDatabase
         private static Dictionary<string, ContributorCheckInfo> sm_IPContributorChecks = new Dictionary<string, ContributorCheckInfo>();
         public static CheckContributorResult CheckContributor(string _UserID, System.Net.IPEndPoint _UserIP)
         {
+            return CheckContributor(_UserID, _UserIP.Address.ToString());
+        }
+        public static CheckContributorResult CheckContributor(string _UserID, string _UserIP)
+        {
             if (sm_ContributorDB == null)
                 return CheckContributorResult.UserID_Failed_UserPass_Wrong;
             try
             {
                 lock (sm_ThreadObject)
                 {
-                    string userIP = _UserIP.Address.ToString();
-                    if (sm_IPContributorChecks.ContainsKey(userIP) == false)
-                        sm_IPContributorChecks.Add(userIP, new ContributorCheckInfo());
+                    if (sm_IPContributorChecks.ContainsKey(_UserIP) == false)
+                        sm_IPContributorChecks.Add(_UserIP, new ContributorCheckInfo());
 
-                    if (sm_IPContributorChecks[userIP].AllowedCheck(_UserID) == false)
+                    if (sm_IPContributorChecks[_UserIP].AllowedCheck(_UserID) == false)
                     {
-                        Logger.ConsoleWriteLine(userIP + " tried to check UserID(" + _UserID + "), too many tries", ConsoleColor.Red);
+                        Logger.ConsoleWriteLine(_UserIP + " tried to check UserID(" + _UserID + "), too many tries", ConsoleColor.Red);
                         return CheckContributorResult.UserID_Failed_Check_Too_Many_Tries;
                     }
 

@@ -10,6 +10,9 @@ using RPPDatabase = VF_RealmPlayersDatabase.Database;
 using ItemDropDatabase = VF_RealmPlayersDatabase.ItemDropDatabase;
 using WowVersionEnum = VF_RealmPlayersDatabase.WowVersionEnum;
 
+using ContributorUtility = VF_RealmPlayersDatabase.ContributorUtility;
+using ContributorDB = VF_RealmPlayersDatabase.ContributorDB;
+
 namespace RealmPlayersServer
 {
     namespace Hidden
@@ -248,6 +251,7 @@ namespace RealmPlayersServer
                         Logger.LogException(ex);
                     }
                 })).Start();
+                ContributorDB.Initialize();
             }
             public void BackupItemInfos()
             {

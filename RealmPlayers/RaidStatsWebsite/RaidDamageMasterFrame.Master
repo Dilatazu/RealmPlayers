@@ -58,6 +58,7 @@
               <li><a href="Ranking.aspx?Bosses=1C1D1E1F1G1H">AQ40 Ranking</a></li>
               <li><a href="Ranking.aspx?Bosses=1L1M1N1O1P1Q1R1S1T1U1V1W1X">Naxx Ranking</a></li>
               <li><a href="http://realmplayers.com">RealmPlayers</a></li>
+              <%= m_UserInfoHTML %>
             </ul>
               <%--<div class="pull-right">
               <ul class="nav">

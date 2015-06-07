@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Web.Mvc;
 
 namespace VF.RaidDamageWebsite
 {
@@ -28,9 +29,23 @@ namespace VF.RaidDamageWebsite
                     + "</script>");
             }
         }
+
+        public MvcHtmlString m_UserInfoHTML;
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            
+        }
+        protected void Page_PreRender(object sender, EventArgs e)
+        {
+            var user = Authentication.GetSessionUser(Page);
+            if (user != null)
+            {
+                m_UserInfoHTML = new MvcHtmlString("<li><a href='UserPage.aspx'>Logged in as " + user.Name + "</a></li>");
+            }
+            else
+            {
+                m_UserInfoHTML = new MvcHtmlString("<li><a href='UserPage.aspx'>Login</a></li>");
+            }
         }
     }
 }
