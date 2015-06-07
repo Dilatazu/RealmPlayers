@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace VF_RaidDamageWebsite {
+namespace VF.RaidDamageWebsite {
     
     
     public partial class Login {

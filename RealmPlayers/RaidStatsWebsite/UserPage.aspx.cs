@@ -8,7 +8,7 @@ using System.Web.Mvc;
 
 using User = RealmPlayersServer.User;
 
-namespace VF_RaidDamageWebsite
+namespace VF.RaidDamageWebsite
 {
     public partial class Login : System.Web.UI.Page
     {
