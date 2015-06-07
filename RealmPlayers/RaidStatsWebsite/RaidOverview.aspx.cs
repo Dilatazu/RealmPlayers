@@ -90,6 +90,7 @@ namespace VF.RaidDamageWebsite
 
             this.Title = "Raid " + uniqueRaidID + " | RaidStats";
 
+#if false//LIMIT_USERS_USING_LOGIN_SYSTEM
             if((DateTime.Now - ApplicationInstance.Instance.GetRaidDate(uniqueRaidID)).TotalDays > 30)
             {
                 var user = Authentication.GetSessionUser(Page, true);
@@ -99,6 +100,7 @@ namespace VF.RaidDamageWebsite
                     return;
                 }
             }
+#endif
 
             var orderedFights = ApplicationInstance.Instance.GetRaidBossFights(uniqueRaidID);
             if (orderedFights == null || orderedFights.Count() == 0)
