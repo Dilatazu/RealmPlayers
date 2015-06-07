@@ -37,6 +37,7 @@ namespace VF.RaidDamageWebsite
         }
         protected void Page_PreRender(object sender, EventArgs e)
         {
+#if false
             var user = Authentication.GetSessionUser(Page);
             if (user != null)
             {
@@ -46,6 +47,7 @@ namespace VF.RaidDamageWebsite
             {
                 m_UserInfoHTML = new MvcHtmlString("<li><a href='UserPage.aspx'>Login</a></li>");
             }
+#endif
         }
     }
 }
