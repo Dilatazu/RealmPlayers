@@ -1,6 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/RaidDamageMasterFrame.Master" AutoEventWireup="true" CodeBehind="RaidList.aspx.cs" Inherits="VF.RaidDamageWebsite.RaidList" %>
 
 <%@OutputCache Duration="60" VaryByParam="*" %>
+<%--<%@OutputCache Location="Server" Duration="60" VaryByParam="*" VaryByCustom="UserID" %>--%>
 
 <%@ Register Src="RealmControl.ascx" TagPrefix="uc1" TagName="RealmControl" %>
 <%@ Register Src="InstanceControl.ascx" TagPrefix="uc1" TagName="InstanceControl" %>

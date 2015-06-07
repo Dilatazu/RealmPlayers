@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Configuration;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Security;
 using System.Web.SessionState;
+using System.Web.Configuration;
 
 namespace VF.RaidDamageWebsite
 {
@@ -52,6 +54,31 @@ namespace VF.RaidDamageWebsite
         {
             Logger.ConsoleWriteLine("Application_End()", ConsoleColor.Magenta);
             Logger.SaveToDisk();
+        }
+
+        private static SessionStateSection SessionStateSection = (System.Web.Configuration.SessionStateSection)ConfigurationManager.GetSection("system.web/sessionState");
+
+        public override string GetVaryByCustomString(HttpContext context, string arg)
+        {
+            if (arg == "UserID")
+            {
+                string customValue = "UserID=Unknown";
+                //Logger.ConsoleWriteLine("GetVaryByCustomString called???");
+                var isUserCookie = context.Request.Cookies.Get("IsUser");
+                bool IsUser = isUserCookie != null && isUserCookie.Value == "true";
+                //Logger.ConsoleWriteLine("GetVaryByCustomString called2???");
+                if(IsUser == true)
+                {
+                    var sessionCookie = context.Request.Cookies.Get(SessionStateSection.CookieName);
+                    if (sessionCookie != null && sessionCookie.Value != null)
+                    {
+                        customValue = "UserID=" + sessionCookie.Value;
+                    }
+                }
+                //Logger.ConsoleWriteLine("GetVaryByCustomString called!!! CustomValue:" + customValue);
+                return customValue;
+            }
+            return base.GetVaryByCustomString(context, arg);
         }
     }
 }

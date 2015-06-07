@@ -46,6 +46,17 @@ namespace RealmPlayersServer
                 Logger.LogException(ex);
             }
         }
+        public static User GetSessionUser(System.Web.SessionState.HttpSessionState _Session)
+        {
+            return (User)_Session["User"];
+        }
+        public static void SetIsUserCookie(HttpResponse _Response, bool _IsUser)
+        {
+            HttpCookie cookie = new HttpCookie("IsUser");
+            cookie.Expires = DateTime.Now.AddDays(1);
+            cookie.Value = _IsUser == true ? "true" : "false";
+            _Response.Cookies.Add(cookie);
+        }
         public static User GetSessionUser(System.Web.UI.Page _CurrentPage, bool _RedirectOnLoginFailure = false)
         {
             if(_CurrentPage.Session["UserIP"] == null
@@ -57,12 +68,14 @@ namespace RealmPlayersServer
             User user = (User)_CurrentPage.Session["User"];
             if(user == null)
             {
+                SetIsUserCookie(_CurrentPage.Response, false);
                 if (_RedirectOnLoginFailure == true && _CurrentPage.AppRelativeVirtualPath != "~/UserPage.aspx")
                     _CurrentPage.Response.Redirect("~/UserPage.aspx?LoginReturnUrl=" + _CurrentPage.Server.HtmlEncode(_CurrentPage.Request.RawUrl));
                 return null;
             }
             else if(_CurrentPage.Request.QueryString["LoginReturnUrl"] != null)
             {
+                SetIsUserCookie(_CurrentPage.Response, true);
                 _CurrentPage.Response.Redirect(_CurrentPage.Server.HtmlDecode(_CurrentPage.Request.QueryString["LoginReturnUrl"]));
             }
             return user;
@@ -82,6 +95,7 @@ namespace RealmPlayersServer
             User newUser = new User(contributor);
             _CurrentPage.Session["User"] = newUser;//Spara undan usern i sessionen så att vi kommer ihåg den
             _CurrentPage.Session["UserIP"] = _CurrentPage.Request.UserHostAddress;//Spara undan IP på den som loggade in. endast denna IP är nu valid med denna Sessionen!
+            SetIsUserCookie(_CurrentPage.Response, true);
             return newUser;
         }
         public static void LogoutUser(System.Web.SessionState.HttpSessionState _Session)
@@ -92,6 +106,7 @@ namespace RealmPlayersServer
         public static void LogoutUser(System.Web.UI.Page _CurrentPage)
         {
             LogoutUser(_CurrentPage.Session);
+            SetIsUserCookie(_CurrentPage.Response, false);
         }
     }
 }
