@@ -257,8 +257,14 @@ namespace VF.RaidDamageWebsite
             }
 
             totalBossMeters += GenerateTotalMeters(filteredData, orderedFights, realmDB, attendingRaidPlayers);
-            totalTrashMeters += GenerateTotalMeters(filteredData, orderedTrashFights, realmDB, attendingRaidPlayers);
-
+            if (orderedTrashFights.Count > 0)
+            {
+                totalTrashMeters += GenerateTotalMeters(filteredData, orderedTrashFights, realmDB, attendingRaidPlayers);
+            }
+            else
+            {
+                totalTrashMeters = "";
+            }
             m_GraphSection = new MvcHtmlString(graphStyle + "<div class='blackframe'>" + totalBossMeters + "</div><br/><div class='blackframe'>" + totalTrashMeters + "</div>");
 
             //TRASH HANDLING
@@ -496,6 +502,8 @@ namespace VF.RaidDamageWebsite
                     playerDeaths.Add(Tuple.Create(data.Item2.I.Death, data.Item1));
                 }
             }
+            if (playerDeaths.Count == 0)
+                return "";
             int totalPlayerDeaths = 0;
             string playerDeathsStr = "";
             var orderedPlayerDeaths = playerDeaths.OrderByDescending((_Value) => _Value.Item1);
