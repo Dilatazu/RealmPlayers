@@ -48,6 +48,10 @@
                                 <asp:ListItem Text="Rebirth" Value="REB"/>
                                 <asp:ListItem Text="Nostalrius" Value="NRB"/>
                                 <asp:ListItem Text="Kronos" Value="KRO"/>
+                                <asp:ListItem Text="VanillaGaming" Value="VG"/>
+                                <asp:ListItem Text="Valkyrie" Value="VAL"/>
+                                <asp:ListItem Text="Nefarian(DE)" Value="NEF"/>
+                                <asp:ListItem Text="NostalGeek(FR)" Value="NG"/>
                                 <asp:ListItem Text="Archangel(TBC)" Value="ArA"/>
                             </asp:DropDownList>
                             <asp:DropDownList style="width:100px; margin: 10px 2.5px 0px 2.5px" ID="ddlRace" runat="server" onchange="this.style.color = this.options[this.selectedIndex].style.color;">
