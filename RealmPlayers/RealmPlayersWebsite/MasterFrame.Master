@@ -103,6 +103,7 @@
               </li>
               <%--<li><a href="http://forum.realmplayers.com">Forum</a></li>--%>
               <li><a href="http://realmplayers.com:5555">Forum</a></li>
+              <li><a href="https://twitter.com/realmplayers">Twitter</a></li>
               <li><a href="About.aspx">About</a></li>
               <li><a href="Donate.aspx">Donate</a></li>
               <li><a href="Contributors.aspx">Data Contributors</a></li>
