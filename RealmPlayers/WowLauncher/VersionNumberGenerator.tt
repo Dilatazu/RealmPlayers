@@ -8,6 +8,6 @@ using System.Reflection;
 [assembly: AssemblyVersion("<#= this.VersionString #>")]
 [assembly: AssemblyFileVersion("<#= this.VersionString #>")]
 <#+
-	string VersionString = "1.3.6." + (int)(DateTime.UtcNow - new DateTime(2015,1,1)).TotalDays;
+	string VersionString = "1.3.7." + (int)(DateTime.UtcNow - new DateTime(2015,1,1)).TotalDays;
 	//System.IO.Directory.GetDirectories("VersionHistory\\");
 #>
