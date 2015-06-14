@@ -1020,5 +1020,11 @@ namespace VF_WoWLauncher
                 }
             })).Start();
         }
+
+        private void c_btnManageRealmLists_Click(object sender, EventArgs e)
+        {
+            RealmListSettings.ShowRealmListSettings();
+            UpdatePossibleRealmConfigurations();
+        }
     }
 }

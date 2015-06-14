@@ -38,6 +38,7 @@
             this.c_dlAddons = new DetailedList.DetailedList();
             this.c_tRefreshNews = new System.Windows.Forms.Timer(this.components);
             this.c_tRefreshAddonUpdates = new System.Windows.Forms.Timer(this.components);
+            this.c_btnManageRealmLists = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // c_btnLaunch
@@ -106,7 +107,7 @@
             // 
             this.c_btnManageAddons.Location = new System.Drawing.Point(9, 398);
             this.c_btnManageAddons.Name = "c_btnManageAddons";
-            this.c_btnManageAddons.Size = new System.Drawing.Size(105, 23);
+            this.c_btnManageAddons.Size = new System.Drawing.Size(122, 23);
             this.c_btnManageAddons.TabIndex = 10;
             this.c_btnManageAddons.Text = "Manage Addons";
             this.c_btnManageAddons.UseVisualStyleBackColor = true;
@@ -136,11 +137,22 @@
             this.c_tRefreshAddonUpdates.Interval = 100000;
             this.c_tRefreshAddonUpdates.Tick += new System.EventHandler(this.c_tRefreshAddonUpdates_Tick);
             // 
+            // c_btnManageRealmLists
+            // 
+            this.c_btnManageRealmLists.Location = new System.Drawing.Point(9, 427);
+            this.c_btnManageRealmLists.Name = "c_btnManageRealmLists";
+            this.c_btnManageRealmLists.Size = new System.Drawing.Size(122, 23);
+            this.c_btnManageRealmLists.TabIndex = 11;
+            this.c_btnManageRealmLists.Text = "Manage RealmLists";
+            this.c_btnManageRealmLists.UseVisualStyleBackColor = true;
+            this.c_btnManageRealmLists.Click += new System.EventHandler(this.c_btnManageRealmLists_Click);
+            // 
             // LauncherWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(645, 457);
+            this.Controls.Add(this.c_btnManageRealmLists);
             this.Controls.Add(this.c_btnManageAddons);
             this.Controls.Add(this.c_dlAddons);
             this.Controls.Add(this.c_cbClearWDB);
@@ -168,6 +180,7 @@
         private System.Windows.Forms.Button c_btnManageAddons;
         private System.Windows.Forms.Timer c_tRefreshNews;
         private System.Windows.Forms.Timer c_tRefreshAddonUpdates;
+        private System.Windows.Forms.Button c_btnManageRealmLists;
     }
 }
 
