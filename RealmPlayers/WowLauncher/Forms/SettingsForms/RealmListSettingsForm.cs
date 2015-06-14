@@ -19,10 +19,17 @@ namespace VF_WoWLauncher
         private void RealmListSettingsForm_Load(object sender, EventArgs e)
         {
             Utility.SetPositionToMouse(this);
-            foreach(var realmList in Settings.Instance.RealmLists)
+            InitializeWindow();
+        }
+
+        private void InitializeWindow()
+        {
+            c_lstRealmConfigurations.Items.Clear();
+            foreach (var realmList in Settings.Instance.RealmLists)
             {
                 c_lstRealmConfigurations.Items.Add(realmList.Key);
             }
+            c_cbxWowVersion.Items.Clear();
             c_cbxWowVersion.Items.Add(WowVersionEnum.Vanilla.ToString());
             c_cbxWowVersion.Items.Add(WowVersionEnum.TBC.ToString());
 
@@ -142,11 +149,43 @@ namespace VF_WoWLauncher
             }
         }
 
+        private void c_btnResetRealmLists_Click(object sender, EventArgs e)
+        {
+            var defaultRealmLists = Settings.CreateDefaultRealmLists();
+            string realmsListStr = "";
+            foreach (var realm in defaultRealmLists)
+            {
+                realmsListStr += realm.Key + ", ";
+            }
+            if (Utility.MessageBoxShow("This will reset all realmlists to default configuration. Which means the following realms will be available:\r\n"
+                + realmsListStr + "\r\n\r\nAre you sure you want to reset?", "Are you sure you want to reset?", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+            {
+                Settings.Instance.RealmLists = defaultRealmLists;
+                InitializeWindow();
+            }
+        }
+
     }
     public class RealmListSettings
     {
         public static void ShowRealmListSettings()
         {
+            var defaultRealmLists = Settings.CreateDefaultRealmLists();
+            foreach (var realm in defaultRealmLists)
+            {
+                if (Settings.Instance.RealmLists.ContainsKey(realm.Key) == true)
+                {
+                    if (Settings.Instance.RealmLists[realm.Key].RealmList == realm.Value.RealmList)
+                    {
+                        continue;
+                    }
+                }
+                else
+                {
+                    Settings.Instance.RealmLists.Add(realm.Key, realm.Value);
+                }
+            }
+
             RealmListSettingsForm realmListSettingsForm = new RealmListSettingsForm();
             realmListSettingsForm.ShowDialog();
         }

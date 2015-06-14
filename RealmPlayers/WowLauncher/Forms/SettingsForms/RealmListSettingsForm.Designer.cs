@@ -30,6 +30,8 @@
         {
             this.c_lstRealmConfigurations = new System.Windows.Forms.ListBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.c_txtNewConfigName = new System.Windows.Forms.TextBox();
             this.c_btnAddNewRealmConfig = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.c_cbxWowVersion = new System.Windows.Forms.ComboBox();
@@ -45,8 +47,7 @@
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.c_btnClose = new System.Windows.Forms.Button();
-            this.c_txtNewConfigName = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
+            this.c_btnResetRealmLists = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -77,6 +78,25 @@
             this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "New Realm Config";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(13, 24);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(71, 13);
+            this.label4.TabIndex = 13;
+            this.label4.Text = "Config Name:";
+            // 
+            // c_txtNewConfigName
+            // 
+            this.c_txtNewConfigName.Location = new System.Drawing.Point(87, 21);
+            this.c_txtNewConfigName.Name = "c_txtNewConfigName";
+            this.c_txtNewConfigName.Size = new System.Drawing.Size(207, 20);
+            this.c_txtNewConfigName.TabIndex = 12;
+            this.c_txtNewConfigName.TextChanged += new System.EventHandler(this.c_txtNewConfigName_TextChanged);
+            this.c_txtNewConfigName.Enter += new System.EventHandler(this.c_txtNewConfigName_Enter);
+            this.c_txtNewConfigName.Leave += new System.EventHandler(this.c_txtNewConfigName_Leave);
             // 
             // c_btnAddNewRealmConfig
             // 
@@ -217,30 +237,22 @@
             this.c_btnClose.UseVisualStyleBackColor = true;
             this.c_btnClose.Click += new System.EventHandler(this.button3_Click);
             // 
-            // c_txtNewConfigName
+            // c_btnResetRealmLists
             // 
-            this.c_txtNewConfigName.Location = new System.Drawing.Point(87, 21);
-            this.c_txtNewConfigName.Name = "c_txtNewConfigName";
-            this.c_txtNewConfigName.Size = new System.Drawing.Size(207, 20);
-            this.c_txtNewConfigName.TabIndex = 12;
-            this.c_txtNewConfigName.TextChanged += new System.EventHandler(this.c_txtNewConfigName_TextChanged);
-            this.c_txtNewConfigName.Enter += new System.EventHandler(this.c_txtNewConfigName_Enter);
-            this.c_txtNewConfigName.Leave += new System.EventHandler(this.c_txtNewConfigName_Leave);
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(13, 24);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(71, 13);
-            this.label4.TabIndex = 13;
-            this.label4.Text = "Config Name:";
+            this.c_btnResetRealmLists.Location = new System.Drawing.Point(186, 214);
+            this.c_btnResetRealmLists.Name = "c_btnResetRealmLists";
+            this.c_btnResetRealmLists.Size = new System.Drawing.Size(200, 23);
+            this.c_btnResetRealmLists.TabIndex = 8;
+            this.c_btnResetRealmLists.Text = "Reset to Default RealmLists";
+            this.c_btnResetRealmLists.UseVisualStyleBackColor = true;
+            this.c_btnResetRealmLists.Click += new System.EventHandler(this.c_btnResetRealmLists_Click);
             // 
             // RealmListSettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(411, 383);
+            this.Controls.Add(this.c_btnResetRealmLists);
             this.Controls.Add(this.c_btnClose);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -278,6 +290,7 @@
         private System.Windows.Forms.Button c_btnClose;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox c_txtNewConfigName;
+        private System.Windows.Forms.Button c_btnResetRealmLists;
 
 
     }
