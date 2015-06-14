@@ -55,27 +55,27 @@ namespace VF_WoWLauncher
                 var linksMenu = new MenuItem("Links");
                 {
                     var feenixLinks = new MenuItem("Feenix Links");
-                    feenixLinks.MenuItems.Add(new MenuItem("Goto homepage", new EventHandler((o, ea) =>
+                    feenixLinks.MenuItems.Add(new MenuItem("Goto Homepage", new EventHandler((o, ea) =>
                     {
                         System.Diagnostics.Process.Start("http://www.wow-one.com");
                     })));
-                    feenixLinks.MenuItems.Add(new MenuItem("Goto forum", new EventHandler((o, ea) =>
+                    feenixLinks.MenuItems.Add(new MenuItem("Goto Forum", new EventHandler((o, ea) =>
                     {
                         System.Diagnostics.Process.Start("http://www.wow-one.com/forum");
                     })));
-                    feenixLinks.MenuItems.Add(new MenuItem("Goto server updates", new EventHandler((o, ea) =>
+                    feenixLinks.MenuItems.Add(new MenuItem("Goto Server Updates", new EventHandler((o, ea) =>
                     {
                         System.Diagnostics.Process.Start("http://www.wow-one.com/forum/117-server-updates/");
                     })));
-                    feenixLinks.MenuItems.Add(new MenuItem("Goto changelogs", new EventHandler((o, ea) =>
+                    feenixLinks.MenuItems.Add(new MenuItem("Goto Changelogs", new EventHandler((o, ea) =>
                     {
                         System.Diagnostics.Process.Start("http://www.wow-one.com/forum/32-1121-changelogs/");
                     })));
-                    feenixLinks.MenuItems.Add(new MenuItem("Goto issue tracker", new EventHandler((o, ea) =>
+                    feenixLinks.MenuItems.Add(new MenuItem("Goto Issue Tracker", new EventHandler((o, ea) =>
                     {
                         System.Diagnostics.Process.Start("http://github.com/FeenixServerProject/Phoenix_1.12.1_Issue_tracker/issues");
                     })));
-                    feenixLinks.MenuItems.Add(new MenuItem("Goto database", new EventHandler((o, ea) =>
+                    feenixLinks.MenuItems.Add(new MenuItem("Goto Database", new EventHandler((o, ea) =>
                     {
                         System.Diagnostics.Process.Start("http://database.wow-one.com/");
                     })));
@@ -83,11 +83,11 @@ namespace VF_WoWLauncher
                 }
                 {
                     var nostalriusLinks = new MenuItem("Nostalrius Links");
-                    nostalriusLinks.MenuItems.Add(new MenuItem("Goto homepage", new EventHandler((o, ea) =>
+                    nostalriusLinks.MenuItems.Add(new MenuItem("Goto Homepage", new EventHandler((o, ea) =>
                     {
                         System.Diagnostics.Process.Start("http://en.nostalrius.org/");
                     })));
-                    nostalriusLinks.MenuItems.Add(new MenuItem("Goto forum", new EventHandler((o, ea) =>
+                    nostalriusLinks.MenuItems.Add(new MenuItem("Goto Forum", new EventHandler((o, ea) =>
                     {
                         System.Diagnostics.Process.Start("http://forum.nostalrius.org/");
                     })));
@@ -95,15 +95,132 @@ namespace VF_WoWLauncher
                 }
                 {
                     var kronosLinks = new MenuItem("Kronos Links");
-                    kronosLinks.MenuItems.Add(new MenuItem("Goto homepage", new EventHandler((o, ea) =>
+                    kronosLinks.MenuItems.Add(new MenuItem("Goto Homepage", new EventHandler((o, ea) =>
                     {
                         System.Diagnostics.Process.Start("http://www.kronos-wow.com/");
                     })));
-                    kronosLinks.MenuItems.Add(new MenuItem("Goto forum", new EventHandler((o, ea) =>
+                    kronosLinks.MenuItems.Add(new MenuItem("Goto Forum", new EventHandler((o, ea) =>
                     {
                         System.Diagnostics.Process.Start("http://forum.twinstar.cz/");
                     })));
                     linksMenu.MenuItems.Add(kronosLinks);
+                }
+                {
+                    var nostalGeekLinks = new MenuItem("NostalGeek(FR) Links");
+                    nostalGeekLinks.MenuItems.Add(new MenuItem("Goto Homepage", new EventHandler((o, ea) =>
+                    {
+                        System.Diagnostics.Process.Start("http://nostalgeek-serveur.com/");
+                    })));
+                    nostalGeekLinks.MenuItems.Add(new MenuItem("Goto Forum", new EventHandler((o, ea) =>
+                    {
+                        System.Diagnostics.Process.Start("http://nostalgeek-serveur.com/forums/");
+                    })));
+                    linksMenu.MenuItems.Add(nostalGeekLinks);
+                }
+                {
+                    var nefarianLinks = new MenuItem("Nefarian(DE) Links");
+                    nefarianLinks.MenuItems.Add(new MenuItem("Goto Homepage", new EventHandler((o, ea) =>
+                    {
+                        System.Diagnostics.Process.Start("http://www.classic-wow.org/");
+                    })));
+                    nefarianLinks.MenuItems.Add(new MenuItem("Goto Forum", new EventHandler((o, ea) =>
+                    {
+                        System.Diagnostics.Process.Start("http://community.mmobase.de/forum.php#classic-wow-1-12-1");
+                    })));
+                    linksMenu.MenuItems.Add(nefarianLinks);
+                }
+                {
+                    var links = new MenuItem("VanillaGaming Links");
+                    links.MenuItems.Add(new MenuItem("Goto Homepage", new EventHandler((o, ea) =>
+                    {
+                        System.Diagnostics.Process.Start("http://vanillagaming.org/");
+                    })));
+                    links.MenuItems.Add(new MenuItem("Goto Forum", new EventHandler((o, ea) =>
+                    {
+                        System.Diagnostics.Process.Start("http://vanillagaming.org/forum/");
+                    })));
+                    links.MenuItems.Add(new MenuItem("Goto Database", new EventHandler((o, ea) =>
+                    {
+                        System.Diagnostics.Process.Start("http://db.vanillagaming.org/");
+                    })));
+                    links.MenuItems.Add(new MenuItem("Goto Talent Calculator", new EventHandler((o, ea) =>
+                    {
+                        System.Diagnostics.Process.Start("http://db.vanillagaming.org/?talent");
+                    })));
+                    linksMenu.MenuItems.Add(links);
+                }
+                {
+                    var links = new MenuItem("Valkyrie Links");
+                    links.MenuItems.Add(new MenuItem("Goto Homepage", new EventHandler((o, ea) =>
+                    {
+                        System.Diagnostics.Process.Start("http://valkyrie-wow.org/");
+                    })));
+                    links.MenuItems.Add(new MenuItem("Goto Forum", new EventHandler((o, ea) =>
+                    {
+                        System.Diagnostics.Process.Start("http://valkyrie-wow.org/boards/");
+                    })));
+                    links.MenuItems.Add(new MenuItem("Goto Database", new EventHandler((o, ea) =>
+                    {
+                        System.Diagnostics.Process.Start("http://db.valkyrie-wow.org/");
+                    })));
+                    links.MenuItems.Add(new MenuItem("Goto Talent Calculator", new EventHandler((o, ea) =>
+                    {
+                        System.Diagnostics.Process.Start("http://valkyrie-wow.org/armory/tool/talentCalculator");
+                    })));
+                    linksMenu.MenuItems.Add(links);
+                }
+                {
+                    var links = new MenuItem("Rebirth Links");
+                    links.MenuItems.Add(new MenuItem("Goto Homepage", new EventHandler((o, ea) =>
+                    {
+                        System.Diagnostics.Process.Start("http://www.therebirth.net/");
+                    })));
+                    links.MenuItems.Add(new MenuItem("Goto Forum", new EventHandler((o, ea) =>
+                    {
+                        System.Diagnostics.Process.Start("http://www.therebirth.net/forum/");
+                    })));
+                    links.MenuItems.Add(new MenuItem("Goto Rebirthwow Subreddit", new EventHandler((o, ea) =>
+                    {
+                        System.Diagnostics.Process.Start("http://www.reddit.com/r/rebirthwow/");
+                    })));
+                    linksMenu.MenuItems.Add(links);
+                }
+                linksMenu.MenuItems.Add("-");
+                {
+                    var links = new MenuItem("Other Links");
+                    links.MenuItems.Add(new MenuItem("Goto Wowservers Subreddit", new EventHandler((o, ea) =>
+                    {
+                        System.Diagnostics.Process.Start("http://www.reddit.com/r/wowservers/");
+                    })));
+                    {
+                        var itemdbLinks = new MenuItem("Item Databases");
+                        itemdbLinks.MenuItems.Add(new MenuItem("Goto Feenix", new EventHandler((o, ea) =>
+                        {
+                            System.Diagnostics.Process.Start("http://database.wow-one.com/");
+                        })));
+                        itemdbLinks.MenuItems.Add(new MenuItem("Goto Valkyrie", new EventHandler((o, ea) =>
+                        {
+                            System.Diagnostics.Process.Start("http://db.valkyrie-wow.org/");
+                        })));
+                        itemdbLinks.MenuItems.Add(new MenuItem("Goto VanillaGaming", new EventHandler((o, ea) =>
+                        {
+                            System.Diagnostics.Process.Start("http://db.vanillagaming.org/");
+                        })));
+                        links.MenuItems.Add(itemdbLinks);
+                    }
+                    {
+                        var talentLinks = new MenuItem("Talent Calculators");
+                        talentLinks.MenuItems.Add(new MenuItem("Goto Valkyrie", new EventHandler((o, ea) =>
+                        {
+                            System.Diagnostics.Process.Start("http://valkyrie-wow.org/armory/tool/talentCalculator");
+                        })));
+                        talentLinks.MenuItems.Add(new MenuItem("Goto VanillaGaming", new EventHandler((o, ea) =>
+                        {
+                            System.Diagnostics.Process.Start("http://db.vanillagaming.org/?talent");
+                        })));
+                        links.MenuItems.Add(talentLinks);
+                    }
+                    linksMenu.MenuItems.Add(links);
                 }
                 linksMenu.MenuItems.Add("-");
                 linksMenu.MenuItems.Add(new MenuItem("Goto RealmPlayers", new EventHandler((o, ea) =>
@@ -117,6 +234,10 @@ namespace VF_WoWLauncher
                 linksMenu.MenuItems.Add(new MenuItem("Goto RealmPlayers Forum", new EventHandler((o, ea) =>
                 {
                     System.Diagnostics.Process.Start("http://forum.realmplayers.com");
+                })));
+                linksMenu.MenuItems.Add(new MenuItem("Goto RealmPlayers Twitter", new EventHandler((o, ea) =>
+                {
+                    System.Diagnostics.Process.Start("http://twitter.com/realmplayers");
                 })));
                 this.Menu.MenuItems.Add(linksMenu);
             }
