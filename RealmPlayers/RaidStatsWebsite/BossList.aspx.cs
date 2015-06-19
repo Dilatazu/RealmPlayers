@@ -195,7 +195,7 @@ namespace VF.RaidDamageWebsite
                     int killCount = bossFights.Count((_Value) => { return _Value.AttemptType == VF_RDDatabase.AttemptType.KillAttempt; });
 
                     tableBody += PageUtility.CreateTableRow("", PageUtility.CreateTableColumn(PageUtility.CreateImage(StaticValues._RaidInstanceImages[boss.Value]) + boss.Value) +
-                        PageUtility.CreateTableColumn(PageUtility.CreateLink("FightOverallOverview.aspx?FightName=" + boss.Key + (guildLimit != "null" ? "&Guild=" + guildLimit : ""), boss.Key)) +
+                        PageUtility.CreateTableColumn(PageUtility.CreateLink("FightOverallOverview.aspx?FightName=" + boss.Key + (guildLimit != "null" ? "&Guild=" + guildLimit : "") + (playerLimit != "null" ? "&realm=" + StaticValues.ConvertRealmParam(realm) + "&PlayerLimit=" + playerLimit : ""), boss.Key)) +
                         PageUtility.CreateTableColumn(topDPS.Item1) +
                         PageUtility.CreateTableColumn(topHPS.Item1) +
                         PageUtility.CreateTableColumn(fastestKill.Item1) +

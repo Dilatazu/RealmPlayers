@@ -32,6 +32,7 @@ namespace VF.RaidDamageWebsite
             bool showMultipleEntries = PageUtility.GetQueryString(Request, "MultipleEntries", "false").ToLower() != "false";
 
             string guildLimit = PageUtility.GetQueryString(Request, "Guild", null);
+            string playerLimit = PageUtility.GetQueryString(Request, "PlayerLimit", null);
             string andPlayer = PageUtility.GetQueryString(Request, "AndPlayer", null);
             int showEntriesCount = PageUtility.GetQueryInt(Request, "Count", 50);
             if (showEntriesCount > 100)
@@ -50,6 +51,10 @@ namespace VF.RaidDamageWebsite
             {
                 this.Title = fightName + " Highscore for " + guildLimit + " | RaidStats";
             }
+            else if (playerLimit != null)
+            {
+                this.Title = fightName + " Highscore for " + playerLimit + " | RaidStats";
+            }
             else
             {
                 this.Title = fightName + " Highscore | RaidStats";
@@ -65,6 +70,13 @@ namespace VF.RaidDamageWebsite
                         + PageUtility.BreadCrumb_AddRealm(realm)
                         + PageUtility.BreadCrumb_AddLink("RaidList.aspx?Guild=" + guildLimit, guildLimit) 
                         + PageUtility.BreadCrumb_AddLink("BossList.aspx?Guild=" + guildLimit, "Bosses");
+                }
+                else if (playerLimit != null)
+                {
+                    breadCrumbCommon = PageUtility.BreadCrumb_AddHome()
+                        + PageUtility.BreadCrumb_AddRealm(realm)
+                        + PageUtility.BreadCrumb_AddLink("PlayerOverview.aspx?realm=" + RealmPlayersServer.StaticValues.ConvertRealmParam(realm) + "&player=" + playerLimit, playerLimit)
+                        + PageUtility.BreadCrumb_AddLink("BossList.aspx?realm=" + RealmPlayersServer.StaticValues.ConvertRealmParam(realm) + "&player=" + playerLimit, "Bosses");
                 }
                 else
                 {
@@ -104,19 +116,35 @@ namespace VF.RaidDamageWebsite
                     }
                 }
 
-                string graphSection = "<h1>Highscore for players vs " + fightName + "</h1><p>Fights with unrealistic dmg spikes(SW_Stats reset bug) are disqualified from this list.</p>";
+                string graphSection = "<h1>Highscore for ";
+                if(playerLimit != null)
+                {
+                    graphSection += playerLimit;
+                }
+                else
+                {
+                    graphSection += "players";
+                }
+                graphSection += " vs " + fightName + "</h1><p>Fights with unrealistic dmg spikes(SW_Stats reset bug) are disqualified from this list.</p>";
                 //graphSection += "<p>View Highscore for class: ";
                 //foreach (var classLimit in ClassLimitConverter)
                 //{
                 //    graphSection += PageUtility.CreateLink(PageUtility.CreateUrlWithNewQueryValue(Request, "ClassLimit", classLimit.Key), PageUtility.CreateColorCodedName(classLimit.Value.ToString(), classLimit.Value)) + ", ";
                 //}
-                if (showMultipleEntries == false)
+                if (playerLimit != null)
                 {
-                    graphSection += "<p>Currently <u>not</u> showing multiple entries per player/guild. <a href='" + PageUtility.CreateUrlWithNewQueryValue(Request, "MultipleEntries", "true") + "'>Click here if you want to show multiple entries per entities</a></p>";
+                    showMultipleEntries = true;//Force it to true
                 }
                 else
                 {
-                    graphSection += "<p>Currently showing multiple entries per player/guild. <a href='" + PageUtility.CreateUrlWithNewQueryValue(Request, "MultipleEntries", "false") + "'>Click here if you do not want to show multiple entries per entities</a></p>";
+                    if (showMultipleEntries == false)
+                    {
+                        graphSection += "<p>Currently <u>not</u> showing multiple entries per player/guild. <a href='" + PageUtility.CreateUrlWithNewQueryValue(Request, "MultipleEntries", "true") + "'>Click here if you want to show multiple entries per entities</a></p>";
+                    }
+                    else
+                    {
+                        graphSection += "<p>Currently showing multiple entries per player/guild. <a href='" + PageUtility.CreateUrlWithNewQueryValue(Request, "MultipleEntries", "false") + "'>Click here if you do not want to show multiple entries per entities</a></p>";
+                    }
                 }
                 //if (showEntriesCount < 50)
                 //{
@@ -143,7 +171,7 @@ namespace VF.RaidDamageWebsite
                 {
                     includePlayers = new List<string> { andPlayer };
                 }
-                m_GraphSection = new MvcHtmlString(VF.FightOverallOverviewGenerator.Generate(fightInstances, ApplicationInstance.Instance.GetRPPDatabase(), new VF.FightOverallOverviewGenerator.GenerateDetails { ClassFilter = classLimits, EntriesCount = showEntriesCount, ShowMultipleEntries = showMultipleEntries, RealmFilter = realm, GuildFilter = guildLimit, FactionFilter = factionFilter, IncludePlayers = includePlayers }));
+                m_GraphSection = new MvcHtmlString(VF.FightOverallOverviewGenerator.Generate(fightInstances, ApplicationInstance.Instance.GetRPPDatabase(), new VF.FightOverallOverviewGenerator.GenerateDetails { ClassFilter = classLimits, EntriesCount = showEntriesCount, ShowMultipleEntries = showMultipleEntries, RealmFilter = realm, GuildFilter = guildLimit, PlayerFilter = playerLimit, FactionFilter = factionFilter, IncludePlayers = includePlayers }));
             }
         }
     }

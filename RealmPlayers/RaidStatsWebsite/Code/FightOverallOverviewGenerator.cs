@@ -62,6 +62,7 @@ namespace VF
             public PlayerFaction FactionFilter;
             public VF_RealmPlayersDatabase.WowRealm RealmFilter;
             public string GuildFilter;
+            public string PlayerFilter;
             public bool ShowMultipleEntries;
             public int EntriesCount;
             public List<string> IncludePlayers;
@@ -109,6 +110,7 @@ namespace VF
                             double currValue = dataPresentTypeInfo.m_GetValue(unit.Item2);
                             if (playerData != null && currValue > 0
                                 && (_Details.ClassFilter == null || _Details.ClassFilter.Contains(playerData.Character.Class))
+                                && (_Details.PlayerFilter == null || _Details.PlayerFilter == playerData.Name)
                                 && (_Details.FactionFilter == PlayerFaction.Unknown || _Details.FactionFilter == StaticValues.GetFaction(playerData.Character.Race))
                                 && dataPresentTypeInfo.m_ValidCheck(unit.Item2))
                             {
@@ -212,7 +214,8 @@ namespace VF
                 {
                     if (_Details.RealmFilter != VF_RealmPlayersDatabase.WowRealm.All && _Details.RealmFilter != raidFight.CacheRaid.CacheGroup.Realm)
                         continue;
-
+                    if (_Details.PlayerFilter != null && raidFight.PlayerFightData.FindIndex((_Value) => {return _Value.Item1 == _Details.PlayerFilter;}) == -1)
+                        continue;
                     if (_Details.ShowMultipleEntries == false && _Details.GuildFilter == null)
                     {
                         if (ignoreGuilds.Contains(raidFight.CacheRaid.CacheGroup.GroupName) == true)
