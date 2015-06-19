@@ -17,34 +17,40 @@ namespace VF.RaidDamageWebsite
         public MvcHtmlString m_BreadCrumbHTML = null;
         public MvcHtmlString m_PageHTML = null;
 
-        public static int GetDPSRank(List<Tuple<PlayerData, AverageStats>> _DataSet, string _PlayerName, out float _DPS)
+        public static int GetDPSRank(List<Tuple<PlayerData, AverageStats>> _DataSet, string _PlayerName, out float _DPS, Predicate<PlayerData> _Predicate = null)
         {
             _DPS = 0.0f;
             var orderedByDPS = _DataSet.OrderByDescending((_Value) => _Value.Item2.m_DPS);
             int playersCounter = 0;
             foreach (var data in orderedByDPS)
             {
-                ++playersCounter;
-                if (data.Item1.Name == _PlayerName)
+                if (_Predicate == null || _Predicate(data.Item1) == true)
                 {
-                    _DPS = data.Item2.m_DPS;
-                    return playersCounter;
+                    ++playersCounter;
+                    if (data.Item1.Name == _PlayerName)
+                    {
+                        _DPS = data.Item2.m_DPS;
+                        return playersCounter;
+                    }
                 }
             }
             return -1;
         }
-        public static int GetHPSRank(List<Tuple<PlayerData, AverageStats>> _DataSet, string _PlayerName, out float _HPS)
+        public static int GetHPSRank(List<Tuple<PlayerData, AverageStats>> _DataSet, string _PlayerName, out float _HPS, Predicate<PlayerData> _Predicate = null)
         {
             _HPS = 0.0f;
             var orderedByDPS = _DataSet.OrderByDescending((_Value) => _Value.Item2.m_HPS);
             int playersCounter = 0;
             foreach (var data in orderedByDPS)
             {
-                ++playersCounter;
-                if (data.Item1.Name == _PlayerName)
+                if (_Predicate == null || _Predicate(data.Item1) == true)
                 {
-                    _HPS = data.Item2.m_HPS;
-                    return playersCounter;
+                    ++playersCounter;
+                    if (data.Item1.Name == _PlayerName)
+                    {
+                        _HPS = data.Item2.m_HPS;
+                        return playersCounter;
+                    }
                 }
             }
             return -1;
@@ -116,23 +122,23 @@ namespace VF.RaidDamageWebsite
             string instanceSummary = "";
             if (instanceSummary == "" && (int)realmProgress >= (int)VF_RealmPlayersDatabase.WowInstance.Naxxramas)
             {
-                instanceSummary = GenerateSummaryForInstance(currPlayerSummary, "Naxxramas - All Quarters", realm, guildLimit);
+                instanceSummary = GenerateSummaryForInstance(currPlayerSummary, realmPlayer, "Naxxramas - All Quarters", realm, guildLimit);
             }
             if (instanceSummary == "" && (int)realmProgress >= (int)VF_RealmPlayersDatabase.WowInstance.Temple_Of_Ahn_Qiraj)
             {
-                instanceSummary =GenerateSummaryForInstance(currPlayerSummary, "Ahn'Qiraj Temple", realm, guildLimit);
+                instanceSummary = GenerateSummaryForInstance(currPlayerSummary, realmPlayer, "Ahn'Qiraj Temple", realm, guildLimit);
             }
             if (instanceSummary == "" && (int)realmProgress >= (int)VF_RealmPlayersDatabase.WowInstance.Blackwing_Lair)
             {
-                instanceSummary = GenerateSummaryForInstance(currPlayerSummary, "Blackwing Lair", realm, guildLimit);
+                instanceSummary = GenerateSummaryForInstance(currPlayerSummary, realmPlayer, "Blackwing Lair", realm, guildLimit);
             }
             if(instanceSummary == "")
             {
-                instanceSummary = GenerateSummaryForInstance(currPlayerSummary, "Molten Core", realm, guildLimit);
+                instanceSummary = GenerateSummaryForInstance(currPlayerSummary, realmPlayer, "Molten Core", realm, guildLimit);
             }
             if (instanceSummary == "")
             {
-                instanceSummary = GenerateSummaryForInstance(currPlayerSummary, "Zul'Gurub", realm, guildLimit);
+                instanceSummary = GenerateSummaryForInstance(currPlayerSummary, realmPlayer, "Zul'Gurub", realm, guildLimit);
             }
             pageBuilder.Append(instanceSummary);
             
@@ -199,28 +205,28 @@ namespace VF.RaidDamageWebsite
             
             return VF_RealmPlayersDatabase.WowInstance.Molten_Core;
         }
-        private static string GenerateSummaryForInstance(VF_RDDatabase.PlayerSummary _Player, string _Instance, VF_RealmPlayersDatabase.WowRealm _Realm, string _GuildLimit = null)
+        private static string GenerateSummaryForInstance(VF_RDDatabase.PlayerSummary _PlayerSummary, PlayerData _Player, string _Instance, VF_RealmPlayersDatabase.WowRealm _Realm, string _GuildLimit = null)
         {
             string realmStr = RealmPlayersServer.StaticValues.ConvertRealmParam(_Realm);
-            string page = "";
+            System.Text.StringBuilder page = new System.Text.StringBuilder("");
 
             int bossesData = 0;
             foreach (var boss in BossInformation.BossesInInstanceNoOptional[_Instance])
             {
-                if (_Player.PlayerBossStats.ContainsKey(boss) == false)
+                if (_PlayerSummary.PlayerBossStats.ContainsKey(boss) == false)
                     continue;
 
                 if (bossesData == 0)
                 {
-                    page += "<table class='table'><thead><tr><th>Boss</th><th>DPS #Rank</th><th>HPS #Rank</th><th>Average DPS</th><th>Average HPS</th><th>Top DPS</th><th>Top HPS</th><th>Kill Count</th></thead><tbody>";
+                    page.Append("<table class='table'><thead><tr><th>Boss</th><th>DPS #Rank</th><th>HPS #Rank</th><th>Average DPS</th><th>Average HPS</th><th>Top DPS</th><th>Top HPS</th><th>Kill Count</th></thead><tbody>");
                 }
                 ++bossesData;
 
                 List<VF_RDDatabase.PlayerFightData> dpsSamplesUsed = null;
                 List<VF_RDDatabase.PlayerFightData> hpsSamplesUsed = null;
 
-                var playerBossData = _Player.PlayerBossStats[boss];
-                if (playerBossData.m_PlayerFightDatas.Count < 4)
+                var playerBossData = _PlayerSummary.PlayerBossStats[boss];
+                if (playerBossData.m_PlayerFightDatas.Count < 3 || (_Instance != "Molten Core" && playerBossData.m_PlayerFightDatas.Count < 4))
                     return "";
                 playerBossData.GetAverageDPS(5, 6, 3, out dpsSamplesUsed);
                 playerBossData.GetAverageEffectiveHPS(5, 6, 3, out hpsSamplesUsed);
@@ -228,8 +234,10 @@ namespace VF.RaidDamageWebsite
                 float bwlBossDPS = 0.0f;
                 float bwlBossHPS = 0.0f;
                 var bwlBossDataSet = AverageOverview.GenerateAverageDataSet(boss, null, null, _Realm, _GuildLimit);
-                var bwlBossDPSRank = GetDPSRank(bwlBossDataSet, _Player.Name, out bwlBossDPS);
-                var bwlBossHPSRank = GetHPSRank(bwlBossDataSet, _Player.Name, out bwlBossHPS);
+                var bwlBossDPSRank = GetDPSRank(bwlBossDataSet, _PlayerSummary.Name, out bwlBossDPS);
+                var bwlBossDPSRankClass = GetDPSRank(bwlBossDataSet, _PlayerSummary.Name, out bwlBossDPS, (PlayerData _Character) => { return _Character.Character.Class == _Player.Character.Class; });
+                var bwlBossHPSRank = GetHPSRank(bwlBossDataSet, _PlayerSummary.Name, out bwlBossHPS);
+                var bwlBossHPSRankClass = GetHPSRank(bwlBossDataSet, _PlayerSummary.Name, out bwlBossHPS, (PlayerData _Character) => { return _Character.Character.Class == _Player.Character.Class; });
                 //page += "<h5>" + boss + "</h5>";
                 //page += "DPS Rank: #" + bwlBossDPSRank + " with DPS " + bwlBossDPS.ToStringDot("0.0");
 
@@ -260,28 +268,30 @@ namespace VF.RaidDamageWebsite
                     hpsSamplesStr += ")";
                 }
 
-                page += "<tr>";
-                page += "<td>" + boss + "</td>";
+                page.Append("<tr>");
+                page.Append("<td>" + boss + "</td>");
                 if (bwlBossDPS != 0.0f || bwlBossHPS != 0.0f)
                 {
-                    page += "<td>" + PageUtility.CreateLink("AverageOverview.aspx?Boss=" + boss + "&realm=" + realmStr + "&andplayer=" + _Player.Name, PageUtility.CreateColorString("#" + bwlBossDPSRank, RPColor.Red)) + "</td>";
-                    page += "<td>" + PageUtility.CreateLink("AverageOverview.aspx?Boss=" + boss + "&realm=" + realmStr + "&andplayer=" + _Player.Name, PageUtility.CreateColorString("#" + bwlBossHPSRank, RPColor.Green)) + "</td>";
+                    page.Append("<td>" + PageUtility.CreateLink("AverageOverview.aspx?Boss=" + boss + "&realm=" + realmStr + "&andplayer=" + _PlayerSummary.Name, PageUtility.CreateColorString("#" + bwlBossDPSRank, RPColor.Red)) + " / ");
+                    page.Append(PageUtility.CreateLink("AverageOverview.aspx?Boss=" + boss + "&realm=" + realmStr + "&andplayer=" + _PlayerSummary.Name + "&ClassLimit=" + ClassControl.GetClassLimitStr(_Player.Character.Class), PageUtility.CreateColorString("#" + bwlBossDPSRankClass, _Player.Character.Class)) + "</td>");
+                    page.Append("<td>" + PageUtility.CreateLink("AverageOverview.aspx?Boss=" + boss + "&realm=" + realmStr + "&andplayer=" + _PlayerSummary.Name, PageUtility.CreateColorString("#" + bwlBossHPSRank, RPColor.Green)) + " / ");
+                    page.Append(PageUtility.CreateLink("AverageOverview.aspx?Boss=" + boss + "&realm=" + realmStr + "&andplayer=" + _PlayerSummary.Name + "&ClassLimit=" + ClassControl.GetClassLimitStr(_Player.Character.Class), PageUtility.CreateColorString("#" + bwlBossHPSRankClass, _Player.Character.Class)) + "</td>");
                 }
                 else
                 {
-                    page += "<td>#??(inactive)</td>";
-                    page += "<td>#??(inactive)</td>";
+                    page.Append("<td>#??(inactive)</td>");
+                    page.Append("<td>#??(inactive)</td>");
                 }
-                page += "<td>" + PageUtility.CreateLink("AverageOverview.aspx?Boss=" + boss + "&realm=" + realmStr + "&andplayer=" + _Player.Name, PageUtility.CreateColorString(bwlBossDPS.ToStringDot("0.0"), RPColor.Red))
+                page.Append("<td>" + PageUtility.CreateLink("AverageOverview.aspx?Boss=" + boss + "&realm=" + realmStr + "&andplayer=" + _PlayerSummary.Name, PageUtility.CreateColorString(bwlBossDPS.ToStringDot("0.0"), RPColor.Red))
                     + dpsSamplesStr  
-                    + "</td>";
-                page += "<td>" + PageUtility.CreateLink("AverageOverview.aspx?Boss=" + boss + "&realm=" + realmStr + "&andplayer=" + _Player.Name, PageUtility.CreateColorString(bwlBossHPS.ToStringDot("0.0"), RPColor.Green))
+                    + "</td>");
+                page.Append("<td>" + PageUtility.CreateLink("AverageOverview.aspx?Boss=" + boss + "&realm=" + realmStr + "&andplayer=" + _PlayerSummary.Name, PageUtility.CreateColorString(bwlBossHPS.ToStringDot("0.0"), RPColor.Green))
                     + hpsSamplesStr  
-                    + "</td>";
-                page += "<td>" + PageUtility.CreateLink("FightOverallOverview.aspx?FightName=" + boss + "&realm=" + realmStr + "&andplayer=" + _Player.Name, "view") + "</td>";
-                page += "<td>" + PageUtility.CreateLink("FightOverallOverview.aspx?FightName=" + boss + "&realm=" + realmStr + "&andplayer=" + _Player.Name, "view") + "</td>";
-                page += "<td>" + _Player.AttendedFights.Count((_Value) => _Value.BossName == boss) + "</td>";
-                page += "</tr>";
+                    + "</td>");
+                page.Append("<td>" + PageUtility.CreateLink("FightOverallOverview.aspx?FightName=" + boss + "&realm=" + realmStr + "&andplayer=" + _PlayerSummary.Name, "view") + "</td>");
+                page.Append("<td>" + PageUtility.CreateLink("FightOverallOverview.aspx?FightName=" + boss + "&realm=" + realmStr + "&andplayer=" + _PlayerSummary.Name, "view") + "</td>");
+                page.Append("<td>" + _PlayerSummary.AttendedFights.Count((_Value) => _Value.BossName == boss) + "</td>");
+                page.Append("</tr>");
             }
             if (bossesData == 0)
             {
@@ -289,7 +299,7 @@ namespace VF.RaidDamageWebsite
             }
             else if (bossesData > 0)
             {
-                page += "</tbody></table>";
+                page.Append("</tbody></table>");
             }
 
             string averagePageData = "<p><h3>Active Ranking in " + _Instance + "</h3>"; 
@@ -297,36 +307,45 @@ namespace VF.RaidDamageWebsite
                 var bwlDataSet = AverageOverview.GenerateAverageDataSet(_Instance, null, null, _Realm, _GuildLimit);
 
                 float bwlDPS = 0.0f;
-                string bwlDPSRank = GetDPSRank(bwlDataSet, _Player.Name, out bwlDPS).ToString();
+                string bwlDPSRank = GetDPSRank(bwlDataSet, _PlayerSummary.Name, out bwlDPS).ToString();
+                string bwlDPSRankClass = GetDPSRank(bwlDataSet, _PlayerSummary.Name, out bwlDPS, (PlayerData _Character) => { return _Character.Character.Class == _Player.Character.Class; }).ToString();
+
 
                 float bwlHPS = 0.0f;
-                string bwlHPSRank = GetHPSRank(bwlDataSet, _Player.Name, out bwlHPS).ToString();
+                string bwlHPSRank = GetHPSRank(bwlDataSet, _PlayerSummary.Name, out bwlHPS).ToString();
+                string bwlHPSRankClass = GetHPSRank(bwlDataSet, _PlayerSummary.Name, out bwlHPS, (PlayerData _Character) => { return _Character.Character.Class == _Player.Character.Class; }).ToString();
 
                 if (bwlDPS != 0.0f || bwlHPS != 0.0f)
                 {
+                    string bossIdentifierStr = BossesControl.MC_ALL;
                     if (_Instance == "Molten Core")
                     {
-                        bwlDPSRank = PageUtility.CreateLink("Ranking.aspx?Bosses=" + BossesControl.MC_ALL + "&realm=" + realmStr + "&andplayer=" + _Player.Name, PageUtility.CreateColorString("#" + bwlDPSRank, RPColor.Red));
-                        bwlHPSRank = PageUtility.CreateLink("Ranking.aspx?Bosses=" + BossesControl.MC_ALL + "&realm=" + realmStr + "&andplayer=" + _Player.Name, PageUtility.CreateColorString("#" + bwlHPSRank, RPColor.Green));
+                        bossIdentifierStr = BossesControl.MC_ALL;
                     }
                     else if (_Instance == "Blackwing Lair")
                     {
-                        bwlDPSRank = PageUtility.CreateLink("Ranking.aspx?Bosses=" + BossesControl.BWL_ALL + "&realm=" + realmStr + "&andplayer=" + _Player.Name, PageUtility.CreateColorString("#" + bwlDPSRank, RPColor.Red));
-                        bwlHPSRank = PageUtility.CreateLink("Ranking.aspx?Bosses=" + BossesControl.BWL_ALL + "&realm=" + realmStr + "&andplayer=" + _Player.Name, PageUtility.CreateColorString("#" + bwlHPSRank, RPColor.Green));
+                        bossIdentifierStr = BossesControl.BWL_ALL;
                     }
                     else if (_Instance == "Ahn'Qiraj Temple")
                     {
-                        bwlDPSRank = PageUtility.CreateLink("Ranking.aspx?Bosses=" + BossesControl.AQ40_ALL + "&realm=" + realmStr + "&andplayer=" + _Player.Name, PageUtility.CreateColorString("#" + bwlDPSRank, RPColor.Red));
-                        bwlHPSRank = PageUtility.CreateLink("Ranking.aspx?Bosses=" + BossesControl.AQ40_ALL + "&realm=" + realmStr + "&andplayer=" + _Player.Name, PageUtility.CreateColorString("#" + bwlHPSRank, RPColor.Green));
+                        bossIdentifierStr = BossesControl.AQ40_ALL;
                     }
                     else if (_Instance == "Naxxramas - All Quarters")
                     {
-                        bwlDPSRank = PageUtility.CreateLink("Ranking.aspx?Bosses=" + BossesControl.NAXX_ALL_QUARTERS + "&realm=" + realmStr + "&andplayer=" + _Player.Name, PageUtility.CreateColorString("#" + bwlDPSRank, RPColor.Red));
-                        bwlHPSRank = PageUtility.CreateLink("Ranking.aspx?Bosses=" + BossesControl.NAXX_ALL_QUARTERS + "&realm=" + realmStr + "&andplayer=" + _Player.Name, PageUtility.CreateColorString("#" + bwlHPSRank, RPColor.Green));
+                        bossIdentifierStr = BossesControl.NAXX_ALL_QUARTERS;
                     }
 
-                    averagePageData += "<h5>DPS Rank: " + bwlDPSRank + " with DPS " + bwlDPS.ToStringDot("0.0") + "</h5>";
-                    averagePageData += "<h5>HPS Rank: " + bwlHPSRank + " with HPS " + bwlHPS.ToStringDot("0.0") + "</h5>";
+                    bwlDPSRank = PageUtility.CreateLink("Ranking.aspx?Bosses=" + bossIdentifierStr + "&realm=" + realmStr + "&andplayer=" + _PlayerSummary.Name, PageUtility.CreateColorString("#" + bwlDPSRank, RPColor.Red));
+                    bwlHPSRank = PageUtility.CreateLink("Ranking.aspx?Bosses=" + bossIdentifierStr + "&realm=" + realmStr + "&andplayer=" + _PlayerSummary.Name, PageUtility.CreateColorString("#" + bwlHPSRank, RPColor.Green));
+
+                    bwlDPSRankClass = PageUtility.CreateLink("Ranking.aspx?Bosses=" + bossIdentifierStr + "&realm=" + realmStr + "&andplayer=" + _PlayerSummary.Name + "&ClassLimit=" + ClassControl.GetClassLimitStr(_Player.Character.Class)
+                        , PageUtility.CreateColorString("#" + bwlDPSRankClass, _Player.Character.Class));
+                    bwlHPSRankClass = PageUtility.CreateLink("Ranking.aspx?Bosses=" + bossIdentifierStr + "&realm=" + realmStr + "&andplayer=" + _PlayerSummary.Name + "&ClassLimit=" + ClassControl.GetClassLimitStr(_Player.Character.Class)
+                        , PageUtility.CreateColorString("#" + bwlHPSRankClass, _Player.Character.Class));
+                    
+
+                    averagePageData += "<h5>DPS Rank: " + bwlDPSRank + " / " + bwlDPSRankClass + " with DPS " + bwlDPS.ToStringDot("0.0") + "</h5>";
+                    averagePageData += "<h5>HPS Rank: " + bwlHPSRank + " / " + bwlHPSRankClass + " with HPS " + bwlHPS.ToStringDot("0.0") + "</h5>";
                 }
                 else
                 {
@@ -335,7 +354,7 @@ namespace VF.RaidDamageWebsite
                 }
             }
 
-            return averagePageData + page;
+            return averagePageData + page.ToString();
         }
     }
 }

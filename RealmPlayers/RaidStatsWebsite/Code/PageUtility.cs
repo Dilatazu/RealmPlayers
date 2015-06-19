@@ -90,6 +90,10 @@ namespace VF
         {
             return "<font color='#" + (_Color.ToArgb() & 0xFFFFFF).ToString("X6") + "'>" + _String + "</font>";
         }
+        public static string CreateColorString(string _String, VF_RealmPlayersDatabase.PlayerClass _Class)
+        {
+            return "<font color='" + GetClassColor(_Class) + "'>" + _String + "</font>";
+        }
         public static string CreateColorString(string _String, RPColor _Color)
         {
             return "<font color='#" + ((int)_Color).ToString("X6") + "'>" + _String + "</font>";
