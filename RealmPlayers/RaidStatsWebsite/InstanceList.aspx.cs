@@ -139,13 +139,13 @@ namespace VF.RaidDamageWebsite
                 {
                     if (showMultipleEntries == false)
                     {
-                        if (ignoreGuilds.Contains(riclear.m_Raid.CacheGroup.GroupName) == true)
+                        if (ignoreGuilds.Contains(riclear.m_Raid.CacheGroup.GroupName + (int)riclear.m_Raid.CacheGroup.Realm) == true)
                         {
                             continue;
                         }
                         else
                         {
-                            ignoreGuilds.Add(riclear.m_Raid.CacheGroup.GroupName);
+                            ignoreGuilds.Add(riclear.m_Raid.CacheGroup.GroupName + (int)riclear.m_Raid.CacheGroup.Realm);
                         }
                     }
 
@@ -189,7 +189,7 @@ namespace VF.RaidDamageWebsite
                         m_BeforeBarText = "#" + clearNr + " (" + PageUtility.CreateLink("RaidOverview.aspx?Raid=" 
                         + riclear.m_Raid.UniqueRaidID
                         , riclear.m_Raid.RaidStartDate.ToString("yyyy-MM-dd")) + ")",
-                        m_OnBarLeftText = PageUtility.CreateLink("RaidList.aspx?Guild=" + riclear.m_Raid.CacheGroup.GroupName, riclear.m_Raid.CacheGroup.GroupName),
+                        m_OnBarLeftText = PageUtility.CreateLink("RaidList.aspx?Realm=" + StaticValues.ConvertRealmParam(riclear.m_Raid.CacheGroup.Realm) + "&Guild=" + riclear.m_Raid.CacheGroup.GroupName, riclear.m_Raid.CacheGroup.GroupName + (realm == VF_RealmPlayersDatabase.WowRealm.All ? " (" + StaticValues.ConvertRealmParam(riclear.m_Raid.CacheGroup.Realm) + ")" : "")),
                         /*PageUtility.CreateLink("http://realmplayers.com/GuildViewer.aspx?realm=" 
                             + RealmPlayersServer.StaticValues.ConvertRealmParam(riclear.m_Raid.Realm) 
                             + "&guild=" + riclear.m_Raid.RaidOwnerName, riclear.m_Raid.RaidOwnerName)*/
@@ -198,7 +198,7 @@ namespace VF.RaidDamageWebsite
                         m_AfterBarText = PageUtility.CreateColorisedFactor(1.0),
                         //m_BarTextColor = "#000",
                         m_OnBarRightText = totalTimeStr,
-                        m_OnBarTextWidth = StaticValues.MeasureStringLength(riclear.m_Raid.CacheGroup.GroupName + " " + totalTimeStr)
+                        m_OnBarTextWidth = StaticValues.MeasureStringLength(riclear.m_Raid.CacheGroup.GroupName + (realm == VF_RealmPlayersDatabase.WowRealm.All ? StaticValues.ConvertRealmParam(realm) + " ()" : "") + "  " + totalTimeStr)
                     });
                 }
 
