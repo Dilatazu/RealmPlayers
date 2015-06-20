@@ -99,6 +99,7 @@
     <Compile Include="ItemDatabase\ItemDatabase.cs" />
     <Compile Include="ItemDatabase\ItemInfo.cs" />
     <Compile Include="ItemDatabase\ItemInfoDownloader.cs" />
+    <Compile Include="ItemDatabase\ItemTranslations.cs" />
     <Compile Include="PlayerData\ArenaData.cs" />
     <Compile Include="RealmPlayersDB.cs" />
     <Compile Include="SummaryDatabases\GuildSummary\GuildSummaryDatabase.cs" />
