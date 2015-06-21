@@ -5,9 +5,21 @@ using System.Text;
 
 namespace VF
 {
-    class ItemTranslations
+    public class ItemTranslations
     {
-        public Dictionary<string, int> _NameToIDTranslation = new Dictionary<string, int>
+        public static int FindItemID(string _Name)
+        {
+            int itemID = 0;
+            if(_NameToIDTranslation.TryGetValue(_Name, out itemID) == true)
+            {
+                return itemID;
+            }
+            return -1;
+        }
+
+        const int SPELL_MODIFIER = 0x1000000;
+        const int NPC_MODIFIER = 0x2000000;
+        public static Dictionary<string, int> _NameToIDTranslation = new Dictionary<string, int>
         {
             //Orc mounts
             {"Arctic Wolf", 12351},
@@ -16,6 +28,7 @@ namespace VF
             {"Brown Wolf", 5668},
             {"Dire Wolf", 5665},
             {"Timber Wolf", 1132},
+            {"Large Timber Wolf", 1132},
 
             {"Swift Timber Wolf", 18797},
             {"Swift Gray Wolf", 18798},
@@ -54,9 +67,11 @@ namespace VF
             
             //Nightelf mounts
             {"Spotted Frostsaber", 8632},
-            {"Spotted Nightsaber", 8628},
+            //{"Spotted Nightsaber", 8628},
+            {"Spotted Panther", 8628},
             {"Striped Frostsaber", 8631},
             {"Striped Nightsaber", 8629},
+            {"Tawny Sabercat", SPELL_MODIFIER + 16059},
             
             {"Frostsaber", 12302},
             {"Nightsaber", 12303},
@@ -64,6 +79,7 @@ namespace VF
             {"Swift Frostsaber", 8632},
             {"Swift Stormsaber", 18902},
             {"Swift Mistsaber", 18767},
+            {"Swift Dawnsaber", SPELL_MODIFIER + 23220},
             
             //Dwarf mounts
             {"Brown Ram", 5872},
@@ -96,11 +112,13 @@ namespace VF
             {"Chestnut Mare", 5655},
             {"Pinto Horse", 2414},
             
-            {"Swift White Stallion", 12353},
+            //{"Swift White Stallion", 12353},
+            {"White Stallion", 12353},
 
             {"Swift White Steed", 18778},
             {"Swift Brown Steed", 18777},
             {"Swift Palomino", 18776},
+            {"Palomino Stallion", 12354},
             
             //Rare drop mounts
             {"Winterspring Frostsaber", 13086},
@@ -120,10 +138,12 @@ namespace VF
             {"Black War Steed", 18241},
             {"Black War Tiger", 18242},
             {"Black War Ram", 18244},
+            {"Black Battlestrider", 18243},
             
             //AQ40 mounts
             {"Summon Red Qiraji Battle Tank", 21321},
             {"Summon Yellow Qiraji Battle Tank", 21324},
+            {"Summon Green Qiraji Battle Tank", 21323},
             {"Summon Blue Qiraji Battle Tank", 21218},
             {"Summon Black Qiraji Battle Tank", 21176},
             
@@ -134,22 +154,124 @@ namespace VF
             //Occassional mounts
             {"Reindeer", 21211},
 
-            /*
+            
             //Warlock mounts
-            {"Summon Felsteed", 5784}, --SPELL
-            {"Summon Dreadsteed", 23161}, --SPELL
+            {"Summon Felsteed", SPELL_MODIFIER + 5784},
+            {"Summon Dreadsteed", SPELL_MODIFIER + 23161},
             
             //Paladin mounts
-            {"Summon Warhorse", 13819}, --SPELL
-            {"Summon Charger", 23214}, --SPELL
-            */
+            {"Summon Warhorse", SPELL_MODIFIER + 13819},
+            {"Summon Charger", SPELL_MODIFIER + 23214},
+            
 
+            {"Mr. Wiggles", 23720},
 
+            
+            /*---------------------------------TBC MOUNTS---------------------------------*/
+            
+            {"Riding Turtle", 23720},
+            {"Fiery Warhorse", 30480},
+            {"Big Battle Bear", 38576},
+            {"Swift Warstrider", 34129},
+            {"Flying Reindeer", SPELL_MODIFIER + 44824},
+            {"Raven Lord", 32768},
+            {"Call of the Phoenix", 32458},
 
+            //PVP mounts
+            {"Merciless Nether Drake", 34092},
+            {"Swift Nether Drake", 30609},
+            {"Vengeful Nether Drake", 37676},
+            {"Brutal Nether Drake", 43516},
+            
+            //Engineering mounts
+            {"Turbo-Charged Flying Machine", 34061},
+            {"X-51 Nether-Rocket X-TREME", 35226},
+            {"X-51 Nether-Rocket", 35225},
 
+            //Netherwing Drakes mounts
+            {"Azure Netherwing Drake", 32858},
+            {"Cobalt Netherwing Drake", 32859},
+            {"Onyx Netherwing Drake", 32857},
+            {"Purple Netherwing Drake", 32860},
+            {"Veridian Netherwing Drake", 32861},
+            {"Violet Netherwing Drake", 32862},
+            
+            //Nether Ray mounts
+            {"Blue Riding Nether Ray", 32319},
+            {"Green Riding Nether Ray", 32314},
+            {"Purple Riding Nether Ray", 32316},
+            {"Red Riding Nether Ray", 32317},
+            {"Silver Riding Nether Ray", 32318},
+            //{"Nether Ray Fry", 38628},
 
+            //Exalted mounts
+            {"Cenarion War Hippogryph", 33999},
 
+            //Talbuk mounts
+            {"Cobalt War Talbuk", 29102},
+            {"Dark War Talbuk", 29228},
+            {"Silver War Talbuk", 29104},
+            {"Tan War Talbuk", 29105},
+            {"White War Talbuk", 29103},
+            
+            {"Cobalt Riding Talbuk", 31829},
+            {"Dark Riding Talbuk", 28915},
+            {"Silver Riding Talbuk", 31831},
+            {"Tan Riding Talbuk", 31833},
+            {"White Riding Talbuk", 31835},
 
+            //Bloodelf mounts
+            {"Black Hawkstrider", 29221},
+            {"Blue Hawkstrider", 29220},
+            {"Purple Hawkstrider", 29222},
+            {"Red Hawkstrider", 28927},
+
+            {"Swift Green Hawkstrider", 29223},
+            {"Swift Pink Hawkstrider", 28936},
+            {"Swift Purple Hawkstrider", 29224},
+            {"Swift White Hawkstrider", 35513},
+
+            //Alliance new race mounts
+            {"Brown Elekk", 28481},
+            {"Gray Elekk", 29744},
+            {"Purple Elekk", 29743},
+
+            {"Great Blue Elekk", 29745},
+            {"Great Green Elekk", 29746},
+            {"Great Purple Elekk", 29747},
+            {"Black War Elekk", 35906},
+
+            //Horde mounts
+            {"Blue Windrider", 25475},
+            {"Green Windrider", 25476},
+            {"Tawny Windrider", 25474},
+
+            {"Swift Green Windrider", 25531},
+            {"Swift Purple Windrider", 25533},
+            {"Swift Red Windrider", 25477},
+            {"Swift Yellow Windrider", 25532},
+            
+            //Alliance mounts
+            {"Ebon Gryphon", 25471},
+            {"Golden Gryphon", 25470},
+            {"Snowy Gryphon", 25472},
+
+            {"Swift Blue Gryphon", 25473},
+            {"Swift Green Gryphon", 25528},
+            {"Swift Red Gryphon", 25527},
+            {"Swift Purple Gryphon", 25529},
+
+            //{"ww", 0},
+            //{"ww", 0},
+            //{"ww", 0},
+            //{"ww", 0},
+            //{"ww", 0},
+            //{"ww", 0},
+            //{"ww", 0},
+            //{"ww", 0},
+            //{"ww", 0},
+            //{"ww", 0},
+            //{"ww", 0},
 
 
 
@@ -166,6 +288,7 @@ namespace VF
 
             {"White Kitten", 8489},
             {"Bombay Cat", 8485},
+            {"Bombay", 8485}, //Needed for Archangel version
             {"Siamese Cat", 8490},
             {"Cornish Rex Cat", 8486},
 
@@ -176,12 +299,69 @@ namespace VF
             {"Great Horned Owl", 8500},
             {"Green Wing Macaw", 8492},
             {"Hyacinth Macaw", 8494},
+            {"Senegal", 8495},
 
             {"Dark Whelpling", 10822},
-            {"Tiny Crimson Whelpling", 8499},
-            {"Tiny Emerald Whelpling", 8498},
+            {"Crimson Whelpling", 8499},
+            {"Emerald Whelpling", 8498},
+            {"Azure Whelpling", 34535},
             
             {"Ancona Chicken", 11023},
+            
+            {"Sprite Darter Hatchling", 11474},
+            {"Prairie Chicken", 11110},
+            {"Tranquil Mechanical Yeti", 21277},
+            
+            {"Smolderweb Hatchling", 12529},
+            {"Whiskers the Rat", 23015},
+
+            {"Pet Bombling", 11825},
+
+            //Occassional pets
+            {"Human Orphan", 18598},
+            {"Orcish Orphan", 18597},
+
+            
+            {"Cockroach", 10393},
+            {"Speedy", 23002},
+            {"Gurky", 22114},
+            {"Murky", 20371},
+            {"Worg Pup", 12263},
+            {"Hawk Owl", 8501},
+
+            
+            {"White Tiger Cub", SPELL_MODIFIER + 30152},
+
+            {"Zergling", 13582},
+            {"Crimson Snake", 10392},
+            {"Brown Snake", 10361},
+            {"Panda Cub", SPELL_MODIFIER + 26972},
+            {"Wood Frog", 11027},
+            {"Blood Parrot", SPELL_MODIFIER + 17567},
+            {"Brown Prairie Dog", 10394},
+            {"Lil' Smoky", 11826},
+            {"Lil&apos; Smoky", 11826},
+            {"Hippogryph Hatchling", 23713},
+            {"Tree Frog", 11026},
+            {"Firefly", 29960},
+            {"Tiny Sporebat", 34478},
+            {"Brown Rabbit", 29364},
+            {"Muckbreath", 33818},
+
+            {"Mechanical Chicken", 10398},
+            {"Mechanical Squirrel", 4401},
+            {"Lifelike Toad", 15996},
+            {"Black Kingsnake", 10360},
+            {"Bananas", 32588},
+            {"Horde Battle Standard", 18607},
+            {"Alliance Battle Standard", 18606},
+            {"Mana Wyrmling", 29363},
+            //{"ww", 0},
+            
+            /*
+            {"Umi's Mechanical Yeti", 12928},
+            {"Fel Guard Hound", 30803},
+             */
         };
     }
 }

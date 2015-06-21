@@ -178,7 +178,7 @@ namespace RealmPlayersServer
             {
                 if (_PlayerHistory != null && _PlayerHistory.HaveValidHistory() == true)
                 {
-                    string currentItemDatabase = DatabaseAccess.GetCurrentItemDatabaseAddress();
+                    var itemSummaryDB = Hidden.ApplicationInstance.Instance.GetItemSummaryDatabase();
 
                     string receivedItemsInfo = "";
                     var recvItems = HistoryGenerator.GenerateLatestReceivedItems(_PlayerHistory, DateTime.MinValue);
@@ -189,34 +189,7 @@ namespace RealmPlayersServer
                     {
                         if (i++ > 10) break;
 
-                        int recvItemIndex = 0;
-                        int xMax = 58*3;
-                        int yMax = (int)((recvItem.Value.Count-1) / 3) * 58;
-
-                        yMax += 58;
-                        string itemLinks = "<div class='inventory' style='background: none; width: " + xMax + "px; height: " + yMax + "px;'>";
-                        foreach (var item in recvItem.Value)
-                        {
-                            int xPos = (recvItemIndex % 3) * 58;
-                            int yPos = (int)(recvItemIndex / 3) * 58;
-
-                            var itemInfo = DatabaseAccess.GetItemInfo(item.ItemID, wowVersion);
-                            if (itemInfo != null)
-                            {
-                                itemLinks += "<div style='background: none; width: 58px; height: 58px;margin: " + yPos + "px " + xPos + "px;'>"
-                                    + "<img class='itempic' src='" + currentItemDatabase + itemInfo.GetIconImageAddress() + "'/>"
-                                    + "<div class='quality' id='" + CharacterViewer.ItemQualityConversion[itemInfo.ItemQuality] + "'></div>"
-                                    + "<img class='itemframe' src='assets/img/icons/ItemNormalFrame.png'/>"
-                                    + GenerateItemLink(currentItemDatabase, item, wowVersion)
-                                    + "</div>";
-                            }
-                            else
-                            {
-                                Logger.ConsoleWriteLine("ItemInfo could not be found for ItemID: " + item.ItemID, ConsoleColor.Red);
-                            }
-                            ++recvItemIndex;
-                        }
-                        itemLinks += "</div>";
+                        string itemLinks = GenerateItemIcons(recvItem.Value, _Player.Realm, 3, GenerateItemIconsSetting.None, itemSummaryDB);
                         receivedItemsInfo += PageUtility.CreateTableRow(""
                             , PageUtility.CreateTableColumn(itemLinks)
                             + PageUtility.CreateTableColumn("<div style='overflow: hidden;white-space: nowrap;'>" + recvItem.Key.ToString("yyyy-MM-dd") + "</div>"));
@@ -224,6 +197,54 @@ namespace RealmPlayersServer
                     m_ReceivedItemsHTML = new MvcHtmlString(receivedItemsInfo);
                 }
             }
+        }
+
+        private enum GenerateItemIconsSetting
+        {
+            None,
+            CenterDiv
+        }
+        private static string GenerateItemIcons(List<PlayerData.ItemInfo> _Items, WowRealm _Realm, int _MaxColumn, GenerateItemIconsSetting _Setting = GenerateItemIconsSetting.None, VF_RPDatabase.ItemSummaryDatabase _ItemSummaryDB = null)
+        {
+            WowVersionEnum _WowVersion = StaticValues.GetWowVersion(_Realm);
+            string currentItemDatabase = DatabaseAccess.GetCurrentItemDatabaseAddress();
+
+            int recvItemIndex = 0;
+            int xMax = 58 * _MaxColumn;
+            int yMax = (int)((_Items.Count - 1) / _MaxColumn) * 58;
+
+            yMax += 58;
+            string itemLinks = "<div class='inventory' style='background: none; width: " + xMax + "px; height: " + yMax + "px;" + (_Setting == GenerateItemIconsSetting.CenterDiv ? "margin-left: auto;margin-right: auto;" : "") + "'>";
+            foreach (var item in _Items)
+            {
+                int xPos = (recvItemIndex % _MaxColumn) * 58;
+                int yPos = (int)(recvItemIndex / _MaxColumn) * 58;
+
+                var itemInfo = DatabaseAccess.GetItemInfo(item.ItemID, _WowVersion);
+                if (itemInfo != null)
+                {
+                    itemLinks += "<div style='background: none; width: 58px; height: 58px;margin: " + yPos + "px " + xPos + "px;'>"
+                        + "<img class='itempic' src='" + currentItemDatabase + itemInfo.GetIconImageAddress() + "'/>"
+                        + "<div class='quality' id='" + CharacterViewer.ItemQualityConversion[itemInfo.ItemQuality] + "'></div>"
+                        + "<img class='itemframe' src='assets/img/icons/ItemNormalFrame.png'/>"
+                        + GenerateItemLink(currentItemDatabase, item, _WowVersion);
+
+                    if(_ItemSummaryDB != null)
+                    {
+                        int usageCount = _ItemSummaryDB.GetItemUsageCount(_Realm, item);
+                        itemLinks += "<a class='itemplayersframe' href='ItemUsageInfo.aspx?realm=" + StaticValues.ConvertRealmParam(_Realm) + "&item=" + item.ItemID + (item.SuffixID != 0 ? "&suffix=" + item.SuffixID : "") + "'>" + usageCount + "</a>";
+                    }
+
+                    itemLinks += "</div>";
+                }
+                else
+                {
+                    Logger.ConsoleWriteLine("ItemInfo could not be found for ItemID: " + item.ItemID, ConsoleColor.Red);
+                }
+                ++recvItemIndex;
+            }
+            itemLinks += "</div>";
+            return itemLinks;
         }
         public static Dictionary<ItemSlot, string> ItemSlotToIDConversion = new Dictionary<ItemSlot, string>
         {
@@ -638,19 +659,43 @@ namespace RealmPlayersServer
                 m_GearStatsHTML = new MvcHtmlString(gearStatsStr);
             }
         }
-        public void GenerateExtraStats(PlayerExtraData _PlayerExtraData)
+        public void GenerateExtraStats(PlayerExtraData _PlayerExtraData, WowRealm _Realm)
         {
             if (_PlayerExtraData == null)
                 return;
             string extraStats = "<table style='width:555px;'><tbody>";
             extraStats += "<tr><td style='vertical-align:top'>";
+            int extraDataColumns = 0;
+            if (_PlayerExtraData.Mounts.Count > 0) ++extraDataColumns;
+            if (_PlayerExtraData.Pets.Count > 0) ++extraDataColumns;
+            if (_PlayerExtraData.Companions.Count > 0) ++extraDataColumns;
+
+            var itemSummaryDB = Hidden.ApplicationInstance.Instance.GetItemSummaryDatabase();
+
             if (_PlayerExtraData.Mounts.Count > 0)
             {
                 //Mounts
+                string extraMounts = "";
                 extraStats += "<h4 style='text-align:center;'>Mounts</h4>";
+                List<PlayerData.ItemInfo> mountItems = new List<PlayerData.ItemInfo>();
                 foreach (var mount in _PlayerExtraData.Mounts)
                 {
-                    extraStats += mount.Mount + "<br/>";
+                    int itemID = VF.ItemTranslations.FindItemID(mount.Mount);
+                    if(itemID > 0)
+                    {
+                        mountItems.Add(new PlayerData.ItemInfo{ Slot = ItemSlot.Unknown, ItemID = itemID, SuffixID = 0, EnchantID = 0, UniqueID = 0, GemIDs = null});
+                    }
+                    else
+                    {
+                        extraMounts += mount.Mount + "<br/>";
+                    }
+                    //extraStats += mount.Mount + "<br/>";
+                }
+                int columCount = mountItems.Count > (9 / extraDataColumns) ? (9 / extraDataColumns) : mountItems.Count;
+                extraStats += GenerateItemIcons(mountItems, _Realm, columCount, GenerateItemIconsSetting.CenterDiv, itemSummaryDB);
+                if (extraMounts != "")
+                {
+                    extraStats += extraMounts;
                 }
             }
             extraStats += "</td>";
@@ -669,10 +714,26 @@ namespace RealmPlayersServer
             if (_PlayerExtraData.Companions.Count > 0)
             {
                 //Companions
+                string extraCompanions = "";
                 extraStats += "<h4 style='text-align:center;'>Companions</h4>";
+                List<PlayerData.ItemInfo> companionItems = new List<PlayerData.ItemInfo>();
                 foreach (var companion in _PlayerExtraData.Companions)
                 {
-                    extraStats += companion.Name + "<br/>";
+                    int itemID = VF.ItemTranslations.FindItemID(companion.Name);
+                    if (itemID > 0)
+                    {
+                        companionItems.Add(new PlayerData.ItemInfo { Slot = ItemSlot.Unknown, ItemID = itemID, SuffixID = 0, EnchantID = 0, UniqueID = 0, GemIDs = null });
+                    }
+                    else
+                    {
+                        extraCompanions += companion.Name + "<br/>";
+                    }
+                }
+                int columCount = companionItems.Count > (9 / extraDataColumns) ? (9 / extraDataColumns) : companionItems.Count;
+                extraStats += GenerateItemIcons(companionItems, _Realm, columCount, GenerateItemIconsSetting.CenterDiv, itemSummaryDB);
+                if (extraCompanions != "")
+                {
+                    extraStats += extraCompanions;
                 }
             }
             extraStats += "</td></tr>";
@@ -738,7 +799,7 @@ namespace RealmPlayersServer
                 + PageUtility.BreadCrumb_AddFinish(player.Name));
             GenerateCharInfo(player, playerHistory);
             m_InventoryInfoHTML = new MvcHtmlString(CreateInventoryInfo(player, playerHistory, realm));
-            GenerateExtraStats(DatabaseAccess.FindRealmPlayerExtraData(this, realm, playerStr, NotLoadedDecision.ReturnNull));
+            GenerateExtraStats(DatabaseAccess.FindRealmPlayerExtraData(this, realm, playerStr, NotLoadedDecision.ReturnNull), realm);
             string chartSection = "";
             if (playerHistory != null && playerHistory.HaveValidHistory() == true)
             {

@@ -293,6 +293,9 @@ namespace VF_RPDatabase
         }
         public void UpdateDatabase(RPPDatabase _Database, DateTime _EarliestDateTime)
         {
+            List<string> failedMountItemNames = new List<string>();
+            List<string> failedCompanionItemNames = new List<string>();
+
             var realmDBs = _Database.GetRealms();
             foreach (var realmDB in realmDBs)
             {
@@ -359,7 +362,48 @@ namespace VF_RPDatabase
                         VF_RealmPlayersDatabase.Logger.LogException(ex);
                     }
                 }
+                foreach (var playerExtraData in realmDB.Value.PlayersExtraData)
+                {
+                    try
+                    {
+                        UInt64 playerID = GetEntityID(realmDB.Value.Realm, playerExtraData.Key);
+                    
+                        foreach(var mount in playerExtraData.Value.Mounts)
+                        {
+                            int mountID = VF.ItemTranslations.FindItemID(mount.Mount);
+                            if(mountID > 0)
+                            {
+                                var itemSummary = GetItemSummary(mountID, 0);
+                                itemSummary.AddOwner(playerID, mount.GetEarliestUpload().GetTime());
+                            }
+                            else
+                            {
+                                failedMountItemNames.AddUnique(mount.Mount);
+                            }
+                        }
+                        
+                        foreach(var companion in playerExtraData.Value.Companions)
+                        {
+                            int companionID = VF.ItemTranslations.FindItemID(companion.Name);
+                            if (companionID > 0)
+                            {
+                                var itemSummary = GetItemSummary(companionID, 0);
+                                itemSummary.AddOwner(playerID, companion.GetEarliestUpload().GetTime());
+                            }
+                            else
+                            {
+                                failedCompanionItemNames.AddUnique(companion.Name);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        VF_RealmPlayersDatabase.Logger.LogException(ex);
+                    }
+                }
             }
+            VF_RealmPlayersDatabase.Logger.ConsoleWriteLine("Failed to add Mounts with names: " + String.Join("\", \"", failedMountItemNames.ToArray()) + "\"");
+            VF_RealmPlayersDatabase.Logger.ConsoleWriteLine("Failed to add Companions with names: " + String.Join("\", \"", failedCompanionItemNames.ToArray()) + "\"");
         }
 
         public static ItemSummaryDatabase LoadSummaryDatabase(string _RootDirectory)

@@ -27,6 +27,20 @@ namespace VF_RealmPlayersDatabase.PlayerData
                 Uploaders.Add(_UploadID);
             }
         }
+        public UploadID GetEarliestUpload()
+        {
+            if (Uploaders.Count == 0)
+                return UploadID.Null();
+            UploadID earliestUploader = Uploaders.First();
+            foreach(var uploader in Uploaders)
+            {
+                if (uploader.GetTime() < earliestUploader.GetTime())
+                {
+                    earliestUploader = uploader;
+                }
+            }
+            return earliestUploader;
+        }
     }
     [ProtoContract]
     public class PetData
@@ -59,6 +73,20 @@ namespace VF_RealmPlayersDatabase.PlayerData
                 Uploaders.Add(_UploadID);
             }
         }
+        public UploadID GetEarliestUpload()
+        {
+            if (Uploaders.Count == 0)
+                return UploadID.Null();
+            UploadID earliestUploader = Uploaders.First();
+            foreach (var uploader in Uploaders)
+            {
+                if (uploader.GetTime() < earliestUploader.GetTime())
+                {
+                    earliestUploader = uploader;
+                }
+            }
+            return earliestUploader;
+        }
     }
     [ProtoContract]
     public class CompanionData
@@ -85,6 +113,20 @@ namespace VF_RealmPlayersDatabase.PlayerData
             {
                 Uploaders.Add(_UploadID);
             }
+        }
+        public UploadID GetEarliestUpload()
+        {
+            if (Uploaders.Count == 0)
+                return UploadID.Null();
+            UploadID earliestUploader = Uploaders.First();
+            foreach (var uploader in Uploaders)
+            {
+                if (uploader.GetTime() < earliestUploader.GetTime())
+                {
+                    earliestUploader = uploader;
+                }
+            }
+            return earliestUploader;
         }
     }
     [ProtoContract]
