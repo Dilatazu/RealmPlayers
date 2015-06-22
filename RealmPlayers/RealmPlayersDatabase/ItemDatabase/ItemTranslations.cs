@@ -71,7 +71,7 @@ namespace VF
             {"Spotted Panther", 8628},
             {"Striped Frostsaber", 8631},
             {"Striped Nightsaber", 8629},
-            {"Tawny Sabercat", SPELL_MODIFIER + 16059},
+            {"Tawny Sabercat", 12326},
             
             {"Frostsaber", 12302},
             {"Nightsaber", 12303},
@@ -79,7 +79,7 @@ namespace VF
             {"Swift Frostsaber", 8632},
             {"Swift Stormsaber", 18902},
             {"Swift Mistsaber", 18767},
-            {"Swift Dawnsaber", SPELL_MODIFIER + 23220},
+            {"Swift Dawnsaber", 18768},
             
             //Dwarf mounts
             {"Brown Ram", 5872},
@@ -152,7 +152,7 @@ namespace VF
             {"Swift Zulian Tiger", 19902},
             
             //Occassional mounts
-            {"Reindeer", 21211},
+            {"Reindeer", 21213},
 
             
             //Warlock mounts
@@ -164,7 +164,7 @@ namespace VF
             {"Summon Charger", SPELL_MODIFIER + 23214},
             
 
-            {"Mr. Wiggles", 23720},
+            {"Mr. Wiggles", 23007},
 
             
             /*---------------------------------TBC MOUNTS---------------------------------*/
@@ -330,14 +330,14 @@ namespace VF
             {"Hawk Owl", 8501},
 
             
-            {"White Tiger Cub", SPELL_MODIFIER + 30152},
+            {"White Tiger Cub", 23712},
 
             {"Zergling", 13582},
             {"Crimson Snake", 10392},
             {"Brown Snake", 10361},
             {"Panda Cub", SPELL_MODIFIER + 26972},
             {"Wood Frog", 11027},
-            {"Blood Parrot", SPELL_MODIFIER + 17567},
+            {"Blood Parrot", 12185},
             {"Brown Prairie Dog", 10394},
             {"Lil' Smoky", 11826},
             {"Lil&apos; Smoky", 11826},
