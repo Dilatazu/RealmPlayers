@@ -206,6 +206,8 @@ namespace RealmPlayersServer
         }
         private static string GenerateItemIcons(List<PlayerData.ItemInfo> _Items, WowRealm _Realm, int _MaxColumn, GenerateItemIconsSetting _Setting = GenerateItemIconsSetting.None, VF_RPDatabase.ItemSummaryDatabase _ItemSummaryDB = null)
         {
+            if (_Items.Count <= 0) return "";
+            if (_MaxColumn <= 0) _MaxColumn = 1;
             WowVersionEnum _WowVersion = StaticValues.GetWowVersion(_Realm);
             string currentItemDatabase = DatabaseAccess.GetCurrentItemDatabaseAddress();
 

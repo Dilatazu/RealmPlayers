@@ -113,6 +113,7 @@ namespace VF_WoWLauncherServer
             if (m_Communicator == null || m_MainThread == null)
                 return;
             UpdateSummaryDatabases();
+            UpdatePlayerSummaryDatabase();
         }
         public void TriggerSaveDatabases()
         {
@@ -158,11 +159,11 @@ namespace VF_WoWLauncherServer
         }
 
         private DateTime m_LastSummaryDatabaseUpdateTime = DateTime.UtcNow.AddMinutes(-15);
-        public void UpdateSummaryDatabases()
+        public void UpdateSummaryDatabases(bool _Force = false)
         {
             lock (m_LockObject)
             {
-                if ((DateTime.UtcNow - m_LastSummaryDatabaseUpdateTime).TotalMinutes > 113)
+                if (_Force == true || (DateTime.UtcNow - m_LastSummaryDatabaseUpdateTime).TotalMinutes > 113)
                 {
                     GC.Collect();
                     var timer = System.Diagnostics.Stopwatch.StartNew();
@@ -175,7 +176,6 @@ namespace VF_WoWLauncherServer
                 }
             }
             GC.Collect();
-            UpdatePlayerSummaryDatabase();
         }
 
         private DateTime m_LastPlayerSummaryDatabaseUpdateTime = DateTime.UtcNow.AddHours(-5);

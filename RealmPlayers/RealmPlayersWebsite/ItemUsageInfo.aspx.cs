@@ -114,6 +114,10 @@ namespace RealmPlayersServer
                                 }
                             }
                         }
+                        if (playerItemData == null)
+                        {
+                            playerItemData = new VF_RealmPlayersDatabase.PlayerData.ItemInfo{ Slot = VF_RealmPlayersDatabase.ItemSlot.Unknown, ItemID = itemID, SuffixID = 0, EnchantID = 0, UniqueID = 0, GemIDs = null};
+                        }
                         ++nr;
                         // style='position: absolute; margin: auto; width:58px; height:58px;'
                         if (nr > pageIndex * count && nr <= (pageIndex + 1) * count)

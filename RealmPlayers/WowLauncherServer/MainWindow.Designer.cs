@@ -50,6 +50,7 @@
             this.c_cmsBetaUsers = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.button10 = new System.Windows.Forms.Button();
+            this.button11 = new System.Windows.Forms.Button();
             this.c_cmsBetaUsers.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -65,7 +66,7 @@
             // 
             // c_btnAddContributor
             // 
-            this.c_btnAddContributor.Location = new System.Drawing.Point(430, 164);
+            this.c_btnAddContributor.Location = new System.Drawing.Point(601, 164);
             this.c_btnAddContributor.Name = "c_btnAddContributor";
             this.c_btnAddContributor.Size = new System.Drawing.Size(91, 23);
             this.c_btnAddContributor.TabIndex = 1;
@@ -76,7 +77,7 @@
             // c_txtAddContributorName
             // 
             this.c_txtAddContributorName.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.c_txtAddContributorName.Location = new System.Drawing.Point(296, 165);
+            this.c_txtAddContributorName.Location = new System.Drawing.Point(467, 165);
             this.c_txtAddContributorName.Name = "c_txtAddContributorName";
             this.c_txtAddContributorName.Size = new System.Drawing.Size(128, 22);
             this.c_txtAddContributorName.TabIndex = 2;
@@ -84,7 +85,7 @@
             // c_lsContributors
             // 
             this.c_lsContributors.FormattingEnabled = true;
-            this.c_lsContributors.Location = new System.Drawing.Point(296, 12);
+            this.c_lsContributors.Location = new System.Drawing.Point(467, 12);
             this.c_lsContributors.Name = "c_lsContributors";
             this.c_lsContributors.Size = new System.Drawing.Size(225, 147);
             this.c_lsContributors.TabIndex = 3;
@@ -92,7 +93,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(12, 99);
+            this.button1.Location = new System.Drawing.Point(270, 142);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(121, 36);
             this.button1.TabIndex = 4;
@@ -112,7 +113,7 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(13, 183);
+            this.button3.Location = new System.Drawing.Point(141, 141);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(121, 36);
             this.button3.TabIndex = 6;
@@ -122,7 +123,7 @@
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(13, 225);
+            this.button4.Location = new System.Drawing.Point(13, 183);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(121, 36);
             this.button4.TabIndex = 7;
@@ -132,7 +133,7 @@
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(139, 99);
+            this.button5.Location = new System.Drawing.Point(268, 184);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(123, 36);
             this.button5.TabIndex = 8;
@@ -142,7 +143,7 @@
             // 
             // button6
             // 
-            this.button6.Location = new System.Drawing.Point(13, 267);
+            this.button6.Location = new System.Drawing.Point(142, 185);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(120, 34);
             this.button6.TabIndex = 9;
@@ -153,7 +154,7 @@
             // button7
             // 
             this.button7.Enabled = false;
-            this.button7.Location = new System.Drawing.Point(122, 388);
+            this.button7.Location = new System.Drawing.Point(226, 399);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(75, 23);
             this.button7.TabIndex = 10;
@@ -174,7 +175,7 @@
             // c_txtBetaAddon
             // 
             this.c_txtBetaAddon.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.c_txtBetaAddon.Location = new System.Drawing.Point(268, 372);
+            this.c_txtBetaAddon.Location = new System.Drawing.Point(439, 372);
             this.c_txtBetaAddon.Name = "c_txtBetaAddon";
             this.c_txtBetaAddon.Size = new System.Drawing.Size(253, 22);
             this.c_txtBetaAddon.TabIndex = 13;
@@ -183,7 +184,7 @@
             // 
             // button9
             // 
-            this.button9.Location = new System.Drawing.Point(430, 400);
+            this.button9.Location = new System.Drawing.Point(601, 400);
             this.button9.Name = "button9";
             this.button9.Size = new System.Drawing.Size(91, 22);
             this.button9.TabIndex = 12;
@@ -194,7 +195,7 @@
             // c_txtBetaUserID
             // 
             this.c_txtBetaUserID.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.c_txtBetaUserID.Location = new System.Drawing.Point(268, 400);
+            this.c_txtBetaUserID.Location = new System.Drawing.Point(439, 400);
             this.c_txtBetaUserID.Name = "c_txtBetaUserID";
             this.c_txtBetaUserID.Size = new System.Drawing.Size(156, 22);
             this.c_txtBetaUserID.TabIndex = 14;
@@ -203,7 +204,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(224, 377);
+            this.label1.Location = new System.Drawing.Point(395, 377);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(38, 13);
             this.label1.TabIndex = 15;
@@ -212,7 +213,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(224, 405);
+            this.label2.Location = new System.Drawing.Point(395, 405);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(40, 13);
             this.label2.TabIndex = 16;
@@ -222,7 +223,7 @@
             // 
             this.c_lsBetaUsers.ContextMenuStrip = this.c_cmsBetaUsers;
             this.c_lsBetaUsers.FormattingEnabled = true;
-            this.c_lsBetaUsers.Location = new System.Drawing.Point(227, 206);
+            this.c_lsBetaUsers.Location = new System.Drawing.Point(398, 206);
             this.c_lsBetaUsers.Name = "c_lsBetaUsers";
             this.c_lsBetaUsers.Size = new System.Drawing.Size(294, 160);
             this.c_lsBetaUsers.TabIndex = 17;
@@ -245,7 +246,7 @@
             // 
             // button10
             // 
-            this.button10.Location = new System.Drawing.Point(13, 343);
+            this.button10.Location = new System.Drawing.Point(13, 359);
             this.button10.Name = "button10";
             this.button10.Size = new System.Drawing.Size(120, 23);
             this.button10.TabIndex = 18;
@@ -253,11 +254,22 @@
             this.button10.UseVisualStyleBackColor = true;
             this.button10.Click += new System.EventHandler(this.button10_Click);
             // 
+            // button11
+            // 
+            this.button11.Location = new System.Drawing.Point(13, 99);
+            this.button11.Name = "button11";
+            this.button11.Size = new System.Drawing.Size(249, 36);
+            this.button11.TabIndex = 19;
+            this.button11.Text = "Update RealmPlayers SummaryDatabases";
+            this.button11.UseVisualStyleBackColor = true;
+            this.button11.Click += new System.EventHandler(this.button11_Click);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(533, 434);
+            this.ClientSize = new System.Drawing.Size(704, 434);
+            this.Controls.Add(this.button11);
             this.Controls.Add(this.button10);
             this.Controls.Add(this.c_lsBetaUsers);
             this.Controls.Add(this.label2);
@@ -310,6 +322,7 @@
         private System.Windows.Forms.ContextMenuStrip c_cmsBetaUsers;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
         private System.Windows.Forms.Button button10;
+        private System.Windows.Forms.Button button11;
     }
 }
 

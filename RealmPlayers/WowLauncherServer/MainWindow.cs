@@ -314,5 +314,17 @@ namespace VF_WoWLauncherServer
             }
             Program.g_RPPDatabaseHandler.TriggerSaveDatabases();
         }
+
+        private void button11_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Program.g_RPPDatabaseHandler.UpdateSummaryDatabases(true);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogException(ex);
+            }
+        }
     }
 }
