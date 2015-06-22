@@ -162,9 +162,13 @@ namespace VF_RealmPlayersDatabase
             DateTime lastSeen = PlayerData.DataParser.ParseLastSeenUTC(_PlayerNode);
             if (lastSeen > DateTime.UtcNow)
             {
-                //Tillåt inte data som är från framtiden(wtf) flagga Contributor som opålitlig
-                _Contributor.SetWarningFlag(Contributor.WarningFlag.DataFromFuture);
-                return;
+                if (lastSeen > DateTime.UtcNow.AddMinutes(2))
+                {
+                    //Tillåt inte data som är från framtiden(wtf) flagga Contributor som opålitlig
+                    _Contributor.SetWarningFlag(Contributor.WarningFlag.DataFromFuture);
+                    return;
+                }
+                lastSeen = DateTime.UtcNow; //Om det är OK så sätter vi LastSeen till UtcNow istället.
             }
             if ((DateTime.UtcNow - lastSeen).TotalDays > 5) //Tillåt inte data som är äldre än 5 dagar
                 return;
