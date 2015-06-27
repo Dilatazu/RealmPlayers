@@ -348,6 +348,7 @@ namespace VF
             {"Brown Rabbit", 29364},
             {"Muckbreath", 33818},
 
+            {"Battle Chicken", 10725},
             {"Mechanical Chicken", 10398},
             {"Mechanical Squirrel", 4401},
             {"Lifelike Toad", 15996},
