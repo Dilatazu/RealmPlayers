@@ -630,39 +630,53 @@ namespace VF_WoWLauncher
                                     , addonUpdateInfo.UpdateDescription, updateOrInstallBy
                                     , new DetailedList.RightSideAddonUpdate(updateButtonText, (_ListItem, _SetProgressBarFunc) =>
                                     {
-                                        _SetProgressBarFunc(0.0f);
-                                        string addonPackageFile = ServerComm.DownloadAddonPackage(addonUpdateInfo.AddonPackageDownloadFTP, addonUpdateInfo.AddonPackageFileSize, (float _DownloadPercentage) => { _SetProgressBarFunc(0.5f * _DownloadPercentage); });
-                                        _SetProgressBarFunc(0.5f);
-                                        if (addonPackageFile != "")
+                                        try
                                         {
-                                            var updateAddons = InstalledAddons.GetAddonsInAddonPackage(addonPackageFile);
-                                            var updatedAddons = InstalledAddons.InstallAddonPackage(addonPackageFile, wowVersion, (float _InstallPercentage) => { _SetProgressBarFunc(0.5f + 0.5f * _InstallPercentage); }, addonUpdateInfo.ClearAccountSavedVariablesRequired || addonUpdateInfo.ClearCharacterSavedVariablesRequired);
-                                            if (updatedAddons != null && updatedAddons.Count > 0)
+                                            _SetProgressBarFunc(0.0f);
+                                            string addonPackageFile = ServerComm.DownloadAddonPackage(addonUpdateInfo.AddonPackageDownloadFTP, addonUpdateInfo.AddonPackageFileSize, (float _DownloadPercentage) => { _SetProgressBarFunc(0.5f * _DownloadPercentage); });
+                                            _SetProgressBarFunc(0.5f);
+                                            if (addonPackageFile != "")
                                             {
-                                                _SetProgressBarFunc(1.0f);
-                                                Utility.MessageBoxShow(updateOrInstallSuccessfullMessage);
-                                                c_dlAddons.BeginInvoke(new Action(() =>
+                                                var updateAddons = InstalledAddons.GetAddonsInAddonPackage(addonPackageFile);
+                                                var updatedAddons = InstalledAddons.InstallAddonPackage(addonPackageFile, wowVersion, (float _InstallPercentage) => { _SetProgressBarFunc(0.5f + 0.5f * _InstallPercentage); }, addonUpdateInfo.ClearAccountSavedVariablesRequired || addonUpdateInfo.ClearCharacterSavedVariablesRequired);
+                                                if (updatedAddons != null && updatedAddons.Count > 0)
                                                 {
-                                                    c_dlAddons.RemoveItem(_ListItem);
-                                                }));
+                                                    _SetProgressBarFunc(1.0f);
+                                                    Utility.MessageBoxShow(updateOrInstallSuccessfullMessage);
+                                                    c_dlAddons.BeginInvoke(new Action(() =>
+                                                    {
+                                                        c_dlAddons.RemoveItem(_ListItem);
+                                                    }));
+                                                }
                                             }
+                                            else
+                                            {
+                                                Utility.MessageBoxShow(installFailedText);
+                                            }
+                                            //c_dlAddons.BeginInvoke(new Action(() =>
+                                            //{
+                                            //    c_dlAddons.RemoveItem(_ListItem);
+                                            //}));
                                         }
-                                        else
+                                        catch (Exception ex)
                                         {
-                                            Utility.MessageBoxShow(installFailedText);
+                                            Logger.LogException(ex);
                                         }
-                                        //c_dlAddons.BeginInvoke(new Action(() =>
-                                        //{
-                                        //    c_dlAddons.RemoveItem(_ListItem);
-                                        //}));
                                     }, () =>
                                     {
-                                        if (addonUpdateInfo.MoreInfoSite == "") 
-                                            Utility.MessageBoxShow("Could not find more info for this addon" + (addonUpdateInfo.AddonName.StartsWith("VF_") ? ", full changelog is always available on the forum: forum.realmplayers.com" : "."));
-                                        else if (addonUpdateInfo.MoreInfoSite.StartsWith("http://"))
-                                            System.Diagnostics.Process.Start(addonUpdateInfo.MoreInfoSite);
-                                        else
-                                            Utility.MessageBoxShow("Unknown \"More Info\" format, Your Launcher may be outdated.");
+                                        try
+                                        {
+                                            if (addonUpdateInfo.MoreInfoSite == "") 
+                                                Utility.MessageBoxShow("Could not find more info for this addon" + (addonUpdateInfo.AddonName.StartsWith("VF_") ? ", full changelog is always available on the forum: forum.realmplayers.com" : "."));
+                                            else if (addonUpdateInfo.MoreInfoSite.StartsWith("http://"))
+                                                System.Diagnostics.Process.Start(addonUpdateInfo.MoreInfoSite);
+                                            else
+                                                Utility.MessageBoxShow("Unknown \"More Info\" format, Your Launcher may be outdated.");
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            Logger.LogException(ex);
+                                        }
                                     }));
                                 //Utility.MessageBoxShow("Updated" + addonUpdateInfo.AddonName);
                                 //c_dlAddons.Refresh();

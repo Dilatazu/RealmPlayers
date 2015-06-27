@@ -201,28 +201,34 @@ namespace VF
         public static List<string> GetFilesInDirectory(string _Directory, string _SearchPattern = "")
         {
             List<string> retList = new List<string>();
-            string[] files;
-            if (_SearchPattern == "")
-                files = System.IO.Directory.GetFiles(_Directory);
-            else
-                files = System.IO.Directory.GetFiles(_Directory, _SearchPattern);
-            foreach (var file in files)
+            if (System.IO.Directory.Exists(_Directory) == true)
             {
-                retList.Add(file.Split('\\', '/').Last());
+                string[] files;
+                if (_SearchPattern == "")
+                    files = System.IO.Directory.GetFiles(_Directory);
+                else
+                    files = System.IO.Directory.GetFiles(_Directory, _SearchPattern);
+                foreach (var file in files)
+                {
+                    retList.Add(file.Split('\\', '/').Last());
+                }
             }
             return retList;
         }
         public static List<string> GetDirectoriesInDirectory(string _Directory, string _SearchPattern = "")
         {
             List<string> retList = new List<string>();
-            string[] dirs;
-            if (_SearchPattern == "")
-                dirs = System.IO.Directory.GetDirectories(_Directory);
-            else
-                dirs = System.IO.Directory.GetDirectories(_Directory, _SearchPattern);
-            foreach (var dir in dirs)
+            if (System.IO.Directory.Exists(_Directory) == true)
             {
-                retList.Add(dir.Split('\\', '/').Last());
+                string[] dirs;
+                if (_SearchPattern == "")
+                    dirs = System.IO.Directory.GetDirectories(_Directory);
+                else
+                    dirs = System.IO.Directory.GetDirectories(_Directory, _SearchPattern);
+                foreach (var dir in dirs)
+                {
+                    retList.Add(dir.Split('\\', '/').Last());
+                }
             }
             return retList;
         }
