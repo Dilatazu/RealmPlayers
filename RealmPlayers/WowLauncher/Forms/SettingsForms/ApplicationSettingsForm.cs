@@ -109,6 +109,10 @@ namespace VF_WoWLauncher
             }
             else
             {
+                if (c_txtWowDirectory.Text.EndsWith("\\") == false && c_txtWowDirectory.Text.EndsWith("/") == false)
+                {
+                    c_txtWowDirectory.Text = c_txtWowDirectory.Text + "\\";
+                }
                 Settings.Instance._WowDirectory = c_txtWowDirectory.Text;
             }
             if (c_cbxEnableTBC.Checked == true)
@@ -146,6 +150,10 @@ namespace VF_WoWLauncher
                 }
                 else
                 {
+                    if (c_txtTBCWowDirectory.Text.EndsWith("\\") == false && c_txtTBCWowDirectory.Text.EndsWith("/") == false)
+                    {
+                        c_txtTBCWowDirectory.Text = c_txtTBCWowDirectory.Text + "\\";
+                    }
                     Settings.Instance._WowTBCDirectory = c_txtTBCWowDirectory.Text;
                 }
             }
