@@ -170,14 +170,16 @@ namespace VF.RaidDamageWebsite
                     VF.Utility.LoadSerialize(g_RDDBDir + _FightFile, out fightDataCollection);
                     m_Fights.Add(_FightFile, Tuple.Create(DateTime.UtcNow, fightDataCollection));
                     
-                    int secondThreshold = 30 * 60;
+                    int secondThreshold = 120 * 60;
                     long currMemory = GC.GetTotalMemory(false);
-                    if (currMemory > 3L * 1024L * 1024L * 1024L)
+                    if (currMemory > 8L * 1024L * 1024L * 1024L)
                         secondThreshold = 0;
-                    else if (currMemory > 2L * 1024L * 1024L * 1024L)
+                    if (currMemory > 7L * 1024L * 1024L * 1024L)
                         secondThreshold = 5 * 60;
-                    else if (currMemory > 1L * 1024L * 1024L * 1024L)
+                    else if (currMemory > 6L * 1024L * 1024L * 1024L)
                         secondThreshold = 20 * 60;
+                    else if (currMemory > 5L * 1024L * 1024L * 1024L)
+                        secondThreshold = 60 * 60;
                     try
                     {
                         Logger.ConsoleWriteLine(HttpContext.Current.Request.UserHostAddress + " - Loaded data file: \"" + _FightFile + "\", Current memory usage: " + ((double)currMemory / 1024.0 / 1024.0).ToString("0.000") + "MB", ConsoleColor.White);
