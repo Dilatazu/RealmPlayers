@@ -186,10 +186,14 @@ namespace VF_WoWLauncherServer
                 if (_Force == true || (DateTime.UtcNow - m_LastPlayerSummaryDatabaseUpdateTime).TotalHours > 6)
                 {
                     var timer = System.Diagnostics.Stopwatch.StartNew();
-                    Database fullDatabase = new Database(m_RPPDBFolder + "Database\\", new DateTime(2012, 5, 1, 0, 0, 0));
-                    fullDatabase.PurgeRealmDBs(true, true);
-
-                    VF_RPDatabase.PlayerSummaryDatabase.GenerateSummaryDatabase(m_RPPDBFolder, fullDatabase);
+                    VF_RPDatabase.PlayerSummaryDatabase playerSummaryDB = new VF_RPDatabase.PlayerSummaryDatabase();
+                    foreach (var realm in Database.ALL_REALMS)
+                    {
+                        Database fullDatabase = new Database(m_RPPDBFolder + "Database\\", new DateTime(2012, 5, 1, 0, 0, 0), new WowRealm[] { realm });
+                        fullDatabase.PurgeRealmDBs(true, true, true);
+                        playerSummaryDB.UpdateRealm(fullDatabase.GetRealm(realm));
+                    }
+                    playerSummaryDB.SaveSummaryDatabase(m_RPPDBFolder);
                     Logger.ConsoleWriteLine("Done Creating Player Summary Database, it took " + (timer.ElapsedMilliseconds / 1000) + " seconds", ConsoleColor.Green);
                     m_LastPlayerSummaryDatabaseUpdateTime = DateTime.UtcNow;
                 }

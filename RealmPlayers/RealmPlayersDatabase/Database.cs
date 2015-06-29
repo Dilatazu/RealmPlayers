@@ -7,7 +7,18 @@ namespace VF_RealmPlayersDatabase
 {
     public class Database
     {
-        public static WowRealm[] ALL_REALMS = new WowRealm[] { WowRealm.Kronos, WowRealm.NostalGeek, WowRealm.Nostalrius, WowRealm.Emerald_Dream, WowRealm.Warsong, WowRealm.Al_Akir, WowRealm.Valkyrie, WowRealm.VanillaGaming, WowRealm.Nefarian, WowRealm.Rebirth, WowRealm.Archangel };
+        public static WowRealm[] ALL_REALMS = new WowRealm[] { 
+            WowRealm.Kronos, 
+            WowRealm.NostalGeek, 
+            WowRealm.Nostalrius, 
+            WowRealm.Emerald_Dream, 
+            WowRealm.Warsong, 
+            WowRealm.Al_Akir, 
+            WowRealm.Valkyrie, 
+            WowRealm.VanillaGaming, 
+            WowRealm.Nefarian, 
+            WowRealm.Rebirth, 
+            WowRealm.Archangel };
 
         Dictionary<WowRealm, RealmDatabase> m_Realms = new Dictionary<WowRealm, RealmDatabase>();
 

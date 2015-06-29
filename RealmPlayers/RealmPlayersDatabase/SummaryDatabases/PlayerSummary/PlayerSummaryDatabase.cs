@@ -59,52 +59,57 @@ namespace VF_RPDatabase
 
         public PlayerSummaryDatabase(RPPDatabase _Database)
         {
-            DateTime nostalrius_HighestRank_FixDate = new DateTime(2017, 5, 30);
             var realmDBs = _Database.GetRealms();
             foreach (var realmDB in realmDBs)
             {
-                foreach (var playerHistory in realmDB.Value.PlayersHistory)
+                UpdateRealm(realmDB.Value);
+            }
+        }
+
+        public void UpdateRealm(VF_RealmPlayersDatabase.RealmDatabase _RealmDB)
+        {
+            DateTime nostalrius_HighestRank_FixDate = new DateTime(2017, 5, 30);
+            foreach (var playerHistory in _RealmDB.PlayersHistory)
+            {
+                try
                 {
-                    try
+                    if (playerHistory.Value.HonorHistory.Count < 1)
+                        continue;
+
+                    PVPSummary playerSummary = new PVPSummary();
+
+                    DateTime currPVPWeek = DateTime.MinValue;
+                    foreach (var honorHistory in playerHistory.Value.HonorHistory)
                     {
-                        if (playerHistory.Value.HonorHistory.Count < 1)
-                            continue;
-
-                        PVPSummary playerSummary = new PVPSummary();
-
-                        DateTime currPVPWeek = DateTime.MinValue;
-                        foreach (var honorHistory in playerHistory.Value.HonorHistory)
+                        if (honorHistory.Data.LifetimeHighestRank > playerSummary.m_HighestRank.Key && honorHistory.Data.LifetimeHighestRank > honorHistory.Data.CurrentRank && (_RealmDB.Realm != WowRealm.Nostalrius || (_RealmDB.Realm == WowRealm.Nostalrius && honorHistory.Uploader.GetTime() > nostalrius_HighestRank_FixDate)))
                         {
-                            if (honorHistory.Data.LifetimeHighestRank > playerSummary.m_HighestRank.Key && honorHistory.Data.LifetimeHighestRank > honorHistory.Data.CurrentRank && (realmDB.Key != WowRealm.Nostalrius || (realmDB.Key == WowRealm.Nostalrius && honorHistory.Uploader.GetTime() > nostalrius_HighestRank_FixDate)))
+                            playerSummary.m_HighestRank = new KeyValuePair<float, DateTime>(honorHistory.Data.LifetimeHighestRank, honorHistory.Uploader.GetTime());
+                        }
+                        else if (honorHistory.Data.GetRankTotal() > playerSummary.m_HighestRank.Key)
+                        {
+                            if (honorHistory.Data.CurrentRank > playerSummary.m_HighestRank.Key)
                             {
-                                playerSummary.m_HighestRank = new KeyValuePair<float, DateTime>(honorHistory.Data.LifetimeHighestRank, honorHistory.Uploader.GetTime());
+                                playerSummary.m_HighestRank = new KeyValuePair<float, DateTime>(honorHistory.Data.GetRankTotal(), honorHistory.Uploader.GetTime());
                             }
-                            else if (honorHistory.Data.GetRankTotal() > playerSummary.m_HighestRank.Key)
+                            else
                             {
-                                if (honorHistory.Data.CurrentRank > playerSummary.m_HighestRank.Key)
-                                {
-                                    playerSummary.m_HighestRank = new KeyValuePair<float, DateTime>(honorHistory.Data.GetRankTotal(), honorHistory.Uploader.GetTime());
-                                }
-                                else
-                                {
-                                    playerSummary.m_HighestRank = new KeyValuePair<float, DateTime>(honorHistory.Data.GetRankTotal(), playerSummary.m_HighestRank.Value);
-                                }
-                            }
-                            if (currPVPWeek < honorHistory.Uploader.GetTime())
-                            {
-                                if (honorHistory.Data.LastWeekStanding > 0)
-                                {
-                                    currPVPWeek = StaticValues.CalculateLastRankUpdadeDateUTC(realmDB.Key, honorHistory.Uploader.GetTime()).AddDays(7);
-                                    playerSummary.m_ActivePVPWeeks += 1;
-                                }
+                                playerSummary.m_HighestRank = new KeyValuePair<float, DateTime>(honorHistory.Data.GetRankTotal(), playerSummary.m_HighestRank.Value);
                             }
                         }
-                        AddPVPSummary(realmDB.Key, playerHistory.Key, playerSummary);
+                        if (currPVPWeek < honorHistory.Uploader.GetTime())
+                        {
+                            if (honorHistory.Data.LastWeekStanding > 0)
+                            {
+                                currPVPWeek = StaticValues.CalculateLastRankUpdadeDateUTC(_RealmDB.Realm, honorHistory.Uploader.GetTime()).AddDays(7);
+                                playerSummary.m_ActivePVPWeeks += 1;
+                            }
+                        }
                     }
-                    catch (Exception ex)
-                    {
-                        VF_RealmPlayersDatabase.Logger.LogException(ex);
-                    }
+                    AddPVPSummary(_RealmDB.Realm, playerHistory.Key, playerSummary);
+                }
+                catch (Exception ex)
+                {
+                    VF_RealmPlayersDatabase.Logger.LogException(ex);
                 }
             }
         }
@@ -127,6 +132,19 @@ namespace VF_RPDatabase
 
             database = new PlayerSummaryDatabase(_Database);
             VF.Utility.SaveSerialize(databaseFile, database);
+        }
+        public static void UpdateSummaryDatabase(string _RootDirectory, RPPDatabase _Database)
+        {
+            PlayerSummaryDatabase database = null;
+            string databaseFile = _RootDirectory + "\\SummaryDatabase\\PlayerSummaryDatabase.dat";
+
+            database = new PlayerSummaryDatabase(_Database);
+            VF.Utility.SaveSerialize(databaseFile, database);
+        }
+        public void SaveSummaryDatabase(string _RootDirectory)
+        {
+            string databaseFile = _RootDirectory + "\\SummaryDatabase\\PlayerSummaryDatabase.dat";
+            VF.Utility.SaveSerialize(databaseFile, this);
         }
     }
 }
