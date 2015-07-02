@@ -402,6 +402,18 @@ namespace VF_RaidDamageDatabase
 		                    Logger.LogException(ex);
 	                    }
                     }
+                    else if (unitData.StartsWith("Z"))
+                    {
+                        try
+                        {
+                            //Zone Definition for 1.9.7, TODO: Implement parsing!
+                            //unitData = "Z Molten Core"
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.LogException(ex);
+                        }
+                    }
                     else if (unitData.StartsWith("B") || unitData.StartsWith("D"))
                     {
                         if (_AddonVersion != "1.8.9" && _AddonVersion != "1.9.0")
