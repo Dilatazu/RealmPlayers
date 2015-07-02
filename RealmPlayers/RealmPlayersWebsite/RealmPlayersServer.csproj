@@ -64,6 +64,8 @@
     <Content Include="Assets\css\bootstrap.min.css" />
     <Content Include="Assets\css\darkstrap.css" />
     <Content Include="Assets\css\style.css" />
+    <Content Include="Assets\css\talent.css" />
+    <Content Include="Assets\css\talentcalc.css" />
     <Content Include="Assets\img\bg\CharacterBackgroundTransparent.png" />
     <Content Include="Assets\img\bg\sidebar-bg-alliance.png" />
     <Content Include="Assets\img\bg\sidebar-bg-horde.png" />
@@ -175,6 +177,9 @@
     <Content Include="Assets\js\guildprogress.js" />
     <Content Include="Assets\js\jquery-1.10.2.min.js" />
     <Content Include="Assets\js\jquery-cookie.js" />
+    <Content Include="Assets\js\talent.js" />
+    <Content Include="Assets\js\TalentCalc.js" />
+    <Content Include="Assets\js\TalentCalc_enus.js" />
     <Content Include="Assets\locale_enus.js" />
     <Content Include="Assets\power.css" />
     <Content Include="Changelog.aspx" />
@@ -204,6 +209,7 @@
     <Content Include="RealmControl.ascx" />
     <Content Include="robots.txt" />
     <Content Include="Sign_Up.aspx" />
+    <Content Include="TalentCalculator.aspx" />
     <Content Include="UserSection.aspx" />
     <Content Include="VF_RealmPlayersIcon32.ico" />
     <Content Include="VF_WoWLauncher.aspx" />
@@ -430,6 +436,13 @@
     <Compile Include="Sign_Up.aspx.designer.cs">
       <DependentUpon>Sign_Up.aspx</DependentUpon>
     </Compile>
+    <Compile Include="TalentCalculator.aspx.cs">
+      <DependentUpon>TalentCalculator.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="TalentCalculator.aspx.designer.cs">
+      <DependentUpon>TalentCalculator.aspx</DependentUpon>
+    </Compile>
     <Compile Include="UserSection.aspx.cs">
       <DependentUpon>UserSection.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -486,6 +499,7 @@
       <HintPath>..\..\Dependencies\protobuf-net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Net" />
     <Reference Include="System.Web" />
@@ -496,7 +510,7 @@
     </Reference>
     <Reference Include="System.Web.Mvc, Version=4.0.0.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-	  <Private>True</Private>
+      <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.Mvc.4.0.40804.0\lib\net40\System.Web.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
