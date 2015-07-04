@@ -9,11 +9,11 @@
         <asp:ListItem Text="Rebirth" Value="REB" />
         <asp:ListItem Text="Nostalrius" Value="NRB" />
         <asp:ListItem Text="Kronos" Value="KRO" />
-        <asp:ListItem Text="Valkyrie" Value="VAL" style="visibility:hidden"/>
-        <asp:ListItem Text="VanillaGaming" Value="VG" style="visibility:hidden"/>
-        <asp:ListItem Text="Nefarian(DE)" Value="NEF" style="visibility:hidden"/>
-        <asp:ListItem Text="NostalGeek(FR)" Value="NG" style="visibility:hidden"/>
-        <asp:ListItem Text="Archangel(TBC)" Value="ArA" style="visibility:hidden"/>
+        <asp:ListItem Text="Valkyrie" Value="VAL" style="visibility:hidden; height:0px; line-height: 0px; overflow:hidden; display:block;"/>
+        <asp:ListItem Text="VanillaGaming" Value="VG" style="visibility:hidden; height:0px; line-height: 0px; overflow:hidden; display:block;"/>
+        <asp:ListItem Text="Nefarian(DE)" Value="NEF" style="visibility:hidden; height:0px; line-height: 0px; overflow:hidden; display:block;"/>
+        <asp:ListItem Text="NostalGeek(FR)" Value="NG" style="visibility:hidden; height:0px; line-height: 0px; overflow:hidden; display:block;"/>
+        <asp:ListItem Text="Archangel(TBC)" Value="ArA" style="visibility:hidden; height:0px; line-height: 0px; overflow:hidden; display:block;"/>
     </asp:RadioButtonList>
 </div>
 <%--</form>--%>
