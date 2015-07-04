@@ -77,58 +77,52 @@ namespace VF_RaidDamageDatabase
             public static void SetAccumParseData(UnitData _UnitData, string _DataString, Dictionary<int, UnitData> _UnitDatas)
             {
                 string[] splitData = _DataString.Split(new char[] { ' ' }, StringSplitOptions.None);
-                try
+                
+                _UnitData.m_UnitID = int.Parse(splitData[0]);
+                UnitData oldData;
+                if (_UnitDatas != null && _UnitDatas.TryGetValue(_UnitData.m_UnitID, out oldData) == true)
                 {
-                    _UnitData.m_UnitID = int.Parse(splitData[0]);
-                    UnitData oldData;
-                    if (_UnitDatas != null && _UnitDatas.TryGetValue(_UnitData.m_UnitID, out oldData) == true)
+                    //Accumulate data to last
+                    _UnitData.I.SetDmg(MergeDataInt(splitData[1], oldData.I.Dmg));
+                    _UnitData.I.SetEffHeal(MergeDataInt(splitData[2], oldData.I.EffHeal));
+                    _UnitData.I.SetDmgTaken(MergeDataInt(splitData[3], oldData.I.DmgTaken));
+                    _UnitData.I.SetOverHeal(MergeDataInt(splitData[4], oldData.I.OverHeal));
+                    //5 = DPS
+                    //6 = HPS
+                    _UnitData.I.SetDeath(MergeDataInt(splitData[7], oldData.I.Death));
+                    _UnitData.I.SetDecurse(MergeDataInt(splitData[8], oldData.I.Decurse));
+                    //9 = DmgCrit
+                    //10 = HealCrit
+                    _UnitData.I.SetEffHealRecv(MergeDataInt(splitData[11], oldData.I.EffHealRecv));
+                    _UnitData.I.SetOverHealRecv(MergeDataInt(splitData[12], oldData.I.OverHealRecv));
+                    int rawHeal = MergeDataInt(splitData[13], 0);
+                    int rawHealRecv = MergeDataInt(splitData[14], 0);
+                    if (rawHeal != _UnitData.I.EffHeal + _UnitData.I.OverHeal
+                    || rawHealRecv != _UnitData.I.EffHealRecv + _UnitData.I.OverHealRecv)
                     {
-                        //Accumulate data to last
-                        _UnitData.I.SetDmg(MergeDataInt(splitData[1], oldData.I.Dmg));
-                        _UnitData.I.SetEffHeal(MergeDataInt(splitData[2], oldData.I.EffHeal));
-                        _UnitData.I.SetDmgTaken(MergeDataInt(splitData[3], oldData.I.DmgTaken));
-                        _UnitData.I.SetOverHeal(MergeDataInt(splitData[4], oldData.I.OverHeal));
-                        //5 = DPS
-                        //6 = HPS
-                        _UnitData.I.SetDeath(MergeDataInt(splitData[7], oldData.I.Death));
-                        _UnitData.I.SetDecurse(MergeDataInt(splitData[8], oldData.I.Decurse));
-                        //9 = DmgCrit
-                        //10 = HealCrit
-                        _UnitData.I.SetEffHealRecv(MergeDataInt(splitData[11], oldData.I.EffHealRecv));
-                        _UnitData.I.SetOverHealRecv(MergeDataInt(splitData[12], oldData.I.OverHealRecv));
-                        int rawHeal = MergeDataInt(splitData[13], 0);
-                        int rawHealRecv = MergeDataInt(splitData[14], 0);
-                        if (rawHeal != _UnitData.I.EffHeal + _UnitData.I.OverHeal
-                        || rawHealRecv != _UnitData.I.EffHealRecv + _UnitData.I.OverHealRecv)
-                        {
-                            //Error?
-                        }
-                        _UnitData.I.SetThreatValue(MergeDataInt(splitData[15], 0));
+                        //Error?
                     }
-                    else
-                    {
-                        //This is first data so no accumulation is done
-                        _UnitData.I.SetDmg(MergeDataInt(splitData[1], 0));
-                        _UnitData.I.SetEffHeal(MergeDataInt(splitData[2], 0));
-                        _UnitData.I.SetDmgTaken(MergeDataInt(splitData[3], 0));
-                        _UnitData.I.SetOverHeal(MergeDataInt(splitData[4], 0));
-                        _UnitData.I.SetDeath(MergeDataInt(splitData[7], 0));
-                        _UnitData.I.SetDecurse(MergeDataInt(splitData[8], 0));
-                        _UnitData.I.SetEffHealRecv(MergeDataInt(splitData[11], 0));
-                        _UnitData.I.SetOverHealRecv(MergeDataInt(splitData[12], 0));
-                        int rawHeal = MergeDataInt(splitData[13], 0);
-                        int rawHealRecv = MergeDataInt(splitData[14], 0);
-                        if (rawHeal != _UnitData.I.EffHeal + _UnitData.I.OverHeal
-                        || rawHealRecv != _UnitData.I.EffHealRecv + _UnitData.I.OverHealRecv)
-                        {
-                            //Error?
-                        }
-                        _UnitData.I.SetThreatValue(MergeDataInt(splitData[15], 0));
-                    }
+                    _UnitData.I.SetThreatValue(MergeDataInt(splitData[15], 0));
                 }
-                catch (Exception)
+                else
                 {
-                    //throw;
+                    //This is first data so no accumulation is done
+                    _UnitData.I.SetDmg(MergeDataInt(splitData[1], 0));
+                    _UnitData.I.SetEffHeal(MergeDataInt(splitData[2], 0));
+                    _UnitData.I.SetDmgTaken(MergeDataInt(splitData[3], 0));
+                    _UnitData.I.SetOverHeal(MergeDataInt(splitData[4], 0));
+                    _UnitData.I.SetDeath(MergeDataInt(splitData[7], 0));
+                    _UnitData.I.SetDecurse(MergeDataInt(splitData[8], 0));
+                    _UnitData.I.SetEffHealRecv(MergeDataInt(splitData[11], 0));
+                    _UnitData.I.SetOverHealRecv(MergeDataInt(splitData[12], 0));
+                    int rawHeal = MergeDataInt(splitData[13], 0);
+                    int rawHealRecv = MergeDataInt(splitData[14], 0);
+                    if (rawHeal != _UnitData.I.EffHeal + _UnitData.I.OverHeal
+                    || rawHealRecv != _UnitData.I.EffHealRecv + _UnitData.I.OverHealRecv)
+                    {
+                        //Error?
+                    }
+                    _UnitData.I.SetThreatValue(MergeDataInt(splitData[15], 0));
                 }
             }
         }
@@ -170,48 +164,42 @@ namespace VF_RaidDamageDatabase
             public static void SetAccumParseData(UnitData _UnitData, string _DataString, Dictionary<int, UnitData> _UnitDatas)
             {
                 string[] splitData = _DataString.Split(new char[] { ' ' }, StringSplitOptions.None);
-                try
+                
+                _UnitData.m_UnitID = int.Parse(splitData[0]);
+                UnitData oldData;
+                if (_UnitDatas != null && _UnitDatas.TryGetValue(_UnitData.m_UnitID, out oldData) == true)
                 {
-                    _UnitData.m_UnitID = int.Parse(splitData[0]);
-                    UnitData oldData;
-                    if (_UnitDatas != null && _UnitDatas.TryGetValue(_UnitData.m_UnitID, out oldData) == true)
-                    {
-                        //Accumulate data to last
-                        _UnitData.I.SetDmg(MergeDataInt(splitData[1], oldData.I.Dmg));
-                        _UnitData.I.SetEffHeal(MergeDataInt(splitData[2], oldData.I.EffHeal));
-                        _UnitData.I.SetDmgTaken(MergeDataInt(splitData[3], oldData.I.DmgTaken));
-                        _UnitData.I.SetOverHeal(MergeDataInt(splitData[4], oldData.I.OverHeal));
-                        _UnitData.I.SetDeath(MergeDataInt(splitData[5], oldData.I.Death));
-                        _UnitData.I2.SetFriendlyDmg(MergeDataInt(splitData[6], oldData.I2.FriendlyDmg));
-                        _UnitData.I.SetDecurse(MergeDataInt(splitData[7], oldData.I.Decurse));
-                        _UnitData.I2.SetCCBreaks(MergeDataInt(splitData[8], oldData.I2.CCBreaks));
-                        _UnitData.I2.SetInterrupts(MergeDataInt(splitData[9], oldData.I2.Interrupts));
-                        _UnitData.I2.SetDispelled(MergeDataInt(splitData[10], oldData.I2.Dispelled));
-                        _UnitData.I.SetEffHealRecv(MergeDataInt(splitData[11], oldData.I.EffHealRecv));
-                        _UnitData.I.SetOverHealRecv(MergeDataInt(splitData[12], oldData.I.OverHealRecv));
-                        _UnitData.I.SetThreatValue(MergeDataInt(splitData[13], 0));
-                    }
-                    else
-                    {
-                        //This is first data so no accumulation is done
-                        _UnitData.I.SetDmg(MergeDataInt(splitData[1], 0));
-                        _UnitData.I.SetEffHeal(MergeDataInt(splitData[2], 0));
-                        _UnitData.I.SetDmgTaken(MergeDataInt(splitData[3], 0));
-                        _UnitData.I.SetOverHeal(MergeDataInt(splitData[4], 0));
-                        _UnitData.I.SetDeath(MergeDataInt(splitData[5], 0));
-                        _UnitData.I2.SetFriendlyDmg(MergeDataInt(splitData[6], 0));
-                        _UnitData.I.SetDecurse(MergeDataInt(splitData[7], 0));
-                        _UnitData.I2.SetCCBreaks(MergeDataInt(splitData[8], 0));
-                        _UnitData.I2.SetInterrupts(MergeDataInt(splitData[9], 0));
-                        _UnitData.I2.SetDispelled(MergeDataInt(splitData[10], 0));
-                        _UnitData.I.SetEffHealRecv(MergeDataInt(splitData[11], 0));
-                        _UnitData.I.SetOverHealRecv(MergeDataInt(splitData[12], 0));
-                        _UnitData.I.SetThreatValue(MergeDataInt(splitData[13], 0));
-                    }
+                    //Accumulate data to last
+                    _UnitData.I.SetDmg(MergeDataInt(splitData[1], oldData.I.Dmg));
+                    _UnitData.I.SetEffHeal(MergeDataInt(splitData[2], oldData.I.EffHeal));
+                    _UnitData.I.SetDmgTaken(MergeDataInt(splitData[3], oldData.I.DmgTaken));
+                    _UnitData.I.SetOverHeal(MergeDataInt(splitData[4], oldData.I.OverHeal));
+                    _UnitData.I.SetDeath(MergeDataInt(splitData[5], oldData.I.Death));
+                    _UnitData.I2.SetFriendlyDmg(MergeDataInt(splitData[6], oldData.I2.FriendlyDmg));
+                    _UnitData.I.SetDecurse(MergeDataInt(splitData[7], oldData.I.Decurse));
+                    _UnitData.I2.SetCCBreaks(MergeDataInt(splitData[8], oldData.I2.CCBreaks));
+                    _UnitData.I2.SetInterrupts(MergeDataInt(splitData[9], oldData.I2.Interrupts));
+                    _UnitData.I2.SetDispelled(MergeDataInt(splitData[10], oldData.I2.Dispelled));
+                    _UnitData.I.SetEffHealRecv(MergeDataInt(splitData[11], oldData.I.EffHealRecv));
+                    _UnitData.I.SetOverHealRecv(MergeDataInt(splitData[12], oldData.I.OverHealRecv));
+                    _UnitData.I.SetThreatValue(MergeDataInt(splitData[13], 0));
                 }
-                catch (Exception)
+                else
                 {
-                    //throw;
+                    //This is first data so no accumulation is done
+                    _UnitData.I.SetDmg(MergeDataInt(splitData[1], 0));
+                    _UnitData.I.SetEffHeal(MergeDataInt(splitData[2], 0));
+                    _UnitData.I.SetDmgTaken(MergeDataInt(splitData[3], 0));
+                    _UnitData.I.SetOverHeal(MergeDataInt(splitData[4], 0));
+                    _UnitData.I.SetDeath(MergeDataInt(splitData[5], 0));
+                    _UnitData.I2.SetFriendlyDmg(MergeDataInt(splitData[6], 0));
+                    _UnitData.I.SetDecurse(MergeDataInt(splitData[7], 0));
+                    _UnitData.I2.SetCCBreaks(MergeDataInt(splitData[8], 0));
+                    _UnitData.I2.SetInterrupts(MergeDataInt(splitData[9], 0));
+                    _UnitData.I2.SetDispelled(MergeDataInt(splitData[10], 0));
+                    _UnitData.I.SetEffHealRecv(MergeDataInt(splitData[11], 0));
+                    _UnitData.I.SetOverHealRecv(MergeDataInt(splitData[12], 0));
+                    _UnitData.I.SetThreatValue(MergeDataInt(splitData[13], 0));
                 }
             }
         }
