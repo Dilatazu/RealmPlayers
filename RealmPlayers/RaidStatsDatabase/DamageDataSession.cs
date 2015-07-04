@@ -124,7 +124,10 @@ namespace VF_RaidDamageDatabase
                                 string instanceName = BossInformation.BossFights[bossName];
                                 int raidID = -1;
                                 DateTime raidResetDateTime = DateTime.MinValue;
-                                FetchRelevantRaidID(currTimeSlice, instanceName, ref raidID, ref raidResetDateTime);
+                                if(FetchRelevantRaidID(currTimeSlice, instanceName, ref raidID, ref raidResetDateTime) == false)
+                                {
+                                    raidID = -1;
+                                }
                                 if (_SaveTrash == true)
                                 {
                                     currTrash.FightDuration = (int)(StartDateTime.AddSeconds(currTimeSlice.Time - StartTime) - currTrash.StartDateTime).TotalSeconds;
@@ -227,7 +230,10 @@ namespace VF_RaidDamageDatabase
                                         string instanceName = BossInformation.BossFights[bossName];
                                         int raidID = -1;
                                         DateTime raidResetDateTime = DateTime.MinValue;
-                                        FetchRelevantRaidID(currTimeSlice, instanceName, ref raidID, ref raidResetDateTime);
+                                        if(FetchRelevantRaidID(currTimeSlice, instanceName, ref raidID, ref raidResetDateTime) == false)
+                                        {
+                                            raidID = -1;
+                                        }
                                         try
                                         {
                                             currFight = new FightData
@@ -445,7 +451,7 @@ namespace VF_RaidDamageDatabase
             return fights;
         }
 
-        private void FetchRelevantRaidID(TimeSlice currTimeSlice, string instanceName, ref int raidID, ref DateTime raidResetDateTime)
+        private bool FetchRelevantRaidID(TimeSlice currTimeSlice, string instanceName, ref int raidID, ref DateTime raidResetDateTime)
         {
             if (RaidIDData.ContainsKey(instanceName))
             {
@@ -469,6 +475,11 @@ namespace VF_RaidDamageDatabase
                     raidID = RaidIDData[instanceName][raidIDEntryIndex].RaidID;
                     raidResetDateTime = RaidIDData[instanceName][raidIDEntryIndex].RaidResetDate;
                 }
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
     }

@@ -291,6 +291,7 @@ namespace VF_RaidDamageDatabase
                     int TFUDViolations = 0;
                     int TUDViolations = 0;
                     int TCUDViolations = 0;
+                    int TGMIDViolations = 0;
                     int TUBBIViolations = 0;
                     int TUBViolations = 0;
                     int TUDBBIViolations = 0;
@@ -321,41 +322,64 @@ namespace VF_RaidDamageDatabase
                         processedTimeSlices.Add(timeSlice);
 
                         //Fixing UnitDatas
-                        Dictionary<int, UnitData> translatedUnitDatas = new Dictionary<int, UnitData>();
-                        foreach(var unitData in timeSlice.UnitDatas)
                         {
-                            if (nameIDTranslationTable.ContainsKey(unitData.Key) == true)
+                            Dictionary<int, UnitData> translatedUnitDatas = new Dictionary<int, UnitData>();
+                            foreach (var unitData in timeSlice.UnitDatas)
                             {
-                                int newUnitID = nameIDTranslationTable[unitData.Key];
-                                unitData.Value.I.SetNewUnitID(newUnitID);
-                                translatedUnitDatas.Add(newUnitID, unitData.Value);
+                                if (nameIDTranslationTable.ContainsKey(unitData.Key) == true)
+                                {
+                                    int newUnitID = nameIDTranslationTable[unitData.Key];
+                                    unitData.Value.I.SetNewUnitID(newUnitID);
+                                    translatedUnitDatas.Add(newUnitID, unitData.Value);
+                                }
+                                else
+                                {
+                                    ++TUDViolations;
+                                }
                             }
-                            else
-                            {
-                                ++TUDViolations;
-                            }
+                            timeSlice.UnitDatas = translatedUnitDatas;
                         }
-                        timeSlice.UnitDatas = translatedUnitDatas;
                         //Fixing UnitDatas
 
                         //Fixing ChangedUnitDatas
-                        List<int> translatedChangedUnitDatas = new List<int>();
-                        foreach (var changedUnitID in timeSlice.ChangedUnitDatas)
                         {
-                            if (nameIDTranslationTable.ContainsKey(changedUnitID) == true)
+                            List<int> translatedChangedUnitDatas = new List<int>();
+                            foreach (var changedUnitID in timeSlice.ChangedUnitDatas)
                             {
-                                translatedChangedUnitDatas.Add(nameIDTranslationTable[changedUnitID]);
+                                if (nameIDTranslationTable.ContainsKey(changedUnitID) == true)
+                                {
+                                    translatedChangedUnitDatas.Add(nameIDTranslationTable[changedUnitID]);
+                                }
+                                else
+                                {
+                                    ++TCUDViolations;
+                                }
                             }
-                            else
-                            {
-                                ++TCUDViolations;
-                            }
+                            timeSlice.ChangedUnitDatas = translatedChangedUnitDatas;
                         }
-                        timeSlice.ChangedUnitDatas = translatedChangedUnitDatas;
                         //Fixing ChangedUnitDatas
 
+                        //Fixing GroupMemberIDs
+                        if (timeSlice.GroupMemberIDs != null)
+                        {
+                            List<int> translatedGroupMemberIDs = new List<int>();
+                            foreach (var unitID in timeSlice.GroupMemberIDs)
+                            {
+                                if (nameIDTranslationTable.ContainsKey(unitID) == true)
+                                {
+                                    translatedGroupMemberIDs.Add(nameIDTranslationTable[unitID]);
+                                }
+                                else
+                                {
+                                    ++TGMIDViolations;
+                                }
+                            }
+                            timeSlice.GroupMemberIDs = translatedGroupMemberIDs;
+                        }
+                        //Fixing GroupMemberIDs
+
                         //Fixing UnitBuffs
-                        if(timeSlice.UnitBuffs != null)
+                        if (timeSlice.UnitBuffs != null)
                         {
                             Dictionary<int, List<BuffInfo>> translatedUnitBuffs = new Dictionary<int, List<BuffInfo>>();
                             foreach (var unitBuff in timeSlice.UnitBuffs)
@@ -433,6 +457,11 @@ namespace VF_RaidDamageDatabase
                     {
                         Logger.ConsoleWriteLine("when generating translatedChangedUnitDatas: "
                             + TCUDViolations + "x THIS IS SERIOUS AND SHOULD NEVER HAPPEN!!! Fight(" + fight.StartDateTime.ToString("yyyy-MM-dd HH:mm:ss") + ")", ConsoleColor.Red);
+                    }
+                    if (TGMIDViolations > 0)
+                    {
+                        Logger.ConsoleWriteLine("when generating translatedGroupMemberIDsDatas: "
+                            + TGMIDViolations + "x THIS IS SERIOUS AND SHOULD NEVER HAPPEN!!! Fight(" + fight.StartDateTime.ToString("yyyy-MM-dd HH:mm:ss") + ")", ConsoleColor.Red);
                     }
                     if (TUBBIViolations > 0)
                     {

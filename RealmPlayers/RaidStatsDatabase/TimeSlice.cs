@@ -38,6 +38,8 @@ namespace VF_RaidDamageDatabase
         public int TimeSliceCounter = 0;
         [ProtoMember(8)]
         public Dictionary<int, List<BuffInfo>> UnitDebuffs = null;
+        [ProtoMember(9)]
+        public List<int> GroupMemberIDs = null;
 
         public bool IsEvent(string _EventType)
         {
@@ -386,7 +388,8 @@ namespace VF_RaidDamageDatabase
                     else if(unitData.StartsWith("R"))
                     {
                         try 
-	                    {	   
+	                    {
+                            GroupMemberIDs = new List<int>();
                             //Raid Definition for 1.8.3, TODO: Implement parsing!
                             //unitData = "R 32 92 82 71 80 93 2 3 492 1" <-- numbers are UnitIDs
                             var raidMembers = unitData.Split(' ');
@@ -395,6 +398,7 @@ namespace VF_RaidDamageDatabase
                                 int raidMemberID = int.Parse(raidMembers[i]);
                                 if (_RaidMemberIDs.Contains(raidMemberID) == false)
                                     _RaidMemberIDs.Add(raidMemberID);
+                                GroupMemberIDs.Add(raidMemberID);
                             }
 	                    }
 	                    catch (Exception ex)
