@@ -5,6 +5,7 @@ using System.Text;
 using ProtoBuf;
 
 using Old_RaidCollection = VF_RaidDamageDatabase.RaidCollection;
+using Old_RaidCollection_Raid = VF_RaidDamageDatabase.RaidCollection_Raid;
 using Old_RaidBossFight = VF_RaidDamageDatabase.RaidBossFight;
 
 namespace VF_RDDatabase
@@ -30,7 +31,7 @@ namespace VF_RDDatabase
         public List<string> m_RaidMembers = new List<string>();
 
         public Raid() { }
-        public Raid(Old_RaidCollection.Raid _Raid)
+        public Raid(Old_RaidCollection_Raid _Raid)
         {
             m_UniqueRaidID = _Raid.UniqueRaidID;
             m_RaidID = _Raid.RaidID;
@@ -39,12 +40,12 @@ namespace VF_RDDatabase
             m_RaidStartDate = _Raid.RaidStartDate;
             m_RaidEndDate = _Raid.RaidEndDate;
         }
-        public void Update(Old_RaidCollection.Raid _Raid, List<Old_RaidBossFight> _RaidBossFights)
+        public void Update(Old_RaidCollection_Raid _Raid, List<Old_RaidBossFight> _RaidBossFights)
         {
             if (m_UniqueRaidID != _Raid.UniqueRaidID 
                 || m_RaidID != _Raid.RaidID 
                 || m_RaidResetDateTime != _Raid.RaidResetDateTime)
-                throw new Exception("Update(RaidCollection.Raid _Raid): _Raid did not match!");
+                throw new Exception("Update(RaidCollection_Raid _Raid): _Raid did not match!");
 
             if(_Raid.RaidStartDate < m_RaidStartDate)
                 m_RaidStartDate = _Raid.RaidStartDate;

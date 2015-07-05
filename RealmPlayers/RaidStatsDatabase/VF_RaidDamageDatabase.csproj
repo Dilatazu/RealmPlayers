@@ -75,6 +75,9 @@
     <Compile Include="NewFormat\Raid.cs" />
     <Compile Include="RaidBossFight.cs" />
     <Compile Include="RaidCollection.cs" />
+    <Compile Include="RaidCollection_Dungeon.cs" />
+    <Compile Include="RaidCollection_FightDataFileInfo.cs" />
+    <Compile Include="RaidCollection_Raid.cs" />
     <Compile Include="RaidInstanceClearData.cs" />
     <Compile Include="RealmDB.cs" />
     <Compile Include="ThreadSafeCache.cs" />

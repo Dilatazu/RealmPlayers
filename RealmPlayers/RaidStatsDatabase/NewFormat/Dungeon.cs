@@ -26,7 +26,7 @@ namespace VF_RDDatabase
     //    public List<string> m_GroupMembers = new List<string>();
         
     //    public Dungeon() { }
-    //    public Dungeon(Old_RaidCollection.Raid _Raid)
+    //    public Dungeon(Old_RaidCollection_Raid _Raid)
     //    {
     //        //m_UniqueRaidID = _Raid.UniqueRaidID;
     //        //m_RaidID = _Raid.RaidID;

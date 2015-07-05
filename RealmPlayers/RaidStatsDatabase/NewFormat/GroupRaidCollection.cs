@@ -5,6 +5,7 @@ using System.Text;
 using ProtoBuf;
 
 using Old_RaidCollection = VF_RaidDamageDatabase.RaidCollection;
+using Old_RaidCollection_Raid = VF_RaidDamageDatabase.RaidCollection_Raid;
 using Old_FightDataCollection = VF_RaidDamageDatabase.FightDataCollection;
 
 using WowRealm = VF_RealmPlayersDatabase.WowRealm;
@@ -97,7 +98,7 @@ namespace VF_RDDatabase
         }
 
 
-        public void GenerateSummary_ReplaceRaid(Old_RaidCollection.Raid _Raid)
+        public void GenerateSummary_ReplaceRaid(Old_RaidCollection_Raid _Raid)
         {
             Raid raid = null;
             if (m_Raids.TryGetValue(_Raid.UniqueRaidID, out raid) == true)
@@ -124,7 +125,7 @@ namespace VF_RDDatabase
                 VF_RaidDamageDatabase.Logger.LogException(ex);
             }
         }
-        public void GenerateSummary_AddRaid(Old_RaidCollection.Raid _Raid)
+        public void GenerateSummary_AddRaid(Old_RaidCollection_Raid _Raid)
         {
             Raid raid = null;
             if (m_Raids.TryGetValue(_Raid.UniqueRaidID, out raid) == false)

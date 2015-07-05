@@ -45,7 +45,7 @@ namespace VF
         {
             return BreadCrumb_AddLink(PageUtility.CreateUrlWithNewQueryValue(_RequestObject, _SkipParam, null), _Name);
         }
-        public static string BreadCrumb_AddRaidOverview(VF_RaidDamageDatabase.RaidCollection.Raid _Raid)
+        public static string BreadCrumb_AddRaidOverview(VF_RaidDamageDatabase.RaidCollection_Raid _Raid)
         {
             return "<li><span class='divider'>/</span> <a href='RaidOverview.aspx?Raid=" + _Raid.UniqueRaidID + "'>"
                 + _Raid.RaidInstance + "(" + _Raid.RaidID.ToString() + ")</a></li>";

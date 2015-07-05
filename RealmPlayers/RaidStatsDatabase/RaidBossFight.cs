@@ -8,14 +8,14 @@ namespace VF_RaidDamageDatabase
 {
     public class RaidBossFight
     {
-        RaidCollection.Raid m_Raid = null;
+        RaidCollection_Raid m_Raid = null;
         int m_RaidBossFightIndex = 0;
         FightDataCollection.FightCacheData m_FightData = null;
         List<FightDataCollection.FightCacheData> m_ExtraFightDataVersions = new List<FightDataCollection.FightCacheData>();
         bool m_IsExtraDataVersion = false;
         ThreadSafeCache m_Cache = new ThreadSafeCache();
 
-        public RaidBossFight(RaidCollection.Raid _Raid, int _RaidBossFightIndex, FightDataCollection.FightCacheData _FightData, List<FightDataCollection.FightCacheData> _ExtraFightDataVersions = null, bool _IsExtraDataVersion = false)
+        public RaidBossFight(RaidCollection_Raid _Raid, int _RaidBossFightIndex, FightDataCollection.FightCacheData _FightData, List<FightDataCollection.FightCacheData> _ExtraFightDataVersions = null, bool _IsExtraDataVersion = false)
         {
             m_Raid = _Raid;
             m_RaidBossFightIndex = _RaidBossFightIndex;
@@ -55,7 +55,7 @@ namespace VF_RaidDamageDatabase
         {
             return m_FightData;
         }
-        public RaidCollection.Raid GetRaid()
+        public RaidCollection_Raid GetRaid()
         {
             return m_Raid;
         }

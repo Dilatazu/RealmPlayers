@@ -147,7 +147,7 @@ namespace VF_WoWLauncherServer
                 if (fights.Fights.Count >= 1)
                 {
                     Logger.ConsoleWriteLine(_fightCollectionFile + " contained " + fights.Fights.Count + " fights", ConsoleColor.Yellow);
-                    List<RaidCollection.Raid> raidsModified = new List<RaidCollection.Raid>();
+                    List<RaidCollection_Raid> raidsModified = new List<RaidCollection_Raid>();
                     m_RaidCollection.AddFightCollection(fights, fightCollectionDatName, raidsModified);
                     //TESTING
                     if (raidsModified.Count > 0)
@@ -239,16 +239,16 @@ namespace VF_WoWLauncherServer
             return 0;
         }
 
-        private void UpdateSummaryDatabase(Dictionary<string, FightDataCollection> _CachedFightDataCollections = null, List<RaidCollection.Raid> _RaidsModified = null, bool _ReplaceRaidsModified = false)
+        private void UpdateSummaryDatabase(Dictionary<string, FightDataCollection> _CachedFightDataCollections = null, List<RaidCollection_Raid> _RaidsModified = null, bool _ReplaceRaidsModified = false)
         {
             var timer = System.Diagnostics.Stopwatch.StartNew();
             //Caching
             Dictionary<string, FightDataCollection> getFightDataCollectionCache = _CachedFightDataCollections;
             if (getFightDataCollectionCache == null)
                 getFightDataCollectionCache = new Dictionary<string, FightDataCollection>();
-            List<RaidCollection.Raid> raidsModified = _RaidsModified;
+            List<RaidCollection_Raid> raidsModified = _RaidsModified;
             if (raidsModified == null)
-                raidsModified = new List<RaidCollection.Raid>();
+                raidsModified = new List<RaidCollection_Raid>();
             Func<string, FightDataCollection> cachedGetFightDataCollectionFunc = (string _File) =>
             {
                 FightDataCollection db = null;
@@ -299,7 +299,7 @@ namespace VF_WoWLauncherServer
             lock (m_LockObject)
             {
                 int[] buggedRaidIDs = { 10933, 10970, 10797 };//2353, 2168, 1840, 2234, 1489, 2106 };
-                List<RaidCollection.Raid> buggedRaids = new List<RaidCollection.Raid>();
+                List<RaidCollection_Raid> buggedRaids = new List<RaidCollection_Raid>();
                 foreach (var raid in m_RaidCollection.m_Raids)
                 {
                     if (raid.Value.Realm == VF_RealmPlayersDatabase.WowRealm.Nostalrius)// 

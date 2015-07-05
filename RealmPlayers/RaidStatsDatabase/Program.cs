@@ -69,7 +69,7 @@ namespace VF_RaidDamageDatabase
                     Logger.ConsoleWriteLine(file + " contained " + fights.Fights.Count + " fights", ConsoleColor.Yellow);
                     if (fights.Fights.Count >= 1)
                     {
-                        List<RaidCollection.Raid> raidsModified = new List<RaidCollection.Raid>();
+                        List<RaidCollection_Raid> raidsModified = new List<RaidCollection_Raid>();
                         raidCollection.AddFightCollection(fights, fightCollectionDatName, raidsModified);
                         //TESTING
                         if (raidsModified.Count > 0)
