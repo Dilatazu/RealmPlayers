@@ -7,6 +7,10 @@ namespace VF_RaidDamageDatabase
 {
     public class BossInformation
     {
+        public static bool IsDungeonZone(string _Zone)
+        {
+            return false;
+        }
         public static Dictionary<string, Dictionary<string, string[]>> InstanceRuns = new Dictionary<string, Dictionary<string, string[]>>
         {
             {"Onyxia's Lair", new Dictionary<string, string[]>{{"Onyxia", new string[]{"Onyxia"}}}},
