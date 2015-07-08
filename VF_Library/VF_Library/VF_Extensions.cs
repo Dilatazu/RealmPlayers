@@ -42,6 +42,9 @@ public static class VF_ListExtensions
 {
     public static string MergeToStringVF(this IEnumerable<string> _List, string _Between = null)
     {
+        if (_List.Count() == 0)
+            return "";
+
         StringBuilder str = new StringBuilder("", _List.Count() * 5);
         foreach (var item in _List)
         {
