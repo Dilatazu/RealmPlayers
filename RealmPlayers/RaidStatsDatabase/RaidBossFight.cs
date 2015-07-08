@@ -8,6 +8,7 @@ namespace VF_RaidDamageDatabase
 {
     public class RaidBossFight
     {
+        RaidCollection_Dungeon m_Dungeon = null;
         RaidCollection_Raid m_Raid = null;
         int m_RaidBossFightIndex = 0;
         FightDataCollection.FightCacheData m_FightData = null;
@@ -17,7 +18,18 @@ namespace VF_RaidDamageDatabase
 
         public RaidBossFight(RaidCollection_Raid _Raid, int _RaidBossFightIndex, FightDataCollection.FightCacheData _FightData, List<FightDataCollection.FightCacheData> _ExtraFightDataVersions = null, bool _IsExtraDataVersion = false)
         {
+            m_Dungeon = null;
             m_Raid = _Raid;
+            m_RaidBossFightIndex = _RaidBossFightIndex;
+            m_FightData = _FightData;
+            if (_ExtraFightDataVersions != null)
+                m_ExtraFightDataVersions = _ExtraFightDataVersions;
+            m_IsExtraDataVersion = _IsExtraDataVersion;
+        }
+        public RaidBossFight(RaidCollection_Dungeon _Dungeon, int _RaidBossFightIndex, FightDataCollection.FightCacheData _FightData, List<FightDataCollection.FightCacheData> _ExtraFightDataVersions = null, bool _IsExtraDataVersion = false)
+        {
+            m_Raid = null;
+            m_Dungeon = _Dungeon;
             m_RaidBossFightIndex = _RaidBossFightIndex;
             m_FightData = _FightData;
             if (_ExtraFightDataVersions != null)
@@ -45,7 +57,14 @@ namespace VF_RaidDamageDatabase
                 otherFightDataVersions.Add(dataVersion);
             }
 
-            return new RaidBossFight(m_Raid, 0x10000 * _VersionNumber + (m_RaidBossFightIndex & 0xFFFF), m_ExtraFightDataVersions[_VersionNumber], otherFightDataVersions, true);
+            if (m_Raid != null)
+            {
+                return new RaidBossFight(m_Raid, 0x10000 * _VersionNumber + (m_RaidBossFightIndex & 0xFFFF), m_ExtraFightDataVersions[_VersionNumber], otherFightDataVersions, true);
+            }
+            else//if(m_Dungeon != null)
+            {
+                return new RaidBossFight(m_Dungeon, 0x10000 * _VersionNumber + (m_RaidBossFightIndex & 0xFFFF), m_ExtraFightDataVersions[_VersionNumber], otherFightDataVersions, true);
+            }
         }
         public FightData GetFightData()
         {
@@ -59,6 +78,10 @@ namespace VF_RaidDamageDatabase
         {
             return m_Raid;
         }
+        public RaidCollection_Dungeon GetDungeon()
+        {
+            return m_Dungeon;
+        }
         public int GetRaidBossFightIndex()
         {
             return m_RaidBossFightIndex;
@@ -69,13 +92,21 @@ namespace VF_RaidDamageDatabase
         }
         public string GetRaidOwner()
         {
-            return m_Raid.RaidOwnerName;
+            if (m_Raid != null)
+                return m_Raid.RaidOwnerName;
+            else//if(m_Dungeon != null)
+                return m_Dungeon.m_GroupMembers.OrderBy((_Value) => _Value).MergeToStringVF("\", \"");
         }
         public bool GetTryCount(out int _TryNumber, out int _TotalTries)
         {
             _TryNumber = 1;
             _TotalTries = 0;
-            var bossFights = m_Raid._GetBossFights();
+            List<RaidBossFight> bossFights = null;
+            if(m_Raid != null)
+                bossFights = m_Raid._GetBossFights();
+            else//if(m_Dungeon != null)
+                bossFights = m_Dungeon._GetBossFights();
+
             if (bossFights == null)
                 return false;
             foreach (var fight in bossFights)

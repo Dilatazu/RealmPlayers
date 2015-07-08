@@ -22,7 +22,7 @@ namespace VF_RaidDamageDatabase
         public RaidCollection()
         { }
 
-        public void AddFightCollection(FightDataCollection _Fights, string _DataFileName, List<RaidCollection_Raid> _ReturnRaidsModified = null, List<RaidCollection_Dungeon> _ReturnDungeonsModified = null)
+        public void AddFightCollection(FightDataCollection _Fights, string _DataFileName, List<RaidCollection_Raid> _ReturnRaidsModified, List<RaidCollection_Dungeon> _ReturnDungeonsModified)
         {
             List<int> raidsAdded = new List<int>();
             List<int> dungeonsAdded = new List<int>();
@@ -71,6 +71,26 @@ namespace VF_RaidDamageDatabase
                             {
                                 if (timeSlice.GroupMemberIDs != null)
                                 {
+                                    foreach (var groupMemberID in timeSlice.GroupMemberIDs)
+                                    {
+                                        groupMembers.AddUnique(_Fights.GetNameFromUnitID(groupMemberID));
+                                    }
+                                }
+                            }
+                        }
+                        if(groupMembers.Count() == 0)
+                        {
+                            bool foundZone = false;
+                            for(int i = fight.m_Fight.TimeSlices.Count - 1; i >= 0; --i)
+                            {
+                                var timeSlice = fight.m_Fight.TimeSlices[i];
+                                if (timeSlice.Zone == dungeonZone)
+                                {
+                                    foundZone = true;
+                                }
+                                if(foundZone == true && timeSlice.GroupMemberIDs != null)
+                                {
+                                    groupMembers.Clear();
                                     foreach (var groupMemberID in timeSlice.GroupMemberIDs)
                                     {
                                         groupMembers.AddUnique(_Fights.GetNameFromUnitID(groupMemberID));

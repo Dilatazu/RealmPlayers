@@ -95,6 +95,119 @@ namespace VF_RaidDamageDatabase
             }
             return new List<string>();
         }
+        private List<VF_RaidDamageDatabase.FightDataCollection.FightCacheData> _GetDungeonFights(Func<string, FightDataCollection> _GetFightDataCollectionFunc, List<Tuple<int, VF_RaidDamageDatabase.FightDataCollection.FightCacheData>> _RetExtraFightDatas = null)
+        {
+            List<VF_RaidDamageDatabase.FightDataCollection.FightCacheData> fights = new List<VF_RaidDamageDatabase.FightDataCollection.FightCacheData>();
+            List<VF_RaidDamageDatabase.FightDataCollection.FightCacheData> extraExtraFights = new List<FightDataCollection.FightCacheData>();
+            foreach (string file in m_DataFiles)
+            {
+                var fightCollection = _GetFightDataCollectionFunc(file);
+
+                foreach (var fight in fightCollection.Fights)
+                {
+                    if (fight.m_Fight.TimeSlices.Count == 0)
+                        continue;
+                    if (fight.m_Fight.TimeSlices[0].GroupMemberIDs == null)
+                        continue;
+
+                    if (fight.m_Fight.StartDateTime >= m_DungeonStartDate && fight.m_Fight.GetEndDateTime() <= m_DungeonEndDate
+                    && BossInformation.BossFights[fight.m_Fight.FightName] == m_Dungeon)
+                    {
+                        
+                        int overlappingFightIndex = fights.FindIndex(_Value => _Value.IsOverlapping(fight));
+                        if (overlappingFightIndex != -1)
+                        {
+                            //Overlapping fights
+                            if (fight.IsBetterVersionOf(fights[overlappingFightIndex]) == true)
+                            {
+                                if (_RetExtraFightDatas != null)
+                                    _RetExtraFightDatas.Add(Tuple.Create(overlappingFightIndex, fights[overlappingFightIndex]));
+                                fights[overlappingFightIndex] = fight;
+                            }
+                            else
+                            {
+                                if (_RetExtraFightDatas != null)
+                                    _RetExtraFightDatas.Add(Tuple.Create(overlappingFightIndex, fight));
+                            }
+                        }
+                        else
+                        {
+                            fights.Add(fight);
+                        }
+                        //else
+                        //{
+                        //    extraExtraFights.Add(fight);
+                        //}
+                        
+                    }
+                }
+            }
+            if (extraExtraFights.Count > 0)
+            {
+                if (_RetExtraFightDatas == null)
+                {
+                    Logger.ConsoleWriteLine("This should never happen! Possibly big error!", ConsoleColor.Red);
+                }
+                foreach (var extraExtraFight in extraExtraFights)
+                {
+                    int overlappingFightIndex = fights.FindIndex(_Value => _Value.IsOverlapping(extraExtraFight));
+                    if (overlappingFightIndex != -1)
+                    {
+                        //Overlapping fights
+                        if (_RetExtraFightDatas != null)
+                            _RetExtraFightDatas.Add(Tuple.Create(overlappingFightIndex, extraExtraFight));
+                    }
+                }
+            }
+            return fights;
+        }
+        private List<VF_RaidDamageDatabase.FightDataCollection.FightCacheData> _GetDungeonFightsOrdered(Func<string, FightDataCollection> _GetFightDataCollectionFunc)
+        {
+            //_RaidSummary CAN BE NULL
+            return _GetDungeonFights(_GetFightDataCollectionFunc).OrderBy((_Value) => { return _Value.m_Fight.StartDateTime; }).ToList();
+        }
+        public List<RaidBossFight> GetBossFights(Func<string, FightDataCollection> _GetFightDataCollectionFunc)
+        {
+            //_RaidSummary CAN BE NULL
+            if (m_BossFightsUpToDate == false)
+            {
+                m_BossFights.Clear();
+                List<Tuple<int, VF_RaidDamageDatabase.FightDataCollection.FightCacheData>> retExtraFights = new List<Tuple<int, FightDataCollection.FightCacheData>>();
+                var fights = _GetDungeonFights(_GetFightDataCollectionFunc, retExtraFights);
+
+                List<RaidBossFight> bossFights = new List<RaidBossFight>();
+                //var fightsOrdered = _GetRaidFightsOrdered(_GetFightDataCollectionFunc, _RaidSummary);
+                for (int i = 0; i < fights.Count; ++i)
+                {
+                    List<VF_RaidDamageDatabase.FightDataCollection.FightCacheData> extraFights = new List<FightDataCollection.FightCacheData>();
+                    foreach (var retExtraFight in retExtraFights)
+                    {
+                        if (retExtraFight.Item1 == i)
+                            extraFights.Add(retExtraFight.Item2);
+                    }
+                    bossFights.Add(new RaidBossFight(this, i, fights[i], extraFights));
+                }
+                int bossFightIndex = 0;
+                bossFights = bossFights.OrderBy((_Value) => _Value.GetStartDateTime()).ToList();
+                foreach (var bossFight in bossFights)
+                {
+                    bossFight._SetRaidBossFightIndex(bossFightIndex++);
+                }
+                m_BossFights = bossFights;
+
+                m_BossFightsUpToDate = true;
+            }
+            return m_BossFights;
+        }
+        public List<RaidBossFight> GetBossFights(FightDataCollection _FightDataCollection)
+        {
+            List<RaidBossFight> bossFights = new List<RaidBossFight>();
+
+            var fightsOrdered = _GetDungeonFightsOrdered((string _DataFile) => { return _FightDataCollection; });
+            for (int i = 0; i < fightsOrdered.Count; ++i)
+                bossFights.Add(new RaidBossFight(this, i, fightsOrdered[i]));
+            return bossFights;
+        }
         public List<RaidBossFight> _GetBossFights()
         {
             return m_BossFights;

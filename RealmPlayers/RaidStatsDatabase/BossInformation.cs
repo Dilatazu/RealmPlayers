@@ -9,7 +9,7 @@ namespace VF_RaidDamageDatabase
     {
         public static bool IsDungeonZone(string _Zone)
         {
-            return false;
+            return _Zone == "Stratholme";
         }
         public static Dictionary<string, Dictionary<string, string[]>> InstanceRuns = new Dictionary<string, Dictionary<string, string[]>>
         {
@@ -106,6 +106,27 @@ namespace VF_RaidDamageDatabase
             {"Ahn'Qiraj Temple", "AQ40"},
             {"Naxxramas", "Naxx"},
             
+            ///////////////////////DUNGEONS///////////////////////
+            {"Ragefire Chasm", "RFC"},
+            {"The Deadmines", "DM"},
+	        {"Wailing Caverns", "WC"},
+	        {"Stockades", "STO"},
+	        {"Shadowfang Keep", "SFK"},
+	        {"Blackfathom Deeps", "BFD"},
+	        {"Razorfen Kraul", "RFK"},
+	        {"Gnomeregan", "GNO"},
+	        {"Scarlet Monastery", "SM"},
+	        {"Razorfen Downs", "RFD"},
+	        {"Uldaman", "ULDA"},
+	        {"Zul'Farrak", "ZF"},
+	        {"Maraudon", "MARA"},
+	        {"Sunken Temple", "ST"},
+	        {"Blackrock Depths", "BRD"},
+	        {"Blackrock Spire", "BRS"},
+	        {"Stratholme", "STRAT"},
+	        {"Scholomance", "SCHOLO"},
+	        {"Dire Maul", "DMA"},
+
             ///////////////////////TBC///////////////////////
             {"Karazhan", "KZ"},
             {"Zul'Aman", "ZA"},
@@ -336,13 +357,31 @@ namespace VF_RaidDamageDatabase
             //{"Sir Zeliek", "Naxxramas"},
             {"Sapphiron", "Naxxramas"},
             {"Kel'Thuzad", "Naxxramas"},
+            
+            ///////////////////////DUNGEONS///////////////////////
+            //Stratholme
+            //Living
+            {"Malor the Zealous", "Stratholme"},
+	        {"Cannon Master Willey", "Stratholme"},
+	        {"Archivist Galford", "Stratholme"},
+	        {"Grand Crusader Dathrohan", "Stratholme"},
+	        {"Balnazzar", "Stratholme"},
+	        //Undead
+	        {"Magistrate Barthilas", "Stratholme"},
+            {"Nerub'enkan", "Stratholme"},
+            {"Baroness Anastari", "Stratholme"},
+            {"Maleki the Pallid", "Stratholme"},
+            {"Ramstein the Gorger", "Stratholme"},
+            {"Baron Rivendare", "Stratholme"},
+	        //Optional/Rare
+	        {"The Unforgiven", "Stratholme"},
+            {"Skul", "Stratholme"},
 
 	        //UBRS
-	        {"Pyroguard Emberseer", "UBRS"},
-	        {"Warchief Rend Blackhand", "UBRS"},
-	        {"The Beast", "UBRS"},
-	        {"General Drakkisath", "UBRS"},
-
+	        {"Pyroguard Emberseer", "Blackrock Spire"},
+	        {"Warchief Rend Blackhand", "Blackrock Spire"},
+	        {"The Beast", "Blackrock Spire"},
+	        {"General Drakkisath", "Blackrock Spire"},
 
             ///////////////////////TBC///////////////////////
 
@@ -518,6 +557,9 @@ namespace VF_RaidDamageDatabase
             //{"Razorgore the Untamed", new string[]{"Grethok the Controller", "Blackwing Guardsman", "Death Talon Dragonspawn", "Blackwing Legionnaire", "Blackwing Mage", "Razorgore the Untamed"}},
             //{"Nefarian", new string[]{"Lord Victor Nefarius", "Red Drakonid", "Blue Drakonid", "Green Drakonid", "Black Drakonid", "Bronze Drakonid", "Chromatic Drakonid", "Nefarian"}},
         
+
+            ///////////////////////Dungeons///////////////////////
+            
             ///////////////////////TBC///////////////////////
             {"Romulo and Julianne", new string[]{"Romulo", "Julianne"}},
 	        {"Wizard of Oz", new string[]{"Dorothee", "Tito", "Roar", "Strawman", "Tinhead", "The Crone"}},

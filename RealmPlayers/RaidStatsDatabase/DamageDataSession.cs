@@ -90,9 +90,33 @@ namespace VF_RaidDamageDatabase
             FightData currFight = null;
             int lastFightTime = 0;
             TimeSlice lastFightTimeSlice = null;
+            List<int> currentGroupMemberIDs = null;
             for (int i = 0; i < TimeSlices.Count; ++i)
             {
                 var currTimeSlice = TimeSlices[i];
+                if(currTimeSlice.GroupMemberIDs != null && currTimeSlice.GroupMemberIDs.Count != 0)
+                {
+                    currentGroupMemberIDs = currTimeSlice.GroupMemberIDs;
+                }
+                if (currentGroupMemberIDs != null)
+                {
+                    if (currTrash != null)
+                    {
+                        if (currTrash.TimeSlices.Count >= 1
+                            && currTrash.TimeSlices[0].GroupMemberIDs == null)
+                        {
+                            currTrash.TimeSlices[0].GroupMemberIDs = new List<int>(currentGroupMemberIDs);
+                        }
+                    }
+                    if (currFight != null)
+                    {
+                        if (currFight.TimeSlices.Count >= 1
+                            && currFight.TimeSlices[0].GroupMemberIDs == null)
+                        {
+                            currFight.TimeSlices[0].GroupMemberIDs = new List<int>(currentGroupMemberIDs);
+                        }
+                    }
+                }
                 if (_SaveTrash == true)
                 {
                     if (currTrash == null && currFight == null)

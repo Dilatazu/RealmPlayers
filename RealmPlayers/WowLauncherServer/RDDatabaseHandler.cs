@@ -148,9 +148,10 @@ namespace VF_WoWLauncherServer
                 {
                     Logger.ConsoleWriteLine(_fightCollectionFile + " contained " + fights.Fights.Count + " fights", ConsoleColor.Yellow);
                     List<RaidCollection_Raid> raidsModified = new List<RaidCollection_Raid>();
-                    m_RaidCollection.AddFightCollection(fights, fightCollectionDatName, raidsModified);
+                    List<RaidCollection_Dungeon> dungeonsModified = new List<RaidCollection_Dungeon>();
+                    m_RaidCollection.AddFightCollection(fights, fightCollectionDatName, raidsModified, dungeonsModified);
                     //TESTING
-                    if (raidsModified.Count > 0)
+                    if (raidsModified.Count > 0 || dungeonsModified.Count > 0)
                     {
                         Logger.ConsoleWriteLine("--------------------", ConsoleColor.White);
                         foreach (var raid in raidsModified)
@@ -198,6 +199,17 @@ namespace VF_WoWLauncherServer
                                         raid.RaidOwnerName = "PUG";
                                     }
                                 }
+                            }
+                        }
+                        foreach (var dungeon in dungeonsModified)
+                        {
+                            var bossFights = dungeon.GetBossFights(fights);
+                            Logger.ConsoleWriteLine("Dungeon: " + dungeon.m_Dungeon + "(" + dungeon.m_UniqueDungeonID + ") by \"" + dungeon.m_GroupMembers.MergeToStringVF("\", \"") + "\"", ConsoleColor.White);
+                            foreach (var bossFight in bossFights)
+                            {
+                                ++totalFightCount;
+                                bossFight.GetFightDetails(); //Trigger FightDetail request, so we get error here instead of later on the website.
+                                //Logger.ConsoleWriteLine("Fight: " + bossFight.GetBossName() + " added to RaidCollection", ConsoleColor.Green);
                             }
                         }
                         Logger.ConsoleWriteLine("--------------------", ConsoleColor.White);
