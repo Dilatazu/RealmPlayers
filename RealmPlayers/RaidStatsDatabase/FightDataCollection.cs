@@ -24,13 +24,13 @@ namespace VF_RaidDamageDatabase
             }
             public bool IsOverlapping(FightCacheData _FightCacheData)
             {
-                var aFightStart = m_Fight.StartDateTime;
-                var aFightEnd = m_Fight.GetEndDateTime();
-                var bFightStart = _FightCacheData.m_Fight.StartDateTime;
-                var bFightEnd = _FightCacheData.m_Fight.GetEndDateTime();
+                var aFightStart = m_Fight.StartDateTime.AddSeconds(-35);
+                var aFightEnd = m_Fight.GetEndDateTime().AddSeconds(35);
+                var bFightStart = _FightCacheData.m_Fight.StartDateTime.AddSeconds(-35);
+                var bFightEnd = _FightCacheData.m_Fight.GetEndDateTime().AddSeconds(35);
 
-                return (aFightStart >= bFightStart && aFightStart <= bFightEnd) || (aFightEnd >= bFightStart && aFightEnd <= bFightEnd)
-                    || (bFightStart >= aFightStart && bFightStart <= aFightEnd) || (bFightEnd >= aFightStart && bFightEnd <= aFightEnd);
+                return m_Fight.FightName == _FightCacheData.m_Fight.FightName && ((aFightStart >= bFightStart && aFightStart <= bFightEnd) || (aFightEnd >= bFightStart && aFightEnd <= bFightEnd)
+                    || (bFightStart >= aFightStart && bFightStart <= aFightEnd) || (bFightEnd >= aFightStart && bFightEnd <= aFightEnd));
             }
             public bool IsBetterVersionOf(FightCacheData _FightCacheData)
             {
