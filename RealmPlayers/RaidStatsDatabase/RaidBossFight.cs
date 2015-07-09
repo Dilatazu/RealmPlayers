@@ -123,73 +123,53 @@ namespace VF_RaidDamageDatabase
             var unitData = GetUnitsData(true);
             return GetFightCacheData().GetAttendingUnits(unitData, _Predicate);
         }
+        public static DateTime LOOT_SERVERTIME_SYNC_BUGFIX_DATE = new DateTime(2015, 07, 10);
+        public int GetLootCount(string _BossName, DateTime _BossFightTime)
+        {
+            if (_BossFightTime < LOOT_SERVERTIME_SYNC_BUGFIX_DATE)
+            {
+                return 2;
+            }
+            else
+            {
+                return 3;
+            }
+        }
         public List<Tuple<string, int>> GetItemDrops()
         {
             try
             {
-                DateTime lootBetweenThreshold_Min = GetStartDateTime().AddSeconds(GetFightDuration());
-                DateTime lootBetweenThreshold_Max = lootBetweenThreshold_Min.AddMinutes(3);
+                DateTime lootBetweenThreshold_Min = m_FightData.m_Fight.GetEndDateTime();
+                DateTime lootBetweenThreshold_Max = lootBetweenThreshold_Min.AddMinutes(30);
+                DateTime lootBetweenThreshold_RealMax = lootBetweenThreshold_Min.AddMinutes(30);
                 List<int> itemDrops = new List<int>();
-                if (GetBossName() == "Twin Emperors")
-                {
-                    var bossLoot = GetFightCacheData().m_FightDataCollection.m_BossLoot;
-                    int boss1LootIndex = bossLoot.FindIndex((_Value) => _Value.Item2 == "Emperor Vek'nilash");
-                    if (boss1LootIndex != -1)
-                        itemDrops = new List<int>(bossLoot[boss1LootIndex].Item3);
-                    int boss2LootIndex = bossLoot.FindIndex((_Value) => _Value.Item2 == "Emperor Vek'lor");
-                    if (boss2LootIndex != -1)
-                        itemDrops.AddRange(bossLoot[boss2LootIndex].Item3);
-                }
-                else
-                {
-                    var bossLoot = GetFightCacheData().m_FightDataCollection.m_BossLoot;
-                    int bossLootIndex = bossLoot.FindIndex((_Value) => _Value.Item2 == GetBossName());
-                    if (bossLootIndex != -1)
-                        itemDrops = new List<int>(bossLoot[bossLootIndex].Item3);
-                }
-
-                List<Tuple<string, int>> receiveItems = new List<Tuple<string, int>>();
-                {
-                    var lootsReceived = GetFightCacheData().m_FightDataCollection.m_PlayerLoot.FindAll((_Value) => _Value.Item1 > lootBetweenThreshold_Min && _Value.Item1 < lootBetweenThreshold_Max);
-                    foreach (var lootReceived in lootsReceived)
-                    {
-                        receiveItems.AddUnique(Tuple.Create(lootReceived.Item2, lootReceived.Item3), (_Value1, _Value2) => _Value1.Item1 == _Value2.Item1 && _Value1.Item2 == _Value2.Item2);
-                    }
-                }
+                _GenerateItemDrops_Loot(GetFightCacheData(), 0, ref lootBetweenThreshold_Max, ref itemDrops);
+                List<Tuple<string, int, DateTime>> receiveItems = new List<Tuple<string, int, DateTime>>();
+                _GenerateItemDrops_ReceiveItems(GetFightCacheData(), 0, lootBetweenThreshold_RealMax, ref receiveItems);
 
                 foreach (var extraFightData in m_ExtraFightDataVersions)
                 {
-                    if (GetBossName() == "Twin Emperors")
+                    var timeDiff = (int)(m_FightData.m_Fight.GetEndDateTime() - extraFightData.m_Fight.GetEndDateTime()).TotalSeconds;
+                    if (lootBetweenThreshold_Max < LOOT_SERVERTIME_SYNC_BUGFIX_DATE)
                     {
-                        var extraBossLoot = extraFightData.m_FightDataCollection.m_BossLoot;
-                        int boss1LootIndex = extraBossLoot.FindIndex((_Value) => _Value.Item2 == "Emperor Vek'nilash");
-                        if (boss1LootIndex != -1)
-                            itemDrops.AddRangeUnique(extraBossLoot[boss1LootIndex].Item3);
-                        int boss2LootIndex = extraBossLoot.FindIndex((_Value) => _Value.Item2 == "Emperor Vek'lor");
-                        if (boss2LootIndex != -1)
-                            itemDrops.AddRangeUnique(extraBossLoot[boss2LootIndex].Item3);
+                        timeDiff = 0;
                     }
-                    else
-                    {
-                        var extraBossLoot = extraFightData.m_FightDataCollection.m_BossLoot;
-                        int extraBossLootIndex = extraBossLoot.FindIndex((_Value) => _Value.Item2 == GetBossName());
-                        if (extraBossLootIndex != -1)
-                        {
-                            itemDrops.AddRangeUnique(extraBossLoot[extraBossLootIndex].Item3);
-                        }
-                    }
-                    var lootsReceived = extraFightData.m_FightDataCollection.m_PlayerLoot.FindAll((_Value) => _Value.Item1 > lootBetweenThreshold_Min && _Value.Item1 < lootBetweenThreshold_Max);
-                    foreach (var lootReceived in lootsReceived)
-                    {
-                        receiveItems.AddUnique(Tuple.Create(lootReceived.Item2, lootReceived.Item3), (_Value1, _Value2) => _Value1.Item1 == _Value2.Item1 && _Value1.Item2 == _Value2.Item2);
-                    }
+                    _GenerateItemDrops_Loot(extraFightData, timeDiff, ref lootBetweenThreshold_Max, ref itemDrops);
+                    _GenerateItemDrops_ReceiveItems(extraFightData, timeDiff, lootBetweenThreshold_RealMax, ref receiveItems);
                 }
+                if (lootBetweenThreshold_Max < LOOT_SERVERTIME_SYNC_BUGFIX_DATE)
+                {
+                    lootBetweenThreshold_Max = lootBetweenThreshold_Min.AddMinutes(3);
+                }
+                //if (lootBetweenThreshold_Max < lootBetweenThreshold_Min.AddSeconds(_TimeDiffSeconds).AddMinutes(3))
+                //    lootBetweenThreshold_Max = lootBetweenThreshold_Min.AddSeconds(_TimeDiffSeconds).AddMinutes(3);
 
-                if (itemDrops.Count < 2)
+                receiveItems = receiveItems.OrderBy((_Value) => _Value.Item3).ToList();
+                if (itemDrops.Count < GetLootCount(GetBossName(), lootBetweenThreshold_Min))
                 {
                     foreach (var receiveItem in receiveItems)
                     {
-                        if (receiveItem.Item2 != 20725)//Nexus Crystal
+                        if (receiveItem.Item2 != 20725 && receiveItem.Item3 >= lootBetweenThreshold_Min && receiveItem.Item3 < lootBetweenThreshold_Max)//Nexus Crystal
                         {
                             itemDrops.AddUnique(receiveItem.Item2);
                         }
@@ -201,7 +181,7 @@ namespace VF_RaidDamageDatabase
                     bool anonymousReceiver = true;
                     foreach (var recvItem in receiveItems)
                     {
-                        if (recvItem.Item2 == item)
+                        if (recvItem.Item2 == item && recvItem.Item3 < lootBetweenThreshold_RealMax)
                         {
                             result.Add(Tuple.Create(recvItem.Item1, recvItem.Item2));
                             receiveItems.Remove(recvItem);
@@ -211,6 +191,11 @@ namespace VF_RaidDamageDatabase
                     }
                     if (anonymousReceiver == true)
                     {
+                        //var playerLoots = GetFightCacheData().m_FightDataCollection.m_PlayerLoot.FindAll((_Value) => _Value.Item3 == item && _Value.Item1 > lootBetweenThreshold_Min);
+                        //foreach(var playerLoot in playerLoots)
+                        //{
+                        //    if(playerLoot.Item2 == )
+                        //}
                         result.Add(Tuple.Create("Unknown", item));
                     }
                 }
@@ -222,6 +207,85 @@ namespace VF_RaidDamageDatabase
 		        Logger.LogException(ex);
                 return new List<Tuple<string, int>>();
 	        }
+        }
+
+        private static void _GenerateItemDrops_ReceiveItems(FightDataCollection.FightCacheData _Fight, int _TimeDiffSeconds, DateTime lootBetweenThreshold_RealMax, ref List<Tuple<string, int, DateTime>> receiveItems)
+        {
+            DateTime lootBetweenThreshold_Min = _Fight.m_Fight.GetEndDateTime();
+            var lootsReceived = _Fight.m_FightDataCollection.m_PlayerLoot.FindAll((_Value) => _Value.Item1 >= lootBetweenThreshold_Min && _Value.Item1 < lootBetweenThreshold_RealMax);
+            foreach (var lootReceived in lootsReceived)
+            {
+                receiveItems.AddUnique(Tuple.Create(lootReceived.Item2, lootReceived.Item3, lootReceived.Item1.AddSeconds(_TimeDiffSeconds)), (_Value1, _Value2) => _Value1.Item1 == _Value2.Item1 && _Value1.Item2 == _Value2.Item2 && Math.Abs((_Value1.Item3 - _Value2.Item3).TotalMinutes) < 3);
+            }
+        }
+        private static void _GenerateItemDrops_Loot(FightDataCollection.FightCacheData _Fight, int _TimeDiffSeconds, ref DateTime lootBetweenThreshold_Max, ref List<int> itemDrops)
+        {
+            DateTime lootBetweenThreshold_Min = _Fight.m_Fight.GetEndDateTime();
+            var bossName = _Fight.m_Fight.FightName;
+            if (bossName == "Twin Emperors")
+            {
+                var bossLoot = _Fight.m_FightDataCollection.m_BossLoot;
+                int boss1LootIndex = bossLoot.FindIndex((_Value) => _Value.Item2 == "Emperor Vek'nilash");
+                if (boss1LootIndex != -1)
+                    itemDrops.AddRangeUnique(bossLoot[boss1LootIndex].Item3);
+                int boss2LootIndex = bossLoot.FindIndex((_Value) => _Value.Item2 == "Emperor Vek'lor");
+                if (boss2LootIndex != -1)
+                    itemDrops.AddRangeUnique(bossLoot[boss2LootIndex].Item3);
+            }
+            else
+            {
+                var allFights = _Fight.m_FightDataCollection.Fights.OrderBy((_Value) => _Value.m_Fight.StartDateTime);
+                //string fightZone = _Fight.m_Fight.TimeSlices.First().Zone;//BossInformation.BossFights[_Fight.m_Fight.FightName];
+                
+                DateTime nextFightDateTime = lootBetweenThreshold_Max;
+                for (int i = 0; i < allFights.Count(); ++i)
+                {
+                    var fight = allFights.ElementAt(i);
+                    if (fight == _Fight)
+                    {
+                        ++i; //Search for next fight
+                        for (; i < allFights.Count(); ++i)
+                        {
+                            var currFight = allFights.ElementAt(i).m_Fight;
+                            if (currFight.StartDateTime.AddSeconds(_TimeDiffSeconds) >= lootBetweenThreshold_Max)
+                                break;
+                            if (currFight.FightName == "Trash")
+                            {
+                                //int startTimeSliceTime = currFight.TimeSlices.First().Time;
+                                //foreach (TimeSlice timeSlice in currFight.TimeSlices)
+                                //{
+                                //    //"The Molten Core" == "Molten Core"
+                                //    if (timeSlice.Zone != fightZone)
+                                //    {
+                                //        nextFightDateTime = currFight.StartDateTime.AddSeconds(_TimeDiffSeconds).AddSeconds(timeSlice.Time - startTimeSliceTime);
+                                //        break;
+                                //    }
+                                //}
+                            }
+                            else
+                            {
+                                nextFightDateTime = currFight.GetEndDateTime().AddSeconds(_TimeDiffSeconds);
+                            }
+                            if (nextFightDateTime < lootBetweenThreshold_Max) lootBetweenThreshold_Max = nextFightDateTime;
+                        }
+                    }
+                }
+               
+                var bossLoot = _Fight.m_FightDataCollection.m_BossLoot;
+                int bossLootIndex = bossLoot.FindIndex((_Value) =>
+                {
+                    var fightTimeDiff = _Value.Item1 - _Fight.m_Fight.StartDateTime;
+                    return _Value.Item2 == bossName && fightTimeDiff.TotalMinutes > -5 && fightTimeDiff.TotalMinutes < 30;
+                });
+                if (bossLootIndex != -1)
+                {
+                    //TODO: Fix so that if there are multiple same items in a bossloot it doesnt addRangeUnique but instead makes sure there are same amount of multiples
+                    if (itemDrops.Count == 0)
+                        itemDrops = new List<int>(bossLoot[bossLootIndex].Item3);
+                    else
+                        itemDrops.AddRangeUnique(bossLoot[bossLootIndex].Item3);
+                }
+            }
         }
         public class FightDetail
         {
