@@ -359,6 +359,17 @@ namespace VF_RaidDamageDatabase
                         string oldDateTimeUTC = newSession.StartDateTime.ToString("yyyy-MM-dd HH:mm:ss");
 
                         newSession.StartDateTime = newSession.StartDateTime.AddHours(hourDiff).AddMinutes(minuteDiff).AddSeconds(secondDiff);
+
+                        for (int qq = 0; qq < newSession.BossLoot.Count; ++qq)
+                        {
+                            var bossLootValue = newSession.BossLoot[qq];
+                            newSession.BossLoot[qq] = new Tuple<DateTime,string,List<int>>(bossLootValue.Item1.AddHours(hourDiff).AddMinutes(minuteDiff).AddSeconds(secondDiff),bossLootValue.Item2, bossLootValue.Item3);
+                        }
+                        for (int qq = 0; qq < newSession.PlayerLoot.Count; ++qq)
+                        {
+                            var playerLootValue = newSession.PlayerLoot[qq];
+                            newSession.PlayerLoot[qq] = new Tuple<DateTime, string, int>(playerLootValue.Item1.AddHours(hourDiff).AddMinutes(minuteDiff).AddSeconds(secondDiff), playerLootValue.Item2, playerLootValue.Item3);
+                        }
                         Logger.ConsoleWriteLine("TimeSynched to ServerTime. old StartDateTimeUTC(" + oldDateTimeUTC + "), new StartDateTimeUTC(" + newSession.StartDateTime.ToString("yyyy-MM-dd HH:mm:ss") + ")", ConsoleColor.White);
                     }
 
