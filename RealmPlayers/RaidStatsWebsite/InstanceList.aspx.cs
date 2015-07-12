@@ -37,12 +37,12 @@ namespace VF.RaidDamageWebsite
 
                 breadCrumbCommon = PageUtility.BreadCrumb_AddHome()
                     + PageUtility.BreadCrumb_AddRealm(realm)
-                    + PageUtility.BreadCrumb_AddLink("RaidList.aspx?Guild=" + guildLimit, guildLimit);
+                    + PageUtility.BreadCrumb_AddLink("RaidList.aspx?Guild=" + guildLimit + "&realm=" + StaticValues.ConvertRealmParam(realm), guildLimit);
                   //  + PageUtility.BreadCrumb_AddFinish("Instances"));
 
                 m_PageInfoHTML = new MvcHtmlString("<h1>Raid Instances for " + guildLimit + "</h1>"
                     + "<p>Fastest instance clears by " + guildLimit + ". Sorted by difficulty.</p>"
-                    + "<p>Note that this does only show data from the guild " + guildLimit + ".<br />If you want to see for all guilds click " + PageUtility.CreateLink("InstanceList.aspx?Realm=" + RealmPlayersServer.StaticValues.ConvertRealmParam(realm), "here") + "</p>");
+                    + "<p>Note that this does only show data from the guild " + guildLimit + ".<br />If you want to see for all guilds click " + PageUtility.CreateLink("InstanceList.aspx?realm=" + RealmPlayersServer.StaticValues.ConvertRealmParam(realm), "here") + "</p>");
             }
             else
             {
@@ -189,7 +189,7 @@ namespace VF.RaidDamageWebsite
                         m_BeforeBarText = "#" + clearNr + " (" + PageUtility.CreateLink("RaidOverview.aspx?Raid=" 
                         + riclear.m_Raid.UniqueRaidID
                         , riclear.m_Raid.RaidStartDate.ToString("yyyy-MM-dd")) + ")",
-                        m_OnBarLeftText = PageUtility.CreateLink("RaidList.aspx?Realm=" + StaticValues.ConvertRealmParam(riclear.m_Raid.CacheGroup.Realm) + "&Guild=" + riclear.m_Raid.CacheGroup.GroupName, riclear.m_Raid.CacheGroup.GroupName + (realm == VF_RealmPlayersDatabase.WowRealm.All ? " (" + StaticValues.ConvertRealmParam(riclear.m_Raid.CacheGroup.Realm) + ")" : "")),
+                        m_OnBarLeftText = PageUtility.CreateLink("RaidList.aspx?realm=" + StaticValues.ConvertRealmParam(riclear.m_Raid.CacheGroup.Realm) + "&Guild=" + riclear.m_Raid.CacheGroup.GroupName, riclear.m_Raid.CacheGroup.GroupName + (realm == VF_RealmPlayersDatabase.WowRealm.All ? " (" + StaticValues.ConvertRealmParam(riclear.m_Raid.CacheGroup.Realm) + ")" : "")),
                         /*PageUtility.CreateLink("http://realmplayers.com/GuildViewer.aspx?realm=" 
                             + RealmPlayersServer.StaticValues.ConvertRealmParam(riclear.m_Raid.Realm) 
                             + "&guild=" + riclear.m_Raid.RaidOwnerName, riclear.m_Raid.RaidOwnerName)*/

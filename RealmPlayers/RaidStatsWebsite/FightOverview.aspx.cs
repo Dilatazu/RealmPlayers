@@ -95,7 +95,7 @@ namespace VF.RaidDamageWebsite
                 //}
                 m_BreadCrumbHTML = new MvcHtmlString(PageUtility.BreadCrumb_AddHome()
                     + PageUtility.BreadCrumb_AddRaidList()
-                + PageUtility.BreadCrumb_AddLink("RaidList.aspx?Guild=" + interestingFight.GetRaid().RaidOwnerName, interestingFight.GetRaid().RaidOwnerName)
+                + PageUtility.BreadCrumb_AddLink("RaidList.aspx?Guild=" + interestingFight.GetRaid().RaidOwnerName + "&realm=" + StaticValues.ConvertRealmParam(realmDB.Realm), interestingFight.GetRaid().RaidOwnerName)
                     + PageUtility.BreadCrumb_AddRaidOverview(interestingFight.GetRaid())
                     + PageUtility.BreadCrumb_AddFinish(interestingFight.GetBossName()));
 
