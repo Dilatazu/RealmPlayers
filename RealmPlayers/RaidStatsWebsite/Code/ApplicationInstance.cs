@@ -253,8 +253,15 @@ namespace VF.RaidDamageWebsite
 
             var currRaid = raidCollection.m_Raids[_UniqueRaidID];
             var groupRC = summaryDB.GetGroupRC(currRaid.Realm, currRaid.RaidOwnerName);
-            var raidSummary = groupRC.GetRaid(_UniqueRaidID);
-            return currRaid.GetBossFights(GetRaidFightCollection, raidSummary);
+            if(groupRC != null)
+            {
+                var raidSummary = groupRC.GetRaid(_UniqueRaidID);
+                return currRaid.GetBossFights(GetRaidFightCollection, raidSummary);
+            }
+            else
+            {
+                return currRaid.GetBossFights(GetRaidFightCollection, null);
+            }
         }
         public List<RaidBossFight> GetDungeonBossFights(int _UniqueDungeonID)
         {

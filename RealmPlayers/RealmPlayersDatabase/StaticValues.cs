@@ -498,6 +498,15 @@ namespace VF_RealmPlayersDatabase
             {"Rebirth", WowRealm.Rebirth},
             {"Test_Server", WowRealm.Test_Server},
             {"TestServer", WowRealm.Test_Server},
+            {"Testserver", WowRealm.Test_Server},
+            {"Test Server", WowRealm.Test_Server},
+            {"Player Test Realm", WowRealm.Test_Server},
+            {"Test Realm 1 - Devs only", WowRealm.Test_Server},
+            {"Test Realm 2 - Devs only", WowRealm.Test_Server},
+            {"Test Realm - IsVV1", WowRealm.Test_Server},
+            {"Test Realm - IsVV2", WowRealm.Test_Server},
+            {"Test Realm - IsVV3", WowRealm.Test_Server},
+            {"Test Realm 3 - Devs only", WowRealm.Test_Server},
             {"Nostalrius Begins PTR", WowRealm.Test_Server},
             {"Nostalrius Begins", WowRealm.Nostalrius},
             //{"Nostalrius", WowRealm.Nostalrius},
@@ -520,7 +529,7 @@ namespace VF_RealmPlayersDatabase
         public static WowVersionEnum GetWowVersion(WowRealm _Realm)
         {
             if (_Realm == WowRealm.Emerald_Dream || _Realm == WowRealm.Warsong || _Realm == WowRealm.Al_Akir
-                || _Realm == WowRealm.Rebirth || _Realm == WowRealm.Valkyrie || _Realm == WowRealm.VanillaGaming || _Realm == WowRealm.Test_Server
+                || _Realm == WowRealm.Rebirth || _Realm == WowRealm.Valkyrie || _Realm == WowRealm.VanillaGaming || _Realm == WowRealm.Test_Server || _Realm == WowRealm.Unknown
                 || _Realm == WowRealm.Nostalrius
                 || _Realm == WowRealm.Kronos
                 || _Realm == WowRealm.NostalGeek

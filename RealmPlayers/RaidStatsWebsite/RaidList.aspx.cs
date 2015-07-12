@@ -71,6 +71,8 @@ namespace VF.RaidDamageWebsite
             {
                 if (raid.Value.Realm == VF_RealmPlayersDatabase.WowRealm.Test_Server)
                     continue;//Skip Test_Server
+                if (raid.Value.RaidOwnerName == "")
+                    continue;//Skip RaidOwnerName == "" because something is obviously wrong!
                 if ((realm == VF_RealmPlayersDatabase.WowRealm.All || realm == raid.Value.Realm) 
                     && (guildStr == null || guildStr == raid.Value.RaidOwnerName) 
                     && InstanceControl.IsFiltered(raid.Value.RaidInstance) == true)

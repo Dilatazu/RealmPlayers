@@ -166,38 +166,46 @@ namespace VF_WoWLauncherServer
                             }
                             if (raid.RaidOwnerName.ToLower() == "unknown" || raid.RaidOwnerName == "")
                             {
-                                lock (m_RPPDatabaseHandler.GetLockObject())
+                                try
                                 {
-                                    var realmDB = new RealmDB(m_RPPDatabaseHandler.GetRealmDB(raid.Realm));
+                                    lock (m_RPPDatabaseHandler.GetLockObject())
+                                    {
+                                        var realmDB = new RealmDB(m_RPPDatabaseHandler.GetRealmDB(raid.Realm));
 
-                                    List<string> attendingPlayers = new List<string>();
-                                    foreach (var bossFight in bossFights)
-                                    {
-                                        attendingPlayers.AddRange(bossFight.GetAttendingUnits(realmDB.RD_IsPlayerFunc(bossFight)));
-                                    }
-                                    if (attendingPlayers.Distinct().Count() > 2)
-                                    {
-                                        Dictionary<string, int> guildCount = new Dictionary<string, int>();
-                                        foreach (var attendingPlayer in attendingPlayers)
+                                        List<string> attendingPlayers = new List<string>();
+                                        foreach (var bossFight in bossFights)
                                         {
-                                            string guildName = realmDB.GetPlayer(attendingPlayer).Guild.GuildName;
-                                            if (guildCount.ContainsKey(guildName))
-                                                guildCount[guildName] = guildCount[guildName] + 1;
-                                            else
-                                                guildCount.Add(guildName, 1);
+                                            attendingPlayers.AddRange(bossFight.GetAttendingUnits(realmDB.RD_IsPlayerFunc(bossFight)));
                                         }
-                                        var biggestGuildCount = guildCount.OrderByDescending((_Value) => _Value.Value).First();
-                                        if (biggestGuildCount.Value >= (int)(0.7f * (float)attendingPlayers.Count))
-                                            raid.RaidOwnerName = biggestGuildCount.Key;
-                                        else
-                                            raid.RaidOwnerName = "PUG";
+                                        if (attendingPlayers.Distinct().Count() > 2)
+                                        {
+                                            Dictionary<string, int> guildCount = new Dictionary<string, int>();
+                                            foreach (var attendingPlayer in attendingPlayers)
+                                            {
+                                                string guildName = realmDB.GetPlayer(attendingPlayer).Guild.GuildName;
+                                                if (guildCount.ContainsKey(guildName))
+                                                    guildCount[guildName] = guildCount[guildName] + 1;
+                                                else
+                                                    guildCount.Add(guildName, 1);
+                                            }
+                                            var biggestGuildCount = guildCount.OrderByDescending((_Value) => _Value.Value).First();
+                                            if (biggestGuildCount.Value >= (int)(0.7f * (float)attendingPlayers.Count))
+                                                raid.RaidOwnerName = biggestGuildCount.Key;
+                                            else
+                                                raid.RaidOwnerName = "PUG";
 
-                                        Logger.ConsoleWriteLine("Raid: Changed RaidOwnerName for " + raid.RaidInstance + "(" + raid.RaidID + ") to " + raid.RaidOwnerName, ConsoleColor.White);
+                                            Logger.ConsoleWriteLine("Raid: Changed RaidOwnerName for " + raid.RaidInstance + "(" + raid.RaidID + ") to " + raid.RaidOwnerName, ConsoleColor.White);
+                                        }
+                                        else
+                                        {
+                                            raid.RaidOwnerName = "PUG";
+                                        }
                                     }
-                                    else
-                                    {
-                                        raid.RaidOwnerName = "PUG";
-                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    raid.RaidOwnerName = "PUG";
+                                    Logger.LogException(ex);
                                 }
                             }
                         }
@@ -247,6 +255,10 @@ namespace VF_WoWLauncherServer
             catch (Exception ex)
             {
                 Logger.LogException(ex);
+                Logger.ConsoleWriteLine("DUE TO ERRORS WE ARE RELOADING RAIDCOLLECTION!!!", ConsoleColor.Red);
+                //RESET m_RaidCollection!!!
+                VF.Utility.LoadSerialize<RaidCollection>(m_RDDBFolder + "RaidCollection.dat", out m_RaidCollection);
+                Logger.ConsoleWriteLine("RELOAD OF RAIDCOLLECTION WAS SUCCESSFULL!!!", ConsoleColor.Green);
             }
             return 0;
         }
