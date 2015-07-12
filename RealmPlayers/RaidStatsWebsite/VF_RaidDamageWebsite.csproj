@@ -97,6 +97,7 @@
     <Content Include="BossList.aspx" />
     <Content Include="ClassControl.ascx" />
     <Content Include="DungeonList.aspx" />
+    <Content Include="DungeonOverview.aspx" />
     <Content Include="FightOverallOverview.aspx" />
     <Content Include="FightOverview.aspx" />
     <Content Include="Global.asax" />
@@ -159,6 +160,13 @@
     </Compile>
     <Compile Include="DungeonList.aspx.designer.cs">
       <DependentUpon>DungeonList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="DungeonOverview.aspx.cs">
+      <DependentUpon>DungeonOverview.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="DungeonOverview.aspx.designer.cs">
+      <DependentUpon>DungeonOverview.aspx</DependentUpon>
     </Compile>
     <Compile Include="FightOverallOverview.aspx.cs">
       <DependentUpon>FightOverallOverview.aspx</DependentUpon>

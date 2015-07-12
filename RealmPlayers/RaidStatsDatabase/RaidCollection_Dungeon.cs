@@ -168,7 +168,6 @@ namespace VF_RaidDamageDatabase
         }
         public List<RaidBossFight> GetBossFights(Func<string, FightDataCollection> _GetFightDataCollectionFunc)
         {
-            //_RaidSummary CAN BE NULL
             if (m_BossFightsUpToDate == false)
             {
                 m_BossFights.Clear();

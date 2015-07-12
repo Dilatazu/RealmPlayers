@@ -256,6 +256,15 @@ namespace VF.RaidDamageWebsite
             var raidSummary = groupRC.GetRaid(_UniqueRaidID);
             return currRaid.GetBossFights(GetRaidFightCollection, raidSummary);
         }
+        public List<RaidBossFight> GetDungeonBossFights(int _UniqueDungeonID)
+        {
+            var raidCollection = GetRaidCollection();
+            if (raidCollection.m_Dungeons.ContainsKey(_UniqueDungeonID) == false)
+                return null;
+
+            var currDungeon = raidCollection.m_Dungeons[_UniqueDungeonID];
+            return currDungeon.GetBossFights(GetRaidFightCollection);
+        }
 
         public RaidBossFight GetRaidTrashFight(int _UniqueRaidID, int _RaidTrashFightIndex)
         {

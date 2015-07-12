@@ -29,6 +29,11 @@ namespace VF
         {
             return "<li><span class='divider'>/</span> <a href='RaidList.aspx'>Raids</a></li>";
         }
+        public static string BreadCrumb_AddDungeonList()
+        {
+            return "<li><span class='divider'>/</span> <a href='DungeonList.aspx'>Dungeons</a></li>";
+        }
+        
         public static string BreadCrumb_AddGuildRaidList(string _Guild)
         {
             return "<li><span class='divider'>/</span>" + CreateLink_GuildRaidList(_Guild) + "</li>";

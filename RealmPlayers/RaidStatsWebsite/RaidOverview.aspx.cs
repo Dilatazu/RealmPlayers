@@ -316,7 +316,7 @@ namespace VF.RaidDamageWebsite
 
         }
 
-        private static string GenerateTotalMeters(bool filteredData, List<VF_RaidDamageDatabase.RaidBossFight> orderedFights, VF_RaidDamageDatabase.RealmDB realmDB, List<string> attendingRaidPlayers)
+        public static string GenerateTotalMeters(bool filteredData, List<VF_RaidDamageDatabase.RaidBossFight> orderedFights, VF_RaidDamageDatabase.RealmDB realmDB, List<string> attendingRaidPlayers)
         {
             string graphSection = "";
             List<Tuple<string, VF_RaidDamageDatabase.UnitData>> fullUnitDatas = new List<Tuple<string, VF_RaidDamageDatabase.UnitData>>();
