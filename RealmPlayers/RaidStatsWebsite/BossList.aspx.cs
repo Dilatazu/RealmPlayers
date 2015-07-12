@@ -40,7 +40,7 @@ namespace VF.RaidDamageWebsite
 
                 m_BossListInfoHTML = new MvcHtmlString("<h1>Raid Bosses for " + guildLimit + "</h1>"
                     + "<p>Top DPS, HPS and fastest kill times are listed below for the different bosses</p>"
-                    + "<p>Note that this does only show data from the guild " + guildLimit + ".<br />If you want to see for all guilds click " + PageUtility.CreateLink("BossList.aspx?Realm=" + RealmPlayersServer.StaticValues.ConvertRealmParam(realm), "here") + "</p>");
+                    + "<p>Note that this does only show data from the guild " + guildLimit + ".<br />If you want to see for all guilds click " + PageUtility.CreateLink("BossList.aspx?realm=" + RealmPlayersServer.StaticValues.ConvertRealmParam(realm), "here") + "</p>");
             }
             else if(playerLimit != "null")
             {
@@ -52,7 +52,7 @@ namespace VF.RaidDamageWebsite
 
                 m_BossListInfoHTML = new MvcHtmlString("<h1>Raid Boss records for " + playerLimit + "</h1>"
                     + "<p>Top DPS, HPS and fastest kill times are listed below for the different bosses</p>"
-                    + "<p>Note that this does only show data for player " + playerLimit + ".<br />If you want to see for all players on the realm click " + PageUtility.CreateLink("BossList.aspx?Realm=" + RealmPlayersServer.StaticValues.ConvertRealmParam(realm), "here") + "</p>");
+                    + "<p>Note that this does only show data for player " + playerLimit + ".<br />If you want to see for all players on the realm click " + PageUtility.CreateLink("BossList.aspx?realm=" + RealmPlayersServer.StaticValues.ConvertRealmParam(realm), "here") + "</p>");
             }
             else
             {

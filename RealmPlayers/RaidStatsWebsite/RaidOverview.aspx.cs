@@ -115,7 +115,7 @@ namespace VF.RaidDamageWebsite
                 Response.Redirect("RaidList.aspx");
             m_BreadCrumbHTML = new MvcHtmlString(PageUtility.BreadCrumb_AddHome()
                 + PageUtility.BreadCrumb_AddRaidList()
-                + PageUtility.BreadCrumb_AddLink("RaidList.aspx?Guild=" + currRaid.RaidOwnerName, currRaid.RaidOwnerName)
+                + PageUtility.BreadCrumb_AddLink("RaidList.aspx?Guild=" + currRaid.RaidOwnerName + "&realm=" + StaticValues.ConvertRealmParam(realmDB.Realm), currRaid.RaidOwnerName)
                     + PageUtility.BreadCrumb_AddFinish(currRaid.RaidInstance + "(" + currRaid.RaidID.ToString() + ")"));
 
             bool displayLoot = false;

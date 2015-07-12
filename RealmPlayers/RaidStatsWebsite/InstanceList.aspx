@@ -1,5 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/RaidDamageMasterFrame.Master" AutoEventWireup="true" CodeBehind="InstanceList.aspx.cs" Inherits="VF.RaidDamageWebsite.InstanceList" %>
 
+<%@OutputCache Duration="60" VaryByParam="*" %>
+
 <%@ Register Src="RealmControl.ascx" TagPrefix="uc1" TagName="RealmControl" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeaderContent" runat="server">

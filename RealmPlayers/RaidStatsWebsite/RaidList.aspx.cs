@@ -37,9 +37,9 @@ namespace VF.RaidDamageWebsite
                     + PageUtility.BreadCrumb_AddFinish(guildStr)
                     + PageUtility.BreadCrumb_AddFinish("Raids"));
                 m_RaidListInfoHTML = new MvcHtmlString("<h1>Recorded raids for " + guildStr + "</h1><p>Sorted by the time the raid ended</p><p>"
-                    + PageUtility.CreateLink("InstanceList.aspx?Realm=" + RealmPlayersServer.StaticValues.ConvertRealmParam(realm) + "&Guild=" + guildStr, "Instances statistics by guild") + "</p><p>"
-                    + PageUtility.CreateLink("BossList.aspx?Realm=" + RealmPlayersServer.StaticValues.ConvertRealmParam(realm) + "&Guild=" + guildStr, "Bosses statistics by guild") + "</p><p>"
-                    + (guildStr != "PUG" ? PageUtility.CreateLink(PageUtility.HOSTURL_Armory + "GuildViewer.aspx?Realm=" + RealmPlayersServer.StaticValues.ConvertRealmParam(realm) + "&Guild=" + guildStr, "View guild on RealmPlayers(Armory)") : "") + "</p>");
+                    + PageUtility.CreateLink("InstanceList.aspx?realm=" + RealmPlayersServer.StaticValues.ConvertRealmParam(realm) + "&Guild=" + guildStr, "Instances statistics by guild") + "</p><p>"
+                    + PageUtility.CreateLink("BossList.aspx?realm=" + RealmPlayersServer.StaticValues.ConvertRealmParam(realm) + "&Guild=" + guildStr, "Bosses statistics by guild") + "</p><p>"
+                    + (guildStr != "PUG" ? PageUtility.CreateLink(PageUtility.HOSTURL_Armory + "GuildViewer.aspx?realm=" + RealmPlayersServer.StaticValues.ConvertRealmParam(realm) + "&Guild=" + guildStr, "View guild on RealmPlayers(Armory)") : "") + "</p>");
             }
             else
             {
@@ -106,7 +106,7 @@ namespace VF.RaidDamageWebsite
                                 raidOwnerVisual = PageUtility.CreateImage("assets/img/Alliance_32.png") + raidOwnerVisual;
                         }
                         tableBody += PageUtility.CreateTableRow("", PageUtility.CreateTableColumn("#" + i) +
-                            PageUtility.CreateTableColumn(PageUtility.CreateLink("RaidList.aspx?Realm=" + RealmPlayersServer.StaticValues.ConvertRealmParam(raid.Value.Realm) + "&Guild=" + raid.Value.RaidOwnerName, raidOwnerVisual)) +
+                            PageUtility.CreateTableColumn(PageUtility.CreateLink("RaidList.aspx?realm=" + RealmPlayersServer.StaticValues.ConvertRealmParam(raid.Value.Realm) + "&Guild=" + raid.Value.RaidOwnerName, raidOwnerVisual)) +
                             PageUtility.CreateTableColumn(PageUtility.CreateLink("RaidOverview.aspx?Raid=" + raid.Value.UniqueRaidID, PageUtility.CreateImage(StaticValues._RaidInstanceImages[raid.Value.RaidInstance]) + " " + raid.Value.RaidInstance + "(" + raid.Value.RaidID + ")")) +
                             PageUtility.CreateTableColumn(raid.Value.RaidStartDate.ToLocalTime().ToString("yyy-MM-dd HH:mm:ss")) +
                             PageUtility.CreateTableColumn(raid.Value.RaidEndDate.ToLocalTime().ToString("yyy-MM-dd HH:mm:ss")) +

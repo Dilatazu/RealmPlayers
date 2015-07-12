@@ -109,40 +109,42 @@ namespace VF_RaidDamageDatabase
             foreach (string file in m_DataFiles)
             {
                 var fightCollection = _GetFightDataCollectionFunc(file);
-
-                foreach (var fight in fightCollection.Fights)
+                if(fightCollection != null)
                 {
-                    if (fight.m_Fight.RaidID == RaidID
-                    && BossInformation.BossFights[fight.m_Fight.FightName] == RaidInstance)
+                    foreach (var fight in fightCollection.Fights)
                     {
-                        var raidSummaryIndex = int.MaxValue;
-                        if (_RaidSummary != null)
-                            raidSummaryIndex = _RaidSummary.BossFights.FindIndex((_Value) => _Value.StartDateTime == fight.m_Fight.StartDateTime && _Value.DataDetails.RecordedBy == fight.m_Fight.RecordedByPlayer);
-                        if (raidSummaryIndex != -1 || _RetExtraFightDatas != null)
+                        if (fight.m_Fight.RaidID == RaidID
+                        && BossInformation.BossFights[fight.m_Fight.FightName] == RaidInstance)
                         {
-                            int overlappingFightIndex = fights.FindIndex(_Value => _Value.IsOverlapping(fight));
-                            if (overlappingFightIndex != -1)
+                            var raidSummaryIndex = int.MaxValue;
+                            if (_RaidSummary != null)
+                                raidSummaryIndex = _RaidSummary.BossFights.FindIndex((_Value) => _Value.StartDateTime == fight.m_Fight.StartDateTime && _Value.DataDetails.RecordedBy == fight.m_Fight.RecordedByPlayer);
+                            if (raidSummaryIndex != -1 || _RetExtraFightDatas != null)
                             {
-                                //Overlapping fights
-                                if (fight.IsBetterVersionOf(fights[overlappingFightIndex]) == true && raidSummaryIndex != -1)
+                                int overlappingFightIndex = fights.FindIndex(_Value => _Value.IsOverlapping(fight));
+                                if (overlappingFightIndex != -1)
                                 {
-                                    if (_RetExtraFightDatas != null)
-                                        _RetExtraFightDatas.Add(Tuple.Create(overlappingFightIndex, fights[overlappingFightIndex]));
-                                    fights[overlappingFightIndex] = fight;
+                                    //Overlapping fights
+                                    if (fight.IsBetterVersionOf(fights[overlappingFightIndex]) == true && raidSummaryIndex != -1)
+                                    {
+                                        if (_RetExtraFightDatas != null)
+                                            _RetExtraFightDatas.Add(Tuple.Create(overlappingFightIndex, fights[overlappingFightIndex]));
+                                        fights[overlappingFightIndex] = fight;
+                                    }
+                                    else
+                                    {
+                                        if (_RetExtraFightDatas != null)
+                                            _RetExtraFightDatas.Add(Tuple.Create(overlappingFightIndex, fight));
+                                    }
+                                }
+                                else if (raidSummaryIndex != -1)
+                                {
+                                    fights.Add(fight);
                                 }
                                 else
                                 {
-                                    if (_RetExtraFightDatas != null)
-                                        _RetExtraFightDatas.Add(Tuple.Create(overlappingFightIndex, fight));
+                                    extraExtraFights.Add(fight);
                                 }
-                            }
-                            else if (raidSummaryIndex != -1)
-                            {
-                                fights.Add(fight);
-                            }
-                            else
-                            {
-                                extraExtraFights.Add(fight);
                             }
                         }
                     }
@@ -174,31 +176,33 @@ namespace VF_RaidDamageDatabase
             foreach (string file in m_DataFiles)
             {
                 var fightCollection = _GetFightDataCollectionFunc(file);
-
-                foreach (var fight in fightCollection.Fights)
+                if (fightCollection != null)
                 {
-                    try
+                    foreach (var fight in fightCollection.Fights)
                     {
-                        if (fight.m_Fight.RaidID == RaidID
-                        && fight.m_Fight.FightName == "Trash")
+                        try
                         {
-                            int overlappingFightIndex = fights.FindIndex(_Value => _Value.IsOverlapping(fight));
-                            if (overlappingFightIndex != -1)
+                            if (fight.m_Fight.RaidID == RaidID
+                            && fight.m_Fight.FightName == "Trash")
                             {
-                                //Overlapping fights
-                                if (fight.IsBetterVersionOf(fights[overlappingFightIndex]) == true)
+                                int overlappingFightIndex = fights.FindIndex(_Value => _Value.IsOverlapping(fight));
+                                if (overlappingFightIndex != -1)
                                 {
-                                    fights[overlappingFightIndex] = fight;
+                                    //Overlapping fights
+                                    if (fight.IsBetterVersionOf(fights[overlappingFightIndex]) == true)
+                                    {
+                                        fights[overlappingFightIndex] = fight;
+                                    }
+                                }
+                                else
+                                {
+                                    fights.Add(fight);
                                 }
                             }
-                            else
-                            {
-                                fights.Add(fight);
-                            }
                         }
+                        catch (Exception)
+                        { }
                     }
-                    catch (Exception)
-                    { }
                 }
             }
             return fights;
@@ -210,12 +214,14 @@ namespace VF_RaidDamageDatabase
             foreach (string file in m_DataFiles)
             {
                 var fightCollection = _GetFightDataCollectionFunc(file);
-
-                foreach (var fight in fightCollection.Fights)
+                if (fightCollection != null)
                 {
-                    if (fight.m_Fight.RaidID == RaidID)
+                    foreach (var fight in fightCollection.Fights)
                     {
-                        fights.Add(fight);
+                        if (fight.m_Fight.RaidID == RaidID)
+                        {
+                            fights.Add(fight);
+                        }
                     }
                 }
             }

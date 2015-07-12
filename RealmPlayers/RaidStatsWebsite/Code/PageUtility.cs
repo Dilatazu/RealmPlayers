@@ -40,11 +40,11 @@ namespace VF
         }
         public static string BreadCrumb_AddAverageOverview_Boss(string _BossName, WowRealm _Realm, string _GuildLimit)
         {
-            return BreadCrumb_AddLink("AverageOverview.aspx?Boss=" + _BossName + "&Realm=" + RealmPlayersServer.StaticValues.ConvertRealmParam(_Realm) + "&Guild=" + _GuildLimit, "Average Performance vs " + _BossName);
+            return BreadCrumb_AddLink("AverageOverview.aspx?Boss=" + _BossName + "&realm=" + RealmPlayersServer.StaticValues.ConvertRealmParam(_Realm) + "&Guild=" + _GuildLimit, "Average Performance vs " + _BossName);
         }
         public static string BreadCrumb_AddAverageOverview_Instance(string _InstanceName, WowRealm _Realm, string _GuildLimit)
         {
-            return BreadCrumb_AddLink("AverageOverview.aspx?Instance=" + _InstanceName + "&Realm=" + RealmPlayersServer.StaticValues.ConvertRealmParam(_Realm) + "&Guild=" + _GuildLimit, "Average Performance vs " + _InstanceName);
+            return BreadCrumb_AddLink("AverageOverview.aspx?Instance=" + _InstanceName + "&realm=" + RealmPlayersServer.StaticValues.ConvertRealmParam(_Realm) + "&Guild=" + _GuildLimit, "Average Performance vs " + _InstanceName);
         }
         public static string BreadCrumb_AddThisPageWithout(string _Name, System.Web.HttpRequest _RequestObject, string _SkipParam)
         {

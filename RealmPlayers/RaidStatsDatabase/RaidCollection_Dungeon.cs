@@ -102,43 +102,45 @@ namespace VF_RaidDamageDatabase
             foreach (string file in m_DataFiles)
             {
                 var fightCollection = _GetFightDataCollectionFunc(file);
-
-                foreach (var fight in fightCollection.Fights)
+                if (fightCollection != null)
                 {
-                    if (fight.m_Fight.TimeSlices.Count == 0)
-                        continue;
-                    if (fight.m_Fight.TimeSlices[0].GroupMemberIDs == null)
-                        continue;
-
-                    if (fight.m_Fight.StartDateTime >= m_DungeonStartDate && fight.m_Fight.GetEndDateTime() <= m_DungeonEndDate
-                    && BossInformation.BossFights[fight.m_Fight.FightName] == m_Dungeon)
+                    foreach (var fight in fightCollection.Fights)
                     {
-                        
-                        int overlappingFightIndex = fights.FindIndex(_Value => _Value.IsOverlapping(fight));
-                        if (overlappingFightIndex != -1)
+                        if (fight.m_Fight.TimeSlices.Count == 0)
+                            continue;
+                        if (fight.m_Fight.TimeSlices[0].GroupMemberIDs == null)
+                            continue;
+
+                        if (fight.m_Fight.StartDateTime >= m_DungeonStartDate && fight.m_Fight.GetEndDateTime() <= m_DungeonEndDate
+                        && BossInformation.BossFights[fight.m_Fight.FightName] == m_Dungeon)
                         {
-                            //Overlapping fights
-                            if (fight.IsBetterVersionOf(fights[overlappingFightIndex]) == true)
+
+                            int overlappingFightIndex = fights.FindIndex(_Value => _Value.IsOverlapping(fight));
+                            if (overlappingFightIndex != -1)
                             {
-                                if (_RetExtraFightDatas != null)
-                                    _RetExtraFightDatas.Add(Tuple.Create(overlappingFightIndex, fights[overlappingFightIndex]));
-                                fights[overlappingFightIndex] = fight;
+                                //Overlapping fights
+                                if (fight.IsBetterVersionOf(fights[overlappingFightIndex]) == true)
+                                {
+                                    if (_RetExtraFightDatas != null)
+                                        _RetExtraFightDatas.Add(Tuple.Create(overlappingFightIndex, fights[overlappingFightIndex]));
+                                    fights[overlappingFightIndex] = fight;
+                                }
+                                else
+                                {
+                                    if (_RetExtraFightDatas != null)
+                                        _RetExtraFightDatas.Add(Tuple.Create(overlappingFightIndex, fight));
+                                }
                             }
                             else
                             {
-                                if (_RetExtraFightDatas != null)
-                                    _RetExtraFightDatas.Add(Tuple.Create(overlappingFightIndex, fight));
+                                fights.Add(fight);
                             }
+                            //else
+                            //{
+                            //    extraExtraFights.Add(fight);
+                            //}
+
                         }
-                        else
-                        {
-                            fights.Add(fight);
-                        }
-                        //else
-                        //{
-                        //    extraExtraFights.Add(fight);
-                        //}
-                        
                     }
                 }
             }
