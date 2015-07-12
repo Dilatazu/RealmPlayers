@@ -96,6 +96,7 @@
     <Content Include="BossesControl.ascx" />
     <Content Include="BossList.aspx" />
     <Content Include="ClassControl.ascx" />
+    <Content Include="DungeonList.aspx" />
     <Content Include="FightOverallOverview.aspx" />
     <Content Include="FightOverview.aspx" />
     <Content Include="Global.asax" />
@@ -152,6 +153,13 @@
     <Compile Include="Code\Logger.cs" />
     <Compile Include="Code\LootGenerator.cs" />
     <Compile Include="Code\StaticValues.cs" />
+    <Compile Include="DungeonList.aspx.cs">
+      <DependentUpon>DungeonList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="DungeonList.aspx.designer.cs">
+      <DependentUpon>DungeonList.aspx</DependentUpon>
+    </Compile>
     <Compile Include="FightOverallOverview.aspx.cs">
       <DependentUpon>FightOverallOverview.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
