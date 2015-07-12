@@ -335,7 +335,7 @@ namespace VF_RaidDamageDatabase
                             newSession.RaidMembers.Add(newSession.UnitIDToNames[raidMemberID]);
                     }
 
-                    if (TimeSynch_UseServerTime == true)
+                    if (TimeSynch_UseServerTime == true && newSession.StartServerTime >= 0)
                     {
                         int serverTimeHours = (int)(newSession.StartServerTime / 3600);
                         int serverTimeMinutes = (int)((newSession.StartServerTime - serverTimeHours * 3600) / 60);
