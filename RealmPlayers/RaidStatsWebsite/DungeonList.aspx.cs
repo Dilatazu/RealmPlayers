@@ -35,6 +35,17 @@ namespace VF.RaidDamageWebsite
 
             var raidCollection = ApplicationInstance.Instance.GetRaidCollection();
             var orderedDungeons = raidCollection.m_Dungeons.OrderByDescending((_Value) => { return _Value.Value.m_DungeonEndDate; });
+
+            m_TableHeadHTML = new MvcHtmlString(
+                PageUtility.CreateTableRow("",
+                PageUtility.CreateTableColumnHead("#Nr") +
+                PageUtility.CreateTableColumnHead("Players") +
+                PageUtility.CreateTableColumnHead("Dungeon") +
+                PageUtility.CreateTableColumnHead("Start Date") +
+                PageUtility.CreateTableColumnHead("End Date") +
+                PageUtility.CreateTableColumnHead("Realm")));
+
+            
             int nr = 0;
 
             int i = orderedDungeons.Count();
