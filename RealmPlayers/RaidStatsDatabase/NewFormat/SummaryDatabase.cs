@@ -81,11 +81,17 @@ namespace VF_RDDatabase
                 }
             }
         }
+        public static readonly DateTime EARLIEST_HSELLIGIBLE_DATE = new DateTime(2013, 10, 23, 0, 0, 0);
+        public static readonly DateTime EARLIEST_HSELLIGIBLE_NOS_MAJORDOMO_DATE = new DateTime(2015, 6, 1, 0, 0, 0);
         public List<BossFight> GetHSElligibleBossFights(string _BossName, WowRealm _Realm = WowRealm.All, string _GuildFilter = null, string _PlayerFilter = null)
         {
             List<BossFight> fightInstances = new List<BossFight>();
 
-            DateTime earliestCompatibleDate = new DateTime(2013, 10, 23, 0, 0, 0);
+            DateTime earliestCompatibleDate = EARLIEST_HSELLIGIBLE_DATE;
+            if(_BossName == "Majordomo Executus" && _Realm == WowRealm.Nostalrius)
+            {
+                earliestCompatibleDate = EARLIEST_HSELLIGIBLE_NOS_MAJORDOMO_DATE;
+            }
 
             double highestPrecision = 0;
             double totalPrecision = 0;
