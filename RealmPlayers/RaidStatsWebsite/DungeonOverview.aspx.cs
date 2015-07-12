@@ -91,7 +91,7 @@ namespace VF.RaidDamageWebsite
                 ///////////////////////
 
                 tableBody += PageUtility.CreateTableRow("", PageUtility.CreateTableColumn("#" + (fight.GetRaidBossFightIndex() + 1)) +
-                    PageUtility.CreateTableColumn(PageUtility.CreateLink("FightOverview.aspx?Dungeon=" + uniqueDungeonID + "&Fight=" + fight.GetRaidBossFightIndex(), "<font color='#f70002'>" + fight.GetFightData().FightName + "</font>") + attemptStr) +
+                    PageUtility.CreateTableColumn(/*PageUtility.CreateLink("FightOverview.aspx?Dungeon=" + uniqueDungeonID + "&Fight=" + fight.GetRaidBossFightIndex(), */"<font color='#f70002'>" + fight.GetFightData().FightName + "</font>"/*)*/ + attemptStr) +
                     PageUtility.CreateTableColumn(attendingFightPlayers.Count.ToString()) +
                     (displayLoot == true ? PageUtility.CreateTableColumn(lootDropped) : "") +
                     PageUtility.CreateTableColumn(((int)fight.GetTotal((_Value) => { return _Value.I.Death; }

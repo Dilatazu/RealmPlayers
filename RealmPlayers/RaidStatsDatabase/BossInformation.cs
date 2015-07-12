@@ -9,7 +9,7 @@ namespace VF_RaidDamageDatabase
     {
         public static bool IsDungeonZone(string _Zone)
         {
-            return _Zone == "Stratholme";
+            return _Zone == "Ragefire Chasm" || _Zone == "The Deadmines" || _Zone == "Stratholme" || _Zone == "Scholomance";
         }
         public static Dictionary<string, Dictionary<string, string[]>> InstanceRuns = new Dictionary<string, Dictionary<string, string[]>>
         {
@@ -359,6 +359,23 @@ namespace VF_RaidDamageDatabase
             {"Kel'Thuzad", "Naxxramas"},
             
             ///////////////////////DUNGEONS///////////////////////
+            //Ragefire Chasm
+	        {"Oggleflint", "Ragefire Chasm"},
+	        {"Taragaman the Hungerer", "Ragefire Chasm"},
+	        {"Bazzalan", "Ragefire Chasm"},
+	        {"Jergosh the Invoker", "Ragefire Chasm"},
+
+	        //The Deadmines
+	        {"Rhahk'Zor", "The Deadmines"},
+	        {"Sneed", "The Deadmines"},
+	        {"Gilnid", "The Deadmines"},
+	        {"Mr. Smite", "The Deadmines"},
+	        {"Captain Greenskin", "The Deadmines"},
+	        {"Edwin VanCleef", "The Deadmines"},
+	        //Optional/Rare
+	        {"Miner Johnson", "The Deadmines"},
+	        {"Cookie", "The Deadmines"},
+
             //Stratholme
             //Living
             {"Malor the Zealous", "Stratholme"},
@@ -376,6 +393,25 @@ namespace VF_RaidDamageDatabase
 	        //Optional/Rare
 	        {"The Unforgiven", "Stratholme"},
             {"Skul", "Stratholme"},
+
+            //Scholomance
+	        {"Rattlegore", "Scholomance"},
+            {"Vectus And Marduk", "Scholomance"},
+	        //["Marduk Blackpool", "Scholomance"},
+	        //["Vectus", "Scholomance"},
+	        {"Ras Frostwhisper", "Scholomance"},
+	        {"Lorekeeper Polkelt", "Scholomance"},
+	        {"Doctor Theolen Krastinov", "Scholomance"},
+	        {"Instructor Malicia", "Scholomance"},
+	        {"Lady Illucia Barov", "Scholomance"},
+	        {"The Ravenian", "Scholomance"},
+	        {"Lord Alexei Barov", "Scholomance"},
+	        {"Darkmaster Gandling", "Scholomance"},
+	        //Optional/Rare
+	        {"Jandice Barov", "Scholomance"},
+	        {"Kirtonos the Herald", "Scholomance"},
+
+
 
 	        //UBRS
 	        {"Pyroguard Emberseer", "Blackrock Spire"},
