@@ -94,9 +94,16 @@ namespace VF_WoWLauncher
                 return;
             }
             startCheck = DateTime.UtcNow;
-            while (wowProcess.WaitForInputIdle(50) == false && (DateTime.UtcNow - startCheck).TotalSeconds < 20)
+            try
             {
-                System.Windows.Forms.Application.DoEvents();
+                while (wowProcess.WaitForInputIdle(50) == false && (DateTime.UtcNow - startCheck).TotalSeconds < 20)
+                {
+                    System.Windows.Forms.Application.DoEvents();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.LogException(ex);
             }
             //wait 1 extra second
             Utility.SoftThreadSleep(1000);
