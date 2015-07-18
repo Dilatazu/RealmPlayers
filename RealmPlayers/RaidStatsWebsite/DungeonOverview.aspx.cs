@@ -162,7 +162,7 @@ namespace VF.RaidDamageWebsite
             m_RaidOverviewInfoHTML = "<h1>\"" + currDungeon.m_GroupMembers.MergeToStringVF("\", \"") + "\" vs "
                 + currDungeon.m_Dungeon + "(" + currDungeon.m_UniqueDungeonID.ToString() + ")<span class='badge badge-inverse'>" + orderedFights.Count() + " fights</span></h1>"
                 + "<p>Fights recorded" + recordedByString + " between " + startRecordTime.ToString("yyy-MM-dd HH:mm:ss") + " and "
-                + endRecordTime.ToString("yyy-MM-dd HH:mm:ss") + totalRecordTime + "</p>" + playersAttendingStr;
+                + endRecordTime.ToString("yyy-MM-dd HH:mm:ss") + totalRecordTime + "</p>" + "<p><font color='red'>Did you attend this dungeon run and dont want this dungeon recording being publicly available? Send a PM to <a href='http://realmplayers.com:5555/memberlist.php?mode=viewprofile&u=2'>Dilatazu</a> on <a href='http://forum.realmplayers.com'>RealmPlayers forum</a>. Include some kind of proof that you are the player you say you are, dont forget to mention the unique DungeonID of the dungeon run. I will remove any dungeon recordings that requests to be hidden by any attending player.</font></p>" + playersAttendingStr;
 
             string graphStyle = "<style>" + PageUtility.CreateStatsBars_HTML_CSSCode() + "</style>";
             string totalBossMeters = "<h2>Damage/Healing total(only bosses)</h2>" +
