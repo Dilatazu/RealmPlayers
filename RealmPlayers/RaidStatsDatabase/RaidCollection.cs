@@ -130,7 +130,10 @@ namespace VF_RaidDamageDatabase
                         RaidCollection_Dungeon currDungeon = null;
                         if (match.Equals(default(KeyValuePair<int, RaidCollection_Dungeon>)) == false)
                             currDungeon = match.Value;
-                        
+
+                        if (currDungeon == null && fight.m_Fight.FightName == "Trash")
+                            continue;
+
                         if (currDungeon == null)
                         {
                             currDungeon = new RaidCollection_Dungeon();
