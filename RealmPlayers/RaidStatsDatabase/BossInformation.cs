@@ -9,7 +9,10 @@ namespace VF_RaidDamageDatabase
     {
         public static bool IsDungeonZone(string _Zone)
         {
-            return _Zone == "Ragefire Chasm" || _Zone == "The Deadmines" || _Zone == "Stratholme" || _Zone == "Scholomance" || _Zone == "Dire Maul";
+            return _Zone == "Ragefire Chasm" || _Zone == "The Deadmines" || _Zone == "Stratholme"
+                || _Zone == "Scholomance" || _Zone == "Dire Maul" || _Zone == "Hall of Blackhand" 
+                || _Zone == "The Temple of Atal'Hakkar" || _Zone == "Zul'Farrak" || _Zone == "Wailing Caverns"
+                || _Zone == "Shadowfang Keep" || _Zone == "Razorfen Kraul";
         }
         public static Dictionary<string, Dictionary<string, string[]>> InstanceRuns = new Dictionary<string, Dictionary<string, string[]>>
         {
@@ -120,9 +123,9 @@ namespace VF_RaidDamageDatabase
 	        {"Uldaman", "ULDA"},
 	        {"Zul'Farrak", "ZF"},
 	        {"Maraudon", "MARA"},
-	        {"Sunken Temple", "ST"},
+	        {"The Temple of Atal'Hakkar", "ST"},
 	        {"Blackrock Depths", "BRD"},
-	        {"Blackrock Spire", "BRS"},
+	        {"Hall of Blackhand", "BRS"}, //Blackrock Spire
 	        {"Stratholme", "STRAT"},
 	        {"Scholomance", "SCHOLO"},
 	        {"Dire Maul", "DMA"},
@@ -375,6 +378,74 @@ namespace VF_RaidDamageDatabase
 	        //Optional/Rare
 	        {"Miner Johnson", "The Deadmines"},
 	        {"Cookie", "The Deadmines"},
+            
+            //Wailing Caverns
+	        {"Lady Anacondra", "Wailing Caverns"},
+	        {"Lord Cobrahn", "Wailing Caverns"},
+	        {"Lord Pythas", "Wailing Caverns"},
+	        {"Lord Serpentis", "Wailing Caverns"},
+	        {"Verdan the Everliving", "Wailing Caverns"},
+	        //Optional/Rare
+	        {"Skum", "Wailing Caverns"},
+	        {"Kresh", "Wailing Caverns"},
+	        {"Mutanus the Devourer", "Wailing Caverns"},
+
+            //Shadowfang Keep
+	        {"Baron Silverlaine", "Shadowfang Keep"},
+	        {"Commander Springvale", "Shadowfang Keep"},
+	        {"Odo the Blindwatcher", "Shadowfang Keep"},
+	        {"Wolf Master Nandos", "Shadowfang Keep"},
+	        {"Archmage Arugal", "Shadowfang Keep"},
+	        //Optional/Rare
+	        {"Razorclaw the Butcher", "Shadowfang Keep"},
+
+            //Razorfen Kraul
+	        {"Death Speaker Jargba", "Razorfen Kraul"},
+	        {"Aggem Thorncurse", "Razorfen Kraul"},
+	        {"Overlord Ramtusk", "Razorfen Kraul"},
+	        {"Earthcaller Halmgar", "Razorfen Kraul"},
+	        {"Agathelos the Raging", "Razorfen Kraul"},
+	        {"Charlga Razorflank", "Razorfen Kraul"},
+	        //Optional/Rare
+	        {"Blind Hunter", "Razorfen Kraul"},
+
+
+	        //Uldaman
+            {"Ironaya", "Uldaman"},
+            {"Galgann Firehammer", "Uldaman"},
+            {"Ancient Stone Keeper", "Uldaman"},
+            {"Grimlok", "Uldaman"},
+            {"Archaedas", "Uldaman"},
+            //--Optional/Rare
+            {"Revelosh", "Uldaman"},
+            {"The Three Dwarfs", "Uldaman"},
+            {"Obsidian Sentinel", "Uldaman"},
+
+            //Zul'Farrak
+	        {"Theka the Martyr", "Zul'Farrak"},
+	        {"Antu'sul", "Zul'Farrak"},
+	        {"Chief Ukorz Sandscalp", "Zul'Farrak"},
+	        //Optional/Rare
+	        {"Zerillis", "Zul'Farrak"},
+	        {"Shadowpriest Sezz'ziz", "Zul'Farrak"},
+	        {"Gahz'rilla", "Zul'Farrak"},
+
+            //Sunken Temple
+            {"Zul'Lor", "The Temple of Atal'Hakkar"},
+	        {"Mijan", "The Temple of Atal'Hakkar"},
+	        {"Hukku", "The Temple of Atal'Hakkar"},
+	        {"Loro", "The Temple of Atal'Hakkar"},
+	        {"Gasher", "The Temple of Atal'Hakkar"},
+	        {"Weaver", "The Temple of Atal'Hakkar"},
+	        {"Dreamscythe", "The Temple of Atal'Hakkar"},
+	        {"Jammal'an", "The Temple of Atal'Hakkar"}, //Jammal'an the Prophet && Ogom the Wretched
+	        {"Morphaz", "The Temple of Atal'Hakkar"},
+	        {"Hazzas", "The Temple of Atal'Hakkar"},
+	        {"Shade of Eranikus", "The Temple of Atal'Hakkar"},
+	        //Optional/Rare
+	        {"Avatar of Hakkar", "The Temple of Atal'Hakkar"},
+            
+
 
             //Stratholme
             //Living
@@ -434,10 +505,23 @@ namespace VF_RaidDamageDatabase
 
 
 	        //UBRS
-	        {"Pyroguard Emberseer", "Blackrock Spire"},
-	        {"Warchief Rend Blackhand", "Blackrock Spire"},
-	        {"The Beast", "Blackrock Spire"},
-	        {"General Drakkisath", "Blackrock Spire"},
+	        {"Pyroguard Emberseer", "Hall of Blackhand"},
+	        {"Warchief Rend Blackhand", "Hall of Blackhand"},
+	        {"The Beast", "Hall of Blackhand"},
+	        {"General Drakkisath", "Hall of Blackhand"},
+	        //Optional/Rare
+	        {"Jed Runewatcher", "Hall of Blackhand"},
+
+	        //LBRS
+	        {"Highlord Omokk", "Hall of Blackhand"},
+	        {"Shadow Hunter Vosh'gajin", "Hall of Blackhand"},
+	        {"War Master Voone", "Hall of Blackhand"},
+	        {"Mother Smolderweb", "Hall of Blackhand"},
+	        {"Quartermaster Zigris", "Hall of Blackhand"},
+	        {"Halycon", "Hall of Blackhand"},
+	        {"Overlord Wyrmthalak", "Hall of Blackhand"},
+	        //Optional/Rare
+	        {"Gizrul the Slavener", "Hall of Blackhand"},
 
             ///////////////////////TBC///////////////////////
 
