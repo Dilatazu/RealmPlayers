@@ -76,7 +76,7 @@ namespace VF
             {"Frostsaber", 12302},
             {"Nightsaber", 12303},
 
-            {"Swift Frostsaber", 8632},
+            {"Swift Frostsaber", 18766},
             {"Swift Stormsaber", 18902},
             {"Swift Mistsaber", 18767},
             {"Swift Dawnsaber", 18768},
