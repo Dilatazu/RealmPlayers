@@ -9,7 +9,7 @@ namespace VF_RaidDamageDatabase
     {
         public static bool IsDungeonZone(string _Zone)
         {
-            return _Zone == "Ragefire Chasm" || _Zone == "The Deadmines" || _Zone == "Stratholme" || _Zone == "Scholomance";
+            return _Zone == "Ragefire Chasm" || _Zone == "The Deadmines" || _Zone == "Stratholme" || _Zone == "Scholomance" || _Zone == "Dire Maul";
         }
         public static Dictionary<string, Dictionary<string, string[]>> InstanceRuns = new Dictionary<string, Dictionary<string, string[]>>
         {
@@ -410,7 +410,27 @@ namespace VF_RaidDamageDatabase
 	        //Optional/Rare
 	        {"Jandice Barov", "Scholomance"},
 	        {"Kirtonos the Herald", "Scholomance"},
-
+            
+	        //Dire Maul
+	        //East
+	        {"Hydrospawn", "Dire Maul"},
+	        {"Zevrim Thornhoof", "Dire Maul"},
+	        {"Lethtendris And Pimgib", "Dire Maul"}, //Lethtendris && Pimgib
+	        {"Alzzin the Wildshaper", "Dire Maul"},
+	        //West
+	        {"Tendris Warpwood", "Dire Maul"},
+	        {"Magister Kalendris", "Dire Maul"},
+	        {"Illyanna And Ferra", "Dire Maul"}, //Illyanna Ravenoak && Ferra
+	        {"Immol'thar", "Dire Maul"},
+	        {"Prince Tortheldrin", "Dire Maul"},
+	        //North
+	        {"Guard Mol'dar", "Dire Maul"},
+	        {"Guard Fengus", "Dire Maul"},
+	        {"Guard Slip'kik", "Dire Maul"},
+	        {"Captain Kromcrush", "Dire Maul"},
+	        {"King Gordok", "Dire Maul"},
+	        //Optional/Rare
+	        {"Stomper Kreeg", "Dire Maul"},
 
 
 	        //UBRS
@@ -595,7 +615,13 @@ namespace VF_RaidDamageDatabase
         
 
             ///////////////////////Dungeons///////////////////////
-            
+            {"The Three Dwarfs", new string[]{"Olaf", "Eric \"The Swift\"", "Baelog"}},
+            {"Jammal'an", new string[]{"Jammal'an the Prophet", "Ogom the Wretched"}},
+            {"The Seven Event", new string[]{"Anger'rel", "Seeth'rel", "Dope'rel", "Gloom'rel", "Vile'rel", "Hate'rel", "Doom'rel"}},
+            {"Illyanna And Ferra", new string[]{"Illyanna Ravenoak", "Ferra"}},
+            {"Lethtendris And Pimgib", new string[]{"Lethtendris", "Pimgib"}},
+            {"Vectus And Marduk", new string[]{"Marduk Blackpool", "Vectus"}},
+
             ///////////////////////TBC///////////////////////
             {"Romulo and Julianne", new string[]{"Romulo", "Julianne"}},
 	        {"Wizard of Oz", new string[]{"Dorothee", "Tito", "Roar", "Strawman", "Tinhead", "The Crone"}},
@@ -654,6 +680,11 @@ namespace VF_RaidDamageDatabase
             {"Grand Widow Faerlina", new string[]{"Naxxramas Follower", "Naxxramas Worshipper"}},
             {"Gothik the Harvester", new string[]{"Unrelenting Deathknight", "Unrelenting Death Knight", "Unrelenting Rider", "Spectral Trainee", "Spectral Deathknight", "Spectral Death Knight", "Spectral Rider", "Spectral Horse"}},
         
+            /////////////////////Dungeons////////////////////
+            {"King Gordok", new string[]{"Cho'Rush the Observer"}},
+            {"Balnazzar", new string[]{"Grand Crusader Dathrohan"}},
+            {"Warchief Rend Blackhand", new string[]{"Gyth"}},
+
             ///////////////////////TBC///////////////////////
             
             //Karazhan
