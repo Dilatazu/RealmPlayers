@@ -150,6 +150,10 @@ namespace RealmPlayersServer
 
         public static Dictionary<DateTime, List<VF_RealmPlayersDatabase.PlayerData.ItemInfo>> GenerateLatestReceivedItems(PlayerHistory _PlayerHistory, DateTime _EarliestDate)
         {
+            return GenerateLatestReceivedItems(_PlayerHistory, null, _EarliestDate);
+        }
+        public static Dictionary<DateTime, List<VF_RealmPlayersDatabase.PlayerData.ItemInfo>> GenerateLatestReceivedItems(PlayerHistory _PlayerHistory, VF_RealmPlayersDatabase.PlayerData.ExtraData _ExtraData, DateTime _EarliestDate)
+        {
             Dictionary<DateTime, List<VF_RealmPlayersDatabase.PlayerData.ItemInfo>> recvItems = new Dictionary<DateTime, List<VF_RealmPlayersDatabase.PlayerData.ItemInfo>>();
             List<int> itemIDs = new List<int>();
             List<int> duplicateItemIDs = new List<int>();
@@ -189,7 +193,22 @@ namespace RealmPlayersServer
                         oneWeaponID = currItemID;
                 }
             }
-
+            if (_ExtraData != null)
+            {
+                try
+                {
+                    foreach(var mount in _ExtraData.Mounts)
+                    {
+                        var mountRecvDateTime = mount.GetEarliestUpload().GetTime();
+                        var mountItem = new VF_RealmPlayersDatabase.PlayerData.ItemInfo { ItemID = VF.ItemTranslations.FindItemID(mount.Mount), SuffixID = 0, EnchantID = 0, UniqueID = 0, GemIDs = null, Slot = VF_RealmPlayersDatabase.ItemSlot.Unknown };
+                        recvItems.AddToList(mountRecvDateTime, mountItem);
+                    }
+                }
+                catch (Exception ex)
+                { 
+                    Logger.LogException(ex); 
+                }
+            }
             return recvItems;
         }
     }

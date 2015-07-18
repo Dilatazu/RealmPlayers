@@ -44,7 +44,7 @@ namespace RealmPlayersServer
         public string m_RaidStatsPlayerOverviewLink = "";
         public string m_CharacterDesignerLink = "";
 
-        public void GenerateCharInfo(Player _Player, PlayerHistory _PlayerHistory)
+        public void GenerateCharInfo(Player _Player, PlayerHistory _PlayerHistory, PlayerData.ExtraData _PlayerExtraData = null)
         {
             var wowVersion = StaticValues.GetWowVersion(_Player.Realm);
             var playerFaction = StaticValues.GetFaction(_Player.Character.Race);
@@ -181,7 +181,7 @@ namespace RealmPlayersServer
                     var itemSummaryDB = Hidden.ApplicationInstance.Instance.GetItemSummaryDatabase();
 
                     string receivedItemsInfo = "";
-                    var recvItems = HistoryGenerator.GenerateLatestReceivedItems(_PlayerHistory, DateTime.MinValue);
+                    var recvItems = HistoryGenerator.GenerateLatestReceivedItems(_PlayerHistory, _PlayerExtraData, DateTime.MinValue);
 
                     var orderedRecvItems = recvItems.OrderByDescending(_Value => _Value.Key);
                     int i = 0;
@@ -767,9 +767,12 @@ namespace RealmPlayersServer
             this.Title = playerStr + " @ " + StaticValues.ConvertRealmParam(realm) + " | RealmPlayers";
             Player player;
             PlayerHistory playerHistory = null;
+            PlayerExtraData playerExtraData = null;
             if(DatabaseAccess.TryGetRealmPlayersHistory(this, realm) != null)
                 playerHistory = DatabaseAccess.FindRealmPlayerHistory(this, realm, playerStr);
             
+            playerExtraData = DatabaseAccess.FindRealmPlayerExtraData(this, realm, playerStr, NotLoadedDecision.ReturnNull);
+
             string m_PageExtraInfo = "";
 
             if (date == DateTime.MaxValue && uploadNR != -1)
@@ -799,7 +802,7 @@ namespace RealmPlayersServer
                 + PageUtility.BreadCrumb_AddRealm(realm)
                 + (player.Guild.GuildName != "nil" ? (PageUtility.BreadCrumb_AddGuilds(realm) + PageUtility.BreadCrumb_AddGuild(realm, player.Guild.GuildName)) : "")
                 + PageUtility.BreadCrumb_AddFinish(player.Name));
-            GenerateCharInfo(player, playerHistory);
+            GenerateCharInfo(player, playerHistory, playerExtraData);
             m_InventoryInfoHTML = new MvcHtmlString(CreateInventoryInfo(player, playerHistory, realm));
             GenerateExtraStats(DatabaseAccess.FindRealmPlayerExtraData(this, realm, playerStr, NotLoadedDecision.ReturnNull), realm);
             string chartSection = "";
