@@ -1834,7 +1834,7 @@ function ss_appendSticky() {
 		};
 		var f = ce("img"),
 		e = Math.min(150 / c.width, 150 / c.height);
-		f.src = (c.wowhead==1 ? "http://static.wowhead.com/uploads/screenshots/thumb/" : "images/screenshots/thumb/") + c.id + ".jpg";
+		f.src = (c.wowhead==1 ? "http://static.wowhead.com/uploads/screenshots/thumb/" : "images/screenshots/thumb/") + c.id + ".png";
 		f.className = "border";
 		ae(l, f);
 		ae(m, l);
@@ -2201,7 +2201,7 @@ var Menu = {
 							U.style.padding = 0;
 							S.style.padding = "4px 18px 4px 28px";
 							S.style.background = "url(templates/wowhead/images/icon_border_small.png) left center no-repeat transparent";
-							G.style.background = "url(images/icons/small/" + Q.smallIcon.toLowerCase() + ".jpg) 4px 3px no-repeat transparent"
+							G.style.background = "url(images/icons/small/" + Q.smallIcon.toLowerCase() + ".png) 4px 3px no-repeat transparent"
 						}
 					}
 				}
@@ -2740,7 +2740,7 @@ var Icon = {
 	},
 	createUser: function (d, f, c, b, a) {
 		if (d == 2) {
-			f = "uploads/avatars/" + f + ".jpg"
+			f = "uploads/avatars/" + f + ".png"
 		}
 		var e = Icon.create(f, c, null, b);
 		if (a) {
@@ -2759,7 +2759,7 @@ var Icon = {
 		if (b.indexOf("?") != -1) {
 			a.backgroundImage = "url(" + b + ")"
 		} else {
-			a.backgroundImage = "url(images/icons/" + Icon.sizes[c] + "/" + b.toLowerCase() + ".jpg)"
+			a.backgroundImage = "url(http://db.vanillagaming.org/images/icons/" + Icon.sizes[c] + "/" + b.toLowerCase() + ".jpg)"
 		}
 		Icon.moveTexture(d, c, 0, 0)
 	},
@@ -3112,7 +3112,7 @@ var Tooltip = {
 	setIcon: function (a) {
 		Tooltip.prepare();
 		if (a) {
-			Tooltip.icon.style.backgroundImage = "url(images/icons/medium/" + a.toLowerCase() + ".jpg)";
+		    Tooltip.icon.style.backgroundImage = "url(http://db.vanillagaming.org/images/icons/medium/" + a.toLowerCase() + ".png)";
 			Tooltip.icon.style.visibility = "visible"
 		} else {
 			Tooltip.icon.style.backgroundImage = "none";
@@ -7580,7 +7580,7 @@ Listview.templates = {
 			q.onclick = rf2;
 			var v = ce("img"),
 			t = Math.min(150 / k.width, 150 / k.height);
-			v.src = (k.wowhead==1 ? "http://static.wowhead.com/uploads/screenshots/thumb/" : "images/screenshots/thumb/") + k.id + ".jpg";
+			v.src = (k.wowhead==1 ? "http://static.wowhead.com/uploads/screenshots/thumb/" : "images/screenshots/thumb/") + k.id + ".png";
 			ae(q, v);
 			ae(e, q);
 			var p = ce("div");
@@ -9290,7 +9290,7 @@ function () {
 			}
 			if ((type == 3 || type == 6 || type == 9 || type == 10) && param1) {
 				div.className += " live-search-icon";
-				div.style.backgroundImage = "url(images/icons/small/" + param1.toLowerCase() + ".jpg)"
+				div.style.backgroundImage = "url(images/icons/small/" + param1.toLowerCase() + ".png)"
 			} else {
 				if (type == 5 && param1 >= 1 && param1 <= 2) {
 					div.className += " live-search-icon-quest-" + (param1 == 1 ? "alliance": "horde")
@@ -10140,7 +10140,7 @@ function () {
 		var C = z[k],
 		I = (C.width > 772 || C.height > 618);
 		g(0);
-		var E = (C.url ? C.url: (C.wowhead==1 ? "http://static.wowhead.com/uploads/screenshots/" : "images/screenshots/") + (I ? "resized/": "normal/") + C.id + ".jpg");
+		var E = (C.url ? C.url: (C.wowhead==1 ? "http://static.wowhead.com/uploads/screenshots/" : "images/screenshots/") + (I ? "resized/": "normal/") + C.id + ".png");
 		var J = '<img src="' + E + '" width="' + e + '" height="' + y + '"';
 		if (Browser.ie6) {
 			J += ' galleryimg="no"'
@@ -10151,7 +10151,7 @@ function () {
 			if (C.url) {
 				h.href = E
 			} else {
-				h.href = (C.wowhead==1 ? "http://static.wowhead.com/uploads/screenshots/normal/" : "images/screenshots/normal/") + C.id + ".jpg"
+				h.href = (C.wowhead==1 ? "http://static.wowhead.com/uploads/screenshots/normal/" : "images/screenshots/normal/") + C.id + ".png"
 			}
 			if (!C.user && typeof g_pageInfo == "object") {
 				C.user = g_pageInfo.username
@@ -11936,5 +11936,5 @@ comments_sort = function(a){
 }	
 ShowIconName = function(t){prompt('Use it to change your avatar', t)};
 //aowow.main_page = function(){$fx('#home-search').fxAdd({type: 'opacity', from: 0, to: 100, step: 10, delay: 20}).fxHold(200).fxRun();$fx('#h43jv6jk346').fxAdd({type: 'opacity', from: 0, to: 100, step: 10, delay: 20}).fxHold(300).fxRun();$fx('#mainlinks').fxAdd({type: 'opacity', from: 0, to: 100, step: 10, delay: 20}).fxHold(400).fxRun();}
-var g_getProfileIcon=function(d,e,a,g,c,b){var f={10:{6:1,3:1,8:1,2:1,5:1,4:1,9:1},11:{6:1,3:1,8:1,2:1,5:1,7:1,1:1},3:{6:1,3:1,2:1,5:1,4:1,1:1},7:{6:1,8:1,4:1,9:1,1:1},1:{6:1,8:1,2:1,5:1,4:1,9:1,1:1},4:{6:1,11:1,3:1,5:1,4:1,1:1},2:{6:1,3:1,4:1,7:1,9:1,1:1},6:{6:1,11:1,3:1,7:1,1:1},8:{6:1,3:1,8:1,5:1,4:1,7:1,1:1},5:{6:1,8:1,5:1,4:1,9:1,1:1}};if(c){return isNaN(c)?c:"/profile=avatar"+(b?"&size="+b:"")+"&id="+c+(b=="tiny"?".gif":".jpg")}if(!g_file_races[d]||!g_file_classes[e]||!g_file_genders[a]||!f[d]||!f[d][e]||(e==6&&g<55)){return"inv_misc_questionmark"}return"chr_"+g_file_races[d]+"_"+g_file_genders[a]+"_"+g_file_classes[e]+"0"+(g>59?(Math.floor((g-60)/10)+2):1)};
+var g_getProfileIcon=function(d,e,a,g,c,b){var f={10:{6:1,3:1,8:1,2:1,5:1,4:1,9:1},11:{6:1,3:1,8:1,2:1,5:1,7:1,1:1},3:{6:1,3:1,2:1,5:1,4:1,1:1},7:{6:1,8:1,4:1,9:1,1:1},1:{6:1,8:1,2:1,5:1,4:1,9:1,1:1},4:{6:1,11:1,3:1,5:1,4:1,1:1},2:{6:1,3:1,4:1,7:1,9:1,1:1},6:{6:1,11:1,3:1,7:1,1:1},8:{6:1,3:1,8:1,5:1,4:1,7:1,1:1},5:{6:1,8:1,5:1,4:1,9:1,1:1}};if(c){return isNaN(c)?c:"/profile=avatar"+(b?"&size="+b:"")+"&id="+c+(b=="tiny"?".gif":".png")}if(!g_file_races[d]||!g_file_classes[e]||!g_file_genders[a]||!f[d]||!f[d][e]||(e==6&&g<55)){return"inv_misc_questionmark"}return"chr_"+g_file_races[d]+"_"+g_file_genders[a]+"_"+g_file_classes[e]+"0"+(g>59?(Math.floor((g-60)/10)+2):1)};
 this.requestProfile=function(aS){X(aS)};this.registerProfile=function(aS){av(aS)};this.isArmoryProfile=function(aS){return aQ(aS)};

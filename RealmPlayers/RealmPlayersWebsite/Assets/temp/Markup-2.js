@@ -575,7 +575,7 @@ var Markup = {
 						c += ' src="images/screenshots/thumb/' + a.id + '.jpg"'
 					} else {
 						if (a.icon) {
-							c += ' src="images/icons/' + (a.size ? a.size : "large") + "/" + a.icon + '.jpg"'
+							c += ' src="images/icons/' + (a.size ? a.size : "large") + "/" + a.icon + '.png"'
 						}
 					}
 				}

@@ -1926,17 +1926,6 @@ function () {
 	K()
 	
 	var g_locale = { id: 0, name: 'enus' };
-	var _head = document.getElementsByTagName('head') [0];
-	var _link = document.createElement('link');
-	var _script = document.createElement('script');
-	_link.rel = "stylesheet";
-	_link.setAttribute("type","text/css");
-	_link.href = "/assets/power.css?version=1.4";
-	_script.setAttribute("src", "/assets/locale_enus.js?version=1.21");
-	_script.setAttribute("type","text/javascript");
-	
-	_head.appendChild(_link);
-	_head.appendChild(_script);
 };
 var Ads = {
 	dimensions: {
