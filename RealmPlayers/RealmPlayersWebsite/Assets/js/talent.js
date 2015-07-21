@@ -16,7 +16,7 @@ function tc_init() {
 	c = ge("tc-classes-inner");
 	for (var d = 0, b = e.length; d < b; ++d) {
 		var h = e[d],
-		f = Icon.create("class_" + g_file_classes[h], 1, null, "javascript:;"),
+		f = Icon.create("class_" + g_file_classes[h] + ".png", 1, null, "javascript:;"),
 		g = Icon.getLink(f);
 		tc_classIcons[h] = f;
 		if (Browser.ie6) {

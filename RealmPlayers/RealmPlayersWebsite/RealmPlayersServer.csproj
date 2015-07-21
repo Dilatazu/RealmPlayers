@@ -50,6 +50,7 @@
   <ItemGroup>
     <Content Include="About.aspx" />
     <Content Include="AdminInfo.aspx" />
+    <Content Include="Ajax.aspx" />
     <Content Include="Assets\CoinWidget\coin.css" />
     <Content Include="Assets\CoinWidget\coin.js" />
     <Content Include="Assets\CoinWidget\icon_bitcoin.png" />
@@ -12232,6 +12233,13 @@
     </Compile>
     <Compile Include="AdminInfo.aspx.designer.cs">
       <DependentUpon>AdminInfo.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Ajax.aspx.cs">
+      <DependentUpon>Ajax.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Ajax.aspx.designer.cs">
+      <DependentUpon>Ajax.aspx</DependentUpon>
     </Compile>
     <Compile Include="Changelog.aspx.cs">
       <DependentUpon>Changelog.aspx</DependentUpon>

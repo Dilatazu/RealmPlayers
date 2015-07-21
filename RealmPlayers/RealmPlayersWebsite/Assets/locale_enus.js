@@ -421,6 +421,51 @@ var mn_spells=[
 			[26,"Arms"],
 			[256,"Fury"],
 			[257,"Protection"]
+		]],
+        [31, "DruidTBC", , [
+			[574, "Balance"],
+			[134, "Feral Combat"],
+			[573, "Restoration"]
+        ]],
+		[23, "HunterTBC", , [
+			[50, "Beast Mastery"],
+			[163, "Marksmanship"],
+			[51, "Survival"]
+		]],
+		[28, "MageTBC", , [
+			[237, "Arcane"],
+			[8, "Fire"],
+			[6, "Frost"]
+		]],
+		[22, "PaladinTBC", , [
+			[594, "Holy"],
+			[267, "Protection"],
+			[184, "Retribution"]
+		]],
+		[25, "PriestTBC", , [
+			[613, "Discipline"],
+			[56, "Holy"],
+			[78, "Shadow Magic"]
+		]],
+		[24, "RogueTBC", , [
+			[253, "Assassination"],
+			[38, "Combat"],
+			[39, "Subtlety"]
+		]],
+		[27, "ShamanTBC", , [
+			[375, "Elemental Combat"],
+			[373, "Enhancement"],
+			[374, "Restoration"]
+		]],
+		[29, "WarlockTBC", , [
+			[355, "Affliction"],
+			[354, "Demonology"],
+			[593, "Destruction"]
+		]],
+		[21, "WarriorTBC", , [
+			[26, "Arms"],
+			[256, "Fury"],
+			[257, "Protection"]
 		]]
 	]],
 	[-4,"Racial Traits"],
@@ -578,7 +623,16 @@ var mn_talentCalc=[
 	[4,"Rogue","?talent#f"],
 	[7,"Shaman","?talent#h"],
 	[9,"Warlock","?talent#I"],
-	[1,"Warrior","?talent#L"]
+	[1, "Warrior", "?talent#L"],
+	[31, "Druid", "?talent#q"],
+	[23, "Hunter", "?talent#r"],
+	[28, "Mage", "?talent#T"],
+	[22, "Paladin", "?talent#K"],
+	[25, "Priest", "?talent#Z"],
+	[24, "Rogue", "?talent#n"],
+	[27, "Shaman", "?talent#M"],
+	[29, "Warlock", "?talent#u"],
+	[21, "Warrior", "?talent#w"]
 ];
 var mn_petCalc=[
 	[24,"Bat","?petcalc#MR"],
@@ -806,7 +860,16 @@ var g_chr_classes={
 	7:"Shaman",
 	8:"Mage",
 	9:"Warlock",
-	11:"Druid"
+	11: "Druid",
+	21: "WarriorTBC",
+	22: "PaladinTBC",
+	23: "HunterTBC",
+	24: "RogueTBC",
+	25: "PriestTBC",
+	27: "ShamanTBC",
+	28: "MageTBC",
+	29: "WarlockTBC",
+	31: "DruidTBC"
 	//13:"Rogue, Druid",
 	//14:"Hunter, Shaman",
 	//15:"Warrior, Paladin",
@@ -851,7 +914,17 @@ var g_chr_specs={
 	4:["Assassination","Combat","Subtlety"],
 	7:["Elemental Combat","Enhancement","Restoration"],
 	9:["Affliction","Demonology","Destruction"],
-	1:["Arms","Fury","Protection"]
+	21: ["Arms", "Fury", "Protection"],
+	26: ["Blood", "Frost", "Unholy"],
+	31: ["Balance", "Feral Combat", "Restoration"],
+	23: ["Beast Mastery", "Marksmanship", "Survival"],
+	28: ["Arcane", "Fire", "Frost"],
+	22: ["Holy", "Protection", "Retribution"],
+	25: ["Discipline", "Holy", "Shadow Magic"],
+	24: ["Assassination", "Combat", "Subtlety"],
+	27: ["Elemental Combat", "Enhancement", "Restoration"],
+	29: ["Affliction", "Demonology", "Destruction"],
+	21: ["Arms", "Fury", "Protection"]
 };
 var g_item_glyphs={
 	1:"Major",

@@ -496,6 +496,18 @@ function g_scrollTo(c, b) {
 	}
 	scrollTo(g, d)
 }
+//NEW FUNC
+function g_addCss(b) {
+	var c = ce("style");
+    c.type = "text/css";
+	if (c.styleSheet) {
+		c.styleSheet.cssText = b
+	} else {
+		ae(c, ct(b))
+	}
+	var a = document.getElementsByTagName("head")[0];
+	ae(a, c)
+	}
 function g_setTextNodes(c, b) {
 	if (c.nodeType == 3) {
 		c.nodeValue = b
@@ -939,6 +951,72 @@ function g_getMoneyHtml(c) {
 	}
 	return a
 }
+function g_getPatchVersion(e) {
+    var d = g_getPatchVersion;
+    var b = 0,
+	c = d.T.length - 2,
+	a;
+    while (c > b) {
+        a = Math.floor((c + b) / 2);
+        if (e >= d.T[a] && e < d.T[a + 1]) {
+            return d.V[a]
+        }
+        if (e >= d.T[a]) {
+            b = a + 1
+        } else {
+            c = a - 1
+        }
+    }
+    a = Math.ceil((c + b) / 2);
+    return d.V[a]
+}
+g_getPatchVersion.V = ["1.12.0", "1.12.1", "1.12.2", "2.0.1", "2.0.3", "2.0.4", "2.0.5", "2.0.6", "2.0.7", "2.0.8", "2.0.10", "2.0.12", "2.1.0", "2.1.1", "2.1.2", "2.1.3", "2.2.0", "2.2.2", "2.2.3", "2.3.0", "2.3.2", "2.3.3", "2.4.0", "2.4.1", "2.4.2", "2.4.3", "3.0.2", "3.0.3", "3.0.8", "3.0.9", "3.1.0", "3.1.1", "3.1.2", "3.1.3", "3.3.5"];
+g_getPatchVersion.T = [1153540800000, 1159243200000, 1160712000000, 1165294800000, 1168318800000, 1168578000000, 1168750800000, 1169528400000, 1171342800000, 1171602000000, 1173157200000, 1175572800000, 1179806400000, 1181016000000, 1182225600000, 1184040000000, 1190692800000, 1191297600000, 1191902400000, 1194930000000, 1199768400000, 1200978000000, 1206417600000, 1207022400000, 1210651200000, 1216094400000, 1223956800000, 1225774800000, 1232427600000, 1234242000000, 1239681600000, 1240286400000, 1242705600000, 1243915200000, 9999999999999];
+function g_expandSite() {
+    ge("wrapper").className = "nosidebar";
+    Ads.removeAll();
+    var a = ge("topbar-expand");
+    if (a) {
+        de(a)
+    }
+    a = ge("sidebar");
+    if (a) {
+        de(a)
+    }
+}
+function g_insertTag(d, a, i, j) {
+    var b = $(d);
+    b.focus();
+    if (b.selectionStart != null) {
+        var l = b.selectionStart,
+		h = b.selectionEnd,
+		k = b.scrollLeft,
+		c = b.scrollTop;
+        var g = b.value.substring(l, h);
+        if (typeof j == "function") {
+            g = j(g)
+        }
+        b.value = b.value.substr(0, l) + a + g + i + b.value.substr(h);
+        b.selectionStart = b.selectionEnd = h + a.length;
+        b.scrollLeft = k;
+        b.scrollTop = c
+    } else {
+        if (document.selection && document.selection.createRange) {
+            var f = document.selection.createRange();
+            if (f.parentElement() != b) {
+                return
+            }
+            var g = f.text;
+            if (typeof j == "function") {
+                g = j(g)
+            }
+            f.text = a + g + i
+        }
+    }
+    if (b.onkeyup) {
+        b.onkeyup()
+    }
+}
 function g_getLocaleFromDomain(a) {
 	var c = g_getLocaleFromDomain.L;
 	if (a) {
@@ -1010,6 +1088,10 @@ function g_onClick(c, d) {
 		return false
 	}
 }
+function g_isLeftClick(a) {
+	a = $E(a);
+	return (a && a._button == 1)
+	}
 function g_createOrRegex(c) {
 	var e = c.split(" "),
 	d = "";
@@ -1076,7 +1158,8 @@ function g_ajaxIshRequest(b) {
 	if (VF_AjaxControl_Request) {
 	    VF_AjaxControl_Request(b);
 	}
-	else {
+	else 
+	{
 	    ae(c, ce("script", {
 	        type: "text/javascript",
 	        src: b
@@ -1115,7 +1198,7 @@ var Icon = {
 		if (b.indexOf("?") != -1) {
 			a.backgroundImage = "url(" + b + ")"
 		} else {
-		    a.backgroundImage = "url(http://database.wow-one.com/" + Icon.sizes[c] + "/" + b.toLowerCase() + ".jpg)"
+		    a.backgroundImage = "url(images/icons/" +Icon.sizes[c] + "/" +b.toLowerCase() + ")"
 		}
 		Icon.moveTexture(d, c, 0, 0)
 	},
@@ -1498,7 +1581,16 @@ var g_file_classes = {
 	4 : "rogue",
 	7 : "shaman",
 	9 : "warlock",
-	1 : "warrior"
+	1: "warrior",
+	31: "druidTBC",
+	23: "hunterTBC",
+	28: "mageTBC",
+	22: "paladinTBC",
+	25: "priestTBC",
+	24: "rogueTBC",
+	27: "shamanTBC",
+	29: "warlockTBC",
+	21: "warriorTBC"
 };
 var g_file_genders = {
 	0 : "male",
@@ -1536,7 +1628,7 @@ g_items.getIcon = function (a) {
 	}
 };
 g_items.createIcon = function (d, b, a, c) {
-	return Icon.create(g_items.getIcon(d), b, null, "?item=" + d, a, c)
+	return Icon.create(g_items.getIcon(d) + ".jpg", b, null, "?item=" + d, a, c)
 };
 g_spells.getIcon = function (a) {
 	if (g_spells[a] != null) {
@@ -1546,7 +1638,7 @@ g_spells.getIcon = function (a) {
 	}
 };
 g_spells.createIcon = function (d, b, a, c) {
-	return Icon.create(g_spells.getIcon(d), b, null, "?spell=" + d, a, c)
+	return Icon.create(g_spells.getIcon(d) + ".jpg", b, null, "?spell=" +d, a, c)
 };
 g_achievements.getIcon = function (a) {
 	if (g_achievements[a] != null) {
@@ -1556,7 +1648,7 @@ g_achievements.getIcon = function (a) {
 	}
 };
 g_achievements.createIcon = function (d, b, a, c) {
-	return Icon.create(g_achievements.getIcon(d), b, null, "?achievement=" + d, a, c)
+	return Icon.create(g_achievements.getIcon(d) + ".jpg", b, null, "?achievement=" + d, a, c)
 };
 var $WowheadPower = new
 function () {
@@ -1782,7 +1874,7 @@ function () {
 		 * g_getDomainFromLocale(X) + ".wowhead.com" } } P += "?" + p[W][1] +
 		 * "=" + S + "&power" + R;
 		 */
-		var P = "http://db.vanillagaming.org/ajax.php?" + p[W][1] + "=" + S + "&power" + R;
+		var P = "" + p[W][1] + "=" + S + "&power" + R;
 		g_ajaxIshRequest(P)
 	}
 	function N(R, S) {
@@ -2014,9 +2106,190 @@ function sendRequest(url, params, callback, method) {
 }
 
 function VF_AjaxControl_Request(_Value) {
-    sendRequest("ItemTooltip.aspx", "item=" + encodeURIComponent(_Value), function (httpRequest) { if (httpRequest.readyState == 4 && httpRequest.status == 200) VF_AjaxControl_Response(httpRequest.responseText); }, 'GET');
+    sendRequest("Ajax.aspx", _Value, function (httpRequest) { if (httpRequest.readyState == 4 && httpRequest.status == 200) VF_AjaxControl_Response(httpRequest.responseText); }, 'GET');
 }
 function VF_AjaxControl_Response(returnValue) {
     if (returnValue != "")
         eval(returnValue);
+}
+
+var Lightbox = new
+function () {
+    var d, m, n, h = {},
+    c = {},
+    i, f;
+    function o() {
+        aE(d, "click", e);
+        aE(document, Browser.opera ? "keypress" : "keydown", g);
+        aE(window, "resize", a);
+        if (Browser.ie6) {
+            aE(window, "scroll", j)
+        }
+    }
+    function l() {
+        dE(d, "click", e);
+        dE(document, Browser.opera ? "keypress" : "keydown", g);
+        dE(window, "resize", a);
+        if (Browser.ie6) {
+            dE(window, "scroll", j)
+        }
+    }
+    function b() {
+        if (i) {
+            return
+        }
+        i = 1;
+        var p = ge("layers");
+        d = ce("div");
+        d.className = "lightbox-overlay";
+        m = ce("div");
+        m.className = "lightbox-outer";
+        n = ce("div");
+        n.className = "lightbox-inner";
+        d.style.display = m.style.display = "none";
+        ae(p, d);
+        ae(m, n);
+        ae(p, m)
+    }
+    function g(p) {
+        p = $E(p);
+        switch (p.keyCode) {
+            case 27:
+                e();
+                break
+        }
+    }
+    function a(p) {
+        if (p != 1234) {
+            if (c.onResize) {
+                c.onResize()
+            }
+        }
+        d.style.height = document.body.offsetHeight + "px";
+        if (Browser.ie6) {
+            j()
+        }
+    }
+    function j() {
+        var q = g_getScroll().y,
+        p = g_getWindowSize().h;
+        m.style.top = (q + p / 2) + "px"
+    }
+    function e() {
+        l();
+        if (c.onHide) {
+            c.onHide()
+        }
+        d.style.display = m.style.display = "none";
+        Ads.restoreHidden();
+        g_enableScroll(true)
+    }
+    function k() {
+        d.style.display = m.style.display = h[f].style.display = ""
+    }
+    this.setSize = function (p, q) {
+        n.style.visibility = "hidden";
+        n.style.width = p + "px";
+        n.style.height = q + "px";
+        n.style.left = -parseInt(p / 2) + "px";
+        n.style.top = -parseInt(q / 2) + "px";
+        n.style.visibility = "visible"
+    };
+    this.show = function (t, s, p) {
+        c = s || {};
+        Ads.hideAll();
+        b();
+        o();
+        if (f != t && h[f] != null) {
+            h[f].style.display = "none"
+        }
+        f = t;
+        var r = 0,
+        q;
+        if (h[t] == null) {
+            r = 1;
+            q = ce("div");
+            ae(n, q);
+            h[t] = q
+        } else {
+            q = h[t]
+        }
+        if (c.onShow) {
+            c.onShow(q, r, p)
+        }
+        a(1234);
+        k();
+        g_enableScroll(false)
+    };
+    this.reveal = function () {
+        k()
+    };
+    this.hide = function () {
+        e()
+    };
+    this.isVisible = function () {
+        return (d && d.style.display != "none")
+    }
+};
+function g_initPath(p, f) {
+	var h = mn_path,
+    c = null,
+    k = null,
+    o = 0,
+    l = ge("main-precontents"),
+    n = ce("div");
+	ee(l);
+	if (g_initPath.lastIt) {
+	    g_initPath.lastIt.checked = null
+	}
+	n.className = "path";
+	if (f != null) {
+	    var m = ce("div");
+	    m.className = "path-right";
+	    var q = ce("a");
+	    q.href = "javascript:;";
+	    q.id = "fi_toggle";
+	    ns(q);
+	    q.onclick = fi_toggle;
+	    if (f) {
+	        q.className = "disclosure-on";
+	        ae(q, ct(LANG.fihide))
+	    } else {
+	        q.className = "disclosure-off";
+	        ae(q, ct(LANG.fishow))
+	    }
+	    ae(m, q);
+	    ae(l, m)
+	}
+	if (o && k) {
+	    k.className = ""
+	} else {
+	    if (c && c[3]) {
+	        k.className = "menuarrow";
+	        q = ce("a");
+	        b = ce("span");
+	        q.href = "javascript:;";
+	        ns(q);
+	        q.style.textDecoration = "none";
+	        q.style.paddingRight = "16px";
+	        q.style.color = "white";
+	        q.style.cursor = "default";
+	        ae(q, ct("..."));
+	        q.menu = c[3];
+	        q.onmouseover = Menu.show;
+	        q.onmouseout = Menu.hide;
+	        ae(b, q);
+	        ae(n, b)
+	    }
+	}
+	var m = ce("div");
+	m.className = "clear";
+	ae(n, m);
+	//gb = ce("div");
+	//gb.className = "g-plusone";
+	//gb.href = "http://www.aowow.org/";
+	//gb.id = "g-plusone";
+	//ae(n, gb);
+	ae(l, n);
+	g_initPath.lastIt = c
 }

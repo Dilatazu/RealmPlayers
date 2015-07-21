@@ -7,17 +7,17 @@
 var $WowheadTalentCalculator;
 function TalentCalc() {
 	var a6 = 0,
-	aI = 1,
-	C = 85,
+	aI_Mode = 1,
+	C_Version = 85,
 	aZ = this,
-	t, M = {},
+	t, M_ClassData = {},
 	a0 = {},
-	g, aC, N, a7, aF = -1,
+	g, aC, N, a7, aF_CurrentClass = -1,
 	ad = -1,
 	K = 0,
 	aa, a2 = (Browser.opera),
 	J = false,
-	aB,
+	aB_CurrMode,
 	w,
 	a1,
 	Z,
@@ -48,7 +48,7 @@ function TalentCalc() {
 	l,
 	ay,
 	aS = [],
-	ah = "0zMcmVokRsaqbdrfwihuGINALpTjnyxtgevElBCDFHJKOPQSUWXYZ123456789",
+	ah_EncodingArray = "0zMcmVokRsaqbdrfwihuGINALpTjnyxtgevElBCDFHJKOPQSUWXYZ123456789",
 	L = "Z",
 	W = [7, 24, 26, 27, 30, 34, 37, 38],
 	aq,
@@ -63,10 +63,10 @@ function TalentCalc() {
 		Lightbox.hide()
 	};
 	this.getBlizzBuild = function () {
-		if (aF == -1) {
+		if (aF_CurrentClass == -1) {
 			return
 		}
-		var bf = M[aF],
+		var bf = M_ClassData[aF_CurrentClass],
 		be = "";
 		for (var bc = 0; bc < w; ++bc) {
 			for (var bd = 0; bd < bf[bc].t.length; ++bd) {
@@ -77,10 +77,10 @@ function TalentCalc() {
 		return be
 	};
 	this.getBlizzGlyphs = function () {
-		if (aF == -1) {
+		if (aF_CurrentClass == -1) {
 			return
 		}
-		var be = M[aF],
+		var be = M_ClassData[aF_CurrentClass],
 		bc = "";
 		for (var bd = 0; bd < Z; ++bd) {
 			if (bd > 0) {
@@ -96,8 +96,8 @@ function TalentCalc() {
 	};
 	this.getGlyphs = function () {
 		var bc = [];
-		if (aF != -1) {
-			var be = M[aF];
+		if (aF_CurrentClass != -1) {
+			var be = M_ClassData[aF_CurrentClass];
 			if (be) {
 				for (var bd = 0; bd < Z; ++bd) {
 					if (be.glyphs[bd]) {
@@ -109,7 +109,7 @@ function TalentCalc() {
 		return bc
 	};
 	this.getSpentFromBlizzBuild = function (bj, bh) {
-		var bi = M[bh],
+		var bi = M_ClassData[bh],
 		bg = [0, 0, 0];
 		if (bi) {
 			var bk = 0,
@@ -133,8 +133,8 @@ function TalentCalc() {
 	};
 	this.getTalents = function () {
 		var bd = [];
-		if (aF != -1) {
-			var be = M[aF];
+		if (aF_CurrentClass != -1) {
+			var be = M_ClassData[aF_CurrentClass];
 			if (be) {
 				for (var bc = 0; bc < w; ++bc) {
 					for (i = 0; i < be[bc].t.length; ++i) {
@@ -148,48 +148,48 @@ function TalentCalc() {
 		return bd
 	};
 	this.getWhBuild = function () {
-		if (aF == -1) {
+		if (aF_CurrentClass == -1) {
 			return
 		}
-		var bh = M[aF],
+		var bh_CurrClassData = M_ClassData[aF_CurrentClass],
 		bd = "",
 		bg,
 		bf;
 		for (var bc = 0; bc < w; ++bc) {
 			bg = "";
-			for (bf = 0; bf < bh[bc].t.length; ++bf) {
-				bg += bh[bc].t[bf].k
+			for (bf = 0; bf < bh_CurrClassData[bc].t.length; ++bf) {
+			    bg += bh_CurrClassData[bc].t[bf].k
 			}
 			bg = rtrim(bg, "0");
 			bd += x(bg);
 			bf = bg.length;
 			if (bf % 2 == 1) {++bf
 			}
-			if (bf < bh[bc].t.length) {
+			if (bf < bh_CurrClassData[bc].t.length) {
 				bd += L
 			}
 		}
 		var be;
-		if (aB == aI) {
-			be = ah.charAt(Math.floor(aF / 10)) + ah.charAt((2 * (aF % 10)) + (r ? 1 : 0))
+		if (aB_CurrMode == aI_Mode) {
+			be = ah_EncodingArray.charAt(Math.floor(aF_CurrentClass / 10)) + ah_EncodingArray.charAt((2 * (aF_CurrentClass % 10)) + (r ? 1 : 0))
 		} else {
-			be = ah.charAt(aw(aF) * 3)
+			be = ah_EncodingArray.charAt(aw_ConvertClassID(aF_CurrentClass) * 3)
 		}
 		be += rtrim(bd, L);
 		return be
 	};
 	this.getWhGlyphs = function () {
-		if (aF == -1) {
+		if (aF_CurrentClass == -1) {
 			return
 		}
-		var bf = M[aF],
+		var bf = M_ClassData[aF_CurrentClass],
 		bc = {
 			1 : "",
 			2 : ""
 		};
 		for (var be = 0; be < Z; ++be) {
 			if (bf.glyphs[be]) {
-				bc[aJ(be)] += ah.charAt(g_glyphs[bf.glyphs[be]].index)
+				bc[aJ(be)] += ah_EncodingArray.charAt(g_glyphs[bf.glyphs[be]].index)
 			}
 		}
 		var bd = bc[1];
@@ -226,8 +226,8 @@ function TalentCalc() {
 		if (t.onChange) {
 			aG = t.onChange
 		}
-		if (t.mode == aI) {
-			aB = aI;
+		if (t.mode == aI_Mode) {
+			aB_CurrMode = aI_Mode;
 			w = 1;
 			a1 = 6;
 			Z = 0;
@@ -236,10 +236,10 @@ function TalentCalc() {
 			aY = g_pet_families;
 			z.className += " talentcalc-pet"
 		} else {
-			aB = a6;
+			aB_CurrMode = a6;
 			w = 3;
 			//NOTE: NUMBER OF ROWS default 11
-			a1 = 8;
+			a1 = 11;
 			Z = 6;
 			aj = {
 				1 : [0, 1, 2],
@@ -258,7 +258,7 @@ function TalentCalc() {
 		ap();
 		ac();
 		if (t.whBuild) {
-			aN(t.whBuild)
+			aN_setWhBuild(t.whBuild)
 		} else {
 			if (t.classId > 0 && aY[t.classId]) {
 				if (t.blizzBuild) {
@@ -269,7 +269,7 @@ function TalentCalc() {
 			}
 		}
 		if (t.whGlyphs) {
-			G(t.whGlyphs)
+			G_setWhGlyphs(t.whGlyphs)
 		} else {
 			if (t.blizzGlyphs) {
 				a8(t.blizzGlyphs)
@@ -277,7 +277,7 @@ function TalentCalc() {
 		}
 	};
 	this.promptBlizzBuild = function () {
-		if (aB == aI) {
+		if (aB_CurrMode == aI_Mode) {
 			return
 		}
 		var be, bc = prompt(LANG.prompt_importblizz, "");
@@ -314,7 +314,7 @@ function TalentCalc() {
 		var bf = bc.indexOf("=");
 		if (bf != -1) {
 			be = bc.substr(bf + 1);
-			bd = aN(be)
+			bd = aN_setWhBuild(be)
 		}
 		if (!bd) {
 			alert(LANG.alert_invalidurl);
@@ -325,30 +325,30 @@ function TalentCalc() {
 		T(bd, bc)
 	};
 	this.reset = function (bc) {
-		if (aF == -1) {
+		if (aF_CurrentClass == -1) {
 			return
 		}
 		if (bc > w - 1) {
 			return
 		}
 		J = false;
-		aV(bc, aF, true)
+		aV(bc, aF_CurrentClass, true)
 	};
 	this.resetAll = function () {
-		if (!M[aF]) {
+		if (!M_ClassData[aF_CurrentClass]) {
 			return
 		}
 		J = false;
-		am(aF);
+		am(aF_CurrentClass);
 		S()
 	};
 	this.resetBuild = function () {
-		if (!M[aF]) {
+		if (!M_ClassData[aF_CurrentClass]) {
 			return
 		}
 		J = false;
-		a5(aF);
-		c(aF);
+		a5(aF_CurrentClass);
+		c(aF_CurrentClass);
 		S()
 	};
 	this.resetGlyphs = function () {
@@ -362,13 +362,13 @@ function TalentCalc() {
 		Q(bc, bd)
 	};
 	this.setBlizzGlyphs = function (bc) {
-		if (aF == -1) {
+		if (aF_CurrentClass == -1) {
 			return
 		}
 		a8(bc)
 	};
 	this.setBonusPoints = function (bc) {
-		if (aB != aI) {
+		if (aB_CurrMode != aI_Mode) {
 			return
 		}
 		ab(bc)
@@ -382,7 +382,7 @@ function TalentCalc() {
 			return
 		}
 		var bc;
-		if (aB == aI) {
+		if (aB_CurrMode == aI_Mode) {
 			bc = Math.max(0, Math.floor((bd - 16) / 4))
 		} else {
 			bc = Math.max(0, bd - 9)
@@ -390,25 +390,25 @@ function TalentCalc() {
 		m(bc, -1)
 	};
 	this.setLock = function (bc) {
-		if (aF == -1) {
+		if (aF_CurrentClass == -1) {
 			return
 		}
 		ai(bc)
 	};
 	this.setWhBuild = function (bc) {
-		return aN(bc)
+		return aN_setWhBuild(bc)
 	};
 	this.setWhGlyphs = function (bc) {
-		if (aF == -1) {
+		if (aF_CurrentClass == -1) {
 			return
 		}
-		G(bc)
+		G_setWhGlyphs(bc)
 	};
 	this.showSummary = function (bh) {
-		if (aF == -1) {
+		if (aF_CurrentClass == -1) {
 			return
 		}
-		var bi = M[aF],
+		var bi = M_ClassData[aF_CurrentClass],
 		bg = window.open("", "", "toolbar=no,menubar=yes,status=yes,scrollbars=yes,resizable=yes"),
 		be,
 		bd,
@@ -417,7 +417,7 @@ function TalentCalc() {
 		bg.document.open();
 		if (bh) {
 			bf += "<h2>";
-			if (aB == aI) {
+			if (aB_CurrMode == aI_Mode) {
 				bf += sprintf(LANG.tc_printh, aQ(), g_pet_families[bi.n])
 			} else {
 				bf += sprintf(LANG.tc_printh, aQ(), g_chr_classes[bi.n]) + " (" + bi[0].k + "/" + bi[1].k + "/" + bi[2].k + ")"
@@ -490,13 +490,13 @@ function TalentCalc() {
 		return av(bc)
 	};
 	this.toggleLock = function () {
-		if (aF == -1) {
+		if (aF_CurrentClass == -1) {
 			return
 		}
 		s()
 	};
 	function au(bf, bd, bc) {
-		var be = M[aF];
+		var be = M_ClassData[aF_CurrentClass];
 		glyph = g_glyphs[bd];
 		if (glyph && n(glyph, bf)) {
 			if (be.glyphs[bf]) {
@@ -511,7 +511,7 @@ function TalentCalc() {
 		}
 	}
 	function u() {
-		var bg = M[aF];
+		var bg = M_ClassData[aF_CurrentClass];
 		if (bg.k > R) {
 			for (var bc = w - 1; bc >= 0; --bc) {
 				for (var bf = bg[bc].t.length - 1; bf >= 0; --bf) {
@@ -684,7 +684,7 @@ function TalentCalc() {
 		bc.className = "talentcalc-sidebar-inner";
 		bp = ce("a");
 		bp.className = "talentcalc-button-help";
-		bp.href = (aB == aI ? "http://petopia.brashendeavors.net/html/patch30/patch30faq_talents.php": "?help=talent-calculator");
+		bp.href = (aB_CurrMode == aI_Mode ? "http://petopia.brashendeavors.net/html/patch30/patch30faq_talents.php": "?help=talent-calculator");
 		bp.target = "_blank";
 		ae(bp, ct(LANG.tc_help));
 		ae(bc, bp);
@@ -747,7 +747,7 @@ function TalentCalc() {
 		if (!t.noAd) {
 			az()
 		}
-		if (aB == a6) {
+		if (aB_CurrMode == a6) {
 			e = ce("div");
 			e.style.display = "none";
 			bp = ce("h3");
@@ -793,7 +793,7 @@ function TalentCalc() {
 				for (var bl = 0; bl < 2; ++bl) {
 					var bn = (bl * 3) + bi;
 					bd = ce("th");
-					bk = Icon.create("inventoryslot_empty", 1, null, "javascript:;");
+					bk = Icon.create("inventoryslot_empty.jpg", 1, null, "javascript:;");
 					bj = Icon.getLink(bk);
 					p[bn] = bk;
 					ae(bd, bk);
@@ -857,7 +857,7 @@ function TalentCalc() {
 		return bk
 	}
 	function P(bo) {
-		var bw = M[bo],
+		var bw = M_ClassData[bo],
 		bA;
 		bw.k = 0;
 		bw.div = ce("div");
@@ -873,7 +873,7 @@ function TalentCalc() {
 				bv.style.borderLeft = "1px solid #404040"
 			}
 			d2.style.overflow = "hidden";
-			d2.style.width = (aB == a6 ? "204px": "244px");
+			d2.style.width = (aB_CurrMode == a6 ? "204px": "244px");
 			//ae(d2, aO(4, a1));
 			ae(d2, aO(4, a1));
 			ae(bv, d2);
@@ -882,9 +882,9 @@ function TalentCalc() {
 			by,
 			bx = "";
 			if (!Browser.ie6) {
-				bx = "?" + C
+				bx = "?" + C_Version
 			}
-			if (aB == aI) {
+			if (aB_CurrMode == aI_Mode) {
 				bv.style.backgroundImage = "url(http://static.wowhead.com/images/pet/petcalc" + (g_locale.id == 25 ? "-ptr": "") + "/bg_" + (bw[0].i + 1) + ".jpg" + bx + ")";
 				by = "http://static.wowhead.com/images/pet/petcalc" + (g_locale.id == 25 ? "-ptr": "") + "/icons_" + (bw[0].i + 1) + ".jpg" + bx
 			} else {
@@ -894,8 +894,8 @@ function TalentCalc() {
 			}
 			for (var bq = bw[bm].t.length - 1; bq >= 0; --bq) {
 				var bj = bw[bm].t[bq],
-				//bu = Icon.create(by, 1, null, "javascript:;"),
-				bu = Icon.create(bj.iconname, 1, null, "javascript:;"),
+				//bu = Icon.create(by + ".jpg", 1, null, "javascript:;"),
+				bu = Icon.create(bj.iconname + ".png", 1, null, "javascript:;"),
 				bf = Icon.getLink(bu),
 				bn = br[(bj.y * 4 + bj.x + 1) - 1];
 				if (Browser.ie6) {
@@ -961,14 +961,14 @@ function TalentCalc() {
 							}
 						}
 					}
-					if (aB == aI) {
+					if (aB_CurrMode == aI_Mode) {
 						bi = (Math.abs(be) - 1) * 60;
 						bs = (Math.abs(bd) - 1) * 60
 					} else {
 						bi = (Math.abs(be) - 1) * 50;
 						bs = (Math.abs(bd) - 1) * 50
 					}
-					if (aB == aI) {
+					if (aB_CurrMode == aI_Mode) {
 						switch (bg) {
 						case 0:
 							bs += 27;
@@ -1035,7 +1035,7 @@ function TalentCalc() {
 		bd = ce("span");
 		bd.className = "talentcalc-upper-class";
 		be = a4 = ce("b");
-		if (aB == aI) {
+		if (aB_CurrMode == aI_Mode) {
 			var bc = ce("a");
 			bc.target = "_blank";
 			ae(a4, bc);
@@ -1052,7 +1052,7 @@ function TalentCalc() {
 		aH = ce("b");
 		ae(bd, aH);
 		ae(bf, bd);
-		if (aB == aI) {
+		if (aB_CurrMode == aI_Mode) {
 			be = I = ce("a");
 			be.href = "javascript:;";
 			be.onclick = E.bind(null, be);
@@ -1083,12 +1083,12 @@ function TalentCalc() {
 					bf[bd] = 0
 				}
 			}
-			bc += ah.charAt(bf[0] * 6 + bf[1])
+			bc += ah_EncodingArray.charAt(bf[0] * 6 + bf[1])
 		}
 		return bc
 	}
 	function h(bj, bf, bi) {
-		var bh = M[bj.classId];
+		var bh = M_ClassData[bj.classId];
 		if (bj.k > 0) {
 			if (bj.links) {
 				for (bd = 0; bd < bj.links.length; ++bd) {
@@ -1123,20 +1123,20 @@ function TalentCalc() {
 			}
 		}
 	}
-	function f(be) {
-		var bc = f.L;
+	function f_InverseConvertClassID(be) {
+	    var bc = f_InverseConvertClassID.L_Table;
 		if (bc == null) {
-			bc = f.L = {};
-			for (var bd in aw.L) {
-				bc[aw.L[bd]] = bd
+			bc = f_InverseConvertClassID.L_Table = {};
+			for (var bd in aw_ConvertClassID.L_Table) {
+				bc[aw_ConvertClassID.L_Table[bd]] = bd
 			}
 		}
 		return bc[be]
 	}
-	function aw(bc) {
-		return aw.L[bc]
+	function aw_ConvertClassID(bc) {
+		return aw_ConvertClassID.L_Table[bc]
 	}
-	aw.L = {
+	aw_ConvertClassID.L_Table = {
 		6 : 9,
 		11 : 0,
 		3 : 1,
@@ -1152,8 +1152,8 @@ function TalentCalc() {
 		return (bc >= 0 && bc <= 2 ? 1 : 2)
 	}
 	function aQ() {
-		var bc = M[aF];
-		if (aB == aI) {
+		var bc = M_ClassData[aF_CurrentClass];
+		if (aB_CurrMode == aI_Mode) {
 			return Math.max(r ? 60 : 0, bc.k > 0 ? (bc.k - r) * 4 + 16 : 0)
 		} else {
 			return (bc.k ? bc.k + 9 : 0)
@@ -1243,7 +1243,7 @@ function TalentCalc() {
 		}
 	}
 	function b(bg, bd, bf) {
-		var be = M[bg.classId];
+		var be = M_ClassData[bg.classId];
 		if (be.k < R) {
 			if (bg.enabled && bg.k < bg.m) {
 				be.k++;
@@ -1263,7 +1263,7 @@ function TalentCalc() {
 				}
 			}
 		} else {
-			if (aB == aI && be.k == R && !bd) {
+			if (aB_CurrMode == aI_Mode && be.k == R && !bd) {
 				m( - 1, 4, true);
 				b(bg, bd, bf)
 			}
@@ -1295,8 +1295,8 @@ function TalentCalc() {
 		if (bc.none) {
 			return true
 		}
-		var bd = M[aF];
-		return (bc.classs == aF && bc.type == aJ(be != null ? be: aa) && !bd.glyphItems[bc.id])
+		var bd = M_ClassData[aF_CurrentClass];
+		return (bc.classs == aF_CurrentClass && bc.type == aJ(be != null ? be: aa) && !bd.glyphItems[bc.id])
 	}
 	function S() {
 		if (aq) {
@@ -1305,18 +1305,18 @@ function TalentCalc() {
 		aq = setTimeout(al, 50)
 	}
 	function al() {
-		var be = M[aF];
+		var be = M_ClassData[aF_CurrentClass];
 		if (!be) {
 			return
 		}
-		A.mode = aB;
-		A.classId = aF;
+		A.mode = aB_CurrMode;
+		A.classId = aF_CurrentClass;
 		A.locked = J;
 		A.requiredLevel = aQ();
 		A.pointsLeft = R - be.k;
-		A.pointsSpent = (aB == aI ? be[0].k: [be[0].k, be[1].k, be[2].k]);
+		A.pointsSpent = (aB_CurrMode == aI_Mode ? be[0].k: [be[0].k, be[1].k, be[2].k]);
 		A.bonusPoints = r;
-		st(V, "(" + (aB == aI ? be.k: A.pointsSpent.join("/")) + ")");
+		st(V, "(" + (aB_CurrMode == aI_Mode ? be.k: A.pointsSpent.join("/")) + ")");
 		st(aR, A.requiredLevel ? A.requiredLevel: "-");
 		st(aH, A.pointsLeft);
 		if (J) {
@@ -1326,7 +1326,7 @@ function TalentCalc() {
 			st(v, LANG.tc_lock);
 			v.className = "talentcalc-button-lock"
 		}
-		if (aB == aI) {
+		if (aB_CurrMode == aI_Mode) {
 			if (r) {
 				st(I, "[-]");
 				I.className = "q10"
@@ -1347,11 +1347,11 @@ function TalentCalc() {
 		}
 	}
 	function aW() {
-		st(a4, aY[aF]);
-		if (aB == aI) {
-			a4.href = "?pet=" + aF
+		st(a4, aY[aF_CurrentClass]);
+		if (aB_CurrMode == aI_Mode) {
+			a4.href = "?pet=" + aF_CurrentClass
 		} else {
-			a4.className = "c" + aF
+			a4.className = "c" + aF_CurrentClass
 		}
 		if (K == 0) {
 			j.style.display = "";
@@ -1365,20 +1365,20 @@ function TalentCalc() {
 			y.style.display = "";
 			ay.style.display = ""
 		}
-		var be = M[aF];
+		var be = M_ClassData[aF_CurrentClass];
 		for (var bc = 0; bc < w; ++bc) {
 			var bd = aS[bc].firstChild.childNodes[0];
-			if (aB == a6) {
-				bd.style.backgroundImage = "url(images/talent/classes/trees/" + g_file_classes[aF] + "_" + (bc + 1) + ".gif)"
+			if (aB_CurrMode == a6) {
+				bd.style.backgroundImage = "url(images/talent/classes/trees/" + g_file_classes[aF_CurrentClass] + "_" + (bc + 1) + ".gif)"
 			}
 			st(bd, be[bc].n)
 		}
 		u();
-		c(aF);
+		c(aF_CurrentClass);
 		S(); ++K
 	}
 	function aP(bk, bi) {
-		var bj = M[bi];
+		var bj = M_ClassData[bi];
 		var bl = 0,
 		bd = 0;
 		var bf = null,
@@ -1438,7 +1438,7 @@ function TalentCalc() {
 		}
 	}
 	function aA(bn, bk) {
-		var bl = M[bk];
+		var bl = M_ClassData[bk];
 		var bo = 0,
 		be = 0;
 		var bm = [];
@@ -1447,7 +1447,7 @@ function TalentCalc() {
 		for (var bj = 0; bj < bn.length; ++bj) {
 			var bc = bn.charAt(bj);
 			if (bc != L) {
-				var bf = ah.indexOf(bc);
+				var bf = ah_EncodingArray.indexOf(bc);
 				if (bf < 0) {
 					continue
 				}
@@ -1489,7 +1489,7 @@ function TalentCalc() {
 				bg = 3;
 				continue
 			}
-			au(bg, a0[aF][aJ(bg)][ah.indexOf(bf)], true); ++bg
+			au(bg, a0[aF_CurrentClass][aJ(bg)][ah_EncodingArray.indexOf(bf)], true); ++bg
 		}
 	}
 	function O(be) {
@@ -1503,11 +1503,11 @@ function TalentCalc() {
 			bd.style.visibility = "hidden";
 			ae(ge("layers"), bd)
 		}
-		var bh = M[be];
+		var bh = M_ClassData[be];
 		for (var bc = 0; bc < w; ++bc) {
 			var bg = ce("img"),
 			bf = ce("img");
-			if (aB == aI) {
+			if (aB_CurrMode == aI_Mode) {
 				bg.src = "http://static.wowhead.com/images/pet/petcalc" + (g_locale.id == 25 ? "-ptr": "") + "/bg_" + (bc + 1) + ".jpg";
 				bf.src = "http://static.wowhead.com/images/pet/petcalc" + (g_locale.id == 25 ? "-ptr": "") + "/icons_" + (bc + 1) + ".jpg"
 			} else {
@@ -1525,7 +1525,7 @@ function TalentCalc() {
 		}
 	}
 	function U() {
-		if (aB != a6) {
+		if (aB_CurrMode != a6) {
 			return
 		}
 		var bc = 0;
@@ -1536,10 +1536,10 @@ function TalentCalc() {
 		e.style.display = (bc == 0 && J && t.profiler ? "none": "")
 	}
 	function T(be, bd) {
-		if (M[be] == null) {
+		if (M_ClassData[be] == null) {
 			bd.n = be;
-			M[be] = bd;
-			var bf = M[be];
+			M_ClassData[be] = bd;
+			var bf = M_ClassData[be];
 			bf.glyphs = [];
 			bf.glyphItems = {};
 			P(be);
@@ -1567,7 +1567,7 @@ function TalentCalc() {
 				}
 			}
 			a7 = null;
-			if (be == aF) {
+			if (be == aF_CurrentClass) {
 				aW();
 				bf.div.style.display = "";
 				for (var bc = 0; bc < w; ++bc) {
@@ -1577,7 +1577,7 @@ function TalentCalc() {
 		}
 	}
 	function X(be, bc) {
-		var bd = M[aF];
+		var bd = M_ClassData[aF_CurrentClass];
 		if (bd.glyphs[be]) {
 			bd.glyphItems[bd.glyphs[be]] = 0;
 			bd.glyphs[be] = 0;
@@ -1594,7 +1594,7 @@ function TalentCalc() {
 		c(bc)
 	}
 	function a5(bd) {
-		if (aB == aI) {
+		if (aB_CurrMode == aI_Mode) {
 			m( - 1, 0, true)
 		}
 		for (var bc = 0; bc < w; ++bc) {
@@ -1602,7 +1602,7 @@ function TalentCalc() {
 		}
 	}
 	function aL(bc) {
-		var be = M[aF];
+		var be = M_ClassData[aF_CurrentClass];
 		if (!be) {
 			return
 		}
@@ -1612,7 +1612,7 @@ function TalentCalc() {
 		U()
 	}
 	function aV(bc, bf, be) {
-		var bg = M[bf];
+		var bg = M_ClassData[bf];
 		var bd;
 		for (bd = 0; bd < bg[bc].t.length; ++bd) {
 			bg[bc].t[bd].k = 0
@@ -1634,14 +1634,14 @@ function TalentCalc() {
 	function af() {
 		if (aC) {
 			if (aC.wh) {
-				aN(aC.wh)
+				aN_setWhBuild(aC.wh)
 			} else {
 				Q(aC.classId, aC.blizz)
 			}
 		}
 		if (N) {
 			if (N.wh) {
-				G(N.wh)
+				G_setWhGlyphs(N.wh)
 			}
 		}
 	}
@@ -1660,7 +1660,7 @@ function TalentCalc() {
 			};
 			d.style.display = ""
 		}
-		if (M[bc]) {
+		if (M_ClassData[bc]) {
 			a5(bc);
 			c(bc);
 			aP(bd, bc);
@@ -1679,14 +1679,14 @@ function TalentCalc() {
 		if (!bc) {
 			return
 		}
-		if (M[aF]) {
+		if (M_ClassData[aF_CurrentClass]) {
 			aL();
 			a(bc);
 			U();
 			S()
 		} else {
 			a7 = {
-				classId: aF,
+				classId: aF_CurrentClass,
 				blizz: bc
 			}
 		}
@@ -1701,23 +1701,23 @@ function TalentCalc() {
 		if (aY[bc] == null) {
 			return
 		}
-		if (bc != aF) {
-			ad = aF;
-			aF = bc;
-			if (aB == aI && M[bc] == null) {
+		if (bc != aF_CurrentClass) {
+			ad = aF_CurrentClass;
+			aF_CurrentClass = bc;
+			if (aB_CurrMode == aI_Mode && M_ClassData[bc] == null) {
 				T(bc, bb(bc))
 			} else {
-				if (M[bc]) {
+				if (M_ClassData[bc]) {
 					aW();
-					var bd = M[bc];
+					var bd = M_ClassData[bc];
 					bd.div.style.display = ""
 				} else {
 					O(bc);
-					g_ajaxIshRequest("?data=talents&class=" + bc + "&" + C)
+					g_ajaxIshRequest("data=talents&class=" + bc + "&" + C_Version)
 				}
 			}
-			if (M[ad]) {
-				M[ad].div.style.display = "none"
+			if (M_ClassData[ad]) {
+				M_ClassData[ad].div.style.display = "none"
 			}
 			return true
 		}
@@ -1725,7 +1725,7 @@ function TalentCalc() {
 	function ai(bc) {
 		if (J != bc) {
 			J = bc;
-			c(aF);
+			c(aF_CurrentClass);
 			S()
 		}
 	}
@@ -1740,27 +1740,27 @@ function TalentCalc() {
 		aT = be;
 		r = bf;
 		R = be + bf;
-		if (aF != -1) {
+		if (aF_CurrentClass != -1) {
 			if (R < bc) {
 				u()
 			}
-			c(aF);
+			c(aF_CurrentClass);
 			if (!bd) {
 				S()
 			}
 		}
 	}
-	function aN(bg) {
-		if (!bg) {
+	function aN_setWhBuild(bg_InputBuild) {
+		if (!bg_InputBuild) {
 			return
 		}
-		var bc = bg,
+		var bc = bg_InputBuild,
 		bd = false,
 		be;
-		if (aB == aI) {
-			var bh = ah.indexOf(bg.charAt(0));
+		if (aB_CurrMode == aI_Mode) {
+			var bh = ah_EncodingArray.indexOf(bg_InputBuild.charAt(0));
 			if (bh >= 0 && bh <= 4) {
-				var bf = ah.indexOf(bg.charAt(1));
+				var bf = ah_EncodingArray.indexOf(bg_InputBuild.charAt(1));
 				if (bf % 2 == 1) {
 					m( - 1, 4, true); --bf
 				} else {
@@ -1768,24 +1768,24 @@ function TalentCalc() {
 				}
 				be = bh * 10 + (bf / 2);
 				if (g_pet_families[be] != null) {
-					bg = bg.substr(2);
+					bg_InputBuild = bg_InputBuild.substr(2);
 					bd = true
 				}
 			}
 		} else {
-			var bh = ah.indexOf(bg.charAt(0));
+			var bh = ah_EncodingArray.indexOf(bg_InputBuild.charAt(0));
 			if (bh >= 0 && bh <= 27) {
 				var bf = bh % 3,
 				be = (bh - bf) / 3;
-				be = f(be);
+				be = f_InverseConvertClassID(be);
 				if (be != null) {
-					bg = bg.substr(1);
+					bg_InputBuild = bg_InputBuild.substr(1);
 					bd = true
 				}
 			}
 		}
 		if (bd) {
-			if (bg.length) {
+			if (bg_InputBuild.length) {
 				J = true;
 				if (!aC) {
 					aC = {
@@ -1794,14 +1794,14 @@ function TalentCalc() {
 					d.style.display = ""
 				}
 			}
-			if (M[be]) {
+			if (M_ClassData[be]) {
 				a5(be);
-				aA(bg, be);
+				aA(bg_InputBuild, be);
 				c(be)
 			} else {
 				g = {
 					classId: be,
-					wh: bg
+					wh: bg_InputBuild
 				}
 			}
 			if (!q(be)) {
@@ -1810,7 +1810,7 @@ function TalentCalc() {
 			return be
 		}
 	}
-	function G(bc) {
+	function G_setWhGlyphs(bc) {
 		if (!bc) {
 			return
 		}
@@ -1819,20 +1819,20 @@ function TalentCalc() {
 				wh: bc
 			}
 		}
-		if (M[aF]) {
+		if (M_ClassData[aF_CurrentClass]) {
 			aL();
 			B(bc);
 			U();
 			S()
 		} else {
 			a7 = {
-				classId: aF,
+				classId: aF_CurrentClass,
 				wh: bc
 			}
 		}
 	}
 	function F(be, bd) {
-		var bc = M[aF];
+		var bc = M_ClassData[aF_CurrentClass];
 		upper = "",
 		lower = "";
 		glyph = g_glyphs[bc.glyphs[bd]];
@@ -1858,7 +1858,7 @@ function TalentCalc() {
 		Tooltip.show(be, "<table><tr><td>" + upper + "</td></tr></table><table><tr><td>" + lower + "</td></tr></table>")
 	}
 	function Y(bf, be) {
-		var bd = M[be.classId],
+		var bd = M_ClassData[be.classId],
 		bc = "<table><tr><td><b>";
 		if (be.z) {
 			bc += '<span style="float: right" class="q0">' + be.z + "</span>"
@@ -1907,24 +1907,24 @@ function TalentCalc() {
 	}
 	function s() {
 		J = !J;
-		c(aF);
+		c(aF_CurrentClass);
 		S();
 		return J
 	}
 	function aX(bh) {
-		var bg = M[aF],
+		var bg = M_ClassData[aF_CurrentClass],
 		bd = p[bh],
 		bf = Icon.getLink(bd),
 		bc = D[bh];
 		if (bg.glyphs[bh]) {
 			var be = g_glyphs[bg.glyphs[bh]];
-			Icon.setTexture(bd, 1, be.icon);
+			Icon.setTexture(bd, 1, be.icon + ".jpg");
 			bc.href = bf.href = "?item=" + be.id;
 			st(bc, av(be.name));
 			bc.className = "q1";
 			return true
 		} else {
-			Icon.setTexture(bd, 1, "inventoryslot_empty");
+			Icon.setTexture(bd, 1, "inventoryslot_empty.jpg");
 			bc.href = bf.href = "javascript:;";
 			st(bc, LANG.tc_empty);
 			bc.className = "q0";
@@ -1932,7 +1932,7 @@ function TalentCalc() {
 		}
 	}
 	function ba(bl, bh, bd, bi) {
-		var bj = M[bi];
+		var bj = M_ClassData[bi];
 		var bg;
 		var bc;
 		if (!bd || bj.k == R) {
@@ -1978,7 +1978,8 @@ function TalentCalc() {
 						bd.bubble.style.color = "#17FD17"
 					}
 					//Icon.moveTexture(bd.icon, 1, be, 0);
-					Icon.setTexture(bd.icon, 1, bd.iconname);
+					Icon.setTexture(bd.icon, 1, bd.iconname + ".png");
+					bd.icon.firstChild.style["background-size"] = "36px";
 					bd.link.className = "bubbly";
 					bd.bubble.style.visibility = "visible";
 					if (bd.r) {
@@ -1991,7 +1992,8 @@ function TalentCalc() {
 					bd.border.style.backgroundPosition = "0 0";
 					//Icon.moveTexture(bd.icon, 1, be, 1);
 					//Icon.setTexture(bd.icon, 1, "?data=talent-icon&icon=" + bd.iconname);
-					Icon.setTexture(bd.icon, 1, bd.iconname + "_grey");
+					Icon.setTexture(bd.icon, 1, "grey/" + bd.iconname + ".jpg");
+					bd.icon.firstChild.style["background-size"] = "36px";
 					bd.link.className = "";
 					bd.bubble.style.visibility = "hidden";
 					if (bd.r) {
