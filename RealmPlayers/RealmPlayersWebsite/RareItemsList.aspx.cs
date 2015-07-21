@@ -103,7 +103,7 @@ namespace RealmPlayersServer
                     firstPlayers += "</div>";
                     extraColumns[ItemAndAquiredDateAfterColumn] = new string[]{
                                 "<div class='inventory' style='background: none; width: 58px; height: 58px;'><div>"
-                                + "<img class='itempic' src='" + currentItemDatabase + itemInfo.GetIconImageAddress() + "'/>"
+                                + "<img class='itempic' src='" + "http://realmplayers.com/" + itemInfo.GetIconImageAddress() + "'/>"
                                 + "<div class='quality' id='" + CharacterViewer.ItemQualityConversion[itemInfo.ItemQuality] + "'></div>"
                                 + "<img class='itemframe' src='assets/img/icons/ItemNormalFrame.png'/>"
                                 + CharacterViewer.GenerateItemLink(currentItemDatabase, rareItem.Value.m_ItemID, rareItem.Value.m_SuffixID, wowVersion)

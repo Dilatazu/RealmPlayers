@@ -296,7 +296,7 @@ namespace RealmPlayersServer
                 else
                 {
                     string currInvInfo = "<div class='equipment-slot' id='" + CharacterViewer.ItemSlotToIDConversion[item.Slot] + "'>"
-                                + "<img class='itempic' src='" + currentItemDatabase + itemInfo.GetIconImageAddress() + "'/>"
+                                + "<img class='itempic' src='" + "http://realmplayers.com/" + itemInfo.GetIconImageAddress() + "'/>"
                                 + "<div class='quality' id='" + CharacterViewer.ItemQualityConversion[itemInfo.ItemQuality] + "'></div>"
                                 + "<img class='itemframe' src='assets/img/icons/ItemNormalFrame.png'/>"
                                 + CharacterViewer.GenerateItemLink(currentItemDatabase, item, _WowVersion, itemInfo.GenerateSetPcsStr(itemIDs));

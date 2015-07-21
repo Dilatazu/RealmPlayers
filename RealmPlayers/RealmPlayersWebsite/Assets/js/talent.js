@@ -67,7 +67,7 @@ function tc_init() {
 	vanillaClasses.style.height = "420px";
 	for (var d = 0, b = tc_chooseClasses.length; d < b; ++d) {
 	    var h = tc_chooseClasses[d],
-		f = Icon.create("class_" + g_file_classes[h] + ".png", 1, null, "javascript:;"),
+		f = Icon.create("class_" + g_file_classes[h] + ".jpg", 1, null, "javascript:;"),
 		g = Icon.getLink(f);
 		tc_classIcons[h] = f;
 		if (Browser.ie6) {
@@ -85,7 +85,7 @@ function tc_init() {
 	tbcClasses.style.height = "420px";
 	for (var d = 0, b = tc_chooseClassesTBC.length; d < b; ++d) {
 	    var h = tc_chooseClassesTBC[d],
-		f = Icon.create("class_" + g_file_classes[h] + ".png", 1, null, "javascript:;"),
+		f = Icon.create("class_" + g_file_classes[h] + ".jpg", 1, null, "javascript:;"),
 		g = Icon.getLink(f);
 	    tc_classIcons[h] = f;
 	    if (Browser.ie6) {

@@ -1198,7 +1198,7 @@ var Icon = {
 		if (b.indexOf("?") != -1) {
 			a.backgroundImage = "url(" + b + ")"
 		} else {
-		    a.backgroundImage = "url(images/icons/" +Icon.sizes[c] + "/" +b.toLowerCase() + ")"
+		    a.backgroundImage = "url(http://realmplayers.com/images/icons/" +Icon.sizes[c] + "/" +b.toLowerCase() + ")"
 		}
 		Icon.moveTexture(d, c, 0, 0)
 	},
@@ -1514,7 +1514,7 @@ var Tooltip = {
 	setIcon: function (a) {
 		Tooltip.prepare();
 		if (a) { 
-		    Tooltip.icon.style.backgroundImage = "url(" + g_WowIconImageHoster + "/images/icons/medium/" + a.toLowerCase() + ".jpg)";
+		    Tooltip.icon.style.backgroundImage = "url(http://realmplayers.com/images/icons/medium/" + a.toLowerCase() + ".jpg)";
 			Tooltip.icon.style.visibility = "visible"
 		} else {
 			Tooltip.icon.style.backgroundImage = "none";

@@ -236,7 +236,7 @@ namespace RealmPlayersServer
 
                             var itemInfo = item.Item2;
                             itemLinks += "<div style='background: none; width: 58px; height: 58px;margin: " + yPos + "px " + xPos + "px;'>"
-                                + "<img class='itempic' src='" + currentItemDatabase + itemInfo.GetIconImageAddress() + "'/>"
+                                + "<img class='itempic' src='" + "http://realmplayers.com/" + itemInfo.GetIconImageAddress() + "'/>"
                                 + "<div class='quality' id='" + CharacterViewer.ItemQualityConversion[itemInfo.ItemQuality] + "'></div>"
                                 + "<img class='itemframe' src='assets/img/icons/ItemNormalFrame.png'/>"
                                 + CharacterViewer.GenerateItemLink(currentItemDatabase, item.Item1, wowVersion);

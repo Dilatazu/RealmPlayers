@@ -36,13 +36,13 @@ background-image:url(../images/icon16-help.gif);
 
 a.talentcalc-button-lock {
 float:left;
-background-image:url(../../../images/talent/lock.gif);
+background-image:url(http://realmplayers.com/images/talent/lock.gif);
 }
 
 a.talentcalc-button-unlock {
 float:left;
 background-position:-110px center;
-background-image:url(../../../images/talent/lock.gif);
+background-image:url(http://realmplayers.com/images/talent/lock.gif);
 }
 
 a.talentcalc-button-reset {
@@ -52,7 +52,7 @@ margin-left:10px;
 background:no-repeat left center;
 float:left;
 padding-left:19px;
-background-image:url(../../../images/talent/clear.gif);
+background-image:url(http://realmplayers.com/images/talent/clear.gif);
 }
 
 .talentcalc-sidebar-controls2 a {
@@ -64,7 +64,7 @@ background:no-repeat left center;
 
 a.talentcalc-button-export {
 padding-left:19px;
-background-image:url(../../../images/talent/link.gif);
+background-image:url(http://realmplayers.com/images/talent/link.gif);
 }
 
 #talentcalc-sidebar-ad {
@@ -184,7 +184,7 @@ left:1px;
 top:1px;
 width:42px;
 height:42px;
-background:url(../../../images/talent/border.gif) no-repeat;
+background:url(http://realmplayers.com/images/talent/border.gif) no-repeat;
 }
 
 .iconmedium div.icon-bubble {
@@ -194,7 +194,7 @@ width:22px;
 height:23px;
 left:30px;
 top:29px;
-background:url(../../../images/talent/bubble2.png) no-repeat;
+background:url(http://realmplayers.com/images/talent/bubble2.png) no-repeat;
 padding:4px 0 0;
 font-family:Verdana,sans-serif;
 font-size:12px;
@@ -203,7 +203,7 @@ cursor:default;
 }
 
 .iconmedium a.bubbly {
-background-image:url(../../../images/talent/icon_hilite_medium_talent.png);
+background-image:url(http://realmplayers.com/images/talent/icon_hilite_medium_talent.png);
 }
 
 .talentcalc-arrow-anchor {
@@ -229,35 +229,35 @@ height:auto;
 }
 
 .talentcalc-arrow-leftdown td {
-background-image:url(../../../images/talent/arrows/leftdown.png);
+background-image:url(http://realmplayers.com/images/talent/arrows/leftdown.png);
 }
 
 .talentcalc-arrow-leftdown2 td {
-background-image:url(../../../images/talent/arrows/leftdown2.png);
+background-image:url(http://realmplayers.com/images/talent/arrows/leftdown2.png);
 }
 
 .talentcalc-arrow-rightdown td {
-background-image:url(../../../images/talent/arrows/rightdown.png);
+background-image:url(http://realmplayers.com/images/talent/arrows/rightdown.png);
 }
 
 .talentcalc-arrow-rightdown2 td {
-background-image:url(../../../images/talent/arrows/rightdown2.png);
+background-image:url(http://realmplayers.com/images/talent/arrows/rightdown2.png);
 }
 
 .talentcalc-arrow-right td {
-background-image:url(../../../images/talent/arrows/right.png);
+background-image:url(http://realmplayers.com/images/talent/arrows/right.png);
 }
 
 .talentcalc-arrow-right2 td {
-background-image:url(../../../images/talent/arrows/right2.png);
+background-image:url(http://realmplayers.com/images/talent/arrows/right2.png);
 }
 
 .talentcalc-arrow-left td {
-background-image:url(../../../images/talent/arrows/left.png);
+background-image:url(http://realmplayers.com/images/talent/arrows/left.png);
 }
 
 .talentcalc-arrow-left2 td {
-background-image:url(../../../images/talent/arrows/left2.png);
+background-image:url(http://realmplayers.com/images/talent/arrows/left2.png);
 }
 
 .talentcalc-lower {
@@ -338,7 +338,7 @@ top:2px;
 width:20px;
 height:20px;
 opacity:.3333;
-background:url(../../../images/talent/clear.gif) no-repeat 2px 2px;
+background:url(http://realmplayers.com/images/talent/clear.gif) no-repeat 2px 2px;
 }
 
 .talentcalc-lower a:hover {
@@ -387,9 +387,9 @@ width:616px;
 }
 
 .talentcalc-arrow-down td,.talentcalc-arrow-leftdown th,.talentcalc-arrow-rightdown th {
-background-image:url(../../../images/talent/arrows/down.png);
+background-image:url(http://realmplayers.com/images/talent/arrows/down.png);
 }
 
 .talentcalc-arrow-down2 td,.talentcalc-arrow-leftdown2 th,.talentcalc-arrow-rightdown2 th {
-background-image:url(../../../images/talent/arrows/down2.png);
+background-image:url(http://realmplayers.com/images/talent/arrows/down2.png);
 }

@@ -966,7 +966,7 @@ function TalentCalc() {
 				bv.style.backgroundImage = "url(http://static.wowhead.com/images/pet/petcalc" + (g_locale.id == 25 ? "-ptr": "") + "/bg_" + (bw[0].i + 1) + ".jpg" + bx + ")";
 				by = "http://static.wowhead.com/images/pet/petcalc" + (g_locale.id == 25 ? "-ptr": "") + "/icons_" + (bw[0].i + 1) + ".jpg" + bx
 			} else {
-			    bv.style.backgroundImage = "url(images/talent/classes/backgrounds/" + g_file_classes[bo] + "_" + (bm + 1) + ".jpg" + bx + ")";
+			    bv.style.backgroundImage = "url(http://realmplayers.com/images/talent/classes/backgrounds/" + g_file_classes[bo] + "_" + (bm + 1) + ".jpg" + bx + ")";
 			    if (bo > 20)
 			    {
                     //TBC
@@ -1515,7 +1515,7 @@ function TalentCalc() {
 		for (var bc = 0; bc < w; ++bc) {
 			var bd = aS[bc].firstChild.childNodes[0];
 			if (aB_CurrMode == a6) {
-				bd.style.backgroundImage = "url(images/talent/classes/trees/" + g_file_classes[aF_CurrentClass] + "_" + (bc + 1) + ".gif)"
+			    bd.style.backgroundImage = "url(http://realmplayers.com/images/talent/classes/trees/" + g_file_classes[aF_CurrentClass] + "_" + (bc + 1) + ".gif)"
 			}
 			st(bd, be[bc].n)
 		}
@@ -1657,7 +1657,7 @@ function TalentCalc() {
 				bg.src = "http://static.wowhead.com/images/pet/petcalc" + (g_locale.id == 25 ? "-ptr": "") + "/bg_" + (bc + 1) + ".jpg";
 				bf.src = "http://static.wowhead.com/images/pet/petcalc" + (g_locale.id == 25 ? "-ptr": "") + "/icons_" + (bc + 1) + ".jpg"
 			} else {
-				bg.src = "images/talent/classes/backgrounds/" + g_file_classes[be] + "_" + (bc + 1) + ".jpg";
+			    bg.src = "http://realmplayers.com/images/talent/classes/backgrounds/" + g_file_classes[be] + "_" + (bc + 1) + ".jpg";
 				//bf.src = "images/talent/classes/icons" + (g_locale.id == 25 ? "-ptr": "") + "/" + g_file_classes[be] + "_" + (bc + 1) + ".jpg"
 			}
 			ae_AddElement(aK, bg);
@@ -2127,7 +2127,7 @@ function TalentCalc() {
 						bd.bubble.style.color = "#17FD17"
 					}
 					//Icon.moveTexture(bd.icon, 1, be, 0);
-					Icon.setTexture(bd.icon, 1, bd.iconname + ".png");
+					Icon.setTexture(bd.icon, 1, bd.iconname + ".jpg");
 					bd.icon.firstChild.style["background-size"] = "36px";
 					bd.link.className = "bubbly";
 					bd.bubble.style.visibility = "visible";
