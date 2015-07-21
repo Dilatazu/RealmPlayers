@@ -253,10 +253,10 @@ function TalentCalc() {
 			o()
 		}
 		R = aT_MaxTalentPoints + r;
+		k_InitializeTalentSideBarMenuDiv();
 		a9_CreateTalentHeaderDiv();
 		ac_InitializeTalentSpecDiv();
 		ap_InitializeTalentMainDiv();
-		k_InitializeTalentSideBarMenuDiv();
 		if (t.whBuild) {
 			aN_setWhBuild(t.whBuild)
 		} else {
@@ -276,6 +276,92 @@ function TalentCalc() {
 			}
 		}
 	};
+	this.promptImportBuild = function () {
+	    if (aB_CurrMode == aI_PetMode) {
+	        return
+	    }
+	    var be, bc = prompt(LANG.prompt_importbuild, "");
+	    if (!bc) {
+	        return
+	    }
+	    if (bc.match("([]*)wowprovider.com/([O-Za-z0-9.]*).?talent=([0-9a-z_]+)"))
+	    {
+	        var talentData = RegExp.$3;
+
+	        //http: //www.wowprovider.com/Old.aspx?talent=11215875_5_85042c1305001002320500323d55r
+
+	        if (talentData.match("11215875_([0-9]+)_([0-9a-z]+)"))
+	        {
+	            //Vanilla
+	            var classNumber = RegExp.$1;
+	            var specc = RegExp.$2;
+
+	            //console.debug("class=" + classNumber + ", specc = " + specc);
+
+	            if (specc.charAt(0) != "8")
+	            {
+	                alert("wowprovider link was possibly broken!");
+	                return;
+	            }
+
+	            specc = specc.substr(1, specc.length - 1);
+	            specc = specc.replace("z", "0000000000000000000000000");
+	            specc = specc.replace("y", "000000000000000000000000");
+	            specc = specc.replace("x", "00000000000000000000000");
+	            specc = specc.replace("w", "0000000000000000000000");
+	            specc = specc.replace("v", "000000000000000000000");
+	            specc = specc.replace("u", "00000000000000000000");
+	            specc = specc.replace("t", "0000000000000000000");
+	            specc = specc.replace("s", "000000000000000000");
+	            specc = specc.replace("r", "00000000000000000");
+	            specc = specc.replace("q", "0000000000000000");
+	            specc = specc.replace("p", "000000000000000");
+	            specc = specc.replace("o", "00000000000000");
+	            specc = specc.replace("n", "0000000000000");
+	            specc = specc.replace("m", "000000000000");
+	            specc = specc.replace("l", "00000000000");
+	            specc = specc.replace("k", "0000000000");
+	            specc = specc.replace("j", "000000000");
+	            specc = specc.replace("i", "00000000");
+	            specc = specc.replace("h", "0000000");
+	            specc = specc.replace("g", "000000");
+	            specc = specc.replace("f", "00000");
+	            specc = specc.replace("e", "0000");
+	            specc = specc.replace("d", "000");
+	            specc = specc.replace("c", "00");
+
+	            //console.debug("talents = " + specc);
+	            Q(classNumber, specc);
+	            return;
+	        }
+	        else
+	        {
+	            //Unknown, TBC?
+	            alert("Did not recognize wowprovider link, do note only vanilla version 11215875 is supported!");
+	            return;
+	        }
+	    }
+        else if (bc.match(/\?cid=([0-9]+)&tal=([0-9]+)/)) {
+	        be = parseInt(RegExp.$1);
+	        Q(be, RegExp.$2);
+	        return
+	    } else {
+	        var bf = bc.indexOf("?tal=");
+	        if (bf != -1) {
+	            for (var bd in g_file_classes) {
+	                if (bc.indexOf(g_file_classes[bd]) != -1) {
+	                    be = parseInt(bd);
+	                    break
+	                }
+	            }
+	            if (be) {
+	                Q(be, bc.substring(bf + 5));
+	                return
+	            }
+	        }
+	    }
+	    alert(LANG.alert_invalidurl)
+	}
 	this.promptBlizzBuild = function () {
 		if (aB_CurrMode == aI_PetMode) {
 			return
@@ -818,7 +904,8 @@ function TalentCalc() {
 			ae_AddElement(bc, e)
 		}
 		ae_AddElement(ao, bc);
-		ae_AddElement(z, ao)
+        //Currently permanently hidden
+		//ae_AddElement(z, ao)
 	}
 	function az() {
 		var bc = ce("div");
@@ -862,7 +949,7 @@ function TalentCalc() {
 			bv.style.backgroundRepeat = "no-repeat";
 			bv.style.cssFloat = bv.style.styleFloat = "left";
 			if (bm > 0) {
-				bv.style.borderLeft = "1px solid #404040"
+				bv.style.borderLeft = "3px solid #000000"
 			}
 			d2.style.overflow = "hidden";
 			d2.style.width = (aB_CurrMode == a6 ? "204px": "244px");
@@ -883,11 +970,13 @@ function TalentCalc() {
 			    if (bo > 20)
 			    {
                     //TBC
-			        bv.style.backgroundSize = "240px 460px";
+			        bv.style.backgroundSize = "204px 460px";
+			        bv.style.height = "460px";
 			    }
 			    else
 			    {
-			        bv.style.backgroundSize = "240px 360px";
+			        bv.style.backgroundSize = "204px 360px";
+			        bv.style.height = "360px";
 			    }
 				//by = "images/talent/classes/icons" + (g_locale.id == 25 ? "-ptr": "") + "/" + g_file_classes[bo] + "_" + (bm + 1) + ".jpg" + bx
 			}
@@ -1045,6 +1134,21 @@ function TalentCalc() {
 		V = ce("b");
 		ae_AddElement(bd, V);
 		ae_AddElement(bf, bd);
+
+		var bp = ce("a");
+		bp.className = "talentcalc-button-reset";
+		bp.href = "javascript:;";
+		bp.onclick = aZ.resetAll;
+		ae_AddElement(bp, ct(LANG.tc_resetall));
+		ae_AddElement(bf, bp);
+
+		var bo = ce("a");
+		bo.className = "talentcalc-button-import";
+		bo.href = "javascript:;";
+		bo.onclick = aZ.promptImportBuild;
+		ae_AddElement(bo, ct(LANG.tc_import));
+		ae_AddElement(bf, bo);
+
 		bd = ce("span");
 		bd.className = "talentcalc-upper-ptsleft";
 		ae_AddElement(bd, ct(LANG.tc_ptsleft));
@@ -1380,14 +1484,13 @@ function TalentCalc() {
 	}
 	function aW() {
 	    if (aF_CurrentClass > 20) {
-	        $(".talentcalc-main").height(450);//.css("height", "460px");
+            //TBC
+	        $(".talentcalc-main").height(460);//.css("height", "460px");
 	        $WowheadTalentCalculator.setLevelCap(70);
-	        console.debug("test-tbc");
 	    }
 	    else {
 	        $(".talentcalc-main").height(360);//.css("height", "460px");
 	        $WowheadTalentCalculator.setLevelCap(60);
-	        console.debug("test");
 	    }
 		st(a4, aY[aF_CurrentClass]);
 		if (aB_CurrMode == aI_PetMode) {
@@ -1748,7 +1851,6 @@ function TalentCalc() {
 			ad = aF_CurrentClass;
 			aF_CurrentClass = bc;
 
-		    //classChange
 			if (aB_CurrMode == aI_PetMode && M_ClassData[bc] == null) {
 				T(bc, bb(bc))
 			} else {

@@ -1,41 +1,13 @@
-#tc-classes {
-width:100px;
-margin:0 auto;
-padding-bottom:10px;
-}
-
 #tc-classes-inner {
 width:50px;
-margin:0 auto;
 text-align:center;
 }
 
-#tc-classes p {
-font-size:32px;
-margin:0 0 16px;
-padding:0;
-}
-
-#tc-classes .iconmedium {
+#tc-classes-inner .iconmedium {
 float:left;
 opacity:.5;
 }
 
-#tc-classes.choose {
-position:relative;
-padding:0;
-}
-
-#tc-classes.choose #tc-classes-outer {
-width:614px;
-}
-
-#tc-classes.choose #tc-classes-inner {
-position:absolute;
-left:77px;
-top:150px;
-}
-
-#tc-classes .iconmedium-gold,#tc-classes.choose .iconmedium {
+#tc-classes-inner .iconmedium-gold,#tc-classes.choose .iconmedium {
 opacity:1;
 }

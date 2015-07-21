@@ -46,6 +46,10 @@ background-image:url(../../../images/talent/lock.gif);
 }
 
 a.talentcalc-button-reset {
+display:block;
+margin-right:10px;
+margin-left:10px;
+background:no-repeat left center;
 float:left;
 padding-left:19px;
 background-image:url(../../../images/talent/clear.gif);
@@ -102,13 +106,13 @@ text-decoration:none;
 }
 
 .talentcalc-upper {
-background-color:#141414;
 margin-bottom:5px;
 }
 
 .talentcalc-upper-inner {
 padding:6px 8px;
 font-size:14px;
+width: 602px;
 }
 
 .talentcalc-upper-inner span {
@@ -140,11 +144,11 @@ margin-left:6px;
 
 .talentcalc-main {
 background-color:black;
-border:1px solid #404040;
+border:3px solid #000000;
 }
 
 .talentcalc-default .talentcalc-main {
-width:614px;
+width:618px;
 /*height:360px;*/
 }
 
@@ -270,6 +274,7 @@ margin-left:185px;
 .talentcalc-lower-tree1,.talentcalc-lower-tree2,.talentcalc-lower-tree3 {
 position:absolute;
 top:0;
+border: 3px solid #000000;
 }
 
 .talentcalc-default .talentcalc-lower-tree1,.talentcalc-default .talentcalc-lower-tree2,.talentcalc-default .talentcalc-lower-tree3 {
@@ -281,15 +286,15 @@ width:244px;
 }
 
 .talentcalc-lower-tree1 {
-left:1px;
+left:0px;
 }
 
 .talentcalc-lower-tree2 {
-left:206px;
+left:207px;
 }
 
 .talentcalc-lower-tree3 {
-left:411px;
+left:414px;
 }
 
 .talentcalc-lower p {
@@ -303,7 +308,7 @@ text-align:center;
 }
 
 .talentcalc-default .talentcalc-lower p {
-width:200px;
+width:204px;
 }
 
 .talentcalc-pet .talentcalc-lower p {

@@ -34,7 +34,6 @@ var tc_chooseClassesTBC = [
 function tc_init() {
 	var c;
 	g_initPath([1, 0]);
-	ge("tc-classes").className = "choose";
 	var e = g_sortJsonArray(g_chr_classes, g_chr_classes);
 	c = ge("tc-classes-inner");
 	var classTable = ce("table");
@@ -64,7 +63,7 @@ function tc_init() {
 	ae_AddElement(classTable, tableBody);
 	var vanillaClasses = ce("div");
 	ae_AddElement(vanillaClasses, tableVanillaHeaderColumn);
-	vanillaClasses.className = "fame";
+	vanillaClasses.className = "blackframe";
 	vanillaClasses.style.height = "420px";
 	for (var d = 0, b = tc_chooseClasses.length; d < b; ++d) {
 	    var h = tc_chooseClasses[d],
@@ -82,7 +81,7 @@ function tc_init() {
 	ae_AddElement(tableVanillaColumn, vanillaClasses);
 	var tbcClasses = ce("div");
 	ae_AddElement(tbcClasses, tableTBCHeaderColumn);
-	tbcClasses.className = "fame";
+	tbcClasses.className = "blackframe";
 	tbcClasses.style.height = "420px";
 	for (var d = 0, b = tc_chooseClassesTBC.length; d < b; ++d) {
 	    var h = tc_chooseClassesTBC[d],
@@ -123,9 +122,6 @@ function tc_onChange(a, e, d) {
 	var c;
 	if (e.classId != tc_classId) {
 		if (!tc_loaded) {
-			var c = ge("tc-classes");
-			de(gE(c, "p")[0]);
-			c.className = "";
 			tc_loaded = true
 		}
 		if (tc_classId != -1) {

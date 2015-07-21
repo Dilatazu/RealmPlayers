@@ -43,5 +43,6 @@ cO(LANG, {
 	alert_choosefamily: "Please choose a pet family first.",
 	alert_buildempty: "Your build is empty.",
 	prompt_importwh: "Please paste the URL of a build made with Wowhead's talent calculator:",
-	prompt_importblizz: "Please paste the URL of a build made with Blizzard's talent calculator:"
+	prompt_importblizz: "Please paste the URL of a build made with Blizzard's talent calculator:",
+    prompt_importbuild: "Please paste the URL of a build made with wowprovider talent calculator:"
 });

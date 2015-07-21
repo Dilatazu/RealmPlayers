@@ -15,25 +15,26 @@ ss_conf = 3;	</script>
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="BodyContent" runat="server">
+    <ul class="breadcrumb">
+        <li><a href="Index.aspx">Home</a></li><li class="active"><span class="divider">/</span> Tools</li><li class="active"><span class="divider">/</span>Talent Calculator</li>
+    </ul>
     <style> .clear {
          clear: both;
      }</style>
 
     <div class="row">
-        <div class="span3">
-                <div id="tc-classes" class="choose">
-		            <div id="tc-classes-outer">
-			            <div id="tc-classes-inner"><p>Choose a class:</p></div>
-		            </div>
-	            </div>
+        <div class="span2" style="min-width:135px;max-width:135px">
+			<div id="tc-classes-inner"></div>
         </div>
-        <div class="span9">
-            <div class="fame">
-            <div id="tc-itself"></div>
+        <div class="span10" style="min-width:650px;max-width:650px">
+            <div class="blackframe">
+                <div id="tc-itself"></div>
 
-            <script type="text/javascript">
-                tc_init();
-	        </script></div>
+            </div>
         </div>
     </div>
+    
+    <script type="text/javascript">
+        tc_init();
+	</script>
 </asp:Content>
