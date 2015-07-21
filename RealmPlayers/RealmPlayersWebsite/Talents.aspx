@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterFrame.Master" AutoEventWireup="true" CodeBehind="TalentCalculator.aspx.cs" Inherits="RealmPlayersServer.TalentCalculator" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterFrame.Master" AutoEventWireup="true" CodeBehind="Talents.aspx.cs" Inherits="RealmPlayersServer.TalentCalculator" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeaderContent" runat="server">
 	
     <%--//https://github.com/mangostools/aowow

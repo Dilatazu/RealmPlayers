@@ -12205,7 +12205,7 @@
     <Content Include="RealmControl.ascx" />
     <Content Include="robots.txt" />
     <Content Include="Sign_Up.aspx" />
-    <Content Include="TalentCalculator.aspx" />
+    <Content Include="Talents.aspx" />
     <Content Include="UserSection.aspx" />
     <Content Include="VF_RealmPlayersIcon32.ico" />
     <Content Include="VF_WoWLauncher.aspx" />
@@ -12439,12 +12439,12 @@
     <Compile Include="Sign_Up.aspx.designer.cs">
       <DependentUpon>Sign_Up.aspx</DependentUpon>
     </Compile>
-    <Compile Include="TalentCalculator.aspx.cs">
-      <DependentUpon>TalentCalculator.aspx</DependentUpon>
+    <Compile Include="Talents.aspx.cs">
+      <DependentUpon>Talents.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="TalentCalculator.aspx.designer.cs">
-      <DependentUpon>TalentCalculator.aspx</DependentUpon>
+    <Compile Include="Talents.aspx.designer.cs">
+      <DependentUpon>Talents.aspx</DependentUpon>
     </Compile>
     <Compile Include="UserSection.aspx.cs">
       <DependentUpon>UserSection.aspx</DependentUpon>

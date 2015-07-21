@@ -367,6 +367,12 @@ background-color:#303030;
 .talentcalc,.talentcalc-main table td .iconmedium {
 margin:0 auto;
 }
+.talentcalc-main {
+        user-select: none; /* CSS3 (little to no support) */
+    -ms-user-select: none; /* IE 10+ */
+    -moz-user-select: none; /* Gecko (Firefox) */
+-webkit-user-select: none; /* Webkit (Safari, Chrome) */
+}
 
 .talentcalc-default,.talentcalc-pet {
 width:946px;
