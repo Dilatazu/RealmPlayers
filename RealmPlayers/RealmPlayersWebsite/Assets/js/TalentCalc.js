@@ -16,14 +16,15 @@ function TalentCalc() {
 	ad = -1,
 	K = 0,
 	aa, a2 = (Browser.opera),
-	J = false,
+	J_TalentsLocked = false,
+    g_TalentsCanBeLocked = false,
 	aB_CurrMode,
 	w,
 	a1_TalentRows,
 	Z,
 	aj,
 	ag,
-	aT,
+	aT_MaxTalentPoints,
 	r = 0,
 	R,
 	aY,
@@ -32,7 +33,7 @@ function TalentCalc() {
 	ao,
 	j,
 	aM,
-	v,
+	v_LockButtonDiv,
 	aD,
 	d,
 	at,
@@ -45,7 +46,7 @@ function TalentCalc() {
 	aR,
 	aH,
 	I,
-	l,
+	l_MainDiv,
 	ay,
 	aS = [],
 	ah_EncodingArray = "0zMcmVokRsaqbdrfwihuGINALpTjnyxtgevElBCDFHJKOPQSUWXYZ123456789",
@@ -232,7 +233,7 @@ function TalentCalc() {
 			a1_TalentRows = 6;
 			Z = 0;
 			ag = 3;
-			aT = 16;
+			aT_MaxTalentPoints = 16;
 			aY = g_pet_families;
 			z.className += " talentcalc-pet"
 		} else {
@@ -245,17 +246,17 @@ function TalentCalc() {
 				2 : [3, 4, 5]
 			};
 			ag = 5;
-			aT = 51;
+			aT_MaxTalentPoints = 51;
 			aY = g_chr_classes;
 			z.className += " talentcalc-default";
 			$WowheadTalentCalculator = aZ;
 			o()
 		}
-		R = aT + r;
-		k_InitializeTalentSideBarMenuDiv();
+		R = aT_MaxTalentPoints + r;
 		a9_CreateTalentHeaderDiv();
 		ac_InitializeTalentSpecDiv();
 		ap_InitializeTalentMainDiv();
+		k_InitializeTalentSideBarMenuDiv();
 		if (t.whBuild) {
 			aN_setWhBuild(t.whBuild)
 		} else {
@@ -330,14 +331,14 @@ function TalentCalc() {
 		if (bc > w - 1) {
 			return
 		}
-		J = false;
+		J_TalentsLocked = false;
 		aV(bc, aF_CurrentClass, true)
 	};
 	this.resetAll = function () {
 		if (!M_ClassData[aF_CurrentClass]) {
 			return
 		}
-		J = false;
+		J_TalentsLocked = false;
 		am(aF_CurrentClass);
 		S()
 	};
@@ -345,7 +346,7 @@ function TalentCalc() {
 		if (!M_ClassData[aF_CurrentClass]) {
 			return
 		}
-		J = false;
+		J_TalentsLocked = false;
 		a5(aF_CurrentClass);
 		c(aF_CurrentClass);
 		S()
@@ -377,7 +378,7 @@ function TalentCalc() {
 	};
 	this.setLevelCap = function (bd) {
 		bd = parseInt(bd);
-		if (isNaN(bd) || bd < 1 || bd > 60) {
+		if (isNaN(bd) || bd < 1 || bd > 70) {
 			return
 		}
 		var bc;
@@ -492,7 +493,7 @@ function TalentCalc() {
 		if (aF_CurrentClass == -1) {
 			return
 		}
-		s()
+		s_ToggleLock()
 	};
 	function au(bf, bd, bc) {
 		var be = M_ClassData[aF_CurrentClass];
@@ -516,7 +517,7 @@ function TalentCalc() {
 				for (var bf = bg[bc].t.length - 1; bf >= 0; --bf) {
 					var bd = bg[bc].t[bf].k;
 					for (var be = 0; be < bd; ++be) {
-						h(bg[bc].t[bf]);
+						h_SubtractTalentPoint(bg[bc].t[bf]);
 						if (bg.k <= R) {
 							return
 						}
@@ -637,12 +638,12 @@ function TalentCalc() {
 		ae_AddElement(z, ay)
 	}
 	function ap_InitializeTalentMainDiv() {
-		l = ce("div");
-		l.className = "talentcalc-main";
+	    l_MainDiv = ce("div");
+		l_MainDiv.className = "talentcalc-main";
 		var bc = ce("div");
 		bc.className = "clear";
-		ae_AddElement(l, bc);
-		ae_AddElement(z, l)
+		ae_AddElement(l_MainDiv, bc);
+		ae_AddElement(z, l_MainDiv)
 	}
 	function bb(bk) {
 		var bi = [{}],
@@ -674,40 +675,35 @@ function TalentCalc() {
 	function k_InitializeTalentSideBarMenuDiv() {
 		var bc, bp, bo, bg;
 		ao = ce("div");
-		ao.className = "talentcalc-sidebar rcorners";
+		ao.className = "talentcalc-upper rcorners";
 		ae_AddElement(ao, ce("tt"));
 		ae_AddElement(ao, ce("strong"));
 		ae_AddElement(ao, ce("var"));
 		ae_AddElement(ao, ce("em"));
 		bc = ce("div");
-		bc.className = "talentcalc-sidebar-inner";
-		bp = ce("a");
-		bp.className = "talentcalc-button-help";
-		bp.href = (aB_CurrMode == aI_PetMode ? "http://petopia.brashendeavors.net/html/patch30/patch30faq_talents.php": "?help=talent-calculator");
-		bp.target = "_blank";
-		ae_AddElement(bp, ct(LANG.tc_help));
-		ae_AddElement(bc, bp);
+		bc.className = "";
 		j = ce("div");
 		j.className = "talentcalc-sidebar-controls";
 		j.style.display = "none";
+		j.style.width = "500px";
 		bp = ce("a");
 		bp.className = "talentcalc-button-reset";
 		bp.href = "javascript:;";
 		bp.onclick = aZ.resetAll;
 		ae_AddElement(bp, ct(LANG.tc_resetall));
 		ae_AddElement(j, bp);
-		bp = v = ce("a");
-		bp.className = "talentcalc-button-lock";
-		bp.href = "javascript:;";
-		bp.onclick = s;
-		ae_AddElement(bp, ct(LANG.tc_lock));
-		ae_AddElement(j, bp);
-		bp = ce("div");
-		bp.className = "clear";
-		ae_AddElement(j, bp);
+		if (g_TalentsCanBeLocked == true)
+		{
+		    bp = v_LockButtonDiv = ce("a");
+		    bp.className = "talentcalc-button-lock";
+		    bp.href = "javascript:;";
+		    bp.onclick = s_ToggleLock;
+		    ae_AddElement(bp, ct(LANG.tc_lock));
+		    ae_AddElement(j, bp);
+		}
 		ae_AddElement(bc, j);
-		bp = ce("div");
-		bp.className = "talentcalc-sidebar-controls2";
+		bp = j;//ce("div");
+		//bp.className = "talentcalc-sidebar-controls2";
 		bo = ce("a");
 		bo.className = "talentcalc-button-import";
 		bo.href = "javascript:;";
@@ -822,10 +818,7 @@ function TalentCalc() {
 			ae_AddElement(bc, e)
 		}
 		ae_AddElement(ao, bc);
-		bp = ce("div");
-		bp.className = "talentcalc-sidebar-anchor";
-		ae_AddElement(bp, ao);
-		ae_AddElement(z, bp)
+		ae_AddElement(z, ao)
 	}
 	function az() {
 		var bc = ce("div");
@@ -861,7 +854,7 @@ function TalentCalc() {
 		bw.k = 0;
 		bw.div = ce("div");
 		bw.div.style.display = "none";
-		aef(l, bw.div);
+		aef_AddElementFirst(l_MainDiv, bw.div);
 		for (var bm = 0; bm < w; ++bm) {
 			bw[bm].k = 0;
 			var bv = ce("div");
@@ -891,12 +884,10 @@ function TalentCalc() {
 			    {
                     //TBC
 			        bv.style.backgroundSize = "240px 460px";
-			        //$(".talentcalc-main").height(461);//.css("height", "460px");
 			    }
 			    else
 			    {
 			        bv.style.backgroundSize = "240px 360px";
-			       // $(".talentcalc-main").height(360);//.css("height", "360px");
 			    }
 				//by = "images/talent/classes/icons" + (g_locale.id == 25 ? "-ptr": "") + "/" + g_file_classes[bo] + "_" + (bm + 1) + ".jpg" + bx
 			}
@@ -913,7 +904,7 @@ function TalentCalc() {
 				bf.target = "_blank";
 				bf.onmousedown = rf;
 				bf.onclick = rf;
-				g_onClick(bf, H.bind(bf, bj));
+				g_onClick(bf, H_MouseClick.bind(bf, bj));
 				bf.onmouseover = Y.bind(null, bf, bj);
 				bf.onmouseout = Tooltip.hide;
 				var bt = ce("div"),
@@ -1095,7 +1086,7 @@ function TalentCalc() {
 		}
 		return bc
 	}
-	function h(bj, bf, bi) {
+	function h_SubtractTalentPoint(bj, bf, bi) {
 		var bh = M_ClassData[bj.classId];
 		if (bj.k > 0) {
 			if (bj.links) {
@@ -1183,7 +1174,7 @@ function TalentCalc() {
 		return bf.d[be]
 	}
 	function ak(bd, bc) {
-		if (!J) {
+		if (!J_TalentsLocked) {
 			if (bc) {
 				if (X(bd)) {
 					F(this, bd)
@@ -1250,17 +1241,38 @@ function TalentCalc() {
 			this.scrollTop -= 27
 		}
 	}
-	function H(bd, bc) {
-		if (J) {
+	function H_MouseClick(bd, bc_InputIsRightClick) { //Mouseclick?
+		if (J_TalentsLocked) {
 			return
 		}
-		if (bc) {
-			h(bd, true, this)
+
+		var shiftPressed = false;
+		if (window.event) {
+		    if (!!window.event.shiftKey) {
+		        shiftPressed = true;
+		    }
+		}
+
+		if (bc_InputIsRightClick) {
+		    h_SubtractTalentPoint(bd, true, this);
+		    if (shiftPressed == true) {
+		        h_SubtractTalentPoint(bd, true, this);
+		        h_SubtractTalentPoint(bd, true, this);
+		        h_SubtractTalentPoint(bd, true, this);
+		        h_SubtractTalentPoint(bd, true, this);
+		    }
 		} else {
-			b(bd, true, this)
+		    b_AddTalentPoint(bd, true, this);
+		    if (shiftPressed == true)
+		    {
+		        b_AddTalentPoint(bd, true, this);
+		        b_AddTalentPoint(bd, true, this);
+		        b_AddTalentPoint(bd, true, this);
+		        b_AddTalentPoint(bd, true, this);
+		    }
 		}
 	}
-	function b(bg, bd, bf) {
+	function b_AddTalentPoint(bg, bd, bf) {
 		var be = M_ClassData[bg.classId];
 		if (be.k < R) {
 			if (bg.enabled && bg.k < bg.m) {
@@ -1283,7 +1295,7 @@ function TalentCalc() {
 		} else {
 			if (aB_CurrMode == aI_PetMode && be.k == R && !bd) {
 				m( - 1, 4, true);
-				b(bg, bd, bf)
+				b_AddTalentPoint(bg, bd, bf)
 			}
 		}
 	}
@@ -1329,7 +1341,7 @@ function TalentCalc() {
 		}
 		A.mode = aB_CurrMode;
 		A.classId = aF_CurrentClass;
-		A.locked = J;
+		A.locked = J_TalentsLocked;
 		A.requiredLevel = aQ();
 		A.pointsLeft = R - be.k;
 		A.pointsSpent = (aB_CurrMode == aI_PetMode ? be[0].k: [be[0].k, be[1].k, be[2].k]);
@@ -1337,12 +1349,14 @@ function TalentCalc() {
 		st(V, "(" + (aB_CurrMode == aI_PetMode ? be.k: A.pointsSpent.join("/")) + ")");
 		st(aR, A.requiredLevel ? A.requiredLevel: "-");
 		st(aH, A.pointsLeft);
-		if (J) {
-			st(v, LANG.tc_unlock);
-			v.className = "talentcalc-button-unlock"
-		} else {
-			st(v, LANG.tc_lock);
-			v.className = "talentcalc-button-lock"
+		if (v_LockButtonDiv) {
+		    if (J_TalentsLocked) {
+		        st(v_LockButtonDiv, LANG.tc_unlock);
+			    v_LockButtonDiv.className = "talentcalc-button-unlock"
+		    } else {
+		        st(v_LockButtonDiv, LANG.tc_lock);
+			    v_LockButtonDiv.className = "talentcalc-button-lock"
+		    }
 		}
 		if (aB_CurrMode == aI_PetMode) {
 			if (r) {
@@ -1365,6 +1379,16 @@ function TalentCalc() {
 		}
 	}
 	function aW() {
+	    if (aF_CurrentClass > 20) {
+	        $(".talentcalc-main").height(450);//.css("height", "460px");
+	        $WowheadTalentCalculator.setLevelCap(70);
+	        console.debug("test-tbc");
+	    }
+	    else {
+	        $(".talentcalc-main").height(360);//.css("height", "460px");
+	        $WowheadTalentCalculator.setLevelCap(60);
+	        console.debug("test");
+	    }
 		st(a4, aY[aF_CurrentClass]);
 		if (aB_CurrMode == aI_PetMode) {
 			a4.href = "?pet=" + aF_CurrentClass
@@ -1384,12 +1408,6 @@ function TalentCalc() {
 			ay.style.display = ""
 
 		}
-		//if (aF_CurrentClass > 20) {
-		//    $(".talentcalc-main").height(450);//.css("height", "460px");
-		//}
-		//else {
-		//    $(".talentcalc-main").height(360);//.css("height", "460px");
-		//}
 		var be = M_ClassData[aF_CurrentClass];
 		for (var bc = 0; bc < w; ++bc) {
 			var bd = aS[bc].firstChild.childNodes[0];
@@ -1414,11 +1432,11 @@ function TalentCalc() {
 				continue
 			}
 			for (var bg = 0; bg < be; ++bg) {
-				b(bj[bl].t[bd])
+				b_AddTalentPoint(bj[bl].t[bd])
 			}
 			if (bf) {
 				for (var bg = 0; bg < bc; ++bg) {
-					b(bf)
+					b_AddTalentPoint(bf)
 				}
 				bf = null
 			}
@@ -1481,11 +1499,11 @@ function TalentCalc() {
 				for (var bi = 0; bi < 2; ++bi) {
 					bf = Math.min(bm[bi], bl[bo].t[be].m);
 					for (var bh = 0; bh < bf; ++bh) {
-						b(bl[bo].t[be])
+						b_AddTalentPoint(bl[bo].t[be])
 					}
 					if (bg) {
 						for (var bh = 0; bh < bd; ++bh) {
-							b(bg)
+							b_AddTalentPoint(bg)
 						}
 						bg = null
 					}
@@ -1558,7 +1576,7 @@ function TalentCalc() {
 			if (aX(bd)) {++bc
 			}
 		}
-		e.style.display = (bc == 0 && J && t.profiler ? "none": "")
+		e.style.display = (bc == 0 && J_TalentsLocked && t.profiler ? "none": "")
 	}
 	function T(be, bd) {
 		if (M_ClassData[be] == null) {
@@ -1573,7 +1591,7 @@ function TalentCalc() {
 					ba(bc, false, null, be)
 				}
 				if (g.wh || g.blizz) {
-					J = true;
+					if(g_TalentsCanBeLocked == true) J_TalentsLocked = true;
 					if (g.wh) {
 						aA(g.wh, be)
 					} else {
@@ -1581,7 +1599,7 @@ function TalentCalc() {
 					}
 				}
 			} else {
-				J = false
+				J_TalentsLocked = false
 			}
 			g = null;
 			if (a7 && a7.classId == be) {
@@ -1677,7 +1695,7 @@ function TalentCalc() {
 		if (!bd) {
 			return
 		}
-		J = true;
+		if(g_TalentsCanBeLocked == true) J_TalentsLocked = true;
 		if (!aC) {
 			aC = {
 				classId: bc,
@@ -1729,10 +1747,12 @@ function TalentCalc() {
 		if (bc != aF_CurrentClass) {
 			ad = aF_CurrentClass;
 			aF_CurrentClass = bc;
+
+		    //classChange
 			if (aB_CurrMode == aI_PetMode && M_ClassData[bc] == null) {
 				T(bc, bb(bc))
 			} else {
-				if (M_ClassData[bc]) {
+			    if (M_ClassData[bc]) {
 					aW();
 					var bd = M_ClassData[bc];
 					bd.div.style.display = ""
@@ -1748,8 +1768,8 @@ function TalentCalc() {
 		}
 	}
 	function ai(bc) {
-		if (J != bc) {
-			J = bc;
+		if (J_TalentsLocked != bc) {
+			J_TalentsLocked = bc;
 			c(aF_CurrentClass);
 			S()
 		}
@@ -1757,12 +1777,12 @@ function TalentCalc() {
 	function m(be, bf, bd) {
 		var bc = R;
 		if (be == -1) {
-			be = aT
+			be = aT_MaxTalentPoints
 		}
 		if (bf == -1) {
 			bf = r
 		}
-		aT = be;
+		aT_MaxTalentPoints = be;
 		r = bf;
 		R = be + bf;
 		if (aF_CurrentClass != -1) {
@@ -1811,7 +1831,7 @@ function TalentCalc() {
 		}
 		if (bd) {
 			if (bg_InputBuild.length) {
-				J = true;
+				if(g_TalentsCanBeLocked == true) J_TalentsLocked = true;
 				if (!aC) {
 					aC = {
 						wh: bc
@@ -1865,13 +1885,13 @@ function TalentCalc() {
 			upper += "<b>" + glyph.name + "</b>";
 			upper += '<br /><span class="q9">' + LANG[bd <= 2 ? "tc_majgly": "tc_mingly"] + "</span>";
 			lower += '<span class="q">' + glyph.description + "</span>";
-			if (!J) {
+			if (!J_TalentsLocked) {
 				lower += '<br /><span class="q10">' + LANG[a2 ? "tc_remgly2": "tc_remgly"] + "</span>"
 			}
 		} else {
 			upper += '<b class="q0">' + LANG.tc_empty + "</b>";
 			upper += '<br /><span class="q9">' + LANG[bd <= 2 ? "tc_majgly": "tc_mingly"] + "</span>";
-			if (!J) {
+			if (!J_TalentsLocked) {
 				lower += '<span class="q2">' + LANG.tc_addgly + "</span>"
 			}
 		}
@@ -1907,7 +1927,7 @@ function TalentCalc() {
 			bc += be.t[1] + "<br />"
 		}
 		bc += '<span class="q">' + ar(be) + "</span><br />";
-		if (J) {} else {
+		if (J_TalentsLocked) {} else {
 			if (be.enabled) {
 				if (!be.k) {
 					bc += '<span class="q2">' + LANG.tc_learn + "</span><br />"
@@ -1930,11 +1950,13 @@ function TalentCalc() {
 		}
 		return bc
 	}
-	function s() {
-		J = !J;
+	function s_ToggleLock() {
+	    if (g_TalentsCanBeLocked == true) J_TalentsLocked = !J_TalentsLocked;
+	    else J_TalentsLocked = false;
+
 		c(aF_CurrentClass);
 		S();
-		return J
+		return J_TalentsLocked
 	}
 	function aX(bh) {
 		var bg = M_ClassData[aF_CurrentClass],
@@ -1994,7 +2016,7 @@ function TalentCalc() {
 				}
 			}
 			if (bh) {
-				if (bd.enabled && (!J || bd.k)) {
+				if (bd.enabled && (!J_TalentsLocked || bd.k)) {
 					if ((bd.k == bd.m)) {
 						bd.border.style.backgroundPosition = "-42px 0";
 						bd.bubble.style.color = "#E7BA00"

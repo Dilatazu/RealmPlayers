@@ -16,25 +16,24 @@ ss_conf = 3;	</script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="BodyContent" runat="server">
     <style> .clear {
-     clear: both;
- }</style>
+         clear: both;
+     }</style>
     <div id="layers"></div>
     <div id="main">
-    <div id="main-precontents"></div>
-	<div id="main-contents" class="main-contents">
+            <div id="tc-classes" class="choose">
+		        <div id="tc-classes-outer">
+			        <div id="tc-classes-inner"><p>Choose a class:</p></div>
+		        </div>
+	        </div>
+	    <div id="main-contents" class="main-contents">
 
-    <div id="tc-classes" class="choose">
-		<div id="tc-classes-outer">
-			<div id="tc-classes-inner"><p>Choose a class:</p></div>
-		</div>
-	</div>
-    <div id="tc-itself"></div>
+            <div id="tc-itself"></div>
 
-<script type="text/javascript">
-	    tc_init();
-	</script>
+            <script type="text/javascript">
+	            tc_init();
+	        </script>
 
-	<div class="clear"></div>
+	        <div class="clear"></div>
         </div>
 	</div>
 </asp:Content>

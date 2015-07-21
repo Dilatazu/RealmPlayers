@@ -18,6 +18,7 @@ padding-bottom:10px;
 }
 
 a.talentcalc-button-help,.talentcalc-sidebar-controls a {
+float:left;
 display:block;
 padding:2px 0 2px 20px;
 margin-right:10px;

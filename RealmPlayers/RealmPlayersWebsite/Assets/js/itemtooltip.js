@@ -183,7 +183,7 @@ function de(a) {
 function ae_AddElement(a, b) {
 	return a.appendChild(b)
 }
-function aef(a, b) {
+function aef_AddElementFirst(a, b) {
 	return a.insertBefore(b, a.firstChild)
 }
 function ee(a, b) {
@@ -201,7 +201,7 @@ function st(a, b) {
 	if (a.firstChild && a.firstChild.nodeType == 3) {
 		a.firstChild.nodeValue = b
 	} else {
-		aef(a, ct(b))
+		aef_AddElementFirst(a, ct(b))
 	}
 }
 function nw(a) {
@@ -1078,7 +1078,7 @@ function g_onClick(c, d) {
 	};
 	c.onmouseup = function (f) {
 		f = $E(f);
-		if (f._button == 3 || f.shiftKey || f.ctrlKey) {
+		if (f._button == 3 || f.ctrlKey) {
 			a(2)
 		} else {
 			if (f._button == 1) {
@@ -2232,17 +2232,13 @@ function () {
     }
 };
 function g_initPath(p, f) {
-	var h = mn_path,
+    var h = mn_path,
     c = null,
     k = null,
-    o = 0,
-    l = ge("main-precontents"),
-    n = ce("div");
-	ee(l);
+    o = 0;
 	if (g_initPath.lastIt) {
 	    g_initPath.lastIt.checked = null
 	}
-	n.className = "path";
 	if (f != null) {
 	    var m = ce("div");
 	    m.className = "path-right";
@@ -2282,14 +2278,5 @@ function g_initPath(p, f) {
 	        ae_AddElement(n, b)
 	    }
 	}
-	var m = ce("div");
-	m.className = "clear";
-	ae_AddElement(n, m);
-	//gb = ce("div");
-	//gb.className = "g-plusone";
-	//gb.href = "http://www.aowow.org/";
-	//gb.id = "g-plusone";
-	//ae_AddElement(n, gb);
-	ae_AddElement(l, n);
 	g_initPath.lastIt = c
 }
