@@ -213,7 +213,7 @@ function TalentCalc() {
 		if (z) {
 			return
 		}
-		bd = $(bd);
+		bd = $_QueryElement(bd);
 		if (!bd) {
 			return
 		}

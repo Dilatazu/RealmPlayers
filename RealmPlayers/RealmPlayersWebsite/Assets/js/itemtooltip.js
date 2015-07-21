@@ -1,9 +1,9 @@
-function $(c) {
+function $_QueryElement(c) {
 	if (arguments.length > 1) {
 		var b = [];
 		var a;
 		for (var d = 0, a = arguments.length; d < a; ++d) {
-			b.push($(arguments[d]))
+			b.push($_QueryElement(arguments[d]))
 		}
 		return b
 	}
@@ -450,7 +450,7 @@ function g_scrollTo(c, b) {
 	e = k.h,
 	g = m.x,
 	d = m.y;
-	c = $(c);
+	c = $_QueryElement(c);
 	if (b == null) {
 		b = []
 	} else {
@@ -985,7 +985,7 @@ function g_expandSite() {
     }
 }
 function g_insertTag(d, a, i, j) {
-    var b = $(d);
+    var b = $_QueryElement(d);
     b.focus();
     if (b.selectionStart != null) {
         var l = b.selectionStart,
@@ -1314,7 +1314,7 @@ var Tooltip = {
 		}
 	},
 	append: function (c, b) {
-		var c = $(c);
+		var c = $_QueryElement(c);
 		var a = Tooltip.create(b);
 		ae(c, a);
 		Tooltip.fixSafe(a, 1, 1)
