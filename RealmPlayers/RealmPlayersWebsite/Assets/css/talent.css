@@ -1,0 +1,13 @@
+#tc-classes-inner {
+width:50px;
+text-align:center;
+}
+
+#tc-classes-inner .iconmedium {
+float:left;
+opacity:.5;
+}
+
+#tc-classes-inner .iconmedium-gold,#tc-classes.choose .iconmedium {
+opacity:1;
+}

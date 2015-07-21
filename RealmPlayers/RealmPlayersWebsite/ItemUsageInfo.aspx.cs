@@ -53,7 +53,7 @@ namespace RealmPlayersServer
                 var itemInfo = DatabaseAccess.GetItemInfo(itemID, wowVersion);
                 m_ItemUsageInfoHTML = new MvcHtmlString("<div style='overflow: hidden; display: table;'><div style='display: table-cell;'><h1>Players with&nbsp;<h1></div>"
                     + "<div class='inventory' style='background: none; width: 58px; height: 58px; display: table-cell;'><div>"
-                            + "<img class='itempic' src='" + currentItemDatabase + itemInfo.GetIconImageAddress() + "'/>"
+                            + "<img class='itempic' src='" + "http://realmplayers.com/" + itemInfo.GetIconImageAddress() + "'/>"
                             + "<div class='quality' id='" + CharacterViewer.ItemQualityConversion[itemInfo.ItemQuality] + "'></div>"
                             + "<img class='itemframe' src='assets/img/icons/ItemNormalFrame.png'/>"
                             + CharacterViewer.GenerateItemLink(currentItemDatabase, itemID, suffixID, wowVersion)
@@ -124,7 +124,7 @@ namespace RealmPlayersServer
                         {
                             extraColumns[ItemAndAquiredDateAfterColumn] = new string[]{
                                 "<div class='inventory' style='background: none; width: 58px; height: 58px;'><div>"
-                                + "<img class='itempic' src='" + currentItemDatabase + itemInfo.GetIconImageAddress() + "'/>"
+                                + "<img class='itempic' src='" + "http://realmplayers.com/" + itemInfo.GetIconImageAddress() + "'/>"
                                 + "<div class='quality' id='" + CharacterViewer.ItemQualityConversion[itemInfo.ItemQuality] + "'></div>"
                                 + "<img class='itemframe' src='assets/img/icons/ItemNormalFrame.png'/>"
                                 + CharacterViewer.GenerateItemLink(currentItemDatabase, playerItemData, wowVersion)

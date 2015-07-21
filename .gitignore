@@ -185,3 +185,6 @@ UpgradeLog*.htm
 FakesAssemblies/
 
 RealmPlayers/RealmPlayersWebsite/Assets/wowicons/
+RealmPlayers/RealmPlayersWebsite/Assets/images/
+RealmPlayers/RealmPlayersWebsite/images/
+RealmPlayers/staticimages/

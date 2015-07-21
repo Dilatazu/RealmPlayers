@@ -578,7 +578,16 @@ var mn_talentCalc=[
 	[4,"Rogue","?talent#f"],
 	[7,"Shaman","?talent#h"],
 	[9,"Warlock","?talent#I"],
-	[1,"Warrior","?talent#L"]
+	[1, "Warrior", "?talent#L"],
+	[31, "Druid", "?talent#x"],
+	[23, "Hunter", "?talent#e"],
+	[28, "Mage", "?talent#l"],
+	[22, "Paladin", "?talent#D"],
+	[25, "Priest", "?talent#J"],
+	[24, "Rogue", "?talent#P"],
+	[27, "Shaman", "?talent#U"],
+	[29, "Warlock", "?talent#Y"],
+	[21, "Warrior", "?talent#2"]
 ];
 var mn_petCalc=[
 	[24,"Bat","?petcalc#MR"],
@@ -806,7 +815,16 @@ var g_chr_classes={
 	7:"Shaman",
 	8:"Mage",
 	9:"Warlock",
-	11:"Druid"
+	11: "Druid",
+	21: "Warrior",
+	22: "Paladin",
+	23: "Hunter",
+	24: "Rogue",
+	25: "Priest",
+	27: "Shaman",
+	28: "Mage",
+	29: "Warlock",
+	31: "Druid"
 	//13:"Rogue, Druid",
 	//14:"Hunter, Shaman",
 	//15:"Warrior, Paladin",
@@ -851,7 +869,17 @@ var g_chr_specs={
 	4:["Assassination","Combat","Subtlety"],
 	7:["Elemental Combat","Enhancement","Restoration"],
 	9:["Affliction","Demonology","Destruction"],
-	1:["Arms","Fury","Protection"]
+	21: ["Arms", "Fury", "Protection"],
+	26: ["Blood", "Frost", "Unholy"],
+	31: ["Balance", "Feral Combat", "Restoration"],
+	23: ["Beast Mastery", "Marksmanship", "Survival"],
+	28: ["Arcane", "Fire", "Frost"],
+	22: ["Holy", "Protection", "Retribution"],
+	25: ["Discipline", "Holy", "Shadow Magic"],
+	24: ["Assassination", "Combat", "Subtlety"],
+	27: ["Elemental Combat", "Enhancement", "Restoration"],
+	29: ["Affliction", "Demonology", "Destruction"],
+	21: ["Arms", "Fury", "Protection"]
 };
 var g_item_glyphs={
 	1:"Major",

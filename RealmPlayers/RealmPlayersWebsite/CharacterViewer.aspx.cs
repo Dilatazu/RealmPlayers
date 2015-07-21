@@ -226,7 +226,7 @@ namespace RealmPlayersServer
                 if (itemInfo != null)
                 {
                     itemLinks += "<div style='background: none; width: 58px; height: 58px;margin: " + yPos + "px " + xPos + "px;'>"
-                        + "<img class='itempic' src='" + currentItemDatabase + itemInfo.GetIconImageAddress() + "'/>"
+                        + "<img class='itempic' src='" + "http://realmplayers.com/" + itemInfo.GetIconImageAddress() + "'/>"
                         + "<div class='quality' id='" + CharacterViewer.ItemQualityConversion[itemInfo.ItemQuality] + "'></div>"
                         + "<img class='itemframe' src='assets/img/icons/ItemNormalFrame.png'/>"
                         + GenerateItemLink(currentItemDatabase, item, _WowVersion);
@@ -387,7 +387,7 @@ namespace RealmPlayersServer
                 else
                 {
                     string currInvInfo = "<div class='equipment-slot' id='" + ItemSlotToIDConversion[item.Key] + "'>"
-                                + "<img class='itempic' src='" + currentItemDatabase + itemInfo.GetIconImageAddress() + "'/>"
+                                + "<img class='itempic' src='" + "http://realmplayers.com/" + itemInfo.GetIconImageAddress() + "'/>"
                                 + "<div class='quality' id='" + ItemQualityConversion[itemInfo.ItemQuality] + "'></div>"
                                 + "<img class='itemframe' src='assets/img/icons/ItemNormalFrame.png'/>"
                                 + GenerateItemLink(currentItemDatabase, item.Value, wowVersion, itemInfo.GenerateSetPcsStr(_Player.Gear));

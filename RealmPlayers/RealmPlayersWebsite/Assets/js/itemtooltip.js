@@ -1,9 +1,9 @@
-function $(c) {
+function $_QueryElement(c) {
 	if (arguments.length > 1) {
 		var b = [];
 		var a;
 		for (var d = 0, a = arguments.length; d < a; ++d) {
-			b.push($(arguments[d]))
+			b.push($_QueryElement(arguments[d]))
 		}
 		return b
 	}
@@ -180,10 +180,10 @@ function ce(c, b) {
 function de(a) {
 	a.parentNode.removeChild(a)
 }
-function ae(a, b) {
+function ae_AddElement(a, b) {
 	return a.appendChild(b)
 }
-function aef(a, b) {
+function aef_AddElementFirst(a, b) {
 	return a.insertBefore(b, a.firstChild)
 }
 function ee(a, b) {
@@ -201,7 +201,7 @@ function st(a, b) {
 	if (a.firstChild && a.firstChild.nodeType == 3) {
 		a.firstChild.nodeValue = b
 	} else {
-		aef(a, ct(b))
+		aef_AddElementFirst(a, ct(b))
 	}
 }
 function nw(a) {
@@ -450,7 +450,7 @@ function g_scrollTo(c, b) {
 	e = k.h,
 	g = m.x,
 	d = m.y;
-	c = $(c);
+	c = $_QueryElement(c);
 	if (b == null) {
 		b = []
 	} else {
@@ -496,6 +496,18 @@ function g_scrollTo(c, b) {
 	}
 	scrollTo(g, d)
 }
+//NEW FUNC
+function g_addCss(b) {
+	var c = ce("style");
+    c.type = "text/css";
+	if (c.styleSheet) {
+		c.styleSheet.cssText = b
+	} else {
+		ae_AddElement(c, ct(b))
+	}
+	var a = document.getElementsByTagName("head")[0];
+	ae_AddElement(a, c)
+	}
 function g_setTextNodes(c, b) {
 	if (c.nodeType == 3) {
 		c.nodeValue = b
@@ -728,16 +740,16 @@ function g_createGlow(a, h) {
 				g.style.color = "black";
 				g.style.zIndex = 2
 			}
-			ae(g, ct(a));
-			ae(e, g)
+			ae_AddElement(g, ct(a));
+			ae_AddElement(e, g)
 		}
 	}
 	e.style.position = "relative";
 	e.className = "glow" + (h != null ? " " + h: "");
 	var f = ce("span");
 	f.style.visibility = "hidden";
-	ae(f, ct(a));
-	ae(e, f);
+	ae_AddElement(f, ct(a));
+	ae_AddElement(e, f);
 	return e
 }
 function g_createProgressBar(c) {
@@ -766,21 +778,21 @@ function g_createProgressBar(c) {
 		e.className = "progressbar-text";
 		if (c.text) {
 			var a = ce("del");
-			ae(a, ct(c.text));
-			ae(e, a)
+			ae_AddElement(a, ct(c.text));
+			ae_AddElement(e, a)
 		}
 		if (c.hoverText) {
 			var b = ce("ins");
-			ae(b, ct(c.hoverText));
-			ae(e, b)
+			ae_AddElement(b, ct(c.hoverText));
+			ae_AddElement(e, b)
 		}
-		ae(d, e)
+		ae_AddElement(d, e)
 	}
 	e = ce("div");
 	e.className = "progressbar-" + c.color;
 	e.style.width = c.width + "%";
-	ae(e, ct(String.fromCharCode(160)));
-	ae(d, e);
+	ae_AddElement(e, ct(String.fromCharCode(160)));
+	ae_AddElement(d, e);
 	return d
 }
 function g_createReputationBar(g) {
@@ -939,6 +951,72 @@ function g_getMoneyHtml(c) {
 	}
 	return a
 }
+function g_getPatchVersion(e) {
+    var d = g_getPatchVersion;
+    var b = 0,
+	c = d.T.length - 2,
+	a;
+    while (c > b) {
+        a = Math.floor((c + b) / 2);
+        if (e >= d.T[a] && e < d.T[a + 1]) {
+            return d.V[a]
+        }
+        if (e >= d.T[a]) {
+            b = a + 1
+        } else {
+            c = a - 1
+        }
+    }
+    a = Math.ceil((c + b) / 2);
+    return d.V[a]
+}
+g_getPatchVersion.V = ["1.12.0", "1.12.1", "1.12.2", "2.0.1", "2.0.3", "2.0.4", "2.0.5", "2.0.6", "2.0.7", "2.0.8", "2.0.10", "2.0.12", "2.1.0", "2.1.1", "2.1.2", "2.1.3", "2.2.0", "2.2.2", "2.2.3", "2.3.0", "2.3.2", "2.3.3", "2.4.0", "2.4.1", "2.4.2", "2.4.3", "3.0.2", "3.0.3", "3.0.8", "3.0.9", "3.1.0", "3.1.1", "3.1.2", "3.1.3", "3.3.5"];
+g_getPatchVersion.T = [1153540800000, 1159243200000, 1160712000000, 1165294800000, 1168318800000, 1168578000000, 1168750800000, 1169528400000, 1171342800000, 1171602000000, 1173157200000, 1175572800000, 1179806400000, 1181016000000, 1182225600000, 1184040000000, 1190692800000, 1191297600000, 1191902400000, 1194930000000, 1199768400000, 1200978000000, 1206417600000, 1207022400000, 1210651200000, 1216094400000, 1223956800000, 1225774800000, 1232427600000, 1234242000000, 1239681600000, 1240286400000, 1242705600000, 1243915200000, 9999999999999];
+function g_expandSite() {
+    ge("wrapper").className = "nosidebar";
+    Ads.removeAll();
+    var a = ge("topbar-expand");
+    if (a) {
+        de(a)
+    }
+    a = ge("sidebar");
+    if (a) {
+        de(a)
+    }
+}
+function g_insertTag(d, a, i, j) {
+    var b = $_QueryElement(d);
+    b.focus();
+    if (b.selectionStart != null) {
+        var l = b.selectionStart,
+		h = b.selectionEnd,
+		k = b.scrollLeft,
+		c = b.scrollTop;
+        var g = b.value.substring(l, h);
+        if (typeof j == "function") {
+            g = j(g)
+        }
+        b.value = b.value.substr(0, l) + a + g + i + b.value.substr(h);
+        b.selectionStart = b.selectionEnd = h + a.length;
+        b.scrollLeft = k;
+        b.scrollTop = c
+    } else {
+        if (document.selection && document.selection.createRange) {
+            var f = document.selection.createRange();
+            if (f.parentElement() != b) {
+                return
+            }
+            var g = f.text;
+            if (typeof j == "function") {
+                g = j(g)
+            }
+            f.text = a + g + i
+        }
+    }
+    if (b.onkeyup) {
+        b.onkeyup()
+    }
+}
 function g_getLocaleFromDomain(a) {
 	var c = g_getLocaleFromDomain.L;
 	if (a) {
@@ -1000,7 +1078,7 @@ function g_onClick(c, d) {
 	};
 	c.onmouseup = function (f) {
 		f = $E(f);
-		if (f._button == 3 || f.shiftKey || f.ctrlKey) {
+		if (f._button == 3 || f.ctrlKey) {
 			a(2)
 		} else {
 			if (f._button == 1) {
@@ -1010,6 +1088,10 @@ function g_onClick(c, d) {
 		return false
 	}
 }
+function g_isLeftClick(a) {
+	a = $E(a);
+	return (a && a._button == 1)
+	}
 function g_createOrRegex(c) {
 	var e = c.split(" "),
 	d = "";
@@ -1076,8 +1158,9 @@ function g_ajaxIshRequest(b) {
 	if (VF_AjaxControl_Request) {
 	    VF_AjaxControl_Request(b);
 	}
-	else {
-	    ae(c, ce("script", {
+	else 
+	{
+	    ae_AddElement(c, ce("script", {
 	        type: "text/javascript",
 	        src: b
 	    }))
@@ -1094,13 +1177,13 @@ var Icon = {
 			k = 1
 		}
 		g.className = "icon" + Icon.sizes[k];
-		ae(g, d);
-		ae(g, f);
+		ae_AddElement(g, d);
+		ae_AddElement(g, f);
 		Icon.setTexture(g, k, c);
 		if (b) {
 			var i = ce("a");
 			i.href = b;
-			ae(g, i)
+			ae_AddElement(g, i)
 		} else {
 			g.ondblclick = Icon.onDblClick
 		}
@@ -1115,7 +1198,7 @@ var Icon = {
 		if (b.indexOf("?") != -1) {
 			a.backgroundImage = "url(" + b + ")"
 		} else {
-		    a.backgroundImage = "url(http://database.wow-one.com/" + Icon.sizes[c] + "/" + b.toLowerCase() + ".jpg)"
+		    a.backgroundImage = "url(http://realmplayers.com/images/icons/" +Icon.sizes[c] + "/" +b.toLowerCase() + ")"
 		}
 		Icon.moveTexture(d, c, 0, 0)
 	},
@@ -1141,14 +1224,14 @@ var Icon = {
 			b.style.right = "0";
 			b.style.bottom = "0";
 			b.style.position = "absolute";
-			ae(e, b)
+			ae_AddElement(e, b)
 		}
 		if (f != null && f > 0) {
 			b = g_createGlow("(" + f + ")", "q");
 			b.style.left = "0";
 			b.style.top = "0";
 			b.style.position = "absolute";
-			ae(e, b)
+			ae_AddElement(e, b)
 		}
 	},
 	getLink: function (a) {
@@ -1185,18 +1268,18 @@ var Tooltip = {
 		if (h) {
 			a.innerHTML = h
 		}
-		ae(e, a);
-		ae(e, j);
-		ae(b, e);
-		ae(c, i);
-		ae(c, g);
-		ae(b, c);
-		ae(k, b);
+		ae_AddElement(e, a);
+		ae_AddElement(e, j);
+		ae_AddElement(b, e);
+		ae_AddElement(c, i);
+		ae_AddElement(c, g);
+		ae_AddElement(b, c);
+		ae_AddElement(k, b);
 		Tooltip.icon = ce("p");
 		Tooltip.icon.style.visibility = "hidden";
-		ae(Tooltip.icon, ce("div"));
-		ae(f, Tooltip.icon);
-		ae(f, k);
+		ae_AddElement(Tooltip.icon, ce("div"));
+		ae_AddElement(f, Tooltip.icon);
+		ae_AddElement(f, k);
 		return f
 	},
 	fix: function (d, b, f) {
@@ -1231,9 +1314,9 @@ var Tooltip = {
 		}
 	},
 	append: function (c, b) {
-		var c = $(c);
+		var c = $_QueryElement(c);
 		var a = Tooltip.create(b);
-		ae(c, a);
+		ae_AddElement(c, a);
 		Tooltip.fixSafe(a, 1, 1)
 	},
 	prepare: function () {
@@ -1252,7 +1335,7 @@ var Tooltip = {
 			_body.appendChild(_div);
 			a = ge("layers_0945757");
 			}
-		ae(a, b);
+		ae_AddElement(a, b);
 		Tooltip.tooltip = b;
 		Tooltip.tooltipTable = gE(b, "table")[0];
 		Tooltip.tooltipTd = gE(b, "td")[0];
@@ -1260,7 +1343,7 @@ var Tooltip = {
 			b = ce("iframe");
 			b.src = "javascript:0;";
 			b.frameBorder = 0;
-			ae(a, b);
+			ae_AddElement(a, b);
 			Tooltip.iframe = b
 		}
 	},
@@ -1431,7 +1514,7 @@ var Tooltip = {
 	setIcon: function (a) {
 		Tooltip.prepare();
 		if (a) { 
-		    Tooltip.icon.style.backgroundImage = "url(" + g_WowIconImageHoster + "/images/icons/medium/" + a.toLowerCase() + ".jpg)";
+		    Tooltip.icon.style.backgroundImage = "url(http://realmplayers.com/images/icons/medium/" + a.toLowerCase() + ".jpg)";
 			Tooltip.icon.style.visibility = "visible"
 		} else {
 			Tooltip.icon.style.backgroundImage = "none";
@@ -1498,7 +1581,16 @@ var g_file_classes = {
 	4 : "rogue",
 	7 : "shaman",
 	9 : "warlock",
-	1 : "warrior"
+	1: "warrior",
+	31: "druid",
+	23: "hunter",
+	28: "mage",
+	22: "paladin",
+	25: "priest",
+	24: "rogue",
+	27: "shaman",
+	29: "warlock",
+	21: "warrior"
 };
 var g_file_genders = {
 	0 : "male",
@@ -1536,7 +1628,7 @@ g_items.getIcon = function (a) {
 	}
 };
 g_items.createIcon = function (d, b, a, c) {
-	return Icon.create(g_items.getIcon(d), b, null, "?item=" + d, a, c)
+	return Icon.create(g_items.getIcon(d) + ".jpg", b, null, "?item=" + d, a, c)
 };
 g_spells.getIcon = function (a) {
 	if (g_spells[a] != null) {
@@ -1546,7 +1638,7 @@ g_spells.getIcon = function (a) {
 	}
 };
 g_spells.createIcon = function (d, b, a, c) {
-	return Icon.create(g_spells.getIcon(d), b, null, "?spell=" + d, a, c)
+	return Icon.create(g_spells.getIcon(d) + ".jpg", b, null, "?spell=" +d, a, c)
 };
 g_achievements.getIcon = function (a) {
 	if (g_achievements[a] != null) {
@@ -1556,7 +1648,7 @@ g_achievements.getIcon = function (a) {
 	}
 };
 g_achievements.createIcon = function (d, b, a, c) {
-	return Icon.create(g_achievements.getIcon(d), b, null, "?achievement=" + d, a, c)
+	return Icon.create(g_achievements.getIcon(d) + ".jpg", b, null, "?achievement=" + d, a, c)
 };
 var $WowheadPower = new
 function () {
@@ -1782,7 +1874,7 @@ function () {
 		 * g_getDomainFromLocale(X) + ".wowhead.com" } } P += "?" + p[W][1] +
 		 * "=" + S + "&power" + R;
 		 */
-		var P = "http://db.vanillagaming.org/ajax.php?" + p[W][1] + "=" + S + "&power" + R;
+		var P = "" + p[W][1] + "=" + S + "&power" + R;
 		g_ajaxIshRequest(P)
 	}
 	function N(R, S) {
@@ -1926,17 +2018,6 @@ function () {
 	K()
 	
 	var g_locale = { id: 0, name: 'enus' };
-	var _head = document.getElementsByTagName('head') [0];
-	var _link = document.createElement('link');
-	var _script = document.createElement('script');
-	_link.rel = "stylesheet";
-	_link.setAttribute("type","text/css");
-	_link.href = "/assets/power.css?version=1.4";
-	_script.setAttribute("src", "/assets/locale_enus.js?version=1.21");
-	_script.setAttribute("type","text/javascript");
-	
-	_head.appendChild(_link);
-	_head.appendChild(_script);
 };
 var Ads = {
 	dimensions: {
@@ -2025,9 +2106,177 @@ function sendRequest(url, params, callback, method) {
 }
 
 function VF_AjaxControl_Request(_Value) {
-    sendRequest("ItemTooltip.aspx", "item=" + encodeURIComponent(_Value), function (httpRequest) { if (httpRequest.readyState == 4 && httpRequest.status == 200) VF_AjaxControl_Response(httpRequest.responseText); }, 'GET');
+    sendRequest("Ajax.aspx", _Value, function (httpRequest) { if (httpRequest.readyState == 4 && httpRequest.status == 200) VF_AjaxControl_Response(httpRequest.responseText); }, 'GET');
 }
 function VF_AjaxControl_Response(returnValue) {
     if (returnValue != "")
         eval(returnValue);
+}
+
+var Lightbox = new
+function () {
+    var d, m, n, h = {},
+    c = {},
+    i, f;
+    function o() {
+        aE(d, "click", e);
+        aE(document, Browser.opera ? "keypress" : "keydown", g);
+        aE(window, "resize", a);
+        if (Browser.ie6) {
+            aE(window, "scroll", j)
+        }
+    }
+    function l() {
+        dE(d, "click", e);
+        dE(document, Browser.opera ? "keypress" : "keydown", g);
+        dE(window, "resize", a);
+        if (Browser.ie6) {
+            dE(window, "scroll", j)
+        }
+    }
+    function b() {
+        if (i) {
+            return
+        }
+        i = 1;
+        var p = ge("layers");
+        d = ce("div");
+        d.className = "lightbox-overlay";
+        m = ce("div");
+        m.className = "lightbox-outer";
+        n = ce("div");
+        n.className = "lightbox-inner";
+        d.style.display = m.style.display = "none";
+        ae_AddElement(p, d);
+        ae_AddElement(m, n);
+        ae_AddElement(p, m)
+    }
+    function g(p) {
+        p = $E(p);
+        switch (p.keyCode) {
+            case 27:
+                e();
+                break
+        }
+    }
+    function a(p) {
+        if (p != 1234) {
+            if (c.onResize) {
+                c.onResize()
+            }
+        }
+        d.style.height = document.body.offsetHeight + "px";
+        if (Browser.ie6) {
+            j()
+        }
+    }
+    function j() {
+        var q = g_getScroll().y,
+        p = g_getWindowSize().h;
+        m.style.top = (q + p / 2) + "px"
+    }
+    function e() {
+        l();
+        if (c.onHide) {
+            c.onHide()
+        }
+        d.style.display = m.style.display = "none";
+        Ads.restoreHidden();
+        g_enableScroll(true)
+    }
+    function k() {
+        d.style.display = m.style.display = h[f].style.display = ""
+    }
+    this.setSize = function (p, q) {
+        n.style.visibility = "hidden";
+        n.style.width = p + "px";
+        n.style.height = q + "px";
+        n.style.left = -parseInt(p / 2) + "px";
+        n.style.top = -parseInt(q / 2) + "px";
+        n.style.visibility = "visible"
+    };
+    this.show = function (t, s, p) {
+        c = s || {};
+        Ads.hideAll();
+        b();
+        o();
+        if (f != t && h[f] != null) {
+            h[f].style.display = "none"
+        }
+        f = t;
+        var r = 0,
+        q;
+        if (h[t] == null) {
+            r = 1;
+            q = ce("div");
+            ae_AddElement(n, q);
+            h[t] = q
+        } else {
+            q = h[t]
+        }
+        if (c.onShow) {
+            c.onShow(q, r, p)
+        }
+        a(1234);
+        k();
+        g_enableScroll(false)
+    };
+    this.reveal = function () {
+        k()
+    };
+    this.hide = function () {
+        e()
+    };
+    this.isVisible = function () {
+        return (d && d.style.display != "none")
+    }
+};
+function g_initPath(p, f) {
+    var h = mn_path,
+    c = null,
+    k = null,
+    o = 0;
+	if (g_initPath.lastIt) {
+	    g_initPath.lastIt.checked = null
+	}
+	if (f != null) {
+	    var m = ce("div");
+	    m.className = "path-right";
+	    var q = ce("a");
+	    q.href = "javascript:;";
+	    q.id = "fi_toggle";
+	    ns(q);
+	    q.onclick = fi_toggle;
+	    if (f) {
+	        q.className = "disclosure-on";
+	        ae_AddElement(q, ct(LANG.fihide))
+	    } else {
+	        q.className = "disclosure-off";
+	        ae_AddElement(q, ct(LANG.fishow))
+	    }
+	    ae_AddElement(m, q);
+	    ae_AddElement(l, m)
+	}
+	if (o && k) {
+	    k.className = ""
+	} else {
+	    if (c && c[3]) {
+	        k.className = "menuarrow";
+	        q = ce("a");
+	        b = ce("span");
+	        q.href = "javascript:;";
+	        ns(q);
+	        q.style.textDecoration = "none";
+	        q.style.paddingRight = "16px";
+	        q.style.color = "white";
+	        q.style.cursor = "default";
+	        ae_AddElement(q, ct("..."));
+	        q.menu = c[3];
+	        q.onmouseover = Menu.show;
+	        q.onmouseout = Menu.hide;
+	        ae_AddElement(b, q);
+	        ae_AddElement(n, b)
+	    }
+	}
+	g_initPath.lastIt = c
 }
