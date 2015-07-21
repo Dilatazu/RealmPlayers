@@ -18,22 +18,22 @@ ss_conf = 3;	</script>
     <style> .clear {
          clear: both;
      }</style>
-    <div id="layers"></div>
-    <div id="main">
-            <div id="tc-classes" class="choose">
-		        <div id="tc-classes-outer">
-			        <div id="tc-classes-inner"><p>Choose a class:</p></div>
-		        </div>
-	        </div>
-	    <div id="main-contents" class="main-contents">
 
+    <div class="row">
+        <div class="span3">
+                <div id="tc-classes" class="choose">
+		            <div id="tc-classes-outer">
+			            <div id="tc-classes-inner"><p>Choose a class:</p></div>
+		            </div>
+	            </div>
+        </div>
+        <div class="span9">
+            <div class="fame">
             <div id="tc-itself"></div>
 
             <script type="text/javascript">
-	            tc_init();
-	        </script>
-
-	        <div class="clear"></div>
+                tc_init();
+	        </script></div>
         </div>
-	</div>
+    </div>
 </asp:Content>

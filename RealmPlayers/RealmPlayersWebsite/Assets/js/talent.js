@@ -8,14 +8,66 @@ tc_object, tc_classId = -1,
 tc_classIcons = {},
 tc_build = "",
 tc_glyphs = "";
+
+var tc_chooseClasses = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    7,
+    8,
+    9,
+    11,
+];
+var tc_chooseClassesTBC = [
+    21,
+    22,
+    23,
+    24,
+    25,
+    27,
+    28,
+    29,
+    31,
+];
 function tc_init() {
 	var c;
 	g_initPath([1, 0]);
 	ge("tc-classes").className = "choose";
 	var e = g_sortJsonArray(g_chr_classes, g_chr_classes);
 	c = ge("tc-classes-inner");
-	for (var d = 0, b = e.length; d < b; ++d) {
-		var h = e[d],
+	var classTable = ce("table");
+	var tableBody = ce("tbody");
+	var tableRowHeader = ce("tr");
+	var tableRow = ce("tr");
+	var tableVanillaColumn = ce("td");
+	var tableTBCColumn = ce("td");
+	var tableVanillaHeaderColumn = ce("div");
+	var tableTBCHeaderColumn = ce("div");
+
+	var spaceColumn = ce("td");
+	var spaceColumnDiv = ce("div");
+	spaceColumnDiv.style.width = "5px";
+	ae_AddElement(spaceColumn, spaceColumnDiv);
+
+	st(tableVanillaHeaderColumn, "Classic");
+	st(tableTBCHeaderColumn, "TBC");
+
+	//ae_AddElement(tableRowHeader, tableVanillaHeaderColumn);
+	//ae_AddElement(tableRowHeader, tableTBCHeaderColumn);
+	//ae_AddElement(tableBody, tableRowHeader);
+	ae_AddElement(tableRow, tableVanillaColumn);
+	ae_AddElement(tableRow, spaceColumn);
+	ae_AddElement(tableRow, tableTBCColumn);
+	ae_AddElement(tableBody, tableRow);
+	ae_AddElement(classTable, tableBody);
+	var vanillaClasses = ce("div");
+	ae_AddElement(vanillaClasses, tableVanillaHeaderColumn);
+	vanillaClasses.className = "fame";
+	vanillaClasses.style.height = "420px";
+	for (var d = 0, b = tc_chooseClasses.length; d < b; ++d) {
+	    var h = tc_chooseClasses[d],
 		f = Icon.create("class_" + g_file_classes[h] + ".png", 1, null, "javascript:;"),
 		g = Icon.getLink(f);
 		tc_classIcons[h] = f;
@@ -25,11 +77,31 @@ function tc_init() {
 		g.onclick = tc_classClick.bind(g, h);
 		g.onmouseover = tc_classOver.bind(g, h);
 		g.onmouseout = Tooltip.hide;
-		ae_AddElement(c, f)
+		ae_AddElement(vanillaClasses, f)
 	}
-	var a = ce("div");
-	a.className = "clear";
-	ae_AddElement(c, a);
+	ae_AddElement(tableVanillaColumn, vanillaClasses);
+	var tbcClasses = ce("div");
+	ae_AddElement(tbcClasses, tableTBCHeaderColumn);
+	tbcClasses.className = "fame";
+	tbcClasses.style.height = "420px";
+	for (var d = 0, b = tc_chooseClassesTBC.length; d < b; ++d) {
+	    var h = tc_chooseClassesTBC[d],
+		f = Icon.create("class_" + g_file_classes[h] + ".png", 1, null, "javascript:;"),
+		g = Icon.getLink(f);
+	    tc_classIcons[h] = f;
+	    if (Browser.ie6) {
+	        g.onfocus = tb
+	    }
+	    g.onclick = tc_classClick.bind(g, h);
+	    g.onmouseover = tc_classOver.bind(g, h);
+	    g.onmouseout = Tooltip.hide;
+	    ae_AddElement(tbcClasses, f)
+	}
+	ae_AddElement(tableTBCColumn, tbcClasses);
+	//var a = ce("div");
+    //a.className = "clear";
+	//ae_AddElement(c, a);
+	ae_AddElement(c, classTable);
 	tc_object = new TalentCalc();
 	tc_object.initialize("tc-itself", {
 		onChange: tc_onChange,

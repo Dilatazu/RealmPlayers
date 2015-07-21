@@ -1,11 +1,11 @@
 #tc-classes {
-width:946px;
+width:100px;
 margin:0 auto;
 padding-bottom:10px;
 }
 
 #tc-classes-inner {
-width:460px;
+width:50px;
 margin:0 auto;
 text-align:center;
 }
@@ -18,8 +18,7 @@ padding:0;
 
 #tc-classes .iconmedium {
 float:left;
-margin-right:2px;
-opacity:.6666;
+opacity:.5;
 }
 
 #tc-classes.choose {
