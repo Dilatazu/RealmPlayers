@@ -25,11 +25,11 @@ function tc_init() {
 		g.onclick = tc_classClick.bind(g, h);
 		g.onmouseover = tc_classOver.bind(g, h);
 		g.onmouseout = Tooltip.hide;
-		ae(c, f)
+		ae_AddElement(c, f)
 	}
 	var a = ce("div");
 	a.className = "clear";
-	ae(c, a);
+	ae_AddElement(c, a);
 	tc_object = new TalentCalc();
 	tc_object.initialize("tc-itself", {
 		onChange: tc_onChange,

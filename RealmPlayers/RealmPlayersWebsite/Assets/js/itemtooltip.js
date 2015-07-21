@@ -180,7 +180,7 @@ function ce(c, b) {
 function de(a) {
 	a.parentNode.removeChild(a)
 }
-function ae(a, b) {
+function ae_AddElement(a, b) {
 	return a.appendChild(b)
 }
 function aef(a, b) {
@@ -503,10 +503,10 @@ function g_addCss(b) {
 	if (c.styleSheet) {
 		c.styleSheet.cssText = b
 	} else {
-		ae(c, ct(b))
+		ae_AddElement(c, ct(b))
 	}
 	var a = document.getElementsByTagName("head")[0];
-	ae(a, c)
+	ae_AddElement(a, c)
 	}
 function g_setTextNodes(c, b) {
 	if (c.nodeType == 3) {
@@ -740,16 +740,16 @@ function g_createGlow(a, h) {
 				g.style.color = "black";
 				g.style.zIndex = 2
 			}
-			ae(g, ct(a));
-			ae(e, g)
+			ae_AddElement(g, ct(a));
+			ae_AddElement(e, g)
 		}
 	}
 	e.style.position = "relative";
 	e.className = "glow" + (h != null ? " " + h: "");
 	var f = ce("span");
 	f.style.visibility = "hidden";
-	ae(f, ct(a));
-	ae(e, f);
+	ae_AddElement(f, ct(a));
+	ae_AddElement(e, f);
 	return e
 }
 function g_createProgressBar(c) {
@@ -778,21 +778,21 @@ function g_createProgressBar(c) {
 		e.className = "progressbar-text";
 		if (c.text) {
 			var a = ce("del");
-			ae(a, ct(c.text));
-			ae(e, a)
+			ae_AddElement(a, ct(c.text));
+			ae_AddElement(e, a)
 		}
 		if (c.hoverText) {
 			var b = ce("ins");
-			ae(b, ct(c.hoverText));
-			ae(e, b)
+			ae_AddElement(b, ct(c.hoverText));
+			ae_AddElement(e, b)
 		}
-		ae(d, e)
+		ae_AddElement(d, e)
 	}
 	e = ce("div");
 	e.className = "progressbar-" + c.color;
 	e.style.width = c.width + "%";
-	ae(e, ct(String.fromCharCode(160)));
-	ae(d, e);
+	ae_AddElement(e, ct(String.fromCharCode(160)));
+	ae_AddElement(d, e);
 	return d
 }
 function g_createReputationBar(g) {
@@ -1160,7 +1160,7 @@ function g_ajaxIshRequest(b) {
 	}
 	else 
 	{
-	    ae(c, ce("script", {
+	    ae_AddElement(c, ce("script", {
 	        type: "text/javascript",
 	        src: b
 	    }))
@@ -1177,13 +1177,13 @@ var Icon = {
 			k = 1
 		}
 		g.className = "icon" + Icon.sizes[k];
-		ae(g, d);
-		ae(g, f);
+		ae_AddElement(g, d);
+		ae_AddElement(g, f);
 		Icon.setTexture(g, k, c);
 		if (b) {
 			var i = ce("a");
 			i.href = b;
-			ae(g, i)
+			ae_AddElement(g, i)
 		} else {
 			g.ondblclick = Icon.onDblClick
 		}
@@ -1224,14 +1224,14 @@ var Icon = {
 			b.style.right = "0";
 			b.style.bottom = "0";
 			b.style.position = "absolute";
-			ae(e, b)
+			ae_AddElement(e, b)
 		}
 		if (f != null && f > 0) {
 			b = g_createGlow("(" + f + ")", "q");
 			b.style.left = "0";
 			b.style.top = "0";
 			b.style.position = "absolute";
-			ae(e, b)
+			ae_AddElement(e, b)
 		}
 	},
 	getLink: function (a) {
@@ -1268,18 +1268,18 @@ var Tooltip = {
 		if (h) {
 			a.innerHTML = h
 		}
-		ae(e, a);
-		ae(e, j);
-		ae(b, e);
-		ae(c, i);
-		ae(c, g);
-		ae(b, c);
-		ae(k, b);
+		ae_AddElement(e, a);
+		ae_AddElement(e, j);
+		ae_AddElement(b, e);
+		ae_AddElement(c, i);
+		ae_AddElement(c, g);
+		ae_AddElement(b, c);
+		ae_AddElement(k, b);
 		Tooltip.icon = ce("p");
 		Tooltip.icon.style.visibility = "hidden";
-		ae(Tooltip.icon, ce("div"));
-		ae(f, Tooltip.icon);
-		ae(f, k);
+		ae_AddElement(Tooltip.icon, ce("div"));
+		ae_AddElement(f, Tooltip.icon);
+		ae_AddElement(f, k);
 		return f
 	},
 	fix: function (d, b, f) {
@@ -1316,7 +1316,7 @@ var Tooltip = {
 	append: function (c, b) {
 		var c = $_QueryElement(c);
 		var a = Tooltip.create(b);
-		ae(c, a);
+		ae_AddElement(c, a);
 		Tooltip.fixSafe(a, 1, 1)
 	},
 	prepare: function () {
@@ -1335,7 +1335,7 @@ var Tooltip = {
 			_body.appendChild(_div);
 			a = ge("layers_0945757");
 			}
-		ae(a, b);
+		ae_AddElement(a, b);
 		Tooltip.tooltip = b;
 		Tooltip.tooltipTable = gE(b, "table")[0];
 		Tooltip.tooltipTd = gE(b, "td")[0];
@@ -1343,7 +1343,7 @@ var Tooltip = {
 			b = ce("iframe");
 			b.src = "javascript:0;";
 			b.frameBorder = 0;
-			ae(a, b);
+			ae_AddElement(a, b);
 			Tooltip.iframe = b
 		}
 	},
@@ -1582,15 +1582,15 @@ var g_file_classes = {
 	7 : "shaman",
 	9 : "warlock",
 	1: "warrior",
-	31: "druidTBC",
-	23: "hunterTBC",
-	28: "mageTBC",
-	22: "paladinTBC",
-	25: "priestTBC",
-	24: "rogueTBC",
-	27: "shamanTBC",
-	29: "warlockTBC",
-	21: "warriorTBC"
+	31: "druid",
+	23: "hunter",
+	28: "mage",
+	22: "paladin",
+	25: "priest",
+	24: "rogue",
+	27: "shaman",
+	29: "warlock",
+	21: "warrior"
 };
 var g_file_genders = {
 	0 : "male",
@@ -2147,9 +2147,9 @@ function () {
         n = ce("div");
         n.className = "lightbox-inner";
         d.style.display = m.style.display = "none";
-        ae(p, d);
-        ae(m, n);
-        ae(p, m)
+        ae_AddElement(p, d);
+        ae_AddElement(m, n);
+        ae_AddElement(p, m)
     }
     function g(p) {
         p = $E(p);
@@ -2209,7 +2209,7 @@ function () {
         if (h[t] == null) {
             r = 1;
             q = ce("div");
-            ae(n, q);
+            ae_AddElement(n, q);
             h[t] = q
         } else {
             q = h[t]
@@ -2253,13 +2253,13 @@ function g_initPath(p, f) {
 	    q.onclick = fi_toggle;
 	    if (f) {
 	        q.className = "disclosure-on";
-	        ae(q, ct(LANG.fihide))
+	        ae_AddElement(q, ct(LANG.fihide))
 	    } else {
 	        q.className = "disclosure-off";
-	        ae(q, ct(LANG.fishow))
+	        ae_AddElement(q, ct(LANG.fishow))
 	    }
-	    ae(m, q);
-	    ae(l, m)
+	    ae_AddElement(m, q);
+	    ae_AddElement(l, m)
 	}
 	if (o && k) {
 	    k.className = ""
@@ -2274,22 +2274,22 @@ function g_initPath(p, f) {
 	        q.style.paddingRight = "16px";
 	        q.style.color = "white";
 	        q.style.cursor = "default";
-	        ae(q, ct("..."));
+	        ae_AddElement(q, ct("..."));
 	        q.menu = c[3];
 	        q.onmouseover = Menu.show;
 	        q.onmouseout = Menu.hide;
-	        ae(b, q);
-	        ae(n, b)
+	        ae_AddElement(b, q);
+	        ae_AddElement(n, b)
 	    }
 	}
 	var m = ce("div");
 	m.className = "clear";
-	ae(n, m);
+	ae_AddElement(n, m);
 	//gb = ce("div");
 	//gb.className = "g-plusone";
 	//gb.href = "http://www.aowow.org/";
 	//gb.id = "g-plusone";
-	//ae(n, gb);
-	ae(l, n);
+	//ae_AddElement(n, gb);
+	ae_AddElement(l, n);
 	g_initPath.lastIt = c
 }
