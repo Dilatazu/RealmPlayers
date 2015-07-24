@@ -79,11 +79,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ICSharpCode.SharpZipLib">
-      <HintPath>..\RealmPlayersDatabase\ICSharpCode.SharpZipLib.dll</HintPath>
+      <HintPath>..\..\Dependencies\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="PresentationFramework" />
     <Reference Include="protobuf-net">
-      <HintPath>..\RealmPlayersDatabase\net30\protobuf-net.dll</HintPath>
+      <HintPath>..\..\Dependencies\protobuf-net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
