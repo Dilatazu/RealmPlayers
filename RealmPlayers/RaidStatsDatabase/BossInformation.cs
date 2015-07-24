@@ -269,6 +269,7 @@ namespace VF_RaidDamageDatabase
             "Kael'thas Sunstrider",
             "High Astromancer Solarian",
             "Illidan Stormrage",
+            "The Lurker Below",
         };
         #region BossFights
         public static Dictionary<string, string> BossFights = new Dictionary<string, string>
