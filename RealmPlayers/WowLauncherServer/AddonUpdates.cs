@@ -93,7 +93,12 @@ namespace VF_WoWLauncherServer
         public static bool IsAddonBeta(string _AddonName)
         {
             if (m_BetaAddonInfo.ContainsKey(_AddonName) == true)
+            {
+                if (m_BetaAddonInfo[_AddonName].Contains("Everyone"))
+                    return false;
+
                 return true;
+            }
             return false;
         }
         public static bool IsBetaParticipant(string _AddonName, string _UserID)
