@@ -199,22 +199,6 @@ namespace RealmPlayersServer
                     }
                     return sortValue;
                 });
-            //#warning implement this feature below in comments
-            /*
-             It's about the guild page: 
-             * as far as I can get, it currently has guilds sorted by the following parameters: 
-             * PvE progress -> Level 60 Members Count -> Average PvP Rank (up to the first 47 guilds, 
-             * after which only the amount of 60s seems to be taken into account to determine a guild standing, 
-             * as for the remaining parameters they're randomly sorted).
-
-            According to me, as a day 1 player who's always been active, 
-             * the average player tends to be mainly after the PvE, 
-             * then the PvP, then the social aspects of a community,
-             * so the sort order would end up providing a more actual indication of a guild's standing by prioritizing 
-             * those values according to this order: 
-             * PvE Progress -> Average PvP Rank -> Members Count -> Level 60 Members Count -> Total HKs. 
-             * Provided it's possible at all to have the system sort guilds by these parameters.
-             */
             if(orderedProgressGuilds.Count() > 0)
             {
                 if (GuildProgress.GetProgressAQ40(orderedProgressGuilds.First().Item1) == 0) //AQ Content not released
@@ -259,9 +243,6 @@ namespace RealmPlayersServer
 
             m_PaginationHTML = new MvcHtmlString(PageUtility.CreatePagination(Request, pageNr, ((guildArray.Count() - 1) / count) + 1));
             m_GuildScriptData = new MvcHtmlString("<script>var guildProgress = new Array();"
-            //+ "guildProgress['Dreamstate'] = { MC: '111111111', Ony: '1', BWL: '11111110', ZG: '0000000000', AQ20: '000000', AQ40: '00000000000', Naxx: '000000000000000', WB: '000000' };"
-            //+ "guildProgress['Delirium'] = { MC: '111101011', Ony: '1', BWL: '11011011', ZG: '0000000000', AQ20: '000000', AQ40: '00000000000', Naxx: '000000000000000', WB: '000000' };"
-            //+ "guildProgress['Team_Plague'] = { MC: '111101011', Ony: '1', BWL: '10011010', ZG: '0000000000', AQ20: '000000', AQ40: '00000000000', Naxx: '000000000000000', WB: '010010' };"
             + guildProgressData
             + "</script>");
 
