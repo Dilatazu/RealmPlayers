@@ -162,6 +162,11 @@ function tc_readPound() {
 					break
 				}
 			}
+			if (c == -1) {
+			    try {
+			        c = parseInt(a);
+			    } catch (e) {}
+			}
 			if (c != -1) {
 				tc_object.setBlizzBuild(c, f)
 			}

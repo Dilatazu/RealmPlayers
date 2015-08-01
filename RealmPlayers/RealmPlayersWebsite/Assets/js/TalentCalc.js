@@ -445,6 +445,14 @@ function TalentCalc() {
 		af()
 	};
 	this.setBlizzBuild = function (bc, bd) {
+	    if (parseInt(bc) > 20) //TBC
+	    {
+	        $WowheadTalentCalculator.setLevelCap(70);
+	    }
+	    else
+	    {
+	        $WowheadTalentCalculator.setLevelCap(60);
+	    }
 		Q(bc, bd)
 	};
 	this.setBlizzGlyphs = function (bc) {
