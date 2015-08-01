@@ -240,6 +240,8 @@ namespace VF_RDDatabase
         }
         public bool IsOverlapping(BossFight _BossFight)
         {
+            if (m_BossName != _BossFight.m_BossName)
+                return false;
             var aFightStart = m_StartDateTime;
             var aFightEnd = m_EndDateTime;
             var bFightStart = _BossFight.m_StartDateTime;
