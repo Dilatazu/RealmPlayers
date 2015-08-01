@@ -69,24 +69,31 @@ namespace RealmPlayersServer
 
                 if (wowVersion == WowVersionEnum.TBC)
                 {
-                    if (_Player.TalentPointsData != null && _Player.TalentPointsData != "")
+                    if (_Player.TalentPointsData != null)
                     {
-                        statsInfo += "<h5 class='hnoextraline'>Talent Speccs</h5>";
-                        statsInfo += "Current: " + PageUtility.CreateTalentSpeccLink(wowVersion, _Player.Character.Class, _Player.TalentPointsData) + "<br/>";
+                        string talentsInfo = "";
+                        if (_Player.TalentPointsData != "")
+                        {
+                            talentsInfo += "Current: " + PageUtility.CreateTalentSpeccLink(wowVersion, _Player.Character.Class, _Player.TalentPointsData) + "<br/>";
+                        }
                         if(_PlayerHistory != null)
                         {
                             var talentSpeccs = _PlayerHistory.GetUsedTalentSpeccs().OrderByDescending((_Value) => _Value.Value.Last().GetTime());
                             int talentSpeccCounter = 0;
                             foreach (var talentSpecc in talentSpeccs)
                             {
-                                if (talentSpecc.Key == _Player.TalentPointsData)
+                                if (talentSpecc.Key == _Player.TalentPointsData || talentSpecc.Key == "")
                                     continue;
 
                                 if (talentSpeccCounter++ > 3)
                                     break;
 
-                                statsInfo += talentSpecc.Value.Last().GetTime().ToString("yyyy-MM-dd") + ": " + PageUtility.CreateTalentSpeccLink(wowVersion, _Player.Character.Class, talentSpecc.Key) + "<br/>";
+                                talentsInfo += talentSpecc.Value.Last().GetTime().ToString("yyyy-MM-dd") + ": " + PageUtility.CreateTalentSpeccLink(wowVersion, _Player.Character.Class, talentSpecc.Key) + "<br/>";
                             }
+                        }
+                        if(talentsInfo != "")
+                        {
+                            statsInfo += "<h5 class='hnoextraline'>Talent Speccs</h5>" + talentsInfo;
                         }
                     }
                 }
