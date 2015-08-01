@@ -67,6 +67,30 @@ namespace RealmPlayersServer
                 string statsInfo = "";
                 statsInfo += "<h4 class='success'>Character Info(" + _Player.LastSeen.ToLocalTime().ToString("yyyy-MM-dd") + ")</h4>";
 
+                if (wowVersion == WowVersionEnum.TBC)
+                {
+                    if (_Player.TalentPointsData != null && _Player.TalentPointsData != "")
+                    {
+                        statsInfo += "<h5 class='hnoextraline'>Talent Speccs</h5>";
+                        statsInfo += "Current: " + PageUtility.CreateTalentSpeccLink(wowVersion, _Player.Character.Class, _Player.TalentPointsData) + "<br/>";
+                        if(_PlayerHistory != null)
+                        {
+                            var talentSpeccs = _PlayerHistory.GetUsedTalentSpeccs().OrderByDescending((_Value) => _Value.Value.Last().GetTime());
+                            int talentSpeccCounter = 0;
+                            foreach (var talentSpecc in talentSpeccs)
+                            {
+                                if (talentSpecc.Key == _Player.TalentPointsData)
+                                    continue;
+
+                                if (talentSpeccCounter++ > 3)
+                                    break;
+
+                                statsInfo += talentSpecc.Value.Last().GetTime().ToString("yyyy-MM-dd") + ": " + PageUtility.CreateTalentSpeccLink(wowVersion, _Player.Character.Class, talentSpecc.Key) + "<br/>";
+                            }
+                        }
+                    }
+                }
+
                 if (_PlayerHistory != null && _PlayerHistory.HaveValidHistory() == true)
                 {
                     statsInfo += "<h5 class='hnoextraline'>History</h5>";

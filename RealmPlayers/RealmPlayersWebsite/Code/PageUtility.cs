@@ -894,5 +894,184 @@ namespace RealmPlayersServer
 
             return control == null ? String.Empty : control.ID;
         }
+
+        internal static string CreateTalentSpeccLink(VF_RealmPlayersDatabase.WowVersionEnum _WowVersion, PlayerClass _Class, string _TalentsData)
+        {
+            /*var g_file_classes = {
+                  6 : "deathknight",
+                  11 : "druid",
+                  3 : "hunter",
+                  8 : "mage",
+                  2 : "paladin",
+                  5 : "priest",
+                  4 : "rogue",
+                  7 : "shaman",
+                  9 : "warlock",
+                  1: "warrior",
+                  31: "druid",
+                  23: "hunter",
+                  28: "mage",
+                  22: "paladin",
+                  25: "priest",
+                  24: "rogue",
+                  27: "shaman",
+                  29: "warlock",
+                  21: "warrior"
+              };*/
+
+            int talentCalculatorClassID = 1;
+            int[] talentTreeSizes = new int[] { 22, 21, 22 };
+            string[] talentTreeNames = new string[] { "Arms", "Fury", "Protection" };
+
+            if(_WowVersion == VF_RealmPlayersDatabase.WowVersionEnum.Vanilla)
+            {
+                switch (_Class)
+                {
+                    case PlayerClass.Unknown:
+                        break;
+                    case PlayerClass.Druid:
+                        talentCalculatorClassID = 11;
+                        talentTreeSizes = new int[] { 16, 16, 15 };
+                        talentTreeNames = new string[] { "Balance", "Feral", "Restoration" };
+                        break;
+                    case PlayerClass.Warrior:
+                        talentCalculatorClassID = 1;
+                        talentTreeSizes = new int[] { 18, 17, 17 };
+                        talentTreeNames = new string[] { "Arms", "Fury", "Prot" };
+                        break;
+                    case PlayerClass.Shaman:
+                        talentCalculatorClassID = 7;
+                        talentTreeSizes = new int[] { 15, 16, 15 };
+                        talentTreeNames = new string[] { "Elemental", "Enhancement", "Restoration" };
+                        break;
+                    case PlayerClass.Priest:
+                        talentCalculatorClassID = 5;
+                        talentTreeSizes = new int[] { 15, 16, 16 };
+                        talentTreeNames = new string[] { "Discipline", "Holy", "Shadow" };
+                        break;
+                    case PlayerClass.Mage:
+                        talentCalculatorClassID = 8;
+                        talentTreeSizes = new int[] { 16, 16, 17 };
+                        talentTreeNames = new string[] { "Arcane", "Fire", "Frost" };
+                        break;
+                    case PlayerClass.Rogue:
+                        talentCalculatorClassID = 4;
+                        talentTreeSizes = new int[] { 15, 19, 17 };
+                        talentTreeNames = new string[] { "Assassination", "Combat", "Subtlety" };
+                        break;
+                    case PlayerClass.Warlock:
+                        talentCalculatorClassID = 9;
+                        talentTreeSizes = new int[] { 17, 17, 16 };
+                        talentTreeNames = new string[] { "Affliction", "Demonology", "Destruction" };
+                        break;
+                    case PlayerClass.Hunter:
+                        talentCalculatorClassID = 3;
+                        talentTreeSizes = new int[] { 16, 14, 16 };
+                        talentTreeNames = new string[] { "Beast Mastery", "Marksmanship", "Survival" };
+                        break;
+                    case PlayerClass.Paladin:
+                        talentCalculatorClassID = 2;
+                        talentTreeSizes = new int[] { 14, 15, 15 };
+                        talentTreeNames = new string[] { "Holy", "Protection", "Retribution" };
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else
+            {
+                switch (_Class)
+                {
+                    case PlayerClass.Unknown:
+                        break;
+                    case PlayerClass.Druid:
+                        talentCalculatorClassID = 31;
+                        talentTreeSizes = new int[] { 21, 21, 20 };
+                        talentTreeNames = new string[] { "Balance", "Feral", "Restoration" };
+                        break;
+                    case PlayerClass.Warrior:
+                        talentCalculatorClassID = 21;
+                        talentTreeSizes = new int[] { 23, 21, 22 };
+                        talentTreeNames = new string[] { "Arms", "Fury", "Protection" };
+                        break;
+                    case PlayerClass.Shaman:
+                        talentCalculatorClassID = 27;
+                        talentTreeSizes = new int[] { 20, 21, 20 };
+                        talentTreeNames = new string[] { "Elemental", "Enhancement", "Restoration" };
+                        break;
+                    case PlayerClass.Priest:
+                        talentCalculatorClassID = 25;
+                        talentTreeSizes = new int[] { 22, 21, 21 };
+                        talentTreeNames = new string[] { "Discipline", "Holy", "Shadow" };
+                        break;
+                    case PlayerClass.Mage:
+                        talentCalculatorClassID = 28;
+                        talentTreeSizes = new int[] { 23, 22, 22 };
+                        talentTreeNames = new string[] { "Arcane", "Fire", "Frost" };
+                        break;
+                    case PlayerClass.Rogue:
+                        talentCalculatorClassID = 24;
+                        talentTreeSizes = new int[] { 21, 24, 22 };
+                        talentTreeNames = new string[] { "Assassination", "Combat", "Subtlety" };
+                        break;
+                    case PlayerClass.Warlock:
+                        talentCalculatorClassID = 29;
+                        talentTreeSizes = new int[] { 21, 22, 21 };
+                        talentTreeNames = new string[] { "Affliction", "Demonology", "Destruction" };
+                        break;
+                    case PlayerClass.Hunter:
+                        talentCalculatorClassID = 23;
+                        talentTreeSizes = new int[] { 21, 20, 23 };
+                        talentTreeNames = new string[] { "Beast Mastery", "Marksmanship", "Survival" };
+                        break;
+                    case PlayerClass.Paladin:
+                        talentCalculatorClassID = 22;
+                        talentTreeSizes = new int[] { 20, 22, 22 };
+                        talentTreeNames = new string[] { "Holy", "Protection", "Retribution" };
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            string talentSpeccSummary = "??/??/??";
+            if (_TalentsData.Length == talentTreeSizes[0] + talentTreeSizes[1] + talentTreeSizes[2])
+            {
+                string specc1 = _TalentsData.Substring(0, talentTreeSizes[0]);
+                string specc2 = _TalentsData.Substring(talentTreeSizes[0], talentTreeSizes[1]);
+                string specc3 = _TalentsData.Substring(talentTreeSizes[0] + talentTreeSizes[1], talentTreeSizes[2]);
+                
+                int specc1Sum = specc1.Sum((_Value) => int.Parse("" + _Value));
+                int specc2Sum = specc2.Sum((_Value) => int.Parse("" + _Value));
+                int specc3Sum = specc3.Sum((_Value) => int.Parse("" + _Value));
+
+                talentSpeccSummary = specc1Sum.ToString() + "/" + specc2Sum.ToString() + "/" + specc3Sum.ToString();
+
+                if(specc1Sum >= specc2Sum)
+                {
+                    if(specc1Sum >= specc3Sum)
+                    {
+                        talentSpeccSummary = talentTreeNames[0] + " (" + talentSpeccSummary + ")";
+                    }
+                    else
+                    {
+                        talentSpeccSummary = talentTreeNames[2] + " (" + talentSpeccSummary + ")";
+                    }
+                }
+                else
+                {
+                    if (specc2Sum >= specc3Sum)
+                    {
+                        talentSpeccSummary = talentTreeNames[1] + " (" + talentSpeccSummary + ")";
+                    }
+                    else
+                    {
+                        talentSpeccSummary = talentTreeNames[2] + " (" + talentSpeccSummary + ")";
+                    }
+                }
+            }
+
+            return PageUtility.CreateLink("Talents.aspx#" + talentCalculatorClassID + "-" + _TalentsData, talentSpeccSummary);
+        }
     }
 }

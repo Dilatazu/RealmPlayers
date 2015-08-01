@@ -387,6 +387,20 @@ namespace VF_RealmPlayersDatabase.PlayerData
         //        obj.Items
         //    }
         //}
+
+
+        public Dictionary<string, List<UploadID>> GetUsedTalentSpeccs()
+        {
+            Dictionary<string, List<UploadID>> result = new Dictionary<string, List<UploadID>>();
+            foreach (var talentHistoryItem in TalentsHistory)
+            {
+                if (talentHistoryItem.Data != null)
+                {
+                    result.AddToList(talentHistoryItem.Data, talentHistoryItem.Uploader);
+                }
+            }
+            return result;
+        }
         public struct GearSet
         {
             public GearData Gear;
