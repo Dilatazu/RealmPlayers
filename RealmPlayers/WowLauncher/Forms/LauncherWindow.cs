@@ -188,9 +188,13 @@ namespace VF_WoWLauncher
                 linksMenu.MenuItems.Add("-");
                 {
                     var links = new MenuItem("Other Links");
-                    links.MenuItems.Add(new MenuItem("Goto Wowservers Subreddit", new EventHandler((o, ea) =>
+                    links.MenuItems.Add(new MenuItem("Wowservers Subreddit", new EventHandler((o, ea) =>
                     {
                         System.Diagnostics.Process.Start("http://www.reddit.com/r/wowservers/");
+                    })));
+                    links.MenuItems.Add(new MenuItem("Talent Calculator", new EventHandler((o, ea) =>
+                    {
+                        System.Diagnostics.Process.Start("http://realmplayers.com/Talents.aspx");
                     })));
                     {
                         var itemdbLinks = new MenuItem("Item Databases");
@@ -208,34 +212,26 @@ namespace VF_WoWLauncher
                         })));
                         links.MenuItems.Add(itemdbLinks);
                     }
-                    {
-                        var talentLinks = new MenuItem("Talent Calculators");
-                        talentLinks.MenuItems.Add(new MenuItem("Goto Valkyrie", new EventHandler((o, ea) =>
-                        {
-                            System.Diagnostics.Process.Start("http://valkyrie-wow.org/armory/tool/talentCalculator");
-                        })));
-                        talentLinks.MenuItems.Add(new MenuItem("Goto VanillaGaming", new EventHandler((o, ea) =>
-                        {
-                            System.Diagnostics.Process.Start("http://db.vanillagaming.org/?talent");
-                        })));
-                        links.MenuItems.Add(talentLinks);
-                    }
                     linksMenu.MenuItems.Add(links);
                 }
                 linksMenu.MenuItems.Add("-");
-                linksMenu.MenuItems.Add(new MenuItem("Goto RealmPlayers", new EventHandler((o, ea) =>
+                linksMenu.MenuItems.Add(new MenuItem("RealmPlayers Armory", new EventHandler((o, ea) =>
                 {
                     System.Diagnostics.Process.Start("http://realmplayers.com");
                 })));
-                linksMenu.MenuItems.Add(new MenuItem("Goto RaidStats", new EventHandler((o, ea) =>
+                linksMenu.MenuItems.Add(new MenuItem("RaidStats", new EventHandler((o, ea) =>
                 {
                     System.Diagnostics.Process.Start("http://realmplayers.com/RaidStats");
                 })));
-                linksMenu.MenuItems.Add(new MenuItem("Goto RealmPlayers Forum", new EventHandler((o, ea) =>
+                linksMenu.MenuItems.Add(new MenuItem("Talent Calculator", new EventHandler((o, ea) =>
+                {
+                    System.Diagnostics.Process.Start("http://realmplayers.com/Talents.aspx");
+                })));
+                linksMenu.MenuItems.Add(new MenuItem("RealmPlayers Forum", new EventHandler((o, ea) =>
                 {
                     System.Diagnostics.Process.Start("http://forum.realmplayers.com");
                 })));
-                linksMenu.MenuItems.Add(new MenuItem("Goto RealmPlayers Twitter", new EventHandler((o, ea) =>
+                linksMenu.MenuItems.Add(new MenuItem("RealmPlayers Twitter", new EventHandler((o, ea) =>
                 {
                     System.Diagnostics.Process.Start("http://twitter.com/realmplayers");
                 })));
