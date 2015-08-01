@@ -90,12 +90,6 @@ namespace VF_WoWLauncherServer
                 string raidDamageDataFile;
                 while (m_NewContributions.TryDequeue(out raidDamageDataFile))
                 {
-                    //TODO: remove
-                    if (raidDamageDataFile.Contains("VF_RaidStatsTBC"))
-                    {
-                        m_AddedContributionFiles.Add(raidDamageDataFile);
-                        continue;
-                    }
                     if (AddFightsToDatabase(raidDamageDataFile) >= 1)
                     {
                         m_AddedContributionFiles.Add(raidDamageDataFile);
@@ -322,18 +316,16 @@ namespace VF_WoWLauncherServer
         {
             lock (m_LockObject)
             {
-                int[] buggedRaidIDs = { 10933, 10970, 10797 };//2353, 2168, 1840, 2234, 1489, 2106 };
+                int[] buggedRaidIDs = { 12805 };
                 List<RaidCollection_Raid> buggedRaids = new List<RaidCollection_Raid>();
                 foreach (var raid in m_RaidCollection.m_Raids)
                 {
-                    if (raid.Value.Realm == VF_RealmPlayersDatabase.WowRealm.Nostalrius)// 
-                    //if(buggedRaidIDs.Contains(raid.Value.UniqueRaidID))
+                    if(buggedRaidIDs.Contains(raid.Value.UniqueRaidID))
                     {
-                        //raid.Value.Realm = VF_RealmPlayersDatabase.WowRealm.Test_Server;
                         buggedRaids.Add(raid.Value);
                     }
                 }
-                VF.Utility.SaveSerialize(m_RDDBFolder + "RaidCollection.dat", m_RaidCollection, false);
+                //VF.Utility.SaveSerialize(m_RDDBFolder + "RaidCollection.dat", m_RaidCollection, false);
                 UpdateSummaryDatabase(null, buggedRaids, true);
             }
             GC.Collect();
