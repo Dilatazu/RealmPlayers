@@ -101,7 +101,18 @@ namespace VF.RaidDamageWebsite
                 }
             }
 #endif
-
+            if(PageUtility.GetQueryString(Request, "Debug", "null") != "null")
+            {
+                var raidFiles = ApplicationInstance.Instance.GetRaidFiles(uniqueRaidID);
+                if(raidFiles != null)
+                {
+                    Logger.ConsoleWriteLine("RaidOverview::Debug(): GetRaidFiles was: \"" + raidFiles.MergeToStringVF("\", \"") + "\"", ConsoleColor.DarkYellow);
+                }
+                else
+                {
+                    Logger.ConsoleWriteLine("RaidOverview::Debug(): GetRaidFiles was null!", ConsoleColor.DarkYellow);
+                }
+            }
             var orderedFights = ApplicationInstance.Instance.GetRaidBossFights(uniqueRaidID);
             if (orderedFights == null || orderedFights.Count() == 0)
                 Response.Redirect("RaidList.aspx");

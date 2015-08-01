@@ -243,6 +243,15 @@ namespace VF.RaidDamageWebsite
             var currRaid = raidCollection.m_Raids[_UniqueRaidID];
             return currRaid.RaidEndDate;
         }
+        public List<string> GetRaidFiles(int _UniqueRaidID)
+        {
+            var raidCollection = GetRaidCollection();
+            if (raidCollection.m_Raids.ContainsKey(_UniqueRaidID) == false)
+                return null;
+
+            var currRaid = raidCollection.m_Raids[_UniqueRaidID];
+            return currRaid.m_DataFiles;
+        }
         public List<RaidBossFight> GetRaidBossFights(int _UniqueRaidID)
         {
             var raidCollection = GetRaidCollection();
