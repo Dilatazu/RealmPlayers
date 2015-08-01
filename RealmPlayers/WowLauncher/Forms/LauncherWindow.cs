@@ -373,7 +373,7 @@ namespace VF_WoWLauncher
                         {
                             minDate = DateTime.Now.AddDays(-28);
                             forumType = ForumReader.ForumType.NostalriusForum;
-                            if (_NewPost.m_PosterName != "Viper" && _NewPost.m_PosterName != "Daemon")
+                            if (_NewPost.m_PosterName != "Viper" && _NewPost.m_PosterName != "Daemon" && _NewPost.m_PosterName != "Syrah")
                                 return;
                         }
                         else if (_NewPost.m_PostURL.Contains("forum.twinstar.cz") == true)
@@ -414,7 +414,8 @@ namespace VF_WoWLauncher
                                 && _NewPost.m_PosterName != "Vidotrieth"
                                 && _NewPost.m_PosterName != "Tyale"
                                 && _NewPost.m_PosterName != "64bytes"
-                                && _NewPost.m_PosterName != "programuotojas")
+                                && _NewPost.m_PosterName != "programuotojas"
+                                && _NewPost.m_PosterName != "Ksenovia")
                                 return;
                         }
                         else
