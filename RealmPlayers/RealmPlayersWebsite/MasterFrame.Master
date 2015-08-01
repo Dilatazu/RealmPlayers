@@ -107,6 +107,7 @@
               <li><a href="https://twitter.com/realmplayers">Twitter</a></li>
               <li><a href="About.aspx">About</a></li>
               <li><a href="Donate.aspx">Donate</a></li>
+              <li><a href="Talents.aspx#2">Talent Calculator</a></li>
               <li><a href="Contributors.aspx">Data Contributors</a></li>
                 <%--(Removed for now)--%>
               <%--<li><a href="Contact.aspx">Contact</a></li>
