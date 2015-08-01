@@ -35,8 +35,17 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
 }
 /* Link Styles */
 a {
-  color: #c6c6c6;
-  text-decoration: underline;
+  color: #fff;
+  font-weight: bold;
+  text-decoration: none;
+}
+a[class="arrow-left"]/*, a[href$='.aspx'], a[href ^="http://realmplayers.com"]*/ { 
+	padding-left: 14px;
+	background: transparent url(../arrow.gif) no-repeat center left;
+}
+a[class="arrow-right"] { 
+	padding-right: 14px;
+	background: transparent url(../arrow.gif) no-repeat center right;
 }
 .brand, .horde_row a, .alliance_row a ,.dead_row a, .nav a{
   text-decoration: none;

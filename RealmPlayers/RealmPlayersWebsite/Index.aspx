@@ -101,7 +101,7 @@
             <br />
             <%= m_VisitorsHTML %>
             <br />
-            <h5><span class='text-center'>Thanks to all the project supporters! (full list <a href="Donators.aspx">here</a>)</span></h5>
+            <h5><span class='text-center'>Thanks to all the project supporters! (for full list <a href="Donators.aspx">click here</a>)</span></h5>
             <style>
                 .table th,
                 .table td {
