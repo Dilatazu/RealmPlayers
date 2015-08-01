@@ -366,7 +366,7 @@ namespace VF_WoWLauncher
                         {
                             minDate = DateTime.Now.AddDays(-28);
                             forumType = ForumReader.ForumType.RealmPlayersForum;
-                            if (_NewPost.m_PosterName != "Dilatazu")
+                            if (_NewPost.m_PosterName != "Dilatazu" || _NewPost.m_PostContent.Contains("- -"))
                                 return;
                         }
                         else if (_NewPost.m_PostURL.Contains("forum.nostalrius.org") == true)
@@ -514,10 +514,12 @@ namespace VF_WoWLauncher
                     }
                     if(Settings.Instance.NewsSources_Feenix == true)
                     {
-                        ForumReader.GetLatestPosts(new string[]{"http://www.wow-one.com/forum/117-server-updates/"
-                        , "http://www.wow-one.com/forum/192-information-and-releases/"
-                        , "http://www.wow-one.com/forum/3-news-and-announcements/"
-                        , "http://www.wow-one.com/forum/32-1121-changelogs/"}
+                        ForumReader.GetLatestPosts(new string[]{"http://www.wow-one.com/forum/forum/199-service-status/"
+                        , "http://www.wow-one.com/forum/forum/3-announcements/"
+                        , "http://www.wow-one.com/forum/forum/117-update-notifications/"
+                        , "http://www.wow-one.com/forum/forum/192-planning-releases/"
+                        , "http://www.wow-one.com/forum/forum/32-1121-changelogs/"
+                        , "http://www.wow-one.com/forum/forum/110-243-changelogs/"}
                             , newPostLambda, ForumReader.ForumType.FeenixForum, onlyNewest);
                     }
                     if (Settings.Instance.NewsSources_Nostalrius == true)

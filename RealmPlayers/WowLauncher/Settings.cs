@@ -76,9 +76,9 @@ namespace VF_WoWLauncher
         [ProtoMember(19)]
         public bool NewsSources_Feenix = false;
         [ProtoMember(20)]
-        public bool NewsSources_Nostalrius = true;
+        public bool NewsSources_Nostalrius = false;
         [ProtoMember(21)]
-        public bool NewsSources_Kronos = true;
+        public bool NewsSources_Kronos = false;
         [ProtoMember(22)]
         public bool ContributeRealmPlayers = true;
         [ProtoMember(23)]
