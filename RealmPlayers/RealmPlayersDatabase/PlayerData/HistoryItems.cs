@@ -213,4 +213,33 @@ namespace VF_RealmPlayersDatabase.PlayerData
             return true;
         }
     }
+
+    [ProtoContract]
+    public struct TalentsDataHistoryItem
+    {
+        [ProtoMember(1)]
+        public string Data;
+        [ProtoMember(2)]
+        public UploadID Uploader;
+
+        public TalentsDataHistoryItem(string _Talents, UploadID _Uploader)
+        {
+            Data = _Talents;
+            Uploader = _Uploader;
+        }
+
+        public static bool IsSame(TalentsDataHistoryItem _Item1, TalentsDataHistoryItem _Item2)
+        {
+            return _Item1.Data == _Item2.Data;
+        }
+        public static bool Time1BiggerThan2(TalentsDataHistoryItem _Item1, TalentsDataHistoryItem _Item2)
+        {
+            return _Item1.Uploader.GetTime() > _Item2.Uploader.GetTime();
+        }
+        public static bool CopyUploader2To1(TalentsDataHistoryItem _Data1, TalentsDataHistoryItem _Data2)
+        {
+            _Data1.Uploader = _Data2.Uploader;
+            return true;
+        }
+    }
 }

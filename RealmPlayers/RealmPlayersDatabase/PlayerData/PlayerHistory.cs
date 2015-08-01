@@ -23,6 +23,8 @@ namespace VF_RealmPlayersDatabase.PlayerData
         public List<GearDataHistoryItem> GearHistory = new List<GearDataHistoryItem>();
         [ProtoMember(5)]
         public List<ArenaDataHistoryItem> ArenaHistory = null;
+        [ProtoMember(6)]
+        public List<TalentsDataHistoryItem> TalentsHistory = null;
 
         public PlayerHistory()
         { }
@@ -40,7 +42,10 @@ namespace VF_RealmPlayersDatabase.PlayerData
             || GearHistory.Count != _PlayerHistory.GearHistory.Count
             || (ArenaHistory == null && _PlayerHistory.ArenaHistory != null)
             || (ArenaHistory != null && _PlayerHistory.ArenaHistory == null)
-            || (ArenaHistory != null && _PlayerHistory.ArenaHistory != null && ArenaHistory.Count != _PlayerHistory.ArenaHistory.Count))
+            || (ArenaHistory != null && _PlayerHistory.ArenaHistory != null && ArenaHistory.Count != _PlayerHistory.ArenaHistory.Count)
+            || (TalentsHistory == null && _PlayerHistory.TalentsHistory != null)
+            || (TalentsHistory != null && _PlayerHistory.TalentsHistory == null)
+            || (TalentsHistory != null && _PlayerHistory.TalentsHistory != null && TalentsHistory.Count != _PlayerHistory.TalentsHistory.Count))
                 return false;
 
             for (int i = 0; i < CharacterHistory.Count; ++i)
@@ -86,6 +91,17 @@ namespace VF_RealmPlayersDatabase.PlayerData
                         return false;
                 }
             }
+            if (TalentsHistory != null)
+            {
+                for (int i = 0; i < TalentsHistory.Count; ++i)
+                {
+                    if (TalentsHistory[i].Data != _PlayerHistory.TalentsHistory[i].Data)
+                        return false;
+                    if (TalentsHistory[i].Uploader.GetTime() != _PlayerHistory.TalentsHistory[i].Uploader.GetTime()
+                    || TalentsHistory[i].Uploader.GetContributorID() != _PlayerHistory.TalentsHistory[i].Uploader.GetContributorID())
+                        return false;
+                }
+            }
 
             return true;
         }
@@ -120,6 +136,12 @@ namespace VF_RealmPlayersDatabase.PlayerData
             if (ArenaHistory != null && ArenaHistory.Count > 0)
             {
                 DateTime dateTime = ArenaHistory.First().Uploader.GetTime();
+                if (dateTime < earliestDateTime)
+                    earliestDateTime = dateTime;
+            }
+            if (TalentsHistory != null && TalentsHistory.Count > 0)
+            {
+                DateTime dateTime = TalentsHistory.First().Uploader.GetTime();
                 if (dateTime < earliestDateTime)
                     earliestDateTime = dateTime;
             }
@@ -158,6 +180,12 @@ namespace VF_RealmPlayersDatabase.PlayerData
                 if (dateTime > latestDateTime)
                     latestDateTime = dateTime;
             }
+            if (TalentsHistory != null && TalentsHistory.Count > 0)
+            {
+                DateTime dateTime = TalentsHistory.Last().Uploader.GetTime();
+                if (dateTime > latestDateTime)
+                    latestDateTime = dateTime;
+            }
             return latestDateTime;
         }
         public DateTime GetDateAtUploadNr(int _UploadNR, DateTime _DefaultValue)
@@ -175,8 +203,10 @@ namespace VF_RealmPlayersDatabase.PlayerData
             extractedHistory.GuildHistory = ExtractOldHistoryItems_T(GuildHistory, (_Item) => { return (_Item.Uploader.GetTime() < _NewestData); }, _RemoveOld);
             extractedHistory.HonorHistory = ExtractOldHistoryItems_T(HonorHistory, (_Item) => { return (_Item.Uploader.GetTime() < _NewestData); }, _RemoveOld);
             extractedHistory.GearHistory = ExtractOldHistoryItems_T(GearHistory, (_Item) => { return (_Item.Uploader.GetTime() < _NewestData); }, _RemoveOld);
-            if(ArenaHistory != null)
+            if (ArenaHistory != null)
                 extractedHistory.ArenaHistory = ExtractOldHistoryItems_T(ArenaHistory, (_Item) => { return (_Item.Uploader.GetTime() < _NewestData); }, _RemoveOld);
+            if (TalentsHistory != null)
+                extractedHistory.TalentsHistory = ExtractOldHistoryItems_T(TalentsHistory, (_Item) => { return (_Item.Uploader.GetTime() < _NewestData); }, _RemoveOld);
             return extractedHistory;
         }
         public void AddOldHistory(PlayerHistory _OldHistory)
@@ -190,6 +220,12 @@ namespace VF_RealmPlayersDatabase.PlayerData
                 if (ArenaHistory == null)
                     ArenaHistory = new List<ArenaDataHistoryItem>();
                 AddOldHistoryItems_T(ArenaHistory, _OldHistory.ArenaHistory, ArenaDataHistoryItem.Time1BiggerThan2);
+            }
+            if (_OldHistory.TalentsHistory != null)
+            {
+                if (TalentsHistory == null)
+                    TalentsHistory = new List<TalentsDataHistoryItem>();
+                AddOldHistoryItems_T(TalentsHistory, _OldHistory.TalentsHistory, TalentsDataHistoryItem.Time1BiggerThan2);
             }
         }
         private void AddOldHistoryItems_T<T_HistoryItem>(List<T_HistoryItem> _HistoryArray, List<T_HistoryItem> _OldHistoryArray, Func<T_HistoryItem, T_HistoryItem, bool> _Time1BiggerThan2)
@@ -256,6 +292,14 @@ namespace VF_RealmPlayersDatabase.PlayerData
                 ArenaHistory = new List<ArenaDataHistoryItem>();
             UtilityClass.AddToHistory.RunGeneric(ArenaHistory, _ArenaData, _Uploader);
         }
+        public void AddTalentsToHistory(string _TalentsData, UploadID _Uploader)
+        {
+            if (_TalentsData == null)
+                return;
+            if (TalentsHistory == null)
+                TalentsHistory = new List<TalentsDataHistoryItem>();
+            UtilityClass.AddToHistory.RunGeneric(TalentsHistory, _TalentsData, _Uploader);
+        }
         private T_HistoryItem GetItemAtTime_T<T_HistoryItem>(List<T_HistoryItem> _HistoryArray, DateTime _DateTime, Predicate<T_HistoryItem> _Predicate)
         {
             if (_HistoryArray.Count == 0)
@@ -292,6 +336,17 @@ namespace VF_RealmPlayersDatabase.PlayerData
             }
             return GetItemAtTime_T(ArenaHistory, _DateTime, (ArenaDataHistoryItem _Item) => { return (_Item.Uploader.GetTime() <= _DateTime); });
         }
+        public TalentsDataHistoryItem GetTalentsItemAtTime(DateTime _DateTime)
+        {
+            if (TalentsHistory == null)
+            {
+                if (CharacterHistory.Count > 0)
+                    return new TalentsDataHistoryItem(null, CharacterHistory.First().Uploader);
+                else
+                    throw new Exception("Error There was no TalentsHistory and no CharacterHistory for DateTime: \"" + _DateTime.ToString() + "\"");
+            }
+            return GetItemAtTime_T(TalentsHistory, _DateTime, (TalentsDataHistoryItem _Item) => { return (_Item.Uploader.GetTime() <= _DateTime); });
+        }
         public bool GetPlayerAtTime(string _Name, WowRealm _Realm, DateTime _DateTime, out Player _RetPlayer)
         {
             try 
@@ -306,7 +361,8 @@ namespace VF_RealmPlayersDatabase.PlayerData
                     , GetGuildItemAtTime(_DateTime)
                     , GetHonorItemAtTime(_DateTime)
                     , GetGearItemAtTime(_DateTime)
-                    , GetArenaItemAtTime(_DateTime));
+                    , GetArenaItemAtTime(_DateTime)
+                    , GetTalentsItemAtTime(_DateTime));
                 return true;
 	        }
 	        catch (Exception)
@@ -429,6 +485,11 @@ namespace VF_RealmPlayersDatabase.PlayerData
                 foreach (var historyItem in ArenaHistory)
                     uploads.Add(historyItem.Uploader);
             }
+            if (TalentsHistory != null)
+            {
+                foreach (var historyItem in TalentsHistory)
+                    uploads.Add(historyItem.Uploader);
+            }
 
             return uploads.Distinct().ToList();
         }
@@ -444,6 +505,10 @@ namespace VF_RealmPlayersDatabase.PlayerData
                 if (ArenaHistory != null)
                 {
                     removedHistoryData += ArenaHistory.RemoveAll((ArenaDataHistoryItem _Item) => { return _Item.Uploader.GetTime() > _DateTime; });
+                }
+                if (TalentsHistory != null)
+                {
+                    removedHistoryData += TalentsHistory.RemoveAll((TalentsDataHistoryItem _Item) => { return _Item.Uploader.GetTime() > _DateTime; });
                 }
                 if (removedHistoryData > 0)
                     _RollbackPlayer(_Player, (_UploadID) => { if (_UploadID.GetTime() > _DateTime) return true; return false; });
@@ -469,6 +534,10 @@ namespace VF_RealmPlayersDatabase.PlayerData
                 {
                     removedHistoryData += ArenaHistory.RemoveAll((ArenaDataHistoryItem _Item) => { return _Item.Uploader.GetContributorID() == contributorID; });
                 }
+                if (TalentsHistory != null)
+                {
+                    removedHistoryData += TalentsHistory.RemoveAll((TalentsDataHistoryItem _Item) => { return _Item.Uploader.GetContributorID() == contributorID; });
+                }
                 if(removedHistoryData > 0)
                     _RollbackPlayer(_Player, (_UploadID) => { if (_UploadID.GetContributorID() == contributorID) return true; return false; });
             }
@@ -492,6 +561,10 @@ namespace VF_RealmPlayersDatabase.PlayerData
                 if (ArenaHistory != null)
                 {
                     removedHistoryData += ArenaHistory.RemoveAll((ArenaDataHistoryItem _Item) => { return (_Item.Uploader.GetContributorID() == contributorID) && (_Item.Uploader.GetTime() > _DateTime); });
+                }
+                if (TalentsHistory != null)
+                {
+                    removedHistoryData += TalentsHistory.RemoveAll((TalentsDataHistoryItem _Item) => { return (_Item.Uploader.GetContributorID() == contributorID) && (_Item.Uploader.GetTime() > _DateTime); });
                 }
                 if (removedHistoryData > 0)
                     _RollbackPlayer(_Player, (_UploadID) => { if (_UploadID.GetContributorID() == contributorID && (_UploadID.GetTime() > _DateTime)) return true; return false; });
@@ -560,6 +633,23 @@ namespace VF_RealmPlayersDatabase.PlayerData
                 else
                 {
                     _Player.Arena = null;
+                }
+                if (TalentsHistory != null)
+                {
+                    if (TalentsHistory.Count > 0)
+                    {
+                        var lastData = TalentsHistory.Last();
+                        _Player.TalentPointsData = lastData.Data;
+                        if (_Player.LastSeen < lastData.Uploader.GetTime())
+                        {
+                            _Player.LastSeen = lastData.Uploader.GetTime();
+                            _Player.Uploader = lastData.Uploader;
+                        }
+                    }
+                }
+                else
+                {
+                    _Player.TalentPointsData = null;
                 }
             }
         }

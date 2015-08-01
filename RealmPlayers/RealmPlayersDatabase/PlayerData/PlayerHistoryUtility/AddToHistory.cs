@@ -74,5 +74,9 @@ namespace VF_RealmPlayersDatabase.PlayerData.PlayerHistoryUtility
         {
             RunGeneric_T(_HistoryArray, new ArenaDataHistoryItem(_Data, _Uploader), ArenaDataHistoryItem.IsSame, ArenaDataHistoryItem.Time1BiggerThan2, ArenaDataHistoryItem.CopyUploader2To1);
         }
+        public static void RunGeneric(List<TalentsDataHistoryItem> _HistoryArray, string _Data, UploadID _Uploader)
+        {
+            RunGeneric_T(_HistoryArray, new TalentsDataHistoryItem(_Data, _Uploader), TalentsDataHistoryItem.IsSame, TalentsDataHistoryItem.Time1BiggerThan2, TalentsDataHistoryItem.CopyUploader2To1);
+        }
     }
 }

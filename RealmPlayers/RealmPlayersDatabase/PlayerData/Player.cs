@@ -30,6 +30,8 @@ namespace VF_RealmPlayersDatabase.PlayerData
         public UploadID Uploader = UploadID.Null();
         [ProtoMember(9)]
         public ArenaData Arena = null;//Default
+        [ProtoMember(10)]
+        public string TalentPointsData = null;//Default
 
         public Player()
         {}
@@ -39,7 +41,7 @@ namespace VF_RealmPlayersDatabase.PlayerData
             Realm = _Realm;
             LastSeen = DateTime.MinValue;
         }
-        public Player(string _Name, WowRealm _Realm, CharacterDataHistoryItem _Character, GuildDataHistoryItem _Guild, HonorDataHistoryItem _Honor, GearDataHistoryItem _Gear, ArenaDataHistoryItem _Arena)
+        public Player(string _Name, WowRealm _Realm, CharacterDataHistoryItem _Character, GuildDataHistoryItem _Guild, HonorDataHistoryItem _Honor, GearDataHistoryItem _Gear, ArenaDataHistoryItem _Arena, TalentsDataHistoryItem _Talents)
         {
             Name = _Name;
             Realm = _Realm;
@@ -48,6 +50,7 @@ namespace VF_RealmPlayersDatabase.PlayerData
             Honor = _Honor.Data;
             Gear = _Gear.Data;
             Arena = _Arena.Data;
+            TalentPointsData = _Talents.Data;
             Uploader = _Character.Uploader;
             if(_Guild.Uploader.GetTime() > Uploader.GetTime())
                 Uploader = _Guild.Uploader;
@@ -57,6 +60,8 @@ namespace VF_RealmPlayersDatabase.PlayerData
                 Uploader = _Gear.Uploader;
             if (_Arena.Uploader.GetTime() > Uploader.GetTime())
                 Uploader = _Arena.Uploader;
+            if (_Talents.Uploader.GetTime() > Uploader.GetTime())
+                Uploader = _Talents.Uploader;
             LastSeen = Uploader.GetTime();
         }
 
@@ -71,11 +76,13 @@ namespace VF_RealmPlayersDatabase.PlayerData
                 return true;
 
             PlayerData.ArenaData newArena = null;
+            string newTalentPointsData = null;
             if (_WowVersion == WowVersionEnum.TBC)
             {
                 newArena = new PlayerData.ArenaData(_PlayerNode);
                 _PlayerHistory.AddToHistory(newArena, _Uploader);
-
+                newTalentPointsData = XMLUtility.GetChildValue(_PlayerNode, "TalentsData", "");
+                _PlayerHistory.AddTalentsToHistory(newTalentPointsData, _Uploader);
             }
 
             _PlayerHistory.AddToHistory(newCharacter, _Uploader);
@@ -93,6 +100,7 @@ namespace VF_RealmPlayersDatabase.PlayerData
                     Gear = newGear;
                 Honor = newHonor;
                 Arena = newArena;
+                TalentPointsData = newTalentPointsData;
                 return false;
             }
 
