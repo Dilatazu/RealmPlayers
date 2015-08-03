@@ -28,15 +28,15 @@ namespace RealmPlayersServer
             if (userStr == null || passStr == null)
                 Response.Redirect("Index.aspx");
 
-            if (userStr == "Admin" && passStr == "***REMOVED***")
+            if (userStr == "Admin" && passStr == VF.HiddenStrings.CreateUserID_AdminPassword)
             {
                 //Admin
                 m_InfoHTML = "<h2>Logged in as Admin</h2>";
                 m_ThisContributor = new ContributorDB.ContributorDBElement();
                 m_ThisContributor.Key = "Admin";
-                m_ThisContributor.UserID = "***REMOVED***";
+                m_ThisContributor.UserID = VF.HiddenStrings.DilatazuUserID;
             }
-            else if (passStr == "***REMOVED***")
+            else if (passStr == VF.HiddenStrings.CreateUserID_UserIDCreaterPassword)
             {
                 m_ThisContributor = ContributorDB.GetContributor(userStr);
                 if (m_ThisContributor == null)

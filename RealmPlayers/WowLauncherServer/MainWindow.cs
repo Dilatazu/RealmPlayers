@@ -100,7 +100,7 @@ namespace VF_WoWLauncherServer
             string userID = "";
             if (ContributorUtility.GenerateUserID(c_txtAddContributorName.Text, out userID) == true)
             {
-                if (ContributorDB.AddVIPContributor(userID, "***REMOVED***") == true)
+                if (ContributorDB.AddVIPContributor(userID, VF.HiddenStrings.DilatazuUserID) == true)
                 {
                     UpdateContributorsList();
                 }

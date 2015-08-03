@@ -125,7 +125,7 @@ namespace VF_RealmPlayersDatabase
             {
                 if (sm_ContributorDB.Find(e => e.Key, contributor.Key) == null)
                 {
-                    var newContributor = new ContributorDB.ContributorDBElement(contributor.Key, contributor.Value, "***REMOVED***");
+                    var newContributor = new ContributorDB.ContributorDBElement(contributor.Key, contributor.Value, VF.HiddenStrings.DilatazuUserID);
                     sm_ContributorDB.Add(newContributor);
                     Logger.ConsoleWriteLine("Added new Contributor");
                 }
@@ -309,7 +309,7 @@ namespace VF_RealmPlayersDatabase
                             .FindAndModify(Query.Null, SortBy.Null, Update.Inc("VIPContributorIDCounter", 1), true)
                                 .GetModifiedDocumentAs<ContributorMetaDBElement>();
                         Contributor contributor = new Contributor(newMetaObject.VIPContributorIDCounter, _UserIP);
-                        sm_ContributorDB.Add(new ContributorDBElement(userIP, contributor, "***REMOVED***"));
+                        sm_ContributorDB.Add(new ContributorDBElement(userIP, contributor, VF.HiddenStrings.DilatazuUserID));
                         return contributor;
                     }
 

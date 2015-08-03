@@ -84,6 +84,9 @@
     <Compile Include="..\..\VF_Library\VF_Library\VF_Utility.cs">
       <Link>VF_Library\VF_Utility.cs</Link>
     </Compile>
+    <Compile Include="..\VF_RealmPlayersHiddenStrings\HiddenStrings.cs">
+      <Link>VF_Library\HiddenStrings.cs</Link>
+    </Compile>
     <Compile Include="Achievments\AchievmentBase.cs" />
     <Compile Include="Achievments\AchievmentType.cs" />
     <Compile Include="Achievments\ItemAchievment.cs" />

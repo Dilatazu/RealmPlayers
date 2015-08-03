@@ -42,6 +42,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManualOldHistoryDataGenerat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManualDataPurger", "ManualDataPurger\ManualDataPurger.csproj", "{689F7BC7-6920-4654-861B-61D71054C078}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VF_RealmPlayersHiddenStrings", "VF_RealmPlayersHiddenStrings\VF_RealmPlayersHiddenStrings.csproj", "{40118791-4372-445E-A6DD-0BC4C31CD064}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -238,6 +240,18 @@ Global
 		{689F7BC7-6920-4654-861B-61D71054C078}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{689F7BC7-6920-4654-861B-61D71054C078}.Release|Win32.ActiveCfg = Release|Any CPU
 		{689F7BC7-6920-4654-861B-61D71054C078}.Release|x64.ActiveCfg = Release|Any CPU
+		{40118791-4372-445E-A6DD-0BC4C31CD064}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40118791-4372-445E-A6DD-0BC4C31CD064}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40118791-4372-445E-A6DD-0BC4C31CD064}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{40118791-4372-445E-A6DD-0BC4C31CD064}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{40118791-4372-445E-A6DD-0BC4C31CD064}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{40118791-4372-445E-A6DD-0BC4C31CD064}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{40118791-4372-445E-A6DD-0BC4C31CD064}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40118791-4372-445E-A6DD-0BC4C31CD064}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40118791-4372-445E-A6DD-0BC4C31CD064}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{40118791-4372-445E-A6DD-0BC4C31CD064}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{40118791-4372-445E-A6DD-0BC4C31CD064}.Release|Win32.ActiveCfg = Release|Any CPU
+		{40118791-4372-445E-A6DD-0BC4C31CD064}.Release|x64.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -254,5 +268,6 @@ Global
 		{A4C9AAA4-61D5-4574-A4CD-467FE72BF0C0} = {0DC79FCA-396D-4202-A5F9-BB2C51423D92}
 		{E7BF23B9-5C87-4E73-9363-F7E374C11340} = {0DC79FCA-396D-4202-A5F9-BB2C51423D92}
 		{689F7BC7-6920-4654-861B-61D71054C078} = {0DC79FCA-396D-4202-A5F9-BB2C51423D92}
+		{40118791-4372-445E-A6DD-0BC4C31CD064} = {368DFFA5-E5E2-4FBC-9AF4-B76AB3FBE62A}
 	EndGlobalSection
 EndGlobal

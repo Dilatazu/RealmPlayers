@@ -11,7 +11,7 @@ namespace VF_RaidDamageDatabase
         {
             List<DamageDataSession> dataSessions = new List<DamageDataSession>();
             List<string> sessionDebugData = new List<string>();
-            dataSessions = DamageDataParser.ParseFile("***REMOVED***_***REMOVED***_2014_05_03_20_59_00_FID0506.txt", ref sessionDebugData);
+            dataSessions = DamageDataParser.ParseFile("2014_05_03_20_59_00_FID0506.txt", ref sessionDebugData);
 
             var fights = FightDataCollection.GenerateFights(dataSessions);//, BossInformation.BossFights);
 #if Use_Main

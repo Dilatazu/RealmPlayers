@@ -45,7 +45,7 @@ namespace RealmPlayersServer
             string userStr = _RequestData.m_GetQueryStringFunction("user");
             string passStr = _RequestData.m_GetQueryStringFunction("pass");
 
-            if (userStr != "Viktor" || passStr != "***REMOVED***")
+            if (userStr != "Viktor" || passStr != VF.HiddenStrings.CreateUserID_AdminPassword)
             {
                 _RequestData.m_RedirectFunction("Index.aspx");
                 return result;

@@ -15,7 +15,7 @@ namespace VF.RaidDamageWebsite
         {
             string userStr = Request.QueryString.Get("user");
             string passStr = Request.QueryString.Get("pass");
-            if (userStr == "Viktor" && passStr == "***REMOVED***")
+            if (userStr == "Viktor" && passStr == VF.HiddenStrings.CreateUserID_AdminPassword)
             {
                 if (PageUtility.GetQueryString(Request, "save", "null") != "null")
                 {
