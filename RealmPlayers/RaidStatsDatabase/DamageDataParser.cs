@@ -3,6 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+/*
+ * This file is the initial parsing of lua phase for RaidStats data
+ * ParseFile is called with savedvariables lua filename and this in turns reads all the data from the lua file
+ * and starts to parse it in the _ParseData function.
+ * The parsing generates a list of DamageDataSessions, one for each player session that was found within the lua database.
+ * The DamageDataSession is time synchronized to the server clock to ensure a precision of 1-2 minutes.
+ * Each DamageDataSession has timeslices with all the information and addition meta data such as conversion tables for ID to names.
+ */
+
 using WowVersionEnum = VF_RealmPlayersDatabase.WowVersionEnum;
 
 namespace VF_RaidDamageDatabase

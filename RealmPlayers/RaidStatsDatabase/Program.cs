@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+/*
+ * This is the old Program which manually parsed lua databases that was put in a specific folder.
+ * This step is done automatically in the VF_WowLauncherServer application instead, there has been modifications and additions since.
+ * This file and information is basically just kept here for history and its useful information for someone that does not have access to the VF_WowLauncherServer project. 
+ */
+
 namespace VF_RaidDamageDatabase
 {
     class Program

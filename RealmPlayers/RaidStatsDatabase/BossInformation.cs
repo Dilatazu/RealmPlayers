@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+/*
+ * This file contains lists of all raids and dungeon bosses and zones.
+ * There also are various information about bosses such as if they have boss yells
+ * and if there are any adds.
+ */
+
 namespace VF_RaidDamageDatabase
 {
     public class BossInformation

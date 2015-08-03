@@ -7,6 +7,29 @@ using System.Runtime.Serialization.Formatters.Binary;
 using ProtoBuf;
 using System.Collections.ObjectModel;
 
+/*
+ * FightDataCollection is the class that contains all parsed data from an uploaded lua database file that was uploaded by one person at one time
+ * This data is saved as one file and can thus be loaded separetely whenever needed to access data from a raid that this "fightdatafile" contains.
+ * A FightDataCollection can contains multiple RaidInstance clears spread out over several weeks. There is no real limit, 
+ * except that it must have all come from the same lua database file.
+ * m_FightCacheDatas is a list of FightCacheData, each FightCacheData is basically just a reference to both the FightDataCollection 
+ * and specific FightData that is wanted to get accessed. The FightCacheData also contains some nice functions that are generally needed.
+ * Do note that m_FightCacheData is generated everytime the FightDataCollection is loaded, all the real data is contained in m_FightDatas which is an array of FightData
+ * m_UnitIDToNames is a conversion table for ID to name conversions that is needed to convert IDs within timeslices etc that exists within the FightDatas.
+ * m_RaidMembers contains a list of all the players that have been in a raid at the same time as the player during any of the FightDatas.
+ * m_BossLoot is the loot that was detected when the player is rightclicking a dead boss corpse and get a loot window. Thus it only contains what items but not who received it.
+ * m_PlayerLoot is all the items that was detected as received by any player. 
+ * m_BuffIDToNames is a conversion table for ID to buff names that is needed to convert BuffIDs within FightDatas.
+ * 
+ * FightDataCollection is created by using the function "FightDataCollection.GenerateFights()" which takes an array of DamageDataSessions
+ * this basically just calls the constructor which contains all the logic.
+ * The constructor loops through all the DamageDataSessions, it makes sure to generate new NameIDs and BuffIDs since they can be different between DamageDataSessions.
+ * The "DamageDataSession.GenerateFightData()" function is called for each session, this generates a list of FightData, every FightData is added to the FightDataCollection.
+ * After FightData has been generated it also makes sure to translate all the IDs that needs to be translated to ensure a uniform ID conversion. 
+ * And it also adds the data such as BossLoot and PlayerLoot to the FightDataCollection so that it contains all relevant data. 
+ * DamageDataSessions are not used after this step so everything that should be saved needs to be saved within this FightDataCollection class.
+ */
+
 namespace VF_RaidDamageDatabase
 {
     [ProtoContract]

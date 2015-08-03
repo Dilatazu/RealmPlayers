@@ -6,6 +6,21 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using ProtoBuf;
 
+/*
+ * FightData is the main data container for details for a fight. It contains all the data that defines a bossfight or trash fight.
+ * This class is always owned by FightDataCollection which can be used to translated IDs to names and get other meta information.
+ * FightName is either boss name or "Trash".
+ * FightUnitID will be the bossname ID if the fight is not a trash and there are no ID conversion problems.
+ * TimeSlices is a list of all the timeslices relevant for the fight.
+ * StartDateTime is the datetime that the first timeslice starts at
+ * FightDuration is the pregenerated duration of the fight this is usually not 100% correct and has been replaced by a function that calculates it "FightData.GetFightRecordDuration()"
+ * PerfectSync is a pregenerated determination if the fight is synchronized correctly, this is old legacy functionality that has unknown consequences(not been touched for a long time).
+ * RaidID is the InstanceID of the raid that the fight belongs to.
+ * RaidResetDateTime is the reset datetime for above mentioned InstanceID.
+ * RecordedByPlayer is just who recorded the fight (playername)
+ * m_FightUnitIDs is an array of IDs of relevant bossfight enemy units. This must never be accessed unless you know what you are doing, the readonly FightUnitIDs propery should be used instead!
+ */
+
 namespace VF_RaidDamageDatabase
 {
     [ProtoContract]
