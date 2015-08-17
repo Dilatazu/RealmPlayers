@@ -340,6 +340,61 @@ namespace VF_RaidDamageDatabase
                                     realDeadEvent = false;
                                 }
                             }
+                            if (currTimeSlice.IsWipeEvent() && BossInformation.FightsWithDisappearingBoss.Contains(currFight.FightName) == true)
+                            {
+                                //Detection of premature Wipe event.
+                                //This was added after problems on Nefarian raid not being able to capture Razorgore fight
+                                //Possibly it is just a problem with the faulty "WIPE" guesses.
+                                //This should hopefully solve the issue as this is pretty much an internal wipe functionality that is standalone from client
+                                var bossAdds = BossInformation.BossAdds[currFight.FightName];
+                                List<int> bossIDs = new List<int>();
+                                bossIDs.AddRange(currFight.FightUnitIDs);
+                                foreach (var bossAdd in bossAdds)
+                                {
+                                    int bossAddID = 0;
+                                    if (TryGetIDFromName(bossAdd, out bossAddID) == true)
+                                    {
+                                        bossIDs.Add(bossAddID);
+                                    }
+                                }
+                                int timeSinceLastBossInTimeSlice = 0;
+                                for (int u = i + 1; u < TimeSlices.Count - 1; ++u)
+                                {
+                                    bool bossInTimeSlice = false;
+                                    foreach(var bossID in bossIDs)
+                                    {
+                                        if(TimeSlices[u].ChangedUnitDatas.Contains(bossID))
+                                        {
+                                            bossInTimeSlice = true;
+                                            break;
+                                        }
+                                    }
+                                    //It is important that we continue adding time to this variable and not check if boss was in timeslice yet
+                                    //This will help cover some rare corner cases such as Wipe->no timeslices for 200 seconds due to whatever reason->Start
+                                    timeSinceLastBossInTimeSlice += (TimeSlices[u].Time - TimeSlices[u - 1].Time);
+
+                                    if ((TimeSlices[u].IsStartEvent() && TimeSlices[u].IsEventBoss(currFight.FightName))
+                                        || TimeSlices[u].Time - TimeSlices[i].Time > 180)
+                                    {
+                                        if (timeSinceLastBossInTimeSlice < 35)
+                                        {
+                                            realDeadEvent = false;
+                                        }
+                                        break;
+                                    }
+                                    else if(bossInTimeSlice == true)
+                                    {
+                                        timeSinceLastBossInTimeSlice = 0;
+                                    }
+                                    else if (bossInTimeSlice == false)
+                                    {
+                                        if(timeSinceLastBossInTimeSlice > 35)
+                                        {
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
                             if (realDeadEvent == true) //Only end the fight if it truely was a Dead event (not fake one like The Prophet Skeram)
                             {
                                 currFight.TimeSlices.Add(currTimeSlice);
