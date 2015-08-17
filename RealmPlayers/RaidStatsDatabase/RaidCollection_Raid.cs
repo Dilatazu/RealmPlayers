@@ -4,6 +4,20 @@ using System.Linq;
 using System.Text;
 using ProtoBuf;
 
+/*
+ * RaidCollection_Raid is the class that contains overall information about a specific raid. It is created from within the AddFightCollection funtion in RaidCollection.cs
+ * UniqueRaidID is the Unique ID that was generated from the RaidCollection, it is a unique identifier to this exact raid and no other raid can have the same ID.
+ * RaidID is the ingame InstanceID, it has occured that multiple raids even if they occur same week have had same InstanceID, thus this is only interesting information and should not be treated as an identifier unless other information is also checked against.
+ * RaidInstance is the instance that this raid occurs in.
+ * RaidStartDate is the calculated datetime of the first occuring fight start.
+ * RaidEndDate is the calculated datetime of the last occuring fight end.
+ * RaidOwnerName is the name of the guild(or "PUG" if less than half of the raid is not within same guild).
+ * m_DataFiles is a list of all the FightDataCollection files that contains information relevant to this run(The FightDataCollection files may however contain information relevant to completely different raids so the data must always be filtered to the correct timeframe and relevant bosses!)
+ * m_ExistingFights contains more detailed information about the DataFiles that contains relevant information
+ * 
+ * THESE COMMENTS ARE NOT DONE YET.
+ */
+
 namespace VF_RaidDamageDatabase
 {
     [ProtoContract]

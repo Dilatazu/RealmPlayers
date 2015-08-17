@@ -4,6 +4,18 @@ using System.Linq;
 using System.Text;
 using ProtoBuf;
 
+/*
+ * RaidCollection is the class that contains a list and lookup table for all the recorded raids
+ * Every raid that gets added to the database receives a uniqueRaidID which is assigned by incrementing the m_UniqueRaidIDCounter
+ * m_Raids is the array of all the recorded raids
+ * m_Dungeons is the new addition for recording dungeons, it has its separate ID counter.
+ * 
+ * The RaidCollection is loaded at all times in memory on the wowlauncher server software and everytime a new raid has been parsed into FightDataCollection
+ * The AddFightCollection function gets called, this identifies if there are any raids in the fightdata collection and if there are they are identified if
+ * there is already such raid within the m_Raids array. If the raid could not be identified to exist within m_Raids a new RaidCollection_Raid gets created and
+ * filled in with the information. The function also returns a list of all the raids that was found within the fightcollection, this is useful so that it can be determined if the data in the FightDataCollection is needed to be saved at all or if it should just be discarded due to not being interesting.
+ */
+
 namespace VF_RaidDamageDatabase
 {
     [ProtoContract]
