@@ -396,6 +396,13 @@ namespace VF_RaidDamageDatabase
         }
         public bool DetectIsCorruptSWSync(Func<string, bool> _PlayerIdentifier)
         {
+            double flatValueMultiplier = 1.0;
+            var wowVersion = VF_RealmPlayersDatabase.StaticValues.GetWowVersion(this.m_Raid.Realm);
+            if (wowVersion == VF_RealmPlayersDatabase.WowVersionEnum.TBC)
+                flatValueMultiplier *= 3.0;
+            else if (wowVersion == VF_RealmPlayersDatabase.WowVersionEnum.WOTLK)
+                flatValueMultiplier *= 10.0;
+
             int lastTime = 0;
             var fightDetails = GetFightDetails();
             int maxCheckTime = 30;
@@ -409,7 +416,7 @@ namespace VF_RaidDamageDatabase
                 if (fightDetail.UnitDatas.Count > 0 && deltaTime > 0)
                 {
                     double dps = fightDetail.UnitDatas.OrderByDescending((_Value) => (_PlayerIdentifier(_Value.Key) ? _Value.Value.I.Dmg : 0)).First().Value.I.Dmg / deltaTime;
-                    if (dps > 6000)
+                    if (dps > 6000 * flatValueMultiplier)
                         return true;
                     lastTime = fightDetail.Time;
                 }
@@ -462,8 +469,18 @@ namespace VF_RaidDamageDatabase
         public List<PlayerSpike> GetUnrealisticPlayerSpikes(Func<string, PlayerIdentifier> _PlayerIdentifier)
         {
             List<PlayerSpike> retList = new List<PlayerSpike>();
+
+            double flatValueMultiplier = 1.0;
+
+            var wowVersion = VF_RealmPlayersDatabase.StaticValues.GetWowVersion(this.m_Raid.Realm);
             if (GetBossName() == "Thaddius")
-                return retList;
+                flatValueMultiplier *= 3.0;
+
+            if (wowVersion == VF_RealmPlayersDatabase.WowVersionEnum.TBC)
+                flatValueMultiplier *= 3.0;
+            else if (wowVersion == VF_RealmPlayersDatabase.WowVersionEnum.WOTLK)
+                flatValueMultiplier *= 10.0;
+
             int lastTime = 0;
             var fightDetails = GetFightDetails();
             var unitDatas = GetUnitsDataAsDictionary(true);
@@ -552,8 +569,9 @@ namespace VF_RaidDamageDatabase
                                 if (playerIdentifier.HasFlag(PlayerIdentifier.PetClass))
                                     dmgMultiplier = dmgMultiplier * 100;
                             }
-                            if ((frameDmg < 3000 * deltaTime * dmgMultiplier && frameHeal < 3000 * deltaTime * healMultiplier && deltaTime <= 10)
-                                || (frameDmg < 5000 && frameHeal < 5000) || (frameDmg < 1000 * playerDeltaTime && frameHeal < 1000 * playerDeltaTime && playerDeltaTime < 50))
+                            if ((frameDmg < 3000 * deltaTime * dmgMultiplier * flatValueMultiplier && frameHeal < 3000 * deltaTime * healMultiplier * flatValueMultiplier && deltaTime <= 10)
+                                || (frameDmg < 5000 * flatValueMultiplier && frameHeal < 5000 * flatValueMultiplier) 
+                                || (frameDmg < 1000 * playerDeltaTime * flatValueMultiplier && frameHeal < 1000 * playerDeltaTime * flatValueMultiplier && playerDeltaTime < 50))
                             {
                                 //Ignorera spikes under 3k dps/hps troligtvis bara data som inte synkats i tid eller andra små grejjer
                             }
@@ -575,8 +593,8 @@ namespace VF_RaidDamageDatabase
                                 }
                                 var approxTotalDPS = totalUnitData.I.Dmg / fightDuration;
 
-                                double fightDeltaCompareTimes_Dmg = fightDeltaCompareTimes_10 * dmgMultiplier;
-                                double fightDeltaCompareTimes_Heal = fightDeltaCompareTimes_10 * healMultiplier;
+                                double fightDeltaCompareTimes_Dmg = fightDeltaCompareTimes_10 * dmgMultiplier * flatValueMultiplier;
+                                double fightDeltaCompareTimes_Heal = fightDeltaCompareTimes_10 * healMultiplier * flatValueMultiplier;
 
                                 if (approxTotalDPS < 100)//We are at very low dps numbers so accept pretty much anything
                                     fightDeltaCompareTimes_Dmg = fightDeltaCompareTimes_Dmg * 500.0;
