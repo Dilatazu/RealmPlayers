@@ -12,9 +12,10 @@ namespace VF
 
         private T_Return _Get<T_Return>(Func<T_Return> _CreateFunc, string _DataKey)
         {
-            T_Return retValue;
+            T_Return retValue = default(T_Return);
 
-            lock(m_Data)
+            Monitor.Enter(m_Data);
+            try
             {
                 if (m_Data.ContainsKey(_DataKey) == false)
                 {
@@ -22,12 +23,13 @@ namespace VF
                     try
                     {
                         retValue = _CreateFunc();
+                        Monitor.Enter(m_Data);
                     }
                     catch (Exception)
                     {
+                        Monitor.Enter(m_Data);
                         retValue = default(T_Return);
                     }
-                    Monitor.Enter(m_Data);
                     if (m_Data.ContainsKey(_DataKey) == false)
                         m_Data.Add(_DataKey, retValue);
                     else
@@ -38,6 +40,10 @@ namespace VF
                     retValue = (T_Return)m_Data[_DataKey];
                 }
             }
+            catch (Exception)
+            {}
+            Monitor.Exit(m_Data);
+
             return retValue;
         }
         public T_Return Get<T_Return>(string _UniqueIdentifier, Func<T_Return> _CreateFunc)
