@@ -20,6 +20,19 @@ namespace VF_RaidDamageDatabase
                 || _Zone == "The Temple of Atal'Hakkar" || _Zone == "Zul'Farrak" || _Zone == "Wailing Caverns"
                 || _Zone == "Shadowfang Keep" || _Zone == "Razorfen Kraul";
         }
+        public static bool IsRaidZone(string _Zone)
+        {
+            return _Zone == "Zul'Gurub" || _Zone == "Ruins of Ahn'Qiraj" //10 man
+                || _Zone == "Onyxia's Lair" || _Zone == "Molten Core" //Classic Tier1
+                || _Zone == "Blackwing Lair" //Classic Tier2
+                || _Zone == "Ahn'Qiraj Temple" //Classic Tier2.5
+                || _Zone == "Naxxramas" //Classic Tier3
+                || _Zone == "Karazhan" || _Zone == "Zul'Aman" //TBC 10 man
+                || _Zone == "Magtheridon's Lair" || _Zone == "Gruul's Lair" //TBC Tier4
+                || _Zone == "Serpentshrine Cavern" || _Zone == "The Eye" //TBC Tier5
+                || _Zone == "Black Temple" || _Zone == "Hyjal Summit" //TBC Tier6
+                || _Zone == "Sunwell Plateau"; //TBC Tier6
+        }
         public static Dictionary<string, Dictionary<string, string[]>> InstanceRuns = new Dictionary<string, Dictionary<string, string[]>>
         {
             {"Onyxia's Lair", new Dictionary<string, string[]>{{"Onyxia", new string[]{"Onyxia"}}}},

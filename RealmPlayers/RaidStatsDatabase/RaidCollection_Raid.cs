@@ -44,6 +44,8 @@ namespace VF_RaidDamageDatabase
         public List<RaidCollection_FightDataFileInfo> m_ExistingFights = new List<RaidCollection_FightDataFileInfo>();
         [ProtoMember(10)]
         public VF_RealmPlayersDatabase.WowRealm Realm = VF_RealmPlayersDatabase.WowRealm.Emerald_Dream;
+        [ProtoMember(11)]
+        public List<string> m_GroupMembers = new List<string>(); //THIS WAS ADDED 2015-08-22. This variable can be null or empty for a lot of raids!
 
         //Cache based, do not serialize!
         private List<RaidBossFight> m_BossFights = new List<RaidBossFight>();
