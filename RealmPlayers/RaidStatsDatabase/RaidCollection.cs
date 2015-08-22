@@ -182,61 +182,62 @@ namespace VF_RaidDamageDatabase
                 }
                 else
                 {
-                    Dictionary<string, int> zoneSlices = new Dictionary<string,int>();
-                    foreach(var timeSlice in fight.m_Fight.TimeSlices)
-                    {
-                        if (BossInformation.IsRaidZone(timeSlice.Zone) == true)
-                        {
-                            if (zoneSlices.ContainsKey(timeSlice.Zone) == true)
-                            {
-                                zoneSlices[timeSlice.Zone] = zoneSlices[timeSlice.Zone] + 1;
-                            }
-                            else
-                            {
-                                zoneSlices[timeSlice.Zone] = 1;
-                            }
-                        }
-                    }
-                    var orderedZones = zoneSlices.OrderByDescending((_Value) => _Value.Value);
-                    string raidZone = null;
-                    List<string> groupMembers = new List<string>();
-                    if (orderedZones.Count() > 0)
-                    {
-                        raidZone = orderedZones.First().Key;
-                        foreach (var timeSlice in fight.m_Fight.TimeSlices)
-                        {
-                            if (timeSlice.Zone == raidZone)
-                            {
-                                if (timeSlice.GroupMemberIDs != null)
-                                {
-                                    foreach (var groupMemberID in timeSlice.GroupMemberIDs)
-                                    {
-                                        groupMembers.AddUnique(_Fights.GetNameFromUnitID(groupMemberID));
-                                    }
-                                }
-                            }
-                        }
-                        if (groupMembers.Count == 0)
-                        {
-                            bool foundZone = false;
-                            for (int i = fight.m_Fight.TimeSlices.Count - 1; i >= 0; --i)
-                            {
-                                var timeSlice = fight.m_Fight.TimeSlices[i];
-                                if (timeSlice.Zone == raidZone)
-                                {
-                                    foundZone = true;
-                                }
-                                if (foundZone == true && timeSlice.GroupMemberIDs != null)
-                                {
-                                    foreach (var groupMemberID in timeSlice.GroupMemberIDs)
-                                    {
-                                        groupMembers.AddUnique(_Fights.GetNameFromUnitID(groupMemberID));
-                                    }
-                                    break;
-                                }
-                            }
-                        }
-                    }
+                    //Dictionary<string, int> zoneSlices = new Dictionary<string,int>();
+                    //foreach(var timeSlice in fight.m_Fight.TimeSlices)
+                    //{
+                    //    if (BossInformation.IsRaidZone(timeSlice.Zone) == true)
+                    //    {
+                    //        if (zoneSlices.ContainsKey(timeSlice.Zone) == true)
+                    //        {
+                    //            zoneSlices[timeSlice.Zone] = zoneSlices[timeSlice.Zone] + 1;
+                    //        }
+                    //        else
+                    //        {
+                    //            zoneSlices[timeSlice.Zone] = 1;
+                    //        }
+                    //    }
+                    //}
+                    //var orderedZones = zoneSlices.OrderByDescending((_Value) => _Value.Value);
+                    //string raidZone = null;
+                    //List<string> groupMembers = new List<string>();
+                    //if (orderedZones.Count() > 0)
+                    //{
+                    //    raidZone = orderedZones.First().Key;
+                    //    foreach (var timeSlice in fight.m_Fight.TimeSlices)
+                    //    {
+                    //        if (timeSlice.Zone == raidZone)
+                    //        {
+                    //            if (timeSlice.GroupMemberIDs != null)
+                    //            {
+                    //                foreach (var groupMemberID in timeSlice.GroupMemberIDs)
+                    //                {
+                    //                    groupMembers.AddUnique(_Fights.GetNameFromUnitID(groupMemberID));
+                    //                }
+                    //            }
+                    //        }
+                    //    }
+                    //    if (groupMembers.Count == 0)
+                    //    {
+                    //        bool foundZone = false;
+                    //        for (int i = fight.m_Fight.TimeSlices.Count - 1; i >= 0; --i)
+                    //        {
+                    //            var timeSlice = fight.m_Fight.TimeSlices[i];
+                    //            if (timeSlice.Zone == raidZone)
+                    //            {
+                    //                foundZone = true;
+                    //            }
+                    //            if (foundZone == true && timeSlice.GroupMemberIDs != null)
+                    //            {
+                    //                foreach (var groupMemberID in timeSlice.GroupMemberIDs)
+                    //                {
+                    //                    groupMembers.AddUnique(_Fights.GetNameFromUnitID(groupMemberID));
+                    //                }
+                    //                break;
+                    //            }
+                    //        }
+                    //    }
+                    //}
+                    List<string> groupMembers = new List<string>(_Fights.m_RaidMembers);
                     var match = m_Raids.FirstOrDefault((_Value) => 
                     {
                         if (_Value.Value.RaidID == fight.m_Fight.RaidID)
