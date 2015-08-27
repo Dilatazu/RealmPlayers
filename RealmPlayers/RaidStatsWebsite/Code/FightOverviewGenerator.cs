@@ -182,13 +182,16 @@ namespace VF
             }
             string playersAttendingStr = "<h3>Players attending(" + playersAttending.Count + "):</h3>";
             var orderedPlayersAttending = playersAttending.OrderBy((_Value) => { return "" + (int)_Value.Item2 + _Value.Item1; });
-            var lastClass = orderedPlayersAttending.First().Item2;
-            foreach (var player in orderedPlayersAttending)
+            if(orderedPlayersAttending.Count() > 0)
             {
-                if (lastClass != player.Item2)
-                    playersAttendingStr += "<br />";
-                playersAttendingStr += PageUtility.CreateColorCodedName(player.Item1, player.Item2) + " ";
-                lastClass = player.Item2;
+                var lastClass = orderedPlayersAttending.First().Item2;
+                foreach (var player in orderedPlayersAttending)
+                {
+                    if (lastClass != player.Item2)
+                        playersAttendingStr += "<br />";
+                    playersAttendingStr += PageUtility.CreateColorCodedName(player.Item1, player.Item2) + " ";
+                    lastClass = player.Item2;
+                }
             }
             /////////////////////
 

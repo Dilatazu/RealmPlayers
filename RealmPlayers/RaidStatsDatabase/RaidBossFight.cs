@@ -1122,7 +1122,7 @@ namespace VF_RaidDamageDatabase
                     if (thisTimeSlice.IsEvent("Dead_C=" + bossName) //Hostile Dead Event - accuracy 100%
                     || thisTimeSlice.IsEvent("Dead_Y=" + bossName)) //YellEvent - accuracy 100%
                     {
-                        if (output.EndTimeSlice == -1) output.EndTimeSlice = i;
+                        output.EndTimeSlice = i;
                     }
                     else if (thisTimeSlice.IsEvent("Dead_T=" + bossName)) //TargetHealthScan every 0.5 sec
                     {
@@ -1145,7 +1145,7 @@ namespace VF_RaidDamageDatabase
                 {
                     if (thisTimeSlice.IsEvent("Wipe_K=" + bossName)) //Checks KTM for 0 threat of everyone every 5 to 10 sec. Must also not have gotten a recent boss combat update. reliable but not exact accuracy
                     {
-                        if (output.EndTimeSlice == -1) output.EndTimeSlice = i;
+                        if (optionalEndTimeSlice == -1) optionalEndTimeSlice = i;
                     }
                     else if (thisTimeSlice.IsEvent("Wipe"))
                     {
