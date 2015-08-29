@@ -9,6 +9,8 @@ namespace VF
     {
         public static string CreateLootDroppedData(List<Tuple<string, int>> _ItemDrops, VF_RaidDamageDatabase.RealmDB _RealmDB, VF_RPDatabase.ItemSummaryDatabase _ItemSummaryDatabase, Func<int, VF_RealmPlayersDatabase.WowVersionEnum, RealmPlayersServer.ItemInfo> _GetItemInfoFunc)
         {
+            var wowVersion = VF_RealmPlayersDatabase.StaticValues.GetWowVersion(_RealmDB.Realm);
+            string currentItemDatabase = RealmPlayersServer.DatabaseAccess.GetCurrentItemDatabaseAddress();
             string lootDropped = "";
             if (_ItemDrops.Count > 0)
             {
@@ -21,14 +23,14 @@ namespace VF
                 {
                     VF_RealmPlayersDatabase.PlayerData.Player itemReceiver = _RealmDB.m_RealmDB.FindPlayer(itemDrop.Item1);
                     int itemID = itemDrop.Item2;
-                    var itemInfo = _GetItemInfoFunc(itemID, VF_RealmPlayersDatabase.WowVersionEnum.Vanilla);
+                    var itemInfo = _GetItemInfoFunc(itemID, wowVersion);
                     if (itemInfo != null && itemInfo.ItemQuality >= 4)
                     {
                         var usageCount = _ItemSummaryDatabase.GetItemUsageCount(_RealmDB.Realm, itemID, 0);
 
                         int xPos = (recvItemIndex % 4) * 58;
                         int yPos = (int)(recvItemIndex / 4) * 58;
-                        string itemLink = "http://database.wow-one.com/" + "?item=" + itemID + "' rel='rand=0;ench=0";
+                        string itemLink = currentItemDatabase + "?item=" + itemID + (wowVersion == VF_RealmPlayersDatabase.WowVersionEnum.TBC ? "-1" : "-0");
 
                         itemLinks += "<div style='background: none; width: 58px; height: 58px;margin: " + yPos + "px " + xPos + "px;'>"
                             + "<img class='itempic' src='" + "http://realmplayers.com/" + itemInfo.GetIconImageAddress() + "'/>"

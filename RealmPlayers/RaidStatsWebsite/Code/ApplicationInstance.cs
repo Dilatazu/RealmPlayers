@@ -57,67 +57,130 @@ namespace VF.RaidDamageWebsite
         }
         object m_ItemInfoLock = new object();
         volatile Dictionary<int, ItemInfo> m_ItemInfoCache = null;
+        object m_ItemInfoLockTBC = new object();
+        volatile Dictionary<int, ItemInfo> m_ItemInfoCacheTBC = null;
         public RealmPlayersServer.ItemInfo GetItemInfo(int _ItemID, VF_RealmPlayersDatabase.WowVersionEnum _WowVersion)
         {
-            if (_WowVersion != VF_RealmPlayersDatabase.WowVersionEnum.Vanilla)
+            if (_WowVersion != VF_RealmPlayersDatabase.WowVersionEnum.Vanilla && _WowVersion != VF_RealmPlayersDatabase.WowVersionEnum.TBC)
             {
-                Logger.ConsoleWriteLine("ERROR, WowVersion was not Vanilla!!!");
+                Logger.ConsoleWriteLine("ERROR, WowVersion was not Vanilla or TBC!!!");
                 return null;
             }
-            if (m_ItemInfoCache == null)
+            if (_WowVersion == VF_RealmPlayersDatabase.WowVersionEnum.TBC)
             {
-                lock (m_ItemInfoLock)
+                if(m_ItemInfoCacheTBC == null)
                 {
-                    try
+                    lock (m_ItemInfoLockTBC)
                     {
-                        if (m_ItemInfoCache == null)
+                        try
                         {
-                            if (System.IO.File.Exists(g_RPPDBDir + "VF_ItemInfoCache.dat"))
+                            if (m_ItemInfoCacheTBC == null)
                             {
-                                Dictionary<int, ItemInfo> itemInfoCache = new Dictionary<int, ItemInfo>();
-                                if (VF_RealmPlayersDatabase.Utility.LoadSerialize(g_RPPDBDir + "VF_ItemInfoCache.dat", out itemInfoCache))
+                                if (System.IO.File.Exists(g_RPPDBDir + "VF_ItemInfoCache.dat"))
                                 {
-                                    m_ItemInfoCache = itemInfoCache;
+                                    Dictionary<int, ItemInfo> itemInfoCache = new Dictionary<int, ItemInfo>();
+                                    if (VF_RealmPlayersDatabase.Utility.LoadSerialize(g_RPPDBDir + "VF_ItemInfoCacheTBC.dat", out itemInfoCache))
+                                    {
+                                        m_ItemInfoCacheTBC = itemInfoCache;
+                                    }
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.LogException(ex);
+                        }
+                    }
+                }
+                if (m_ItemInfoCacheTBC == null)
+                    return null;
+                ItemInfo itemInfo = null;
+                if (m_ItemInfoCacheTBC.TryGetValue(_ItemID, out itemInfo) == true)
+                    return itemInfo;
+                try
+                {
+                    var webRequest = (System.Net.HttpWebRequest)System.Net.HttpWebRequest.Create("http://realmplayers.com/ItemTooltip.aspx?item=" + System.Web.HttpUtility.UrlEncode("?item=" + _ItemID + "-1"));
+                    webRequest.Timeout = 2000;
+                    webRequest.ReadWriteTimeout = 2000;
+                    using (var webResponse = webRequest.GetResponse())
+                    {
+                        using (var streamReader = new System.IO.StreamReader(webResponse.GetResponseStream()))
+                        {
+                            itemInfo = new ItemInfo(_ItemID, streamReader.ReadToEnd(), "");
+                            lock (m_ItemInfoLockTBC)
+                            {
+                                if (m_ItemInfoCacheTBC.ContainsKey(_ItemID) == false)
+                                {
+                                    m_ItemInfoCacheTBC.Add(_ItemID, itemInfo);
                                 }
                             }
                         }
                     }
-                    catch (Exception ex)
+                }
+                catch (Exception)
+                {
+                    itemInfo = null;
+                }
+                return itemInfo;
+            }
+            else if (_WowVersion == VF_RealmPlayersDatabase.WowVersionEnum.Vanilla)
+            {
+                if (m_ItemInfoCache == null)
+                {
+                    lock (m_ItemInfoLock)
                     {
-                        Logger.LogException(ex);
+                        try
+                        {
+                            if (m_ItemInfoCache == null)
+                            {
+                                if (System.IO.File.Exists(g_RPPDBDir + "VF_ItemInfoCache.dat"))
+                                {
+                                    Dictionary<int, ItemInfo> itemInfoCache = new Dictionary<int, ItemInfo>();
+                                    if (VF_RealmPlayersDatabase.Utility.LoadSerialize(g_RPPDBDir + "VF_ItemInfoCache.dat", out itemInfoCache))
+                                    {
+                                        m_ItemInfoCache = itemInfoCache;
+                                    }
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.LogException(ex);
+                        }
                     }
                 }
-            }
-            if (m_ItemInfoCache == null)
-                return null;
-            ItemInfo itemInfo = null;
-            if (m_ItemInfoCache.TryGetValue(_ItemID, out itemInfo) == true)
-                return itemInfo;
-            try
-            {
-                var webRequest = (System.Net.HttpWebRequest)System.Net.HttpWebRequest.Create("http://realmplayers.com/ItemTooltip.aspx?item=" + System.Web.HttpUtility.UrlEncode("?item=" + _ItemID + ""));
-                webRequest.Timeout = 2000;
-                webRequest.ReadWriteTimeout = 2000;
-                using (var webResponse = webRequest.GetResponse())
+                if (m_ItemInfoCache == null)
+                    return null;
+                ItemInfo itemInfo = null;
+                if (m_ItemInfoCache.TryGetValue(_ItemID, out itemInfo) == true)
+                    return itemInfo;
+                try
                 {
-                    using (var streamReader = new System.IO.StreamReader(webResponse.GetResponseStream()))
+                    var webRequest = (System.Net.HttpWebRequest)System.Net.HttpWebRequest.Create("http://realmplayers.com/ItemTooltip.aspx?item=" + System.Web.HttpUtility.UrlEncode("?item=" + _ItemID + "-0"));
+                    webRequest.Timeout = 2000;
+                    webRequest.ReadWriteTimeout = 2000;
+                    using (var webResponse = webRequest.GetResponse())
                     {
-                        itemInfo = new ItemInfo(_ItemID, streamReader.ReadToEnd(), "");
-                        lock (m_ItemInfoLock)
+                        using (var streamReader = new System.IO.StreamReader(webResponse.GetResponseStream()))
                         {
-                            if (m_ItemInfoCache.ContainsKey(_ItemID) == false)
+                            itemInfo = new ItemInfo(_ItemID, streamReader.ReadToEnd(), "");
+                            lock (m_ItemInfoLock)
                             {
-                                m_ItemInfoCache.Add(_ItemID, itemInfo);
+                                if (m_ItemInfoCache.ContainsKey(_ItemID) == false)
+                                {
+                                    m_ItemInfoCache.Add(_ItemID, itemInfo);
+                                }
                             }
                         }
                     }
                 }
+                catch (Exception)
+                {
+                    itemInfo = null;
+                }
+                return itemInfo;
             }
-            catch(Exception)
-            {
-                itemInfo = null;
-            }
-            return itemInfo;
+            return null;
         }
         public List<string> GetFightsFileList()
         {
