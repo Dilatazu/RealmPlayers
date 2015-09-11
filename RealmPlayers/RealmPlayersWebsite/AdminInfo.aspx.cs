@@ -60,12 +60,12 @@ namespace RealmPlayersServer
             if (commandStr == "reload")
             {
                 appInstance.m_LastLoadedDateTime = DateTime.MinValue;
-                _RequestData.m_RedirectFunction(_RequestData.AbsoluteURLPath + "?user=Viktor&pass=***REMOVED***");
+                _RequestData.m_RedirectFunction(_RequestData.AbsoluteURLPath + "?user=Viktor&pass=" + VF.HiddenStrings.CreateUserID_AdminPassword);
                 return result;
             }
             string info = "<ul class='breadcrumb'></ul><div class='row'><div class='span12'>"
-                    + "<h2><a href='Admininfo.aspx?user=Viktor&pass=***REMOVED***'>Admin Info</a></h2>";
-            info += "<h3><a href='Log.aspx?user=Viktor&pass=***REMOVED***'>Event Log</a></h3><br />";
+                    + "<h2><a href='Admininfo.aspx?user=Viktor&pass=" + VF.HiddenStrings.CreateUserID_AdminPassword + "'>Admin Info</a></h2>";
+            info += "<h3><a href='Log.aspx?user=Viktor&pass=" + VF.HiddenStrings.CreateUserID_AdminPassword + "'>Event Log</a></h3><br />";
             info += "<div class='row'><div class='span10'>";
             info += "<h2>User Activity</h2><br />Last complete restart: " + appInstance.m_StartTime.ToString();
             info += "<br />Last database load time: " + appInstance.m_LastLoadedDateTime.ToLocalTime().ToString() + " <a href='" + _RequestData.RawURL + "&command=reload" + "'>(Reload now?)</a>";
@@ -174,13 +174,13 @@ namespace RealmPlayersServer
                             if ((DateTime.UtcNow - latestVisit.Value.VisitTime).TotalHours >= 6)
                             {
                                 info += "<a class='nav' href='http://www.ip-adress.com/ip_tracer/" + latestVisit.Key + "'>" + latestVisit.Key + "</a>: "
-                                    + "<a class='nav' href='AdminInfo.aspx?user=Viktor&pass=***REMOVED***&details=" + latestVisit.Key + "'>" + latestVisit.Value.VisitTime.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss") + "</a>" + " = <a class='nav' href='" + latestVisit.Value.URL + "'>" + latestVisit.Value.URL + "</a>"
+                                    + "<a class='nav' href='AdminInfo.aspx?user=Viktor&pass=" + VF.HiddenStrings.CreateUserID_AdminPassword + "&details=" + latestVisit.Key + "'>" + latestVisit.Value.VisitTime.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss") + "</a>" + " = <a class='nav' href='" + latestVisit.Value.URL + "'>" + latestVisit.Value.URL + "</a>"
                                     + (latestVisit.Value.FromURL != "" ? " from \"" + latestVisit.Value.FromURL + "\"" : "") + "<br />";
                             }
                             else
                             {
                                 info += "<a class='nav' href='http://www.ip-adress.com/ip_tracer/" + latestVisit.Key + "'>" + latestVisit.Key + "</a>: "
-                                    + "<a class='nav' href='AdminInfo.aspx?user=Viktor&pass=***REMOVED***&details=" + latestVisit.Key + "'>" + latestVisit.Value.VisitTime.ToLocalTime().ToString("HH:mm:ss") + "</a>" + " = <a class='nav' href='" + latestVisit.Value.URL + "'>" + latestVisit.Value.URL + "</a>"
+                                    + "<a class='nav' href='AdminInfo.aspx?user=Viktor&pass=" + VF.HiddenStrings.CreateUserID_AdminPassword + "&details=" + latestVisit.Key + "'>" + latestVisit.Value.VisitTime.ToLocalTime().ToString("HH:mm:ss") + "</a>" + " = <a class='nav' href='" + latestVisit.Value.URL + "'>" + latestVisit.Value.URL + "</a>"
                                     + (latestVisit.Value.FromURL != "" ? " from \"" + latestVisit.Value.FromURL + "\"" : "") + "<br />";
                             }
                         }

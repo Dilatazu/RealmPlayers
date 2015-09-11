@@ -20,7 +20,7 @@ namespace VF.RaidDamageWebsite
                 if (PageUtility.GetQueryString(Request, "save", "null") != "null")
                 {
                     Logger.SaveToDisk();
-                    Response.Redirect(Request.Url.AbsolutePath + "?user=Viktor&pass=***REMOVED***");
+                    Response.Redirect(Request.Url.AbsolutePath + "?user=Viktor&pass=" + VF.HiddenStrings.CreateUserID_AdminPassword);
                 }
 
                 var log = Logger.GetCopyOfLog(100);
