@@ -327,6 +327,10 @@
       <Project>{0daf0727-af2a-4d71-a0d4-7769442222dd}</Project>
       <Name>RealmPlayersServer</Name>
     </ProjectReference>
+    <ProjectReference Include="..\VF_RealmPlayersHiddenStrings\VF_RealmPlayersHiddenStrings.csproj">
+      <Project>{40118791-4372-445e-a6dd-0bc4c31cd064}</Project>
+      <Name>VF_RealmPlayersHiddenStrings</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

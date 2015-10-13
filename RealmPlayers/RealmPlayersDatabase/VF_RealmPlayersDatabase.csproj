@@ -84,9 +84,6 @@
     <Compile Include="..\..\VF_Library\VF_Library\VF_Utility.cs">
       <Link>VF_Library\VF_Utility.cs</Link>
     </Compile>
-    <Compile Include="..\VF_RealmPlayersHiddenStrings\HiddenStrings.cs">
-      <Link>VF_Library\HiddenStrings.cs</Link>
-    </Compile>
     <Compile Include="Achievments\AchievmentBase.cs" />
     <Compile Include="Achievments\AchievmentType.cs" />
     <Compile Include="Achievments\ItemAchievment.cs" />
@@ -181,6 +178,12 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.XML" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VF_RealmPlayersHiddenStrings\VF_RealmPlayersHiddenStrings.csproj">
+      <Project>{40118791-4372-445e-a6dd-0bc4c31cd064}</Project>
+      <Name>VF_RealmPlayersHiddenStrings</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

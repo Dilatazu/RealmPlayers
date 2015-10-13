@@ -548,6 +548,10 @@
       <Project>{ac235bce-181b-4b49-8abc-d1639d935373}</Project>
       <Name>VF_RealmPlayersDatabase</Name>
     </ProjectReference>
+    <ProjectReference Include="..\VF_RealmPlayersHiddenStrings\VF_RealmPlayersHiddenStrings.csproj">
+      <Project>{40118791-4372-445e-a6dd-0bc4c31cd064}</Project>
+      <Name>VF_RealmPlayersHiddenStrings</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
