@@ -47,6 +47,7 @@
                                 <asp:ListItem Text="Al'Akir" Value="AlA"/>
                                 <asp:ListItem Text="Rebirth" Value="REB"/>
                                 <asp:ListItem Text="Nostalrius" Value="NRB"/>
+                            <%--<asp:ListItem Text="NostalriusPVE" Value="NBE" />--%>
                                 <asp:ListItem Text="Kronos" Value="KRO"/>
                                 <asp:ListItem Text="VanillaGaming" Value="VG"/>
                                 <asp:ListItem Text="Valkyrie" Value="VAL"/>

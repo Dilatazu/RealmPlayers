@@ -21,6 +21,7 @@ namespace VF_RealmPlayersDatabase
         Kronos = 11,
         NostalGeek = 12,
         Nefarian = 13,
+        NostalriusPVE = 14,
     }
     public enum WowVersionEnum
     {
@@ -509,7 +510,9 @@ namespace VF_RealmPlayersDatabase
             {"Test Realm 3 - Devs only", WowRealm.Test_Server},
             {"Nostalrius Begins PTR", WowRealm.Test_Server},
             {"Nostalrius Begins", WowRealm.Nostalrius},
+            {"Nostalrius Begins PvE", WowRealm.NostalriusPVE},
             //{"Nostalrius", WowRealm.Nostalrius},
+            {"NBE", WowRealm.NostalriusPVE},
             {"NRB", WowRealm.Nostalrius},
             {"NB", WowRealm.Nostalrius},
             {"Kronos", WowRealm.Kronos},
@@ -531,6 +534,7 @@ namespace VF_RealmPlayersDatabase
             if (_Realm == WowRealm.Emerald_Dream || _Realm == WowRealm.Warsong || _Realm == WowRealm.Al_Akir
                 || _Realm == WowRealm.Rebirth || _Realm == WowRealm.Valkyrie || _Realm == WowRealm.VanillaGaming || _Realm == WowRealm.Test_Server || _Realm == WowRealm.Unknown
                 || _Realm == WowRealm.Nostalrius
+                || _Realm == WowRealm.NostalriusPVE
                 || _Realm == WowRealm.Kronos
                 || _Realm == WowRealm.NostalGeek
                 || _Realm == WowRealm.Nefarian)
@@ -567,7 +571,7 @@ namespace VF_RealmPlayersDatabase
         }
         public static DateTime CalculateLastRankUpdadeDateUTC(WowRealm _Realm, DateTime? _NowUTC = null)
         {
-            if(_Realm == WowRealm.Nostalrius)
+            if (_Realm == WowRealm.Nostalrius || _Realm == WowRealm.NostalriusPVE)
             {
                 return CalculateLastRankUpdadeDateUTC_WednesdayMidday(_NowUTC);
             }

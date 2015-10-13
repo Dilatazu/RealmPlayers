@@ -39,6 +39,7 @@ namespace VF_RealmPlayersDatabase
                 case WowRealm.VanillaGaming:
                     return (4U << 24) + _ItemID;
                 case WowRealm.Nostalrius:
+                case WowRealm.NostalriusPVE:
                     return (5U << 24) + _ItemID;
                 case WowRealm.Kronos:
                     return (6U << 24) + _ItemID;

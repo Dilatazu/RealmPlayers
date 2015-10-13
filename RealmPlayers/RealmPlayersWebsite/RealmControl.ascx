@@ -6,6 +6,7 @@
         <asp:ListItem Text="Warsong" Value="WSG" />
         <asp:ListItem Text="Al'Akir" Value="AlA" />
         <asp:ListItem Text="Nostalrius" Value="NRB" />
+        <%--<asp:ListItem Text="NostalriusPVE" Value="NBE" />--%>
         <asp:ListItem Text="Kronos" Value="KRO" />
         <asp:ListItem Text="Archangel(TBC)" Value="ArA" />
         <asp:ListItem Text="Rebirth" Value="REB" />

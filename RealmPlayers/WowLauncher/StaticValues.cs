@@ -118,6 +118,8 @@ namespace VF_WoWLauncher
             {"Archangel [14x] Blizzlike", "Archangel(TBC)"},
             {"NostalGeek 1.12", "NostalGeek"},
             {"Nostalrius Begins", "Nostalrius"},
+            {"Nostalrius Begins PvE", "Nostalrius(PVE)"},
+            {"Nostalrius Begins PvP", "Nostalrius"},
         };
     }
 }

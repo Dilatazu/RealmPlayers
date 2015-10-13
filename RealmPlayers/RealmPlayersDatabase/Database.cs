@@ -11,6 +11,7 @@ namespace VF_RealmPlayersDatabase
             WowRealm.Kronos, 
             WowRealm.NostalGeek, 
             WowRealm.Nostalrius, 
+            WowRealm.NostalriusPVE, 
             WowRealm.Emerald_Dream, 
             WowRealm.Warsong, 
             WowRealm.Al_Akir, 
