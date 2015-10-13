@@ -68,7 +68,7 @@ namespace VF
                 return "";
 
             if (_APIKey == null)
-                _APIKey = "***REMOVED***";
+                _APIKey = HiddenStrings.GoogleAPIKey;
 
             try
             {

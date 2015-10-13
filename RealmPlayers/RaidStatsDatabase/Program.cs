@@ -103,7 +103,7 @@ namespace VF_RaidDamageDatabase
                                             if (timeSinceWrite.TotalDays > 20 ||
                                                 System.Windows.Forms.MessageBox.Show("The file: \"" + rppDBDir + "Emerald_Dream\\PlayersData.dat\" is older than 5 hours. Do you want to use the database from the server instead?", "", System.Windows.Forms.MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
                                             {
-                                                rppDBDir = "\\\\***REMOVED***\\VF_RealmPlayersData\\RPPDatabase\\Database\\";
+                                                rppDBDir = "\\\\" + HiddenStrings.ServerComputerName + "\\VF_RealmPlayersData\\RPPDatabase\\Database\\";
                                             }
                                         }
                                         Logger.ConsoleWriteLine("Loaded RPPDatabase(\"" + rppDBDir + "\")", ConsoleColor.Magenta);

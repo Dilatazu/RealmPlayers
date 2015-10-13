@@ -44,7 +44,7 @@ namespace VF.RaidDamageWebsite
             var timeSinceWrite = DateTime.UtcNow - System.IO.File.GetLastWriteTime(rppDBDir + "Emerald_Dream\\PlayersData.dat");
             //if (timeSinceWrite.TotalDays > 20)
             //{
-            //    rppDBDir = "\\\\***REMOVED***\\VF_RealmPlayersData\\RPPDatabase\\Database\\";
+            //    rppDBDir = "\\\\" + HiddenStrings.ServerComputerName + "\\VF_RealmPlayersData\\RPPDatabase\\Database\\";
             //}
             m_RPPDatabase = new RPPDatabase(rppDBDir);
         }
