@@ -188,3 +188,5 @@ RealmPlayers/RealmPlayersWebsite/Assets/wowicons/
 RealmPlayers/RealmPlayersWebsite/Assets/images/
 RealmPlayers/RealmPlayersWebsite/images/
 RealmPlayers/staticimages/
+RealmPlayers/MongoDBPorting/DistributeToServer.bat
+RealmPlayers/WowLauncherServer/DistributeToServer.bat
