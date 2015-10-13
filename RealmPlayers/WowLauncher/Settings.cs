@@ -178,7 +178,7 @@ namespace VF_WoWLauncher
                 {"VanillaGaming", new RealmInfo{RealmList = "logon.vanillagaming.org", RealmName = "VanillaGaming", WowVersion = WowVersionEnum.Vanilla}},
                 {"Valkyrie", new RealmInfo{RealmList = "logon.valkyrie-wow.com", RealmName = "Valkyrie", WowVersion = WowVersionEnum.Vanilla}},
                 {"Rebirth", new RealmInfo{RealmList = "wow.therebirth.net", RealmName = "Rebirth", WowVersion = WowVersionEnum.Vanilla}},
-                {"Nostalrius", new RealmInfo{RealmList = "login.nostalrius.org", RealmName = "Nostalrius Begins", WowVersion = WowVersionEnum.Vanilla}},
+                {"Nostalrius", new RealmInfo{RealmList = "login.nostalrius.org", RealmName = "Nostalrius Begins PvP", WowVersion = WowVersionEnum.Vanilla}},
                 {"Nostalrius(PVE)", new RealmInfo{RealmList = "login.nostalrius.org", RealmName = "Nostalrius Begins PvE", WowVersion = WowVersionEnum.Vanilla}},
                 {"Kronos", new RealmInfo{RealmList = "wow.twinstar.cz", RealmName = "Kronos", WowVersion = WowVersionEnum.Vanilla}},
                 {"Nefarian(DE)", new RealmInfo{RealmList = "logon.classic-wow.org", RealmName = "Nefarian", WowVersion = WowVersionEnum.Vanilla}},
