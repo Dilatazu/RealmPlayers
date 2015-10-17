@@ -306,6 +306,7 @@
   <ItemGroup>
     <Content Include="RaidDamageMasterFrame.Master" />
     <Content Include="packages.config" />
+    <None Include="Properties\PublishProfiles\PublishToServer.pubxml" />
     <None Include="Properties\PublishProfiles\QinarwServer.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

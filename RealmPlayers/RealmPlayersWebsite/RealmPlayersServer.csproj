@@ -469,6 +469,7 @@
   <ItemGroup>
     <Content Include="MasterFrame.Master" />
     <Content Include="packages.config" />
+    <None Include="Properties\PublishProfiles\PublishToServer.pubxml" />
     <None Include="Properties\PublishProfiles\Qinarw-Server.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
