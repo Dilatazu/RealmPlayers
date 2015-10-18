@@ -208,10 +208,10 @@ namespace VF_RDDatabase
             if (basicQuality == false)
                 return false;
 
-            if (m_DataPrecisionDetails.HealthPercentageFirstSeen < 0.98f)
+            if (m_DataPrecisionDetails.HealthPercentageFirstSeen < 0.97f)
             {
                 if (m_BossName == "Vaelastrasz the Corrupt"
-                && m_DataPrecisionDetails.HealthPercentageFirstSeen > 0.29f)
+                && m_DataPrecisionDetails.HealthPercentageFirstSeen >= 0.29f)
                 {
                     //return true;
                 }

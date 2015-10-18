@@ -237,7 +237,7 @@ namespace VF_RaidDamageDatabase
             "Hakkar",
 
             "Razorgore the Untamed",
-            "Vaelastrasz the Corrupt",
+            //"Vaelastrasz the Corrupt",
             "Broodlord Lashlayer",
             "Nefarian",
 
