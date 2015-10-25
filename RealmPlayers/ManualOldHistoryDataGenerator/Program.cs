@@ -119,13 +119,13 @@ namespace ManualOldHistoryDataGenerator
         {
             if (sm_OldHistory.ContainsKey(_Player) == false)
                 sm_OldHistory.Add(_Player, new PlayerData.PlayerHistory());
-            sm_OldHistory[_Player].AddToHistory(new GearData(_GearDataStr, 1.4f), new UploadID(0, _DateTime));
+            sm_OldHistory[_Player].AddToHistory(new GearData(_GearDataStr, VF_RealmPlayersDatabase.WowVersionEnum.Vanilla), new UploadID(0, _DateTime));
         }
         static void AddHonorData(string _Player, string _HonorDataStr, DateTime _DateTime)
         {
             if (sm_OldHistory.ContainsKey(_Player) == false)
                 sm_OldHistory.Add(_Player, new PlayerData.PlayerHistory());
-            sm_OldHistory[_Player].AddToHistory(new HonorData(_HonorDataStr, 1.4f), new UploadID(0, _DateTime));
+            sm_OldHistory[_Player].AddToHistory(new HonorData(_HonorDataStr, VF_RealmPlayersDatabase.WowVersionEnum.Vanilla), new UploadID(0, _DateTime));
         }
         static void AddCharacterData(string _Player, CharacterData _CharacterData, DateTime _DateTime)
         {

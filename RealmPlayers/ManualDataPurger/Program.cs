@@ -167,14 +167,14 @@ namespace ManualDataPurger
             Dictionary<string, PlayerData.Player> players = null;
             VF_RealmPlayersDatabase.Utility.LoadSerialize(System.IO.Path.GetDirectoryName(_DatabaseFile) + "\\PlayersData.dat", out players);
 
-            var contributor = VF_RealmPlayersDatabase.ContributorHandler._GetContributor(_UploaderUserID);
+            var contributor = VF_RealmPlayersDatabase.ContributorDB.GetContributor(_UploaderUserID);
 
             List<string> affectedPlayers = new List<string>();
             foreach(var historyData in playerHistorys)
             {
                 if (players.ContainsKey(historyData.Key))
                 {
-                    int rollbackValue = historyData.Value.RollbackPlayer(players[historyData.Key], contributor);
+                    int rollbackValue = historyData.Value.RollbackPlayer(players[historyData.Key], contributor.GetAsContributor());
                     if (rollbackValue > 0)
                     {
                         affectedPlayers.Add(historyData.Key + " = " + rollbackValue);
