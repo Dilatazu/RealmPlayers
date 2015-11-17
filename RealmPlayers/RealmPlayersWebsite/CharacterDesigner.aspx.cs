@@ -335,7 +335,7 @@ namespace RealmPlayersServer
                     invInfo += currInvInfo;
                 }
             }
-            invInfo += "<img style='position: absolute;z-index: 1;' src='assets/img/bg/CharacterBackgroundTransparent.png'></img>";
+            invInfo += "<img style='position: absolute;z-index: 1; pointer-events: none;' src='assets/img/bg/CharacterBackgroundTransparent.png'></img>";
 
             string modelViewerQuery = PageUtility.GetQueryString(Request, "modelviewer", "unknown").ToLower();
             if (modelViewerQuery != "false" && modelEqString != "" && ModelViewerOptions.View3DModel == true)

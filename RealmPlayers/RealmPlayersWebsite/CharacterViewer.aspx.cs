@@ -457,7 +457,7 @@ namespace RealmPlayersServer
                     invInfo += currInvInfo;
                 }
             }
-            invInfo += "<img style='position: absolute;z-index: 1;max-width: 555px;' src='assets/img/bg/CharacterBackgroundTransparent.png'></img>";
+            invInfo += "<img style='position: absolute;z-index: 1;max-width: 555px; pointer-events: none;' src='assets/img/bg/CharacterBackgroundTransparent.png'></img>";
 
             m_CharacterDesignerLink = PageUtility.CreateLink("CharacterDesigner.aspx?char=" + _Player.Character.Race + "+" + _Player.Character.Class + "+" + _Player.Character.Sex + "&items=" + designerItemsStr + "&wowversion=" + wowVersion.ToString(), "Character Designer");
 
