@@ -55,7 +55,12 @@ namespace VF_WoWLauncher
                 Utility.MessageBoxShow("UserID is not valid format, must be <name(a-z)>.<number> example of valid UserID: Unknown.123456");
                 return false;
             }
-
+            if(char.IsUpper(c_txtUserID.Text[0]) == false 
+            || c_txtUserID.Text.Last((char _Char) => char.IsUpper(_Char)) == c_txtUserID.Text[0])
+            {
+                Utility.MessageBoxShow("UserID have to start with capital letter and not contain any other capital letters in the UserName section!");
+                return false;
+            }
             Socket tcpSocket = null;
             try
             {
