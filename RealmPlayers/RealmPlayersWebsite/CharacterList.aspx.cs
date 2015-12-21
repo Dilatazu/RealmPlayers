@@ -154,7 +154,7 @@ namespace RealmPlayersServer
             }
             if (_SortBy == PlayersMatchingSortBy.SortBy_NameSearch)
             {
-                if (_PartOfName.Length >= 3)
+                if (_PartOfName.Length >= 2)
                 {
                     string nameFormattedSearchStr = char.ToUpper(_PartOfName[0]) + _PartOfName.Substring(1).ToLower();
                     return playerMatchList.OrderByDescending(_Player => {
