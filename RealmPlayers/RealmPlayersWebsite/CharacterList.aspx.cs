@@ -157,7 +157,18 @@ namespace RealmPlayersServer
                 if (_PartOfName.Length >= 3)
                 {
                     string nameFormattedSearchStr = char.ToUpper(_PartOfName[0]) + _PartOfName.Substring(1).ToLower();
-                    return playerMatchList.OrderByDescending(_Player => _Player.LastSeen.AddYears(_Player.Name.StartsWith(nameFormattedSearchStr) ? 2 : 0)).ToArray();
+                    return playerMatchList.OrderByDescending(_Player => {
+                        var sortValue = _Player.LastSeen;
+                        if(_Player.Name.StartsWith(nameFormattedSearchStr))
+                        {
+                            sortValue = sortValue.AddYears(2);
+                            if(_Player.Name == nameFormattedSearchStr)
+                            {
+                                sortValue = sortValue.AddYears(10);
+                            }
+                        }
+                        return sortValue;
+                    }).ToArray();
                 }
                 else
                 {
