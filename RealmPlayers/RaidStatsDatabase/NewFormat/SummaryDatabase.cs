@@ -54,11 +54,17 @@ namespace VF_RDDatabase
                     {
                         foreach (var raid in groupRC.Value.Raids)
                         {
+                            List<string> bossFightsAdded = new List<string>();
                             foreach (var bossFight in raid.Value.BossFights)
                             {
                                 if (bossFight.AttemptType != AttemptType.KillAttempt)
                                     continue;
-                                
+
+                                if (bossFightsAdded.Contains(bossFight.BossName))
+                                    continue;//Do not add duplicates!
+
+                                bossFightsAdded.Add(bossFight.BossName);
+
                                 foreach (var playerData in bossFight.PlayerFightData)
                                 {
                                     if (playerData.Item2.Deaths > 0 || playerData.Item2.Damage > 0 || playerData.Item2.RawHeal > 0)
@@ -106,6 +112,8 @@ namespace VF_RDDatabase
 
                 foreach (var raid in groupRC.Value.Raids)
                 {
+                    List<string> bossFightsAdded = new List<string>();
+
                     if (_PurgePlayers != null && _PurgePlayers.Any(pp => raid.Value.RaidStartDate > pp.BeginDate
                                             && raid.Value.RaidEndDate < pp.EndDate
                                             && groupRC.Value.Realm == pp.Realm
@@ -116,6 +124,9 @@ namespace VF_RDDatabase
 
                     foreach (var bossFight in raid.Value.BossFights)
                     {
+                        if (bossFightsAdded.Contains(bossFight.BossName))
+                            continue;//Do not add duplicates!
+
                         if (bossFight.BossName == _BossName && bossFight.IsQualityHigh()
                         && bossFight.StartDateTime > earliestCompatibleDate)
                         {
@@ -127,6 +138,8 @@ namespace VF_RDDatabase
                                     continue;
                                 }
                             }
+
+                            bossFightsAdded.Add(bossFight.BossName);
 
                             double precision = bossFight.DataDetails.FightPrecision;// fight.CalculatePrecision(realmDB.RD_IsPlayer);
                             fightInstances.Add(bossFight);

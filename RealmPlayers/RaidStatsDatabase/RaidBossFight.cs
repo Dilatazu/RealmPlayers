@@ -475,6 +475,8 @@ namespace VF_RaidDamageDatabase
             var wowVersion = VF_RealmPlayersDatabase.StaticValues.GetWowVersion(this.m_Raid.Realm);
             if (GetBossName() == "Thaddius")
                 flatValueMultiplier *= 3.0;
+            if (GetBossName() == "Baron Geddon")
+                flatValueMultiplier *= 0.5;//Try to prevent some spikes
 
             if (wowVersion == VF_RealmPlayersDatabase.WowVersionEnum.TBC)
                 flatValueMultiplier *= 3.0;
@@ -1046,6 +1048,8 @@ namespace VF_RaidDamageDatabase
             int optionalEndTimeSlice = -1;
             int optionalStartTimeSlice = -1;
             string bossName = GetBossName();
+            bool hasBossStartYell = BossInformation.BossWithStartYell.Contains(bossName);
+            //bool hasBossEndYell = BossInformation.BossWithEndYell.Contains(bossName);
             for (int i = 0; i < m_FightData.m_Fight.TimeSlices.Count; ++i)
             {
                 var thisTimeSlice = _GetTimeSlice(i);
@@ -1088,7 +1092,7 @@ namespace VF_RaidDamageDatabase
                 }
                 if (thisTimeSlice.IsStartEvent())
                 {
-                    if (thisTimeSlice.IsEvent("Start_Y=" + bossName)) //YellEvent - accuracy 100%
+                    if (hasBossStartYell && thisTimeSlice.IsEvent("Start_Y=" + bossName)) //YellEvent - accuracy 100%
                     {
                         if (output.StartTimeSlice == -1) output.StartTimeSlice = i;
                     }
