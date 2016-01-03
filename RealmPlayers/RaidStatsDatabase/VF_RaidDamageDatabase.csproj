@@ -78,7 +78,6 @@
     <Compile Include="RaidCollection_Raid.cs" />
     <Compile Include="RaidInstanceClearData.cs" />
     <Compile Include="RealmDB.cs" />
-    <Compile Include="Repositories\PurgedPlayersRepository.cs" />
     <Compile Include="ThreadSafeCache.cs" />
     <Compile Include="UnitData.cs" />
     <Compile Include="Program.cs" />
@@ -103,7 +102,9 @@
     </Reference>
     <Reference Include="System" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Repositories\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
