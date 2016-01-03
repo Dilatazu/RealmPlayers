@@ -113,13 +113,15 @@ namespace VF.RaidDamageWebsite
             if (summaryDatabase == null)
                 return;
 
+            IEnumerable<VF_RaidDamageDatabase.Models.PurgedPlayer> purgePlayers = ApplicationInstance.Instance.GetPurgedPlayers(realm);
+
             var classLimits = ClassControl.GetClassLimits();
             var factionLimits = ClassControl.GetFactionLimits();
 
             string tableBody = "";
             foreach (var boss in BossInformation.BossFights)
             {
-                var bossFights = summaryDatabase.GetHSElligibleBossFights(boss.Key, realm, guildLimit == "null" ? null : guildLimit, playerLimit == "null" ? null : playerLimit);
+                var bossFights = summaryDatabase.GetHSElligibleBossFights(boss.Key, realm, guildLimit == "null" ? null : guildLimit, playerLimit == "null" ? null : playerLimit, purgePlayers);
                 if (bossFights.Count > 0)
                 {
                     //averagePrecision /= bossFights.Count;

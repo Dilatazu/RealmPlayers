@@ -381,5 +381,49 @@ namespace VF.RaidDamageWebsite
                 return summaryDB;
             }, (_RaidCollection, _LastLoadTime) => { return (DateTime.UtcNow - _LastLoadTime).TotalMinutes > 30; });
         }
+        public IEnumerable<VF_RaidDamageDatabase.Models.PurgedPlayer> GetPurgedPlayers(WowRealm _Realm)
+        {
+            if (_Realm == WowRealm.Unknown)
+                return null;
+
+            var allPurgedPlayers = DynamicReloader.GetData<List<VF_RaidDamageDatabase.Models.PurgedPlayer>>(() =>
+            {
+                List<VF_RaidDamageDatabase.Models.PurgedPlayer> resultPurgedPlayers = new List<VF_RaidDamageDatabase.Models.PurgedPlayer>();
+                string purgedPlayersStr = RealmPlayersServer.DynamicFileData.GetTextFile(g_RDDBDir + "Variables\\PurgedPlayers.txt");
+                var purgedPlayerStrArray = purgedPlayersStr.SplitVF("\r\n");
+
+                foreach (string purgedPlayerStr in purgedPlayerStrArray)
+                {
+                    var purgedPlayerData = purgedPlayerStr.Split(',');
+
+                    if (purgedPlayerData.Length < 2)
+                    {
+                        if(purgedPlayerStr != "")
+                        {
+                            Logger.ConsoleWriteLine("Error!!! Could not parse PurgedPlayer String \"" + purgedPlayerStr + "\"", System.Drawing.Color.Red);
+                        }
+                        continue;
+                    }
+
+                    string realmName = purgedPlayerData[0];
+                    string playerName = purgedPlayerData[1];
+                    string beginDate = "";
+                    string endDate = "";
+                    if (purgedPlayerData.Length >= 3) beginDate = purgedPlayerData[2];
+                    if (purgedPlayerData.Length >= 4) endDate = purgedPlayerData[3];
+
+                    resultPurgedPlayers.Add(new VF_RaidDamageDatabase.Models.PurgedPlayer(playerName, realmName, beginDate, endDate));
+                }
+                return resultPurgedPlayers;
+            }, (_RaidCollection, _LastLoadTime) => { return (DateTime.UtcNow - _LastLoadTime).TotalMinutes > 60; });
+
+            if (_Realm == WowRealm.All)
+                return allPurgedPlayers;
+
+            var realmPurgedPlayers = allPurgedPlayers.Where((pp) => pp.Realm == _Realm);
+            if (realmPurgedPlayers.Count() > 0)
+                return realmPurgedPlayers;
+            return null;
+        }
     }
 }

@@ -84,7 +84,7 @@ namespace VF_RDDatabase
         }
         public static readonly DateTime EARLIEST_HSELLIGIBLE_DATE = new DateTime(2013, 10, 23, 0, 0, 0);
         public static readonly DateTime EARLIEST_HSELLIGIBLE_NOS_MAJORDOMO_DATE = new DateTime(2015, 6, 1, 0, 0, 0);
-        public List<BossFight> GetHSElligibleBossFights(string _BossName, WowRealm _Realm = WowRealm.All, string _GuildFilter = null, string _PlayerFilter = null)
+        public List<BossFight> GetHSElligibleBossFights(string _BossName, WowRealm _Realm = WowRealm.All, string _GuildFilter = null, string _PlayerFilter = null, IEnumerable<PurgedPlayer> _PurgePlayers = null)
         {
             List<BossFight> fightInstances = new List<BossFight>();
 
@@ -106,6 +106,14 @@ namespace VF_RDDatabase
 
                 foreach (var raid in groupRC.Value.Raids)
                 {
+                    if (_PurgePlayers != null && _PurgePlayers.Any(pp => raid.Value.RaidStartDate > pp.BeginDate
+                                            && raid.Value.RaidEndDate < pp.EndDate
+                                            && groupRC.Value.Realm == pp.Realm
+                                            && raid.Value.m_RaidMembers.Contains(pp.Name)))
+                    {
+                        continue; //Disqualify any raid having a purgeplayer as raidmember since there is basically no guarantee anything is correct anymore.
+                    }
+
                     foreach (var bossFight in raid.Value.BossFights)
                     {
                         if (bossFight.BossName == _BossName && bossFight.IsQualityHigh()
@@ -133,17 +141,7 @@ namespace VF_RDDatabase
             double averagePrecision = totalPrecision / fightInstances.Count;
             double acceptablePrecisionMin = averagePrecision - 0.05;
 
-            var purgedPlayers = new List<PurgedPlayer>();
-
-            fightInstances.RemoveAll(
-                (_Value) =>
-                    (_Value.DataDetails.FightPrecision < acceptablePrecisionMin) ||
-                    _Value.PlayerFightData.Any(
-                        t =>
-                            purgedPlayers.Any(
-                                pp =>
-                                    pp.Name.Equals(t.Item1, StringComparison.OrdinalIgnoreCase) &&
-                                    pp.Realm.Equals(_Realm.ToString(), StringComparison.OrdinalIgnoreCase))));
+            fightInstances.RemoveAll((_Value) => { return _Value.DataDetails.FightPrecision < acceptablePrecisionMin; });
             return fightInstances;
         }
         public PlayerSummary GetPlayerSummary(string _Player, WowRealm _Realm)

@@ -59,7 +59,9 @@ namespace VF.RaidDamageWebsite
             {
                 this.Title = fightName + " Highscore | RaidStats";
             }
-            var fightInstances = summaryDatabase.GetHSElligibleBossFights(fightName, realm, guildLimit);
+            IEnumerable<VF_RaidDamageDatabase.Models.PurgedPlayer> purgePlayers = ApplicationInstance.Instance.GetPurgedPlayers(realm);
+
+            var fightInstances = summaryDatabase.GetHSElligibleBossFights(fightName, realm, guildLimit, null, purgePlayers);
             //Remove fights that have too low precision
             if (fightInstances.Count > 0)
             {
