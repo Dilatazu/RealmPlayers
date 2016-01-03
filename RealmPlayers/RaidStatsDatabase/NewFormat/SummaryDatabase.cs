@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using ProtoBuf;
-
+using VF_RaidDamageDatabase.Models;
 using WowRealm = VF_RealmPlayersDatabase.WowRealm;
 
 using Old_RaidCollection = VF_RaidDamageDatabase.RaidCollection;
@@ -118,6 +119,7 @@ namespace VF_RDDatabase
                                     continue;
                                 }
                             }
+
                             double precision = bossFight.DataDetails.FightPrecision;// fight.CalculatePrecision(realmDB.RD_IsPlayer);
                             fightInstances.Add(bossFight);
 
@@ -131,7 +133,17 @@ namespace VF_RDDatabase
             double averagePrecision = totalPrecision / fightInstances.Count;
             double acceptablePrecisionMin = averagePrecision - 0.05;
 
-            fightInstances.RemoveAll((_Value) => { return _Value.DataDetails.FightPrecision < acceptablePrecisionMin; });
+            var purgedPlayers = new List<PurgedPlayer>();
+
+            fightInstances.RemoveAll(
+                (_Value) =>
+                    (_Value.DataDetails.FightPrecision < acceptablePrecisionMin) ||
+                    _Value.PlayerFightData.Any(
+                        t =>
+                            purgedPlayers.Any(
+                                pp =>
+                                    pp.Name.Equals(t.Item1, StringComparison.OrdinalIgnoreCase) &&
+                                    pp.Realm.Equals(_Realm.ToString(), StringComparison.OrdinalIgnoreCase))));
             return fightInstances;
         }
         public PlayerSummary GetPlayerSummary(string _Player, WowRealm _Realm)

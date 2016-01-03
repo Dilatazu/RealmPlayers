@@ -61,6 +61,7 @@
     <Compile Include="FightDataCollection.cs" />
     <Compile Include="FightEvent.cs" />
     <Compile Include="Logger.cs" />
+    <Compile Include="Models\PurgedPlayer.cs" />
     <Compile Include="NewFormat\BossFight.cs" />
     <Compile Include="NewFormat\GlobalInitializationData.cs" />
     <Compile Include="NewFormat\GroupSummary\GroupInfo.cs" />
@@ -77,6 +78,7 @@
     <Compile Include="RaidCollection_Raid.cs" />
     <Compile Include="RaidInstanceClearData.cs" />
     <Compile Include="RealmDB.cs" />
+    <Compile Include="Repositories\PurgedPlayersRepository.cs" />
     <Compile Include="ThreadSafeCache.cs" />
     <Compile Include="UnitData.cs" />
     <Compile Include="Program.cs" />
@@ -96,8 +98,12 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Dependencies\protobuf-net.dll</HintPath>
     </Reference>
+    <Reference Include="RealmPlayersServer">
+      <HintPath>..\RealmPlayersWebsite\Bin\RealmPlayersServer.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
