@@ -244,7 +244,7 @@ namespace VF.RaidDamageWebsite
             if (summaryDatabase == null)
                 return null;
 
-            var realmDB = ApplicationInstance.Instance.GetRealmDB(VF_RealmPlayersDatabase.WowRealm.Emerald_Dream);
+            var realmDB = ApplicationInstance.Instance.GetRealmDB(VF_RealmPlayersDatabase.WowRealm.Nostalrius);
 
             var orderedPlayers = summaryDatabase.PlayerSummaries.OrderBy(_Value => _Value.Key); //Order by realm to avoid changing realmDB all the time
 

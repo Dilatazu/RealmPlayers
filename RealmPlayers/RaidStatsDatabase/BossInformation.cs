@@ -231,7 +231,7 @@ namespace VF_RaidDamageDatabase
             //"High Priestess Jeklik",
             "High Priestess Mar'li",
             "Bloodlord Mandokir",
-            "High Priest Thekal",
+            //"High Priest Thekal",
             "High Priestess Arlokk",
             "Jin'do the Hexxer",
             "Hakkar",
@@ -259,7 +259,7 @@ namespace VF_RaidDamageDatabase
             "High Priestess Jeklik",
             "High Priest Venoxis",
             "High Priestess Mar'li",
-            "High Priest Thekal",
+            //"High Priest Thekal",
             "High Priestess Arlokk",
 
             "Nefarian",

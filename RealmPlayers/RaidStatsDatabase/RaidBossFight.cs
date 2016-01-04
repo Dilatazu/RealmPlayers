@@ -1092,9 +1092,16 @@ namespace VF_RaidDamageDatabase
                 }
                 if (thisTimeSlice.IsStartEvent())
                 {
-                    if (hasBossStartYell && thisTimeSlice.IsEvent("Start_Y=" + bossName)) //YellEvent - accuracy 100%
+                    if (thisTimeSlice.IsEvent("Start_Y=" + bossName)) //YellEvent - accuracy 100%
                     {
-                        if (output.StartTimeSlice == -1) output.StartTimeSlice = i;
+                        if(hasBossStartYell == true)//Expected to have start yell
+                        {
+                            if (output.StartTimeSlice == -1) output.StartTimeSlice = i;
+                        }
+                        else
+                        {
+                            if (optionalStartTimeSlice == -1) optionalStartTimeSlice = i;
+                        }
                     }
                     else if (thisTimeSlice.IsEvent("Start_T=" + bossName)) //TargetHealthScan every 0.5 sec //händer inte om YellEvent existerar för bossen
                     {

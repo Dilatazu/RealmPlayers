@@ -211,8 +211,9 @@ namespace VF.RaidDamageWebsite
                 VF_RDDatabase.SummaryDatabase summaryDB = null;
                 summaryDB = VF_RDDatabase.SummaryDatabase.LoadSummaryDatabase(g_RDDBDir);
                 summaryDB.GeneratePlayerSummaries();
+                GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced);
                 return summaryDB;
-            }, (_RaidCollection, _LastLoadTime) => { return (DateTime.UtcNow - _LastLoadTime).TotalMinutes > 10; });
+            }, (_SummaryDatabase, _LastLoadTime) => { return (DateTime.UtcNow - _LastLoadTime).TotalMinutes > 30; });
         }
         public FightDataCollection GetRaidFightCollection(string _FightFile)
         {

@@ -33,6 +33,7 @@ namespace VF_RealmPlayersDatabase
                 try
                 {
                     LoadRealmDatabase(_RootPath, loadRealm, _HistoryEarliestTime);
+                    GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced);
                 }
                 catch (Exception ex)
                 {

@@ -161,7 +161,12 @@ namespace VF_RDDatabase
         {
             if (m_PlayerSummaries.Count == 0)
             {
+                DateTime timer = DateTime.Now;
+                VF_RealmPlayersDatabase.Logger.ConsoleWriteLine("Started generating PlayerSummary");
+                GC.Collect();
                 GeneratePlayerSummaries();
+                GC.Collect();
+                VF_RealmPlayersDatabase.Logger.ConsoleWriteLine("Done with generating PlayerSummary after " + (DateTime.Now - timer));
             }
             PlayerSummary retValue = null;
             if (m_PlayerSummaries.TryGetValue(Utility.GetRealmPreString(_Realm) + _Player, out retValue) == false)
