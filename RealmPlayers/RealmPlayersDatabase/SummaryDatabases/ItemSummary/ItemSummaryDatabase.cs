@@ -82,6 +82,8 @@ namespace VF_RPDatabase
         public UInt64 m_EntityCounter_Nefarian = 0L;
         [ProtoMember(14)]
         public UInt64 m_EntityCounter_NostalriusPVE = 0L;
+        [ProtoMember(15)]
+        public UInt64 m_EntityCounter_WarsongTBC = 0L;
 
         private void CalcRealmBits(WowRealm _Realm, out UInt64 _BitMask, out UInt64 _RealmValue)
         {
@@ -125,7 +127,10 @@ namespace VF_RPDatabase
                 case WowRealm.NostalriusPVE:
                     _RealmValue = 12UL << 56;
                     break;
-	        }
+                case WowRealm.WarsongTBC:
+                    _RealmValue = 13UL << 56;
+                    break;
+            }
         }
         public int GetItemUsageCount(WowRealm _Realm, ItemInfo _Item)
         {
@@ -246,6 +251,10 @@ namespace VF_RPDatabase
                     entityID = (12UL << 56) | m_EntityCounter_NostalriusPVE++;
                     m_PlayerIDs.Add(entityLinkStr, entityID);
                     break;
+                case WowRealm.WarsongTBC:
+                    entityID = (13UL << 56) | m_EntityCounter_WarsongTBC++;
+                    m_PlayerIDs.Add(entityLinkStr, entityID);
+                    break;
             }
             return entityID;
         }
@@ -285,6 +294,8 @@ namespace VF_RPDatabase
                     return WowRealm.Nefarian;
                 case 12UL:
                     return WowRealm.NostalriusPVE;
+                case 13UL:
+                    return WowRealm.WarsongTBC;
                 default:
                     VF_RealmPlayersDatabase.Logger.ConsoleWriteLine("Error GetPlayerRealm failed. Realm(" + realm + ") was not valid!!!");
                     return WowRealm.Unknown;

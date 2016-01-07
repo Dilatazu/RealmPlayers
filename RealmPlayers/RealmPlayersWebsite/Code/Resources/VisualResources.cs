@@ -62,8 +62,9 @@ namespace RealmPlayersServer.Code.Resources
         {
 	        {WowRealm.Emerald_Dream , "ED"},
 	        {WowRealm.Al_Akir , "AlA"},
-	        {WowRealm.Warsong , "WSG"},
-	        {WowRealm.Unknown , "Unknown"},
+            {WowRealm.Warsong , "WSG"},
+            {WowRealm.WarsongTBC , "WBC"},
+            {WowRealm.Unknown , "Unknown"},
 	        {WowRealm.All , "All"},
 	        {WowRealm.Archangel , "ArA"},
 	        {WowRealm.VanillaGaming , "VG"},
@@ -80,8 +81,9 @@ namespace RealmPlayersServer.Code.Resources
         {
 	        {WowRealm.Emerald_Dream , "Emerald Dream"},
 	        {WowRealm.Al_Akir , "Al'Akir"},
-	        {WowRealm.Warsong , "Warsong"},
-	        {WowRealm.Unknown , "Unknown"},
+            {WowRealm.Warsong , "Warsong"},
+            {WowRealm.WarsongTBC , "WarsongTBC"},
+            {WowRealm.Unknown , "Unknown"},
 	        {WowRealm.All , "All"},
 	        {WowRealm.Archangel , "Archangel"},
 	        {WowRealm.VanillaGaming , "VanillaGaming"},

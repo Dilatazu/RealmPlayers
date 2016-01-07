@@ -22,6 +22,7 @@ namespace VF_RealmPlayersDatabase
         NostalGeek = 12,
         Nefarian = 13,
         NostalriusPVE = 14,
+        WarsongTBC = 15,
     }
     public enum WowVersionEnum
     {
@@ -480,9 +481,12 @@ namespace VF_RealmPlayersDatabase
             {"Emerald Dream", WowRealm.Emerald_Dream},
             {"Emerald Dream [1x] Blizzlike", WowRealm.Emerald_Dream},
             {"ED", WowRealm.Emerald_Dream},
-            {"Warsong [12x] Blizzlike", WowRealm.Warsong},
-            {"Warsong", WowRealm.Warsong},
+            //{"Warsong [12x] Blizzlike", WowRealm.Warsong},
+            //{"Warsong", WowRealm.Warsong},
+            {"Warsong [12x] Blizzlike", WowRealm.WarsongTBC},
+            {"Warsong", WowRealm.WarsongTBC},
             {"WSG", WowRealm.Warsong},
+            {"WBC", WowRealm.WarsongTBC},
             {"Al'Akir [instant 60] Blizzlike", WowRealm.Al_Akir},
             {"Al&apos;Akir [instant 60] Blizzlike", WowRealm.Al_Akir},
             {"Al'Akir", WowRealm.Al_Akir},
@@ -545,7 +549,7 @@ namespace VF_RealmPlayersDatabase
             {
                 return WowVersionEnum.Vanilla;
             }
-            else if (_Realm == WowRealm.Archangel)
+            else if (_Realm == WowRealm.Archangel || _Realm == WowRealm.WarsongTBC)
             {
                 return WowVersionEnum.TBC;
             }

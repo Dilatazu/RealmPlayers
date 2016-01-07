@@ -18,8 +18,9 @@ namespace VF_RealmPlayersDatabase
             WowRealm.Valkyrie, 
             WowRealm.VanillaGaming, 
             WowRealm.Nefarian, 
-            WowRealm.Rebirth, 
-            WowRealm.Archangel };
+            WowRealm.Rebirth,
+            WowRealm.Archangel,
+            WowRealm.WarsongTBC };
 
         Dictionary<WowRealm, RealmDatabase> m_Realms = new Dictionary<WowRealm, RealmDatabase>();
 
@@ -204,9 +205,9 @@ namespace VF_RealmPlayersDatabase
                         {
                             string realmStr = PlayerData.DataParser.ParseRealm(playerNode);
                             WowRealm realm = StaticValues.ConvertRealm(realmStr);
-                            if(realm == WowRealm.Archangel || wowVersion == WowVersionEnum.TBC)
+                            if(realm == WowRealm.Archangel || realm == WowRealm.WarsongTBC || wowVersion == WowVersionEnum.TBC)
                             {
-                                if(realm != WowRealm.Archangel || wowVersion != WowVersionEnum.TBC)
+                                if((realm != WowRealm.Archangel && realm != WowRealm.WarsongTBC) || wowVersion != WowVersionEnum.TBC)
                                 {
                                     Logger.ConsoleWriteLine("RealmPlayers WoWversion guess was wrong!!!", ConsoleColor.Red);
                                 }

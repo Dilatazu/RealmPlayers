@@ -54,6 +54,7 @@
                                 <asp:ListItem Text="Nefarian(DE)" Value="NEF"/>
                                 <asp:ListItem Text="NostalGeek(FR)" Value="NG"/>
                                 <asp:ListItem Text="Archangel(TBC)" Value="ArA"/>
+                                <asp:ListItem Text="WarsongTBC" Value="WBC"/>
                             </asp:DropDownList>
                             <asp:DropDownList style="width:100px; margin: 10px 2.5px 0px 2.5px" ID="ddlRace" runat="server" onchange="this.style.color = this.options[this.selectedIndex].style.color;">
                                 <asp:ListItem Text="Any Race" style="color:#ffffff" Value="All" Selected="true"></asp:ListItem>

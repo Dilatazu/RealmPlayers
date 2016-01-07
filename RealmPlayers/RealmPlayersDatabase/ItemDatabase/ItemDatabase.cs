@@ -31,6 +31,7 @@ namespace VF_RealmPlayersDatabase
                 case WowRealm.All:
                     return uint.MaxValue;
                 case WowRealm.Archangel:
+                case WowRealm.WarsongTBC:
                     return (0x10U << 24) + _ItemID;
                 case WowRealm.Valkyrie:
                     return (2U << 24) + _ItemID;
@@ -76,7 +77,7 @@ namespace VF_RealmPlayersDatabase
             {
                 itemInfo = ItemInfo.GenerateVanilla(_ItemID, _ItemInfoDownloader);
             }
-            else if(_Realm == WowRealm.Archangel)
+            else if(_Realm == WowRealm.Archangel || _Realm == WowRealm.WarsongTBC)
             {
                 itemInfo = ItemInfo.GenerateTBC(_ItemID, _ItemInfoDownloader);
             }

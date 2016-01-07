@@ -5,6 +5,7 @@
         <asp:ListItem Text="Emerald Dream" Value="ED" />
         <asp:ListItem Text="Warsong" Value="WSG" />
         <asp:ListItem Text="Al'Akir" Value="AlA" />
+        <asp:ListItem Text="WarsongTBC" Value="WBC" />
         <asp:ListItem Text="Nostalrius" Value="NRB" />
         <asp:ListItem Text="NostalriusPVE" Value="NBE" />
         <asp:ListItem Text="Kronos" Value="KRO" />
