@@ -1,4 +1,4 @@
-
+BEGIN;
 --UNIQUE FOR PLAYER AND TIME
 CREATE TABLE PlayerGuildTable (
 	ID				integer,
@@ -21,7 +21,7 @@ CREATE TABLE PlayerHonorTable (
 
 --UNIQUE FOR PLAYER AND TIME
 CREATE TABLE PlayerHonorVanillaTable (
-	PlayerHonorID	integer REFERENCES PlayerHonorTable(ID)
+	PlayerHonorID	integer REFERENCES PlayerHonorTable(ID),
 	CurrentRank		smallint,
 	CurrentRankProgress	real,
 	ThisWeekHK		integer,
@@ -83,14 +83,22 @@ CREATE TABLE PlayerGearGemsTable (
 --Unique for Player and Time
 CREATE TABLE PlayerArenaTeamTable (
 	ID				integer,
-	TeamType		smallint,
 	TeamName		text,
 	TeamRating		integer,
 	GamesPlayed		integer,
 	GamesWon		integer,
 	PlayerGamesPlayed	integer,
 	PlayerRating	integer,
-	PRIMARY KEY (ID, TeamType)
+	PRIMARY KEY (ID)
+);
+
+--Unique for Player and Time
+CREATE TABLE PlayerArenaInfoTable (
+	ID				integer,
+	Team_2v2		integer REFERENCES PlayerArenaTeamTable(ID),
+	Team_3v3		integer REFERENCES PlayerArenaTeamTable(ID),
+	Team_5v5		integer REFERENCES PlayerArenaTeamTable(ID),
+	PRIMARY KEY (ID)
 );
 
 --Unique for Player and Time
@@ -118,6 +126,22 @@ CREATE TABLE UpdateTable (
 	PRIMARY KEY (ID)
 );
 
+--Unique for Player and Time
+CREATE TABLE PlayerDataTable (
+	PlayerID		integer,-- REFERENCES PlayerTable(ID),
+	UpdateID		integer REFERENCES UpdateTable(ID),
+	Race			smallint,
+	Class			smallint,
+	Sex				smallint,
+	Level			smallint,
+	GuildInfo		integer REFERENCES PlayerGuildTable(ID),
+	HonorInfo		integer REFERENCES PlayerHonorTable(ID),
+	GearInfo		integer REFERENCES PlayerGearTable(ID),
+	ArenaInfo		integer REFERENCES PlayerArenaInfoTable(ID),
+	TalentsInfo		integer REFERENCES TalentsInfoTable(ID),
+	PRIMARY KEY (PlayerID, UpdateID)
+);
+
 --Unique for Character and Realm
 CREATE TABLE PlayerTable (
 	ID				integer,
@@ -128,18 +152,4 @@ CREATE TABLE PlayerTable (
 	PRIMARY KEY (ID)
 );
 
---Unique for Player and Time
-CREATE TABLE PlayerDataTable (
-	PlayerID		integer REFERENCES PlayerTable(ID),
-	UpdateID		integer REFERENCES UpdateTable(ID),
-	Race			smallint,
-	Class			smallint,
-	Sex				smallint,
-	Level			smallint,
-	GuildInfo		integer REFERENCES PlayerGuildTable(ID),
-	HonorInfo		integer REFERENCES PlayerHonorTable(ID)
-	GearInfo		integer REFERENCES PlayerGearTable(ID),
-	ArenaInfo		integer REFERENCES PlayerArenaTeamTable(ID),
-	TalentsInfo		integer REFERENCES TalentsInfoTable(ID),
-	PRIMARY KEY (PlayerID, UpdateID)
-);
+COMMIT;
