@@ -1,11 +1,11 @@
 
 DROP TABLE PlayerTable;
 DROP TABLE PlayerDataTable;
-DROP TABLE UpdateTable;
+DROP TABLE UploadTable;
 DROP TABLE ContributorTable;
 DROP TABLE TalentsInfoTable;
 DROP TABLE PlayerArenaInfoTable;
-DROP TABLE PlayerArenaTeamTable;
+DROP TABLE PlayerArenaDataTable;
 DROP TABLE PlayerGearGemsTable;
 DROP TABLE PlayerGearTable;
 DROP TABLE IngameItemTable;
@@ -29,7 +29,7 @@ CREATE TABLE PlayerGuildTable (
 CREATE TABLE PlayerHonorTable (
 	ID				serial,
 	TodayHK			integer,
-	TodayDKVanilla_Or_TodayHonorTBC integer,
+	TodayHonor		integer,--Not used for vanilla
 	YesterdayHK		integer,
 	YesterdayHonor	integer,
 	LifetimeHK		integer,
@@ -41,6 +41,7 @@ CREATE TABLE PlayerHonorVanillaTable (
 	PlayerHonorID	integer REFERENCES PlayerHonorTable(ID),
 	CurrentRank		smallint,
 	CurrentRankProgress	real,
+	TodayDK			integer,
 	ThisWeekHK		integer,
 	ThisWeekHonor	integer,
 	LastWeekHK		integer,
@@ -88,7 +89,7 @@ CREATE TABLE PlayerGearTable (
 
 --Unique for Player, Time and Slot
 CREATE TABLE PlayerGearGemsTable (
-	GearID			serial REFERENCES PlayerGearTable(ID),
+	GearID			integer REFERENCES PlayerGearTable(ID),
 	ItemSlot		smallint,
 	GemID1			integer,
 	GemID2			integer,
@@ -98,7 +99,7 @@ CREATE TABLE PlayerGearGemsTable (
 );
 
 --Unique for Player and Time
-CREATE TABLE PlayerArenaTeamTable (
+CREATE TABLE PlayerArenaDataTable (
 	ID				serial,
 	TeamName		text,
 	TeamRating		integer,
@@ -112,9 +113,9 @@ CREATE TABLE PlayerArenaTeamTable (
 --Unique for Player and Time
 CREATE TABLE PlayerArenaInfoTable (
 	ID				serial,
-	Team_2v2		integer REFERENCES PlayerArenaTeamTable(ID),
-	Team_3v3		integer REFERENCES PlayerArenaTeamTable(ID),
-	Team_5v5		integer REFERENCES PlayerArenaTeamTable(ID),
+	Team_2v2		integer REFERENCES PlayerArenaDataTable(ID),
+	Team_3v3		integer REFERENCES PlayerArenaDataTable(ID),
+	Team_5v5		integer REFERENCES PlayerArenaDataTable(ID),
 	PRIMARY KEY (ID)
 );
 
@@ -135,7 +136,7 @@ CREATE TABLE ContributorTable (
 );
 
 --Unique for Upload from Contributor
-CREATE TABLE UpdateTable (
+CREATE TABLE UploadTable (
 	ID				serial,
 	UploadTime		timestamp,
 	Contributor		integer REFERENCES ContributorTable(ID),
@@ -145,8 +146,8 @@ CREATE TABLE UpdateTable (
 --Unique for Player and Time
 CREATE TABLE PlayerDataTable (
 	PlayerID		integer,-- REFERENCES PlayerTable(ID),
-	UpdateID		integer REFERENCES UpdateTable(ID),
-	DateTime		timestamp,
+	UploadID		integer REFERENCES UploadTable(ID),
+	UpdateTime		timestamp,
 	Race			smallint,
 	Class			smallint,
 	Sex				smallint,
@@ -156,7 +157,7 @@ CREATE TABLE PlayerDataTable (
 	GearInfo		integer REFERENCES PlayerGearTable(ID),
 	ArenaInfo		integer REFERENCES PlayerArenaInfoTable(ID),
 	TalentsInfo		integer REFERENCES TalentsInfoTable(ID),
-	PRIMARY KEY (PlayerID, UpdateID)
+	PRIMARY KEY (PlayerID, UploadID)
 );
 
 --Unique for Character and Realm
@@ -164,8 +165,8 @@ CREATE TABLE PlayerTable (
 	ID				serial,
 	Name			text,
 	Realm			integer,
-	UpdateID		integer REFERENCES UpdateTable(ID), --Use along with ID to find PlayerDataTable ID
-	FOREIGN KEY (ID, UpdateID) REFERENCES PlayerDataTable(PlayerID, UpdateID),
+	UploadID		integer REFERENCES UploadTable(ID), --Use along with ID to find PlayerDataTable ID
+	FOREIGN KEY (ID, UploadID) REFERENCES PlayerDataTable(PlayerID, UploadID),
 	PRIMARY KEY (ID)
 );
 
