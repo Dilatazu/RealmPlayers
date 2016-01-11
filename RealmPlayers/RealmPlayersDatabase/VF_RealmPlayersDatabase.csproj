@@ -186,6 +186,7 @@
       <HintPath>..\..\Dependencies\SavedVariablesParser.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
