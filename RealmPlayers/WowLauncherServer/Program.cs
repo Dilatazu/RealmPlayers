@@ -41,14 +41,25 @@ namespace VF_WoWLauncherServer
             VF_WoWLauncher.ConsoleUtility.CreateConsole();
 
             /*Some Testing*/
-            RealmDatabase newRealm = new RealmDatabase(WowRealm.Al_Akir);
-            Console.WriteLine("Started Loading!!!");
-            newRealm.LoadDatabase("D:\\VF_RealmPlayersData\\RPPDatabase\\Database\\Al_Akir", new DateTime(2012, 5, 1, 0, 0, 0));
-            Console.WriteLine("Loading...");
-            newRealm.WaitForLoad(RealmDatabase.LoadStatus.EverythingLoaded);
-            Console.WriteLine("Everything Loaded!!!");
-            newRealm.SaveDatabaseSQL();
-            Console.WriteLine("Everything Done!!!");
+            try
+            {
+                RealmDatabase newRealm = new RealmDatabase(WowRealm.Al_Akir);
+                Console.WriteLine("Started Loading!!!");
+                newRealm.LoadDatabase("D:\\VF_RealmPlayersData\\RPPDatabase\\Database\\Al_Akir", new DateTime(2015, 9, 1, 0, 0, 0));//, new DateTime(2012, 5, 1, 0, 0, 0));
+                Console.WriteLine("Loading...");
+                newRealm.WaitForLoad(RealmDatabase.LoadStatus.EverythingLoaded);
+                Console.WriteLine("Everything Loaded!!!");
+                SQLMigration.SaveRealmDatabase(newRealm);
+                Console.WriteLine("Everything Done!!!");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("EXCEPTION OCCURED\n----------------------\n" + ex.ToString());
+            }
+            while(true)
+            {
+                System.Threading.Thread.Sleep(1000);
+            }
             return;
             /*Some Testing*/
 

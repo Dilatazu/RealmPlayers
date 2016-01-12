@@ -1,16 +1,29 @@
 
+TRUNCATE TABLE PlayerTable;
 DROP TABLE PlayerTable;
+TRUNCATE TABLE PlayerDataTable;
 DROP TABLE PlayerDataTable;
+TRUNCATE TABLE UploadTable;
 DROP TABLE UploadTable;
+TRUNCATE TABLE ContributorTable;
 DROP TABLE ContributorTable;
-DROP TABLE TalentsInfoTable;
+TRUNCATE TABLE PlayerTalentsInfoTable;
+DROP TABLE PlayerTalentsInfoTable;
+TRUNCATE TABLE PlayerArenaInfoTable;
 DROP TABLE PlayerArenaInfoTable;
+TRUNCATE TABLE PlayerArenaDataTable;
 DROP TABLE PlayerArenaDataTable;
+TRUNCATE TABLE PlayerGearGemsTable;
 DROP TABLE PlayerGearGemsTable;
+TRUNCATE TABLE PlayerGearTable;
 DROP TABLE PlayerGearTable;
+TRUNCATE TABLE IngameItemTable;
 DROP TABLE IngameItemTable;
+TRUNCATE TABLE PlayerHonorVanillaTable;
 DROP TABLE PlayerHonorVanillaTable;
+TRUNCATE TABLE PlayerHonorTable;
 DROP TABLE PlayerHonorTable;
+TRUNCATE TABLE PlayerGuildTable;
 DROP TABLE PlayerGuildTable;
 
 
@@ -25,6 +38,8 @@ CREATE TABLE PlayerGuildTable (
 	PRIMARY KEY (ID)
 );
 
+INSERT INTO PlayerGuildTable VALUES(0, '', '', 0);
+
 --UNIQUE FOR PLAYER AND TIME
 CREATE TABLE PlayerHonorTable (
 	ID				serial,
@@ -35,6 +50,8 @@ CREATE TABLE PlayerHonorTable (
 	LifetimeHK		integer,
 	PRIMARY KEY (ID)
 );
+
+INSERT INTO PlayerHonorTable VALUES(0, 0, 0, 0, 0, 0);
 
 --UNIQUE FOR PLAYER AND TIME
 CREATE TABLE PlayerHonorVanillaTable (
@@ -52,6 +69,8 @@ CREATE TABLE PlayerHonorVanillaTable (
 	PRIMARY KEY (PlayerHonorID)
 );
 
+INSERT INTO PlayerHonorVanillaTable VALUES(0, 0, 0.0, 0, 0, 0, 0, 0, 0, 0, 0);
+
 --Not unique for Player
 CREATE TABLE IngameItemTable (
 	ID				serial,
@@ -61,6 +80,8 @@ CREATE TABLE IngameItemTable (
 	UniqueID		integer,
 	PRIMARY KEY (ID)
 );
+
+INSERT INTO IngameItemTable VALUES(0, 0, 0, 0, 0);
 
 --Unique for Player and Time
 CREATE TABLE PlayerGearTable (
@@ -87,6 +108,8 @@ CREATE TABLE PlayerGearTable (
 	PRIMARY KEY (ID)
 );
 
+INSERT INTO PlayerGearTable VALUES(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
 --Unique for Player, Time and Slot
 CREATE TABLE PlayerGearGemsTable (
 	GearID			integer REFERENCES PlayerGearTable(ID),
@@ -97,6 +120,8 @@ CREATE TABLE PlayerGearGemsTable (
 	GemID4			integer,
 	PRIMARY KEY (GearID, ItemSlot)
 );
+
+INSERT INTO PlayerGearGemsTable VALUES(0, 0, 0, 0, 0, 0);
 
 --Unique for Player and Time
 CREATE TABLE PlayerArenaDataTable (
@@ -110,6 +135,8 @@ CREATE TABLE PlayerArenaDataTable (
 	PRIMARY KEY (ID)
 );
 
+INSERT INTO PlayerArenaDataTable VALUES(0, '', 0, 0, 0, 0, 0);
+
 --Unique for Player and Time
 CREATE TABLE PlayerArenaInfoTable (
 	ID				serial,
@@ -119,12 +146,16 @@ CREATE TABLE PlayerArenaInfoTable (
 	PRIMARY KEY (ID)
 );
 
+INSERT INTO PlayerArenaInfoTable VALUES(0, 0, 0, 0);
+
 --Unique for Player and Time
-CREATE TABLE TalentsInfoTable (
+CREATE TABLE PlayerTalentsInfoTable (
 	ID				serial,
 	Talents			text,
 	PRIMARY KEY (ID)
 );
+
+INSERT INTO PlayerTalentsInfoTable VALUES(0, '');
 
 --Unique for UserID
 CREATE TABLE ContributorTable (
@@ -156,9 +187,10 @@ CREATE TABLE PlayerDataTable (
 	HonorInfo		integer REFERENCES PlayerHonorTable(ID),
 	GearInfo		integer REFERENCES PlayerGearTable(ID),
 	ArenaInfo		integer REFERENCES PlayerArenaInfoTable(ID),
-	TalentsInfo		integer REFERENCES TalentsInfoTable(ID),
+	TalentsInfo		integer REFERENCES PlayerTalentsInfoTable(ID),
 	PRIMARY KEY (PlayerID, UploadID)
 );
+
 
 --Unique for Character and Realm
 CREATE TABLE PlayerTable (
