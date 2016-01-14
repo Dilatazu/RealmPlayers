@@ -152,7 +152,7 @@ public static class VF_DictionaryExtensions
         _List.Add(_Value);
         return true;
     }
-    public static int AddRangeUnique<TValue>(this List<TValue> _List, List<TValue> _OtherList)
+    public static int AddRangeUnique<TValue>(this List<TValue> _List, IEnumerable<TValue> _OtherList)
     {
         int addCounter = 0;
         foreach (TValue item in _OtherList)

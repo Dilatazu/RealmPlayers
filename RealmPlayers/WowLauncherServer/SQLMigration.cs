@@ -163,6 +163,9 @@ namespace VF_WoWLauncherServer
             }
             _PlayerGuildTableIDCounter = playerGuildTableIDCounter;
         }
+        public static Dictionary<int, List<KeyValuePair<int, ItemInfo>>> distinctItemIDs = new Dictionary<int, List<KeyValuePair<int, ItemInfo>>>();
+        public static int ingameItemsDuplicateCount = 0;
+        public static int ingameItemsUniqueCount = 0;
         public static void UploadGearData(NpgsqlConnection _Connection
                                         , ref int _PlayerGearTableIDCounter
                                         , WowVersionEnum _WowVersion
@@ -193,6 +196,20 @@ namespace VF_WoWLauncherServer
                                 ItemInfo itemInfo;
                                 if (playerGear.Data.Items.TryGetValue(_Slot, out itemInfo) == false) return 0;//0 index is empty ItemInfo
 
+                                List<KeyValuePair<int, ItemInfo>> distinctItemInfos;
+                                if(distinctItemIDs.TryGetValue(itemInfo.ItemID, out distinctItemInfos) == true)
+                                {
+                                    foreach(var distinctItem in distinctItemInfos)
+                                    {
+                                        if (distinctItem.Value.IsSame(itemInfo) == true)
+                                        {
+                                            ++ingameItemsDuplicateCount;
+                                            return distinctItem.Key;
+                                        }
+                                    }
+                                }
+                                ++ingameItemsUniqueCount;
+                                distinctItemIDs.AddToList(itemInfo.ItemID, new KeyValuePair<int, ItemInfo>(ingameItemTableIDCounter, itemInfo));
                                 cmdItems.StartRow();
                                 cmdItems.Write(ingameItemTableIDCounter, NpgsqlDbType.Integer);
                                 cmdItems.Write(itemInfo.ItemID, NpgsqlDbType.Integer);
@@ -490,6 +507,8 @@ namespace VF_WoWLauncherServer
         }
         public static RealmDatabase LoadRealmDatabase(WowRealm _Realm)
         {
+            var timer = System.Diagnostics.Stopwatch.StartNew();
+            Logger.ConsoleWriteLine("Started Loading Database FROM SQL" + _Realm.ToString(), ConsoleColor.Green);
             RealmDatabase realmDatabase = new RealmDatabase(_Realm);
 
             using (var conn = new NpgsqlConnection("Host=localhost;Port=5432;Username=RealmPlayers;Password=TestPass;Database=testdb"))
@@ -511,15 +530,17 @@ namespace VF_WoWLauncherServer
                     }
                     reader.Dispose();
                 }
+                conn.Close();
 
                 int playerProgress = 0;
                 int playerProgressMax = playerIDs.Count;
                 foreach (var player in playerIDs)
                 {
                     PlayerHistory playerHistory = new PlayerHistory();
-                    Player playerData = new Player();
                     ++playerProgress;
-                    conn.Close();
+
+                    List<KeyValuePair<UploadID, List<KeyValuePair<ItemSlot, int>>>> allGearItems = new List<KeyValuePair<UploadID, List<KeyValuePair<ItemSlot, int>>>>();
+                    List<int> uniqueGearItems = new List<int>();
                     conn.Open();
                     using (var reader = conn.BeginBinaryExport("COPY (SELECT character.uploadid, character.updatetime, character.race, character.class, character.sex, character.level" +
                         ", guild.guildname, guild.guildrank, guild.guildranknr" +
@@ -547,14 +568,14 @@ namespace VF_WoWLauncherServer
                             int uploadID = reader.Read<int>(NpgsqlDbType.Integer);
                             DateTime updateTime = reader.Read<DateTime>(NpgsqlDbType.Timestamp);
 
-                            UploadID thisUploadID = new UploadID(0, updateTime);
+                            UploadID uploader = new UploadID(0, updateTime);
 
                             CharacterData characterData = new CharacterData();
                             characterData.Race = (PlayerRace)reader.Read<int>(NpgsqlDbType.Smallint);
                             characterData.Class = (PlayerClass)reader.Read<int>(NpgsqlDbType.Smallint);
                             characterData.Sex = (PlayerSex)reader.Read<int>(NpgsqlDbType.Smallint);
                             characterData.Level = reader.Read<int>(NpgsqlDbType.Smallint);
-                            playerHistory.AddToHistory(characterData, thisUploadID);
+                            playerHistory.AddToHistory(characterData, uploader);
 
                             //JOINED DATA BELOW
                             //Logger.ConsoleWriteLine("Reading PlayerGuildTable!");
@@ -564,7 +585,7 @@ namespace VF_WoWLauncherServer
                             guildData.GuildName = reader.Read<string>(NpgsqlDbType.Text);
                             guildData.GuildRank = reader.Read<string>(NpgsqlDbType.Text);
                             guildData.GuildRankNr = reader.Read<int>(NpgsqlDbType.Smallint);
-                            playerHistory.AddToHistory(guildData, thisUploadID);
+                            playerHistory.AddToHistory(guildData, uploader);
 
                             //Logger.ConsoleWriteLine("Reading PlayerHonorTable!");
                             //PlayerHonorTable
@@ -589,31 +610,33 @@ namespace VF_WoWLauncherServer
                             honorData.LastWeekStanding = reader.Read<int>(NpgsqlDbType.Integer);
                             honorData.LifetimeDK = reader.Read<int>(NpgsqlDbType.Integer);
                             honorData.LifetimeHighestRank = reader.Read<int>(NpgsqlDbType.Smallint);
-                            playerHistory.AddToHistory(honorData, thisUploadID);
+                            playerHistory.AddToHistory(honorData, uploader);
 
                             //Logger.ConsoleWriteLine("Reading PlayerGearTable!");
                             //PlayerGearTable
                             if (reader.IsNull) continue;
-                            int itemHeadID = reader.Read<int>(NpgsqlDbType.Integer);
-                            int itemNeckID = reader.Read<int>(NpgsqlDbType.Integer);
-                            int itemShoulderID = reader.Read<int>(NpgsqlDbType.Integer);
-                            int itemShirtID = reader.Read<int>(NpgsqlDbType.Integer);
-                            int itemChestID = reader.Read<int>(NpgsqlDbType.Integer);
-                            int itemBeltID = reader.Read<int>(NpgsqlDbType.Integer);
-                            int itemLegsID = reader.Read<int>(NpgsqlDbType.Integer);
-                            int itemFeetID = reader.Read<int>(NpgsqlDbType.Integer);
-                            int itemWristID = reader.Read<int>(NpgsqlDbType.Integer);
-                            int itemGlovesID = reader.Read<int>(NpgsqlDbType.Integer);
-                            int itemFinger1ID = reader.Read<int>(NpgsqlDbType.Integer);
-                            int itemFinger2ID = reader.Read<int>(NpgsqlDbType.Integer);
-                            int itemTrinket1ID = reader.Read<int>(NpgsqlDbType.Integer);
-                            int itemTrinket2ID = reader.Read<int>(NpgsqlDbType.Integer);
-                            int itemBackID = reader.Read<int>(NpgsqlDbType.Integer);
-                            int itemMainHandID = reader.Read<int>(NpgsqlDbType.Integer);
-                            int itemOffHandID = reader.Read<int>(NpgsqlDbType.Integer);
-                            int itemRangedID = reader.Read<int>(NpgsqlDbType.Integer);
-                            int itemTabardID = reader.Read<int>(NpgsqlDbType.Integer);
-
+                            List<KeyValuePair<ItemSlot, int>> gearItems = new List<KeyValuePair<ItemSlot, int>>();
+                            gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Head, reader.Read<int>(NpgsqlDbType.Integer)));
+                            gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Neck, reader.Read<int>(NpgsqlDbType.Integer)));
+                            gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Shoulder, reader.Read<int>(NpgsqlDbType.Integer)));
+                            gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Shirt, reader.Read<int>(NpgsqlDbType.Integer)));
+                            gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Chest, reader.Read<int>(NpgsqlDbType.Integer)));
+                            gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Belt, reader.Read<int>(NpgsqlDbType.Integer)));
+                            gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Legs, reader.Read<int>(NpgsqlDbType.Integer)));
+                            gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Feet, reader.Read<int>(NpgsqlDbType.Integer)));
+                            gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Wrist, reader.Read<int>(NpgsqlDbType.Integer)));
+                            gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Gloves, reader.Read<int>(NpgsqlDbType.Integer)));
+                            gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Finger_1, reader.Read<int>(NpgsqlDbType.Integer)));
+                            gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Finger_2, reader.Read<int>(NpgsqlDbType.Integer)));
+                            gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Trinket_1, reader.Read<int>(NpgsqlDbType.Integer)));
+                            gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Trinket_2, reader.Read<int>(NpgsqlDbType.Integer)));
+                            gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Back, reader.Read<int>(NpgsqlDbType.Integer)));
+                            gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Main_Hand, reader.Read<int>(NpgsqlDbType.Integer)));
+                            gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Off_Hand, reader.Read<int>(NpgsqlDbType.Integer)));
+                            gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Ranged, reader.Read<int>(NpgsqlDbType.Integer)));
+                            gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Tabard, reader.Read<int>(NpgsqlDbType.Integer)));
+                            uniqueGearItems.AddRangeUnique(gearItems.Select((_V) => _V.Value));
+                            allGearItems.Add(new KeyValuePair<UploadID, List<KeyValuePair<ItemSlot, int>>>(uploader, gearItems));
                             //Logger.ConsoleWriteLine("Reading PlayerArenaInfoTable!");
                             //PlayerArenaInfoTable
                             if (reader.IsNull) continue;
@@ -625,7 +648,6 @@ namespace VF_WoWLauncherServer
                             //PlayerTalentsInfoTable
                             if (reader.IsNull) continue;
                             string talents = reader.Read<string>(NpgsqlDbType.Text);
-
                         }
                         if(playerProgress % 100 == 0)
                         {
@@ -636,10 +658,65 @@ namespace VF_WoWLauncherServer
                         }
                         reader.Dispose();
                     }
+                    conn.Close();
+                    if(uniqueGearItems.Count > 0)
+                    {
+                        Dictionary <int, ItemInfo> itemTranslation = new Dictionary<int, ItemInfo>();
+                        string sqlSearchIds = String.Join(", ", uniqueGearItems);
+                        //Console.WriteLine(sqlSearchIds);
+
+                        if (sqlSearchIds != "" && sqlSearchIds != ", ")
+                        {
+                            conn.Open();
+                            using (var reader = conn.BeginBinaryExport("COPY (SELECT id, itemid, enchantid, suffixid, uniqueid FROM ingameitemtable WHERE id IN (" + sqlSearchIds + ")) TO STDIN BINARY"))
+                            {
+                                while (reader.StartRow() != -1)
+                                {
+                                    ItemInfo itemInfo = new ItemInfo();
+                                    int itemSQLIndex = reader.Read<int>(NpgsqlDbType.Integer);
+                                    itemInfo.ItemID = reader.Read<int>(NpgsqlDbType.Integer);
+                                    itemInfo.EnchantID = reader.Read<int>(NpgsqlDbType.Integer);
+                                    itemInfo.SuffixID = reader.Read<int>(NpgsqlDbType.Integer);
+                                    itemInfo.UniqueID = reader.Read<int>(NpgsqlDbType.Integer);
+                                    itemTranslation.AddIfKeyNotExist(itemSQLIndex, itemInfo);
+                                }
+                            }
+                            conn.Close();
+                            //using (var cmd = new NpgsqlCommand("SELECT id, itemid, enchantid, suffixid, uniqueid FROM ingameitemtable WHERE id IN (" + sqlSearchIds + ")", conn))
+                            //{
+                            //    using (var reader = cmd.ExecuteReader())
+                            //    {
+                            //        if (reader.HasRows == false)
+                            //            Logger.ConsoleWriteLine("UNEXPECTED ERROR!!!");
+
+                            //    }
+                            //}
+
+                            foreach (var gearItems in allGearItems)
+                            {
+                                GearData gearData = new GearData();
+                                foreach (var itemSlot in gearItems.Value)
+                                {
+                                    if (itemSlot.Value == 0) continue; //Skip 0s they means no gear was recorded at slot!
+                                    ItemInfo itemInfo = itemTranslation[itemSlot.Value];
+                                    itemInfo.Slot = itemSlot.Key;
+                                    gearData.Items.Add(itemSlot.Key, itemInfo);
+
+                                }
+                                playerHistory.AddToHistory(gearData, gearItems.Key);
+                            }
+                        }
+                    }
                     realmDatabase.PlayersHistory.Add(player.Key, playerHistory);
-                    realmDatabase.Players.Add(player.Key, playerData);
+                    Player playerData = new Player();
+                    if (playerHistory.GetPlayerAtTime(player.Key, _Realm, DateTime.MaxValue, out playerData) == true)
+                    {
+                        realmDatabase.Players.Add(player.Key, playerData);
+                    }
                 }
             }
+
+            Logger.ConsoleWriteLine("Done with loading Database FROM SQL " + _Realm.ToString() + ", it took " + (timer.ElapsedMilliseconds / 1000) + " seconds", ConsoleColor.Green);
             return realmDatabase;
         }
         public static void SaveRealmDatabase(RealmDatabase _RealmDatabase)
@@ -727,6 +804,9 @@ namespace VF_WoWLauncherServer
                     _Connection2 = null;
                 }
             }
+
+            Logger.ConsoleWriteLine("Items duplicate skipped due to Optimizaiton count = " + ingameItemsDuplicateCount);
+            Logger.ConsoleWriteLine("Saved Items Count = " + ingameItemsUniqueCount);
         }
     }
 }

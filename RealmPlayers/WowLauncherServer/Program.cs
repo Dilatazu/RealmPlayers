@@ -43,18 +43,55 @@ namespace VF_WoWLauncherServer
             /*Some Testing*/
             //try
             {
-                Logger.ConsoleWriteLine("Starting Load from SQL!!!");
-                SQLMigration.LoadRealmDatabase(WowRealm.Al_Akir);
-                Logger.ConsoleWriteLine("Done Loading from SQL!!!");
-                
                 RealmDatabase newRealm = new RealmDatabase(WowRealm.Al_Akir);
                 Logger.ConsoleWriteLine("Started Loading!!!");
                 newRealm.LoadDatabase("D:\\VF_RealmPlayersData\\RPPDatabase\\Database\\Al_Akir", new DateTime(2012, 5, 1, 0, 0, 0));//new DateTime(2015, 9, 1, 0, 0, 0));//, 
                 Logger.ConsoleWriteLine("Loading...");
                 newRealm.WaitForLoad(RealmDatabase.LoadStatus.EverythingLoaded);
                 Logger.ConsoleWriteLine("Everything Loaded!!!");
-                SQLMigration.SaveFakeContributorData();
-                SQLMigration.SaveRealmDatabase(newRealm);
+                if(false)
+                {
+                    Logger.ConsoleWriteLine("Starting Saving to SQL!!!");
+                    SQLMigration.SaveFakeContributorData();
+                    SQLMigration.SaveRealmDatabase(newRealm);
+                    Logger.ConsoleWriteLine("Done Saving to SQL!!!");
+                }
+                else
+                {
+                    Logger.ConsoleWriteLine("Starting Load from SQL!!!");
+                    RealmDatabase sqlRealm = SQLMigration.LoadRealmDatabase(WowRealm.Al_Akir);
+                    Logger.ConsoleWriteLine("Done Loading from SQL!!!");
+
+                    Logger.ConsoleWriteLine("Starting Comparing realm datas!!!");
+                    foreach (var player in newRealm.Players)
+                    {
+                        try
+                        {
+                            var playerData = sqlRealm.Players[player.Key];
+                            if (player.Value.Guild.IsSame(playerData.Guild) == false)
+                            {
+                                Logger.ConsoleWriteLine("\"" + player.Key + "\" Guild data was not same!");
+                            }
+                            if (player.Value.Character.IsSame(playerData.Character) == false)
+                            {
+                                Logger.ConsoleWriteLine("\"" + player.Key + "\" Character data was not same!");
+                            }
+                            if (player.Value.Honor.IsSame(playerData.Honor) == false)
+                            {
+                                Logger.ConsoleWriteLine("\"" + player.Key + "\" Honor data was not same!");
+                            }
+                            if (player.Value.Gear.IsSame(playerData.Gear) == false)
+                            {
+                                Logger.ConsoleWriteLine("\"" + player.Key + "\" Gear data was not same!");
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine("EXCEPTION OCCURED\n----------------------\n" + ex.ToString());
+                        }
+                    }
+                    Logger.ConsoleWriteLine("Done comparing realm datas!!!");
+                }
                 Logger.ConsoleWriteLine("Everything Done!!!");
             }
             //catch (Exception ex)
