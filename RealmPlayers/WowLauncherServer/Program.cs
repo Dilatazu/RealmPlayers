@@ -43,6 +43,10 @@ namespace VF_WoWLauncherServer
             /*Some Testing*/
             //try
             {
+                Logger.ConsoleWriteLine("Starting Load from SQL!!!");
+                SQLMigration.LoadRealmDatabase(WowRealm.Al_Akir);
+                Logger.ConsoleWriteLine("Done Loading from SQL!!!");
+                
                 RealmDatabase newRealm = new RealmDatabase(WowRealm.Al_Akir);
                 Logger.ConsoleWriteLine("Started Loading!!!");
                 newRealm.LoadDatabase("D:\\VF_RealmPlayersData\\RPPDatabase\\Database\\Al_Akir", new DateTime(2012, 5, 1, 0, 0, 0));//new DateTime(2015, 9, 1, 0, 0, 0));//, 

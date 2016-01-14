@@ -488,6 +488,160 @@ namespace VF_WoWLauncherServer
                 cmdPlayerData.Close();
             }
         }
+        public static RealmDatabase LoadRealmDatabase(WowRealm _Realm)
+        {
+            RealmDatabase realmDatabase = new RealmDatabase(_Realm);
+
+            using (var conn = new NpgsqlConnection("Host=localhost;Port=5432;Username=RealmPlayers;Password=TestPass;Database=testdb"))
+            {
+                conn.Open();
+                Dictionary<string, int> playerIDs = new Dictionary<string, int>();
+                using (var reader = conn.BeginBinaryExport("COPY (SELECT id, name FROM PlayerTable WHERE realm = " + (int)_Realm + ") TO STDIN BINARY"))
+                {
+                    int u = 0;
+                    while(reader.StartRow() != -1) //-1 means end of data
+                    {
+                        int id = reader.Read<int>(NpgsqlDbType.Integer);
+                        string name = reader.Read<string>(NpgsqlDbType.Text);
+                        playerIDs.Add(name, id);
+                        if (++u % 100 == 0)
+                        {
+                            Logger.ConsoleWriteLine("player load iteration progress(" + u + " / ???)");
+                        }
+                    }
+                    reader.Dispose();
+                }
+
+                int playerProgress = 0;
+                int playerProgressMax = playerIDs.Count;
+                foreach (var player in playerIDs)
+                {
+                    PlayerHistory playerHistory = new PlayerHistory();
+                    Player playerData = new Player();
+                    ++playerProgress;
+                    conn.Close();
+                    conn.Open();
+                    using (var reader = conn.BeginBinaryExport("COPY (SELECT character.uploadid, character.updatetime, character.race, character.class, character.sex, character.level" +
+                        ", guild.guildname, guild.guildrank, guild.guildranknr" +
+                        ", honor.todayhk, honor.todayhonor, honor.yesterdayhk, honor.yesterdayhonor, honor.lifetimehk" +
+                        ", honor2.currentrank, honor2.currentrankprogress, honor2.todaydk, honor2.thisweekhk, honor2.thisweekhonor, honor2.lastweekhk, honor2.lastweekhonor, honor2.lastweekstanding, honor2.lifetimedk, honor2.lifetimehighestrank" +
+                        ", gear.head, gear.neck, gear.shoulder, gear.shirt, gear.chest, gear.belt, gear.legs, gear.feet, gear.wrist, gear.gloves, gear.finger_1, gear.finger_2, gear.trinket_1, gear.trinket_2, gear.back, gear.main_hand, gear.off_hand, gear.ranged, gear.tabard" +
+                        ", arena.team_2v2, arena.team_3v3, arena.team_5v5" +
+                        ", talents.talents" +
+                        " FROM PlayerDataTable character" +
+                        " INNER JOIN PlayerGuildTable guild ON character.GuildInfo = guild.ID" +
+                        " INNER JOIN PlayerHonorTable honor ON character.HonorInfo = honor.ID" +
+                        " INNER JOIN PlayerHonorVanillaTable honor2 ON character.HonorInfo = honor2.PlayerHonorID" +
+                        " INNER JOIN PlayerGearTable gear ON character.GearInfo = gear.ID" +
+                        " INNER JOIN PlayerArenaInfoTable arena ON character.ArenaInfo = arena.ID" +
+                        " INNER JOIN PlayerTalentsInfoTable talents ON character.TalentsInfo = talents.ID" +
+                        " WHERE character.playerid = " + player.Value + ") TO STDIN BINARY"))
+                    {
+                        //Logger.ConsoleWriteLine("Starting read for player \"" + player.Key + "\"!");
+                        int u = 0;
+                        while (reader.StartRow() != -1) //-1 means end of data
+                        {
+                            ++u;
+                            //Logger.ConsoleWriteLine("Reading PlayerDataTable!");
+                            //PlayerDataTable
+                            int uploadID = reader.Read<int>(NpgsqlDbType.Integer);
+                            DateTime updateTime = reader.Read<DateTime>(NpgsqlDbType.Timestamp);
+
+                            UploadID thisUploadID = new UploadID(0, updateTime);
+
+                            CharacterData characterData = new CharacterData();
+                            characterData.Race = (PlayerRace)reader.Read<int>(NpgsqlDbType.Smallint);
+                            characterData.Class = (PlayerClass)reader.Read<int>(NpgsqlDbType.Smallint);
+                            characterData.Sex = (PlayerSex)reader.Read<int>(NpgsqlDbType.Smallint);
+                            characterData.Level = reader.Read<int>(NpgsqlDbType.Smallint);
+                            playerHistory.AddToHistory(characterData, thisUploadID);
+
+                            //JOINED DATA BELOW
+                            //Logger.ConsoleWriteLine("Reading PlayerGuildTable!");
+                            //PlayerGuildTable
+                            if (reader.IsNull) continue;
+                            GuildData guildData = new GuildData();
+                            guildData.GuildName = reader.Read<string>(NpgsqlDbType.Text);
+                            guildData.GuildRank = reader.Read<string>(NpgsqlDbType.Text);
+                            guildData.GuildRankNr = reader.Read<int>(NpgsqlDbType.Smallint);
+                            playerHistory.AddToHistory(guildData, thisUploadID);
+
+                            //Logger.ConsoleWriteLine("Reading PlayerHonorTable!");
+                            //PlayerHonorTable
+                            if (reader.IsNull) continue;
+                            HonorData honorData = new HonorData();
+                            honorData.TodayHK = reader.Read<int>(NpgsqlDbType.Integer);
+                            honorData.TodayHonorTBC = reader.Read<int>(NpgsqlDbType.Integer);
+                            honorData.YesterdayHK = reader.Read<int>(NpgsqlDbType.Integer);
+                            honorData.YesterdayHonor = reader.Read<int>(NpgsqlDbType.Integer);
+                            honorData.LifetimeHK = reader.Read<int>(NpgsqlDbType.Integer);
+
+                            //Logger.ConsoleWriteLine("Reading PlayerHonorVanillaTable!");
+                            //PlayerHonorVanillaTable
+                            if (reader.IsNull) continue;
+                            honorData.CurrentRank = reader.Read<int>(NpgsqlDbType.Smallint);
+                            honorData.CurrentRankProgress = reader.Read<float>(NpgsqlDbType.Real);
+                            honorData.TodayDK = reader.Read<int>(NpgsqlDbType.Integer);
+                            honorData.ThisWeekHK = reader.Read<int>(NpgsqlDbType.Integer);
+                            honorData.ThisWeekHonor = reader.Read<int>(NpgsqlDbType.Integer);
+                            honorData.LastWeekHK = reader.Read<int>(NpgsqlDbType.Integer);
+                            honorData.LastWeekHonor = reader.Read<int>(NpgsqlDbType.Integer);
+                            honorData.LastWeekStanding = reader.Read<int>(NpgsqlDbType.Integer);
+                            honorData.LifetimeDK = reader.Read<int>(NpgsqlDbType.Integer);
+                            honorData.LifetimeHighestRank = reader.Read<int>(NpgsqlDbType.Smallint);
+                            playerHistory.AddToHistory(honorData, thisUploadID);
+
+                            //Logger.ConsoleWriteLine("Reading PlayerGearTable!");
+                            //PlayerGearTable
+                            if (reader.IsNull) continue;
+                            int itemHeadID = reader.Read<int>(NpgsqlDbType.Integer);
+                            int itemNeckID = reader.Read<int>(NpgsqlDbType.Integer);
+                            int itemShoulderID = reader.Read<int>(NpgsqlDbType.Integer);
+                            int itemShirtID = reader.Read<int>(NpgsqlDbType.Integer);
+                            int itemChestID = reader.Read<int>(NpgsqlDbType.Integer);
+                            int itemBeltID = reader.Read<int>(NpgsqlDbType.Integer);
+                            int itemLegsID = reader.Read<int>(NpgsqlDbType.Integer);
+                            int itemFeetID = reader.Read<int>(NpgsqlDbType.Integer);
+                            int itemWristID = reader.Read<int>(NpgsqlDbType.Integer);
+                            int itemGlovesID = reader.Read<int>(NpgsqlDbType.Integer);
+                            int itemFinger1ID = reader.Read<int>(NpgsqlDbType.Integer);
+                            int itemFinger2ID = reader.Read<int>(NpgsqlDbType.Integer);
+                            int itemTrinket1ID = reader.Read<int>(NpgsqlDbType.Integer);
+                            int itemTrinket2ID = reader.Read<int>(NpgsqlDbType.Integer);
+                            int itemBackID = reader.Read<int>(NpgsqlDbType.Integer);
+                            int itemMainHandID = reader.Read<int>(NpgsqlDbType.Integer);
+                            int itemOffHandID = reader.Read<int>(NpgsqlDbType.Integer);
+                            int itemRangedID = reader.Read<int>(NpgsqlDbType.Integer);
+                            int itemTabardID = reader.Read<int>(NpgsqlDbType.Integer);
+
+                            //Logger.ConsoleWriteLine("Reading PlayerArenaInfoTable!");
+                            //PlayerArenaInfoTable
+                            if (reader.IsNull) continue;
+                            int team2v2 = reader.Read<int>(NpgsqlDbType.Integer);
+                            int team3v3 = reader.Read<int>(NpgsqlDbType.Integer);
+                            int team5v5 = reader.Read<int>(NpgsqlDbType.Integer);
+
+                            //Logger.ConsoleWriteLine("Reading PlayerTalentsInfoTable!");
+                            //PlayerTalentsInfoTable
+                            if (reader.IsNull) continue;
+                            string talents = reader.Read<string>(NpgsqlDbType.Text);
+
+                        }
+                        if(playerProgress % 100 == 0)
+                        {
+                            Logger.ConsoleWriteLine("" + playerProgress + " / " + playerProgressMax + ":\tplayer \"" + player.Key + "\"\thad " + u + " updates!" +
+                                "\n\tCharacterHistoryCount=" + playerHistory.CharacterHistory.Count + 
+                                "\n\tHonorHistoryCount=" + playerHistory.HonorHistory.Count +
+                                "\n\tGuildHistoryCount=" + playerHistory.GuildHistory.Count);
+                        }
+                        reader.Dispose();
+                    }
+                    realmDatabase.PlayersHistory.Add(player.Key, playerHistory);
+                    realmDatabase.Players.Add(player.Key, playerData);
+                }
+            }
+            return realmDatabase;
+        }
         public static void SaveRealmDatabase(RealmDatabase _RealmDatabase)
         {
             var realmPlayers = _RealmDatabase.Players;
@@ -564,7 +718,7 @@ namespace VF_WoWLauncherServer
 
                                 if (++u % 100 == 0)
                                 {
-                                    Logger.ConsoleWriteLine("player iteration progress(" + u + " / " + realmPlayersHistory.Count + ")");
+                                    Logger.ConsoleWriteLine("player save iteration progress(" + u + " / " + realmPlayersHistory.Count + ")");
                                 }
                             }
                         }

@@ -84,23 +84,33 @@ namespace VF_RealmPlayersDatabase.PlayerData
                 newTalentPointsData = XMLUtility.GetChildValue(_PlayerNode, "TalentsData", "");
                 _PlayerHistory.AddTalentsToHistory(newTalentPointsData, _Uploader);
             }
+            return Update(_Uploader, _LastSeen, _PlayerHistory, _WowVersion, newCharacter, newGuild, newGear, newHonor, newArena, newTalentPointsData);
+        }
+        public bool Update(UploadID _Uploader/*Contains LastSeen*/, DateTime _LastSeen, PlayerHistory _PlayerHistory, WowVersionEnum _WowVersion
+            , PlayerData.CharacterData _NewCharacter, PlayerData.GuildData _NewGuild, PlayerData.GearData _NewGear, PlayerData.HonorData _NewHonor, PlayerData.ArenaData _NewArena = null, string _NewTalents = null)
+        {
+            if(_WowVersion == WowVersionEnum.TBC)
+            {
+                if(_NewArena != null) _PlayerHistory.AddToHistory(_NewArena, _Uploader);
+                if(_NewTalents != null) _PlayerHistory.AddTalentsToHistory(_NewTalents, _Uploader);
+            }
 
-            _PlayerHistory.AddToHistory(newCharacter, _Uploader);
-            _PlayerHistory.AddToHistory(newGuild, _Uploader);
-            if(newGear.Items.Count > 0)
-                _PlayerHistory.AddToHistory(newGear, _Uploader);
-            _PlayerHistory.AddToHistory(newHonor, _Uploader);
+            _PlayerHistory.AddToHistory(_NewCharacter, _Uploader);
+            _PlayerHistory.AddToHistory(_NewGuild, _Uploader);
+            if (_NewGear.Items.Count > 0)
+                _PlayerHistory.AddToHistory(_NewGear, _Uploader);
+            _PlayerHistory.AddToHistory(_NewHonor, _Uploader);
             if (_LastSeen > LastSeen)
             {
                 Uploader = _Uploader;
                 LastSeen = _LastSeen;
-                Character = newCharacter;
-                Guild = newGuild;
-                if (newGear.Items.Count > 0)
-                    Gear = newGear;
-                Honor = newHonor;
-                Arena = newArena;
-                TalentPointsData = newTalentPointsData;
+                Character = _NewCharacter;
+                Guild = _NewGuild;
+                if (_NewGear.Items.Count > 0)
+                    Gear = _NewGear;
+                Honor = _NewHonor;
+                Arena = _NewArena;
+                TalentPointsData = _NewTalents;
                 return false;
             }
 
