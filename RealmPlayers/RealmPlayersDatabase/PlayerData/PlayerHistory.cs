@@ -106,46 +106,50 @@ namespace VF_RealmPlayersDatabase.PlayerData
             return true;
         }
 
-        public DateTime GetEarliestDateTime()
+        public UploadID GetEarliestUploader()
         {
-            DateTime earliestDateTime = DateTime.MaxValue;
-            if(CharacterHistory.Count > 0)
+            UploadID earlierUploader = UploadID.NullMax();
+            if (CharacterHistory.Count > 0)
             {
-                DateTime dateTime = CharacterHistory.First().Uploader.GetTime();
-                if(dateTime < earliestDateTime)
-                    earliestDateTime = dateTime;
+                UploadID uploader = CharacterHistory.First().Uploader;
+                if (uploader.GetTime() < earlierUploader.GetTime())
+                    earlierUploader = uploader;
             }
             if (GuildHistory.Count > 0)
             {
-                DateTime dateTime = GuildHistory.First().Uploader.GetTime();
-                if (dateTime < earliestDateTime)
-                    earliestDateTime = dateTime;
+                UploadID uploader = GuildHistory.First().Uploader;
+                if (uploader.GetTime() < earlierUploader.GetTime())
+                    earlierUploader = uploader;
             }
             if (HonorHistory.Count > 0)
             {
-                DateTime dateTime = HonorHistory.First().Uploader.GetTime();
-                if (dateTime < earliestDateTime)
-                    earliestDateTime = dateTime;
+                UploadID uploader = HonorHistory.First().Uploader;
+                if (uploader.GetTime() < earlierUploader.GetTime())
+                    earlierUploader = uploader;
             }
             if (GearHistory.Count > 0)
             {
-                DateTime dateTime = GearHistory.First().Uploader.GetTime();
-                if (dateTime < earliestDateTime)
-                    earliestDateTime = dateTime;
+                UploadID uploader = GearHistory.First().Uploader;
+                if (uploader.GetTime() < earlierUploader.GetTime())
+                    earlierUploader = uploader;
             }
             if (ArenaHistory != null && ArenaHistory.Count > 0)
             {
-                DateTime dateTime = ArenaHistory.First().Uploader.GetTime();
-                if (dateTime < earliestDateTime)
-                    earliestDateTime = dateTime;
+                UploadID uploader = ArenaHistory.First().Uploader;
+                if (uploader.GetTime() < earlierUploader.GetTime())
+                    earlierUploader = uploader;
             }
             if (TalentsHistory != null && TalentsHistory.Count > 0)
             {
-                DateTime dateTime = TalentsHistory.First().Uploader.GetTime();
-                if (dateTime < earliestDateTime)
-                    earliestDateTime = dateTime;
+                UploadID uploader = TalentsHistory.First().Uploader;
+                if (uploader.GetTime() < earlierUploader.GetTime())
+                    earlierUploader = uploader;
             }
-            return earliestDateTime;
+            return earlierUploader;
+        }
+        public DateTime GetEarliestDateTime()
+        {
+            return GetEarliestUploader().GetTime();
         }
         public DateTime GetLatestDateTime()
         {
