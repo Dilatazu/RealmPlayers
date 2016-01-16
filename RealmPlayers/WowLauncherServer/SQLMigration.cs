@@ -539,10 +539,15 @@ namespace VF_WoWLauncherServer
                     PlayerHistory playerHistory = new PlayerHistory();
                     ++playerProgress;
 
+                    //List<KeyValuePair<CharacterData, UploadID>> charHistoryItems = new List<KeyValuePair<CharacterData, UploadID>>();
+                    //List<KeyValuePair<HonorData, UploadID>> honorHistoryItems = new List<KeyValuePair<HonorData, UploadID>>();
+                    //List<KeyValuePair<GuildData, UploadID>> guildHistoryItems = new List<KeyValuePair<GuildData, UploadID>>();
+                    //List<KeyValuePair<GearData, UploadID>> gearHistoryItems = new List<KeyValuePair<GearData, UploadID>>();
+
                     List<KeyValuePair<UploadID, List<KeyValuePair<ItemSlot, int>>>> allGearItems = new List<KeyValuePair<UploadID, List<KeyValuePair<ItemSlot, int>>>>();
                     List<int> uniqueGearItems = new List<int>();
                     conn.Open();
-                    using (var reader = conn.BeginBinaryExport("COPY (SELECT character.uploadid, character.updatetime, character.race, character.class, character.sex, character.level" +
+                    using (var reader = conn.BeginBinaryExport("COPY (SELECT upload.id, upload.uploadtime, upload.contributor, character.updatetime, character.race, character.class, character.sex, character.level" +
                         ", guild.guildname, guild.guildrank, guild.guildranknr" +
                         ", honor.todayhk, honor.todayhonor, honor.yesterdayhk, honor.yesterdayhonor, honor.lifetimehk" +
                         ", honor2.currentrank, honor2.currentrankprogress, honor2.todaydk, honor2.thisweekhk, honor2.thisweekhonor, honor2.lastweekhk, honor2.lastweekhonor, honor2.lastweekstanding, honor2.lifetimedk, honor2.lifetimehighestrank" +
@@ -550,13 +555,14 @@ namespace VF_WoWLauncherServer
                         ", arena.team_2v2, arena.team_3v3, arena.team_5v5" +
                         ", talents.talents" +
                         " FROM PlayerDataTable character" +
+                        " INNER JOIN UploadTable upload ON character.UploadID = upload.ID" +
                         " INNER JOIN PlayerGuildTable guild ON character.GuildInfo = guild.ID" +
                         " INNER JOIN PlayerHonorTable honor ON character.HonorInfo = honor.ID" +
                         " INNER JOIN PlayerHonorVanillaTable honor2 ON character.HonorInfo = honor2.PlayerHonorID" +
                         " INNER JOIN PlayerGearTable gear ON character.GearInfo = gear.ID" +
                         " INNER JOIN PlayerArenaInfoTable arena ON character.ArenaInfo = arena.ID" +
                         " INNER JOIN PlayerTalentsInfoTable talents ON character.TalentsInfo = talents.ID" +
-                        " WHERE character.playerid = " + player.Value + ") TO STDIN BINARY"))
+                        " WHERE character.playerid = " + player.Value + " ORDER BY character.updatetime) TO STDIN BINARY"))
                     {
                         //Logger.ConsoleWriteLine("Starting read for player \"" + player.Key + "\"!");
                         int u = 0;
@@ -566,9 +572,12 @@ namespace VF_WoWLauncherServer
                             //Logger.ConsoleWriteLine("Reading PlayerDataTable!");
                             //PlayerDataTable
                             int uploadID = reader.Read<int>(NpgsqlDbType.Integer);
+                            DateTime uploadDate = reader.Read<DateTime>(NpgsqlDbType.Timestamp);
+                            int contributorID = reader.Read<int>(NpgsqlDbType.Integer);
+
                             DateTime updateTime = reader.Read<DateTime>(NpgsqlDbType.Timestamp);
 
-                            UploadID uploader = new UploadID(0, updateTime);
+                            UploadID uploader = new UploadID(contributorID, updateTime);
 
                             CharacterData characterData = new CharacterData();
                             characterData.Race = (PlayerRace)reader.Read<int>(NpgsqlDbType.Smallint);

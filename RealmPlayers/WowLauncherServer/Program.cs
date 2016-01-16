@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 
 using VF_RealmPlayersDatabase;
+using VF_RealmPlayersDatabase.PlayerData;
 using UploaderCommunication = VF_RealmPlayersDatabase.UploaderCommunication;
 
 namespace VF_WoWLauncherServer
@@ -43,17 +44,17 @@ namespace VF_WoWLauncherServer
             /*Some Testing*/
             //try
             {
-                RealmDatabase newRealm = new RealmDatabase(WowRealm.Al_Akir);
+                RealmDatabase binRealm = new RealmDatabase(WowRealm.Al_Akir);
                 Logger.ConsoleWriteLine("Started Loading!!!");
-                newRealm.LoadDatabase("D:\\VF_RealmPlayersData\\RPPDatabase\\Database\\Al_Akir", new DateTime(2012, 5, 1, 0, 0, 0));//new DateTime(2015, 9, 1, 0, 0, 0));//, 
+                binRealm.LoadDatabase("D:\\VF_RealmPlayersData\\RPPDatabase\\Database\\Al_Akir", new DateTime(2012, 5, 1, 0, 0, 0));//new DateTime(2015, 9, 1, 0, 0, 0));//, 
                 Logger.ConsoleWriteLine("Loading...");
-                newRealm.WaitForLoad(RealmDatabase.LoadStatus.EverythingLoaded);
+                binRealm.WaitForLoad(RealmDatabase.LoadStatus.EverythingLoaded);
                 Logger.ConsoleWriteLine("Everything Loaded!!!");
                 if(false)
                 {
                     Logger.ConsoleWriteLine("Starting Saving to SQL!!!");
                     SQLMigration.SaveFakeContributorData();
-                    SQLMigration.SaveRealmDatabase(newRealm);
+                    SQLMigration.SaveRealmDatabase(binRealm);
                     Logger.ConsoleWriteLine("Done Saving to SQL!!!");
                 }
                 else
@@ -63,31 +64,126 @@ namespace VF_WoWLauncherServer
                     Logger.ConsoleWriteLine("Done Loading from SQL!!!");
 
                     Logger.ConsoleWriteLine("Starting Comparing realm datas!!!");
-                    foreach (var player in newRealm.Players)
+                    foreach (var binPlayer in binRealm.Players)
                     {
                         try
                         {
-                            var playerData = sqlRealm.Players[player.Key];
-                            if (player.Value.Guild.IsSame(playerData.Guild) == false)
+                            PlayerHistory binHistory = null;
+                            if(binRealm.PlayersHistory.TryGetValue(binPlayer.Key, out binHistory) == false)
                             {
-                                Logger.ConsoleWriteLine("\"" + player.Key + "\" Guild data was not same!");
+                                Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" did not have history in BINRealm!");
+                                continue;
                             }
-                            if (player.Value.Character.IsSame(playerData.Character) == false)
+                            Player sqlPlayer = null;
+                            if(sqlRealm.Players.TryGetValue(binPlayer.Key, out sqlPlayer) == false)
                             {
-                                Logger.ConsoleWriteLine("\"" + player.Key + "\" Character data was not same!");
+                                Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" did not exist for SQLRealm!");
+                                continue;
                             }
-                            if (player.Value.Honor.IsSame(playerData.Honor) == false)
+                            PlayerHistory sqlHistory = null;
+                            if (sqlRealm.PlayersHistory.TryGetValue(binPlayer.Key, out sqlHistory) == false)
                             {
-                                Logger.ConsoleWriteLine("\"" + player.Key + "\" Honor data was not same!");
+                                Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" did not have history in SQLRealm!");
+                                continue;
                             }
-                            if (player.Value.Gear.IsSame(playerData.Gear) == false)
+                            if (binPlayer.Value.Guild.IsSame(sqlPlayer.Guild) == false)
                             {
-                                Logger.ConsoleWriteLine("\"" + player.Key + "\" Gear data was not same!");
+                                Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" Guild data was not same!");
+                            }
+                            if (binPlayer.Value.Character.IsSame(sqlPlayer.Character) == false)
+                            {
+                                Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" Character data was not same!");
+                            }
+                            if (binPlayer.Value.Honor.IsSame(sqlPlayer.Honor) == false)
+                            {
+                                Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" Honor data was not same!");
+                            }
+                            if (binPlayer.Value.Gear.IsSame(sqlPlayer.Gear) == false)
+                            {
+                                string gearItemsDebugInfo = "GearDifferences:\n";
+                                List<ItemSlot> diffCheckedSlots = new List<ItemSlot>();
+                                foreach(ItemSlot slot in Enum.GetValues(typeof(ItemSlot)))
+                                {
+                                    ItemInfo binItem = null;
+                                    ItemInfo sqlItem = null;
+                                    if (binPlayer.Value.Gear.Items.TryGetValue(slot, out binItem) == false) binItem = null;
+                                    if (sqlPlayer.Gear.Items.TryGetValue(slot, out sqlItem) == false) sqlItem = null;
+
+                                    if (binItem == null && sqlItem != null)
+                                    {
+                                        gearItemsDebugInfo += "\tSQL{" + sqlItem.Slot.ToString() + ", " + sqlItem.ItemID + ", " + sqlItem.EnchantID + ", " + sqlItem.SuffixID + ", " + sqlItem.UniqueID + "}!=" +
+                                            "BIN{null}\n";
+                                    }
+                                    else if(binItem != null && sqlItem == null)
+                                    {
+                                        gearItemsDebugInfo += "\tSQL{null}!=" +
+                                            "BIN{" + binItem.Slot.ToString() + ", " + binItem.ItemID + ", " + binItem.EnchantID + ", " + binItem.SuffixID + ", " + binItem.UniqueID + "}\n";
+                                    }
+                                    else if(binItem != null && sqlItem != null)
+                                    {
+                                        if(sqlItem.IsSame(binItem) == false)
+                                        {
+                                            gearItemsDebugInfo += "\tSQL{" + sqlItem.Slot.ToString() + ", " + sqlItem.ItemID + ", " + sqlItem.EnchantID + ", " + sqlItem.SuffixID + ", " + sqlItem.UniqueID + "}!=" +
+                                                "BIN{" + binItem.Slot.ToString() + ", " + binItem.ItemID + ", " + binItem.EnchantID + ", " + binItem.SuffixID + ", " + binItem.UniqueID + "}\n";
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if(binItem != null || sqlItem != null)
+                                        {
+                                            Logger.ConsoleWriteLine("ERROR\nERROR\nERROR\nERROR\nERROR\nERROR\nERROR\nERROR\n, this is unexpected and should never happen!\nERROR\nERROR\nERROR\nERROR\nERROR\nERROR");
+                                        }
+                                    }
+                                }
+                                Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" Gear data was not same!\n" + gearItemsDebugInfo);
+                            }
+
+                            if (sqlHistory.CharacterHistory.Count != binHistory.CharacterHistory.Count)
+                            {
+                                string charHistoryDebugInfo = "";
+                                for (int i = 0; i < sqlHistory.CharacterHistory.Count; ++i)
+                                {
+                                    charHistoryDebugInfo += "\tSQL[" + i + "]=" + sqlHistory.CharacterHistory[i].GetAsString() + "\n";
+                                }
+                                for (int i = 0; i < binHistory.CharacterHistory.Count; ++i)
+                                {
+                                    charHistoryDebugInfo += "\tBIN[" + i + "]=" + binHistory.CharacterHistory[i].GetAsString() + "\n";
+                                }
+                                Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" Character history was not same! SQLCount(" + sqlHistory.CharacterHistory.Count + ") != BINCount(" + binHistory.CharacterHistory.Count + ")\n" + charHistoryDebugInfo);
+                            }
+                            for(int i = 0; i < sqlHistory.CharacterHistory.Count; ++i)
+                            {
+                                if (i >= binHistory.CharacterHistory.Count)
+                                    break;
+
+                                var sqlChar = sqlHistory.CharacterHistory[i];
+                                var binChar = binHistory.CharacterHistory[i];
+
+                                if(sqlChar.Uploader.GetTime() != binChar.Uploader.GetTime())
+                                {
+                                    Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" Character history item[" + i + "] was not same update datetime! SQL(" + sqlChar.Uploader.GetTime() + ") != BIN(" + binChar.Uploader.GetTime() + ")");
+                                }
+                                else if (sqlChar.Data.IsSame(binChar.Data) == false)
+                                {
+                                    Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" Character history item[" + i + "] was not same update datetime! SQL" + sqlChar.Data.GetAsString() + " != BIN" + binChar.Data.GetAsString() + "");
+                                }
+                            }
+                            if (sqlHistory.HonorHistory.Count != binHistory.HonorHistory.Count)
+                            {
+                                Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" Honor history was not same! SQLCount(" + sqlHistory.HonorHistory.Count + ") != BINCount(" + binHistory.HonorHistory.Count + ")");
+                            }
+                            if (sqlHistory.GearHistory.Count != binHistory.GearHistory.Count)
+                            {
+                                Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" Gear history was not same! SQLCount(" + sqlHistory.GearHistory.Count + ") != BINCount(" + binHistory.GearHistory.Count + ")");
+                            }
+                            if (sqlHistory.GuildHistory.Count != binHistory.GuildHistory.Count)
+                            {
+                                Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" Guild history was not same! SQLCount(" + sqlHistory.GuildHistory.Count + ") != BINCount(" + binHistory.GuildHistory.Count + ")");
                             }
                         }
                         catch (Exception ex)
                         {
-                            Console.WriteLine("EXCEPTION OCCURED\n----------------------\n" + ex.ToString());
+                            Logger.ConsoleWriteLine("EXCEPTION OCCURED for \"" + binPlayer.Key + "\"\n----------------------\n" + ex.ToString());
                         }
                     }
                     Logger.ConsoleWriteLine("Done comparing realm datas!!!");
