@@ -38,6 +38,11 @@ namespace VF_RealmPlayersDatabase.PlayerData
         }
         #endregion
 
+        public string GetAsString()
+        {
+            return "{Data=" + Data.GetAsString() + ", Uploader=" + Uploader.GetAsString() + "}";
+        }
+
         public static bool IsSame(CharacterDataHistoryItem _Item1, CharacterDataHistoryItem _Item2)
         {
             return _Item1.Data.IsSame(_Item2.Data);

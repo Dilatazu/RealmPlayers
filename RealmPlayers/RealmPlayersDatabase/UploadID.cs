@@ -52,6 +52,11 @@ namespace VF_RealmPlayersDatabase
             return new UploadID(-1, DateTime.MaxValue);
         }
 
+        public string GetAsString()
+        {
+            return "{ContributorID=" + ContributorID + ", Time=" + Time.ToDateTimeStr() + "}";
+        }
+
         #region Serializing
         public UploadID(SerializationInfo _Info, StreamingContext _Context)
         {
