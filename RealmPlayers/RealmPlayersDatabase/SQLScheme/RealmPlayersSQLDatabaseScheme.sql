@@ -1,31 +1,25 @@
 
-TRUNCATE TABLE PlayerTable;
+DROP TABLE PlayerMountTable;
+DROP TABLE PlayerPetTable;
+DROP TABLE PlayerCompanionTable;
 DROP TABLE PlayerTable;
-TRUNCATE TABLE PlayerDataTable;
 DROP TABLE PlayerDataTable;
-TRUNCATE TABLE UploadTable;
+
 DROP TABLE UploadTable;
-TRUNCATE TABLE ContributorTable;
 DROP TABLE ContributorTable;
-TRUNCATE TABLE PlayerTalentsInfoTable;
 DROP TABLE PlayerTalentsInfoTable;
-TRUNCATE TABLE PlayerArenaInfoTable;
 DROP TABLE PlayerArenaInfoTable;
-TRUNCATE TABLE PlayerArenaDataTable;
 DROP TABLE PlayerArenaDataTable;
-TRUNCATE TABLE PlayerGearGemsTable;
 DROP TABLE PlayerGearGemsTable;
-TRUNCATE TABLE PlayerGearTable;
 DROP TABLE PlayerGearTable;
-TRUNCATE TABLE IngameItemTable;
-DROP TABLE IngameItemTable;
-TRUNCATE TABLE PlayerHonorVanillaTable;
 DROP TABLE PlayerHonorVanillaTable;
-TRUNCATE TABLE PlayerHonorTable;
 DROP TABLE PlayerHonorTable;
-TRUNCATE TABLE PlayerGuildTable;
 DROP TABLE PlayerGuildTable;
 
+DROP TABLE IngameItemTable;
+DROP TABLE IngameMountTable;
+DROP TABLE IngamePetTable;
+DROP TABLE IngameCompanionTable;
 
 BEGIN;
 

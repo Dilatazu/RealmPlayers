@@ -352,28 +352,36 @@ namespace VF_WoWLauncherServer
             public int IngameItemIDCounter = 1;
             public int ArenaDataIDCounter = 1;
 
-            public int UploadTableIDCounter = 0;
-
             public int IngameMountIDCounter = 1;
             public int IngamePetIDCounter = 1;
             public int IngameCompanionIDCounter = 1;
 
-            List<KeyValuePair<UploadID, int>> m_AddedUploadIDs = new List<KeyValuePair<UploadID, int>>();
-            public int GenerateUploadTableID(UploadID _Uploader, NpgsqlConnection _Conn)
-            {
-                int foundIndex = m_AddedUploadIDs.FindIndex((_V) => _V.Key.GetContributorID() == _Uploader.GetContributorID() && _V.Key.GetTime() == _Uploader.GetTime());
-                if (foundIndex != -1) return m_AddedUploadIDs[foundIndex].Value;
+            int m_UploadTableIDCounter = 0;
 
-                int currUploadTableID = UploadTableIDCounter++;
-                using (var cmdUpload = _Conn.BeginBinaryImport("COPY UploadTable (id, uploadtime, contributor) FROM STDIN BINARY"))
+            Dictionary<UploadID, int> m_AddedUploadIDs = new Dictionary<UploadID, int>();
+            public int GenerateUploadTableID(UploadID _Uploader, NpgsqlConnection _Conn, bool _ForceNew = false)
+            {
+                int currUploadTableID;
+                if(_ForceNew == true || m_AddedUploadIDs.TryGetValue(_Uploader, out currUploadTableID) == false)
                 {
-                    cmdUpload.StartRow();
-                    cmdUpload.Write(currUploadTableID, NpgsqlDbType.Integer);
-                    cmdUpload.Write(_Uploader.GetTime(), NpgsqlDbType.Timestamp);
-                    cmdUpload.Write(_Uploader.GetContributorID(), NpgsqlDbType.Integer);
-                    cmdUpload.Close();
+                    currUploadTableID = m_UploadTableIDCounter++;
+                    using (var cmdUpload = _Conn.BeginBinaryImport("COPY UploadTable (id, uploadtime, contributor) FROM STDIN BINARY"))
+                    {
+                        cmdUpload.StartRow();
+                        cmdUpload.Write(currUploadTableID, NpgsqlDbType.Integer);
+                        cmdUpload.Write(_Uploader.GetTime(), NpgsqlDbType.Timestamp);
+                        cmdUpload.Write(_Uploader.GetContributorID(), NpgsqlDbType.Integer);
+                        cmdUpload.Close();
+                    }
+                    if(_ForceNew == true)
+                    {
+                        m_AddedUploadIDs.AddOrSet(_Uploader, currUploadTableID);
+                    }
+                    else
+                    {
+                        m_AddedUploadIDs.Add(_Uploader, currUploadTableID);
+                    }
                 }
-                m_AddedUploadIDs.Add(new KeyValuePair<UploadID, int>(_Uploader, currUploadTableID));
                 return currUploadTableID;
             }
         }
@@ -449,7 +457,6 @@ namespace VF_WoWLauncherServer
             
             using (var cmdPlayerData = _Connection.BeginBinaryImport("COPY PlayerDataTable (playerid, uploadid, updatetime, race, class, sex, level, guildinfo, honorinfo, gearinfo, arenainfo, talentsinfo) FROM STDIN BINARY"))
             {
-                int uploadTableIDCounter = _SQLIDCounters.UploadTableIDCounter;
                 while (true)
                 {
                     int nextIterateIndex = itemNextUploadIDs.IndexOfMin((_V) => _V.GetTime());
@@ -474,17 +481,9 @@ namespace VF_WoWLauncherServer
                     UploadID uploader = itemHistoryItems[nextIterateIndex][itemCurrIndexs[nextIterateIndex]].Key;
                     if (uploader.IsNull() == false)
                     {
-                        int currUploadTableID = uploadTableIDCounter++;
+                        int currUploadTableID = _SQLIDCounters.GenerateUploadTableID(uploader, _Connection2, true);
                         _ResultPlayerUploadIDs.Add(new KeyValuePair<UploadID, int>(uploader, currUploadTableID));
 
-                        using (var cmdUpload = _Connection2.BeginBinaryImport("COPY UploadTable (id, uploadtime, contributor) FROM STDIN BINARY"))
-                        {
-                            cmdUpload.StartRow();
-                            cmdUpload.Write(currUploadTableID, NpgsqlDbType.Integer);
-                            cmdUpload.Write(uploader.GetTime(), NpgsqlDbType.Timestamp);
-                            cmdUpload.Write(uploader.GetContributorID(), NpgsqlDbType.Integer);
-                            cmdUpload.Close();
-                        }
                         int guildItemID = itemHistoryItems[GUILD_INDEX][itemCurrIndexs[GUILD_INDEX]].Value;
                         int honorItemID = itemHistoryItems[HONOR_INDEX][itemCurrIndexs[HONOR_INDEX]].Value;
                         int gearItemID = itemHistoryItems[GEAR_INDEX][itemCurrIndexs[GEAR_INDEX]].Value;
@@ -524,7 +523,6 @@ namespace VF_WoWLauncherServer
                         Logger.ConsoleWriteLine("This is unexpected, should never happen!!!");
                     }
                 }
-                _SQLIDCounters.UploadTableIDCounter = uploadTableIDCounter;
                 cmdPlayerData.Close();
             }
         }
@@ -539,7 +537,7 @@ namespace VF_WoWLauncherServer
             if (_ExtraData == null)
                 return;
 
-            using (var cmdPlayerMount = _Connection.BeginBinaryImport("COPY PlayerMountTable (playerid, uploadid, mountid) FROM STDIN BINARY"))
+            using (var cmdPlayerMount = _Connection.BeginBinaryImport("COPY PlayerMountTable (playerid, uploadid, updatetime, mountid) FROM STDIN BINARY"))
             {
                 foreach (var playerMount in _ExtraData.Mounts)
                 {
@@ -566,7 +564,7 @@ namespace VF_WoWLauncherServer
                 cmdPlayerMount.Close();
             }
 
-            using (var cmdPlayerPet = _Connection.BeginBinaryImport("COPY PlayerPetTable (playerid, uploadid, petid) FROM STDIN BINARY"))
+            using (var cmdPlayerPet = _Connection.BeginBinaryImport("COPY PlayerPetTable (playerid, uploadid, updatetime, petid) FROM STDIN BINARY"))
             {
                 foreach (var playerPet in _ExtraData.Pets)
                 {
@@ -596,18 +594,18 @@ namespace VF_WoWLauncherServer
                 cmdPlayerPet.Close();
             }
 
-            using (var cmdPlayerCompanion = _Connection.BeginBinaryImport("COPY PlayerCompanionTable (playerid, uploadid, companionid) FROM STDIN BINARY"))
+            using (var cmdPlayerCompanion = _Connection.BeginBinaryImport("COPY PlayerCompanionTable (playerid, uploadid, updatetime, companionid) FROM STDIN BINARY"))
             {
                 foreach (var playerCompanion in _ExtraData.Companions)
                 {
                     int currCompanionID = _SQLIDCounters.IngameCompanionIDCounter++;
-                    using (var cmdPets = _Connection2.BeginBinaryImport("COPY IngameCompanionTable (id, name, level) FROM STDIN BINARY"))
+                    using (var cmdCompanions = _Connection2.BeginBinaryImport("COPY IngameCompanionTable (id, name, level) FROM STDIN BINARY"))
                     {
-                        cmdPets.StartRow();
-                        cmdPets.Write(currCompanionID, NpgsqlDbType.Integer);
-                        cmdPets.Write(playerCompanion.Name, NpgsqlDbType.Text);
-                        cmdPets.Write(playerCompanion.Level, NpgsqlDbType.Smallint);
-                        cmdPets.Close();
+                        cmdCompanions.StartRow();
+                        cmdCompanions.Write(currCompanionID, NpgsqlDbType.Integer);
+                        cmdCompanions.Write(playerCompanion.Name, NpgsqlDbType.Text);
+                        cmdCompanions.Write(playerCompanion.Level, NpgsqlDbType.Smallint);
+                        cmdCompanions.Close();
                     }
 
                     foreach (var uploader in playerCompanion.Uploaders)
@@ -650,8 +648,17 @@ namespace VF_WoWLauncherServer
                             connPrivate.Open();
                             foreach (var playerHistory in realmPlayersHistory)
                             {
-                                var thisPlayer = realmPlayers[playerHistory.Key];
-                                var thisPlayerExtraData = realmPlayersExtraData[playerHistory.Key];
+                                Player thisPlayer;
+                                if (realmPlayers.TryGetValue(playerHistory.Key, out thisPlayer) == false)
+                                {
+                                    thisPlayer = null;
+                                    Logger.ConsoleWriteLine("Player \"" + playerHistory.Key + "\" was not found!!!", ConsoleColor.Red);
+                                }
+
+                                ExtraData thisPlayerExtraData;
+                                if (realmPlayersExtraData.TryGetValue(playerHistory.Key, out thisPlayerExtraData) == false)
+                                    thisPlayerExtraData = null;
+
                                 UploadID earliestUploader = playerHistory.Value.GetEarliestUploader();
                                 if (thisPlayer.Uploader.GetTime() < earliestUploader.GetTime())
                                     earliestUploader = thisPlayer.Uploader;
@@ -695,7 +702,8 @@ namespace VF_WoWLauncherServer
                                         cmdPlayer.Write(_RealmDatabase.Realm, NpgsqlDbType.Integer);
                                         cmdPlayer.Write(uploadItems.Last().Value, NpgsqlDbType.Integer);
                                     }
-                                    UploadPlayerExtraData(conn, ref counters, WowVersionEnum.Vanilla, currPlayerTableID, playerHistory.Key, thisPlayerExtraData);
+                                    if(thisPlayerExtraData != null)
+                                        UploadPlayerExtraData(conn, ref counters, WowVersionEnum.Vanilla, currPlayerTableID, playerHistory.Key, thisPlayerExtraData);
                                 }
                                 else
                                 {
@@ -934,6 +942,60 @@ namespace VF_WoWLauncherServer
                     if (playerHistory.GetPlayerAtTime(player.Key, _Realm, DateTime.MaxValue, out playerData) == true)
                     {
                         realmDatabase.Players.Add(player.Key, playerData);
+                    }
+
+                    {
+                        ExtraData extraData = new ExtraData();
+                        conn.Open();
+                        using (var reader = conn.BeginBinaryExport("COPY (SELECT upload.contributor, playerseen.updatetime, mount.name FROM playermounttable playerseen" +
+                            " INNER JOIN ingamemounttable mount ON playerseen.mountid = mount.ID" +
+                            " INNER JOIN uploadtable upload ON playerseen.uploadid = upload.ID" +
+                            " WHERE playerseen.playerid = " + player.Value + ") TO STDIN BINARY"))
+                        {
+                            while (reader.StartRow() != -1)
+                            {
+                                int contributorID = reader.Read<int>(NpgsqlDbType.Integer);
+                                DateTime updateTime = reader.Read<DateTime>(NpgsqlDbType.Timestamp);
+                                string mountName = reader.Read<string>(NpgsqlDbType.Text);
+                                extraData._AddMount(mountName, new UploadID(contributorID, updateTime));
+                            }
+                        }
+                        conn.Close();
+                        conn.Open();
+                        using (var reader = conn.BeginBinaryExport("COPY (SELECT upload.contributor, playerseen.updatetime, pet.name, pet.level, pet.creaturefamily, pet.creaturetype FROM playerpettable playerseen" +
+                            " INNER JOIN ingamepettable pet ON playerseen.petid = pet.ID" +
+                            " INNER JOIN uploadtable upload ON playerseen.uploadid = upload.ID" +
+                            " WHERE playerseen.playerid = " + player.Value + ") TO STDIN BINARY"))
+                        {
+                            while (reader.StartRow() != -1)
+                            {
+                                int contributorID = reader.Read<int>(NpgsqlDbType.Integer);
+                                DateTime updateTime = reader.Read<DateTime>(NpgsqlDbType.Timestamp);
+                                string petName = reader.Read<string>(NpgsqlDbType.Text);
+                                int petLevel = reader.Read<int>(NpgsqlDbType.Smallint);
+                                string petFamily = reader.Read<string>(NpgsqlDbType.Text);
+                                string petType = reader.Read<string>(NpgsqlDbType.Text);
+                                extraData._AddPet(petName, petLevel, petFamily, petType, new UploadID(contributorID, updateTime));
+                            }
+                        }
+                        conn.Close();
+                        conn.Open();
+                        using (var reader = conn.BeginBinaryExport("COPY (SELECT upload.contributor, playerseen.updatetime, companion.name, companion.level FROM playercompaniontable playerseen" +
+                            " INNER JOIN ingamecompaniontable companion ON playerseen.companionid = companion.ID" +
+                            " INNER JOIN uploadtable upload ON playerseen.uploadid = upload.ID" +
+                            " WHERE playerseen.playerid = " + player.Value + ") TO STDIN BINARY"))
+                        {
+                            while (reader.StartRow() != -1)
+                            {
+                                int contributorID = reader.Read<int>(NpgsqlDbType.Integer);
+                                DateTime updateTime = reader.Read<DateTime>(NpgsqlDbType.Timestamp);
+                                string companionName = reader.Read<string>(NpgsqlDbType.Text);
+                                int companionLevel = reader.Read<int>(NpgsqlDbType.Smallint);
+                                extraData._AddCompanion(companionName, companionLevel, new UploadID(contributorID, updateTime));
+                            }
+                        }
+                        conn.Close();
+                        realmDatabase.PlayersExtraData.Add(player.Key, extraData);
                     }
                 }
             }

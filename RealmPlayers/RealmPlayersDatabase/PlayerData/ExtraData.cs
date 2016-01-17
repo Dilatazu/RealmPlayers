@@ -145,7 +145,7 @@ namespace VF_RealmPlayersDatabase.PlayerData
         {
             AddData(_Uploader, XMLUtility.GetChildValue(_PlayerNode, "ExtraData", ""));
         }
-        private void AddMount(string _MountName, UploadID _Uploader)
+        public void _AddMount(string _MountName, UploadID _Uploader)
         {
             var mountIndex = Mounts.FindIndex((_Value) => _Value.Mount == _MountName);
             if (mountIndex != -1)
@@ -157,7 +157,7 @@ namespace VF_RealmPlayersDatabase.PlayerData
                 Mounts.Add(new MountData(_MountName, _Uploader));
             }
         }
-        private void AddPet(string _PetData, UploadID _Uploader)
+        private void _AddPet(string _PetData, UploadID _Uploader)
         {
             var petDatas = _PetData.Split(':');
             if (petDatas.Length != 4)
@@ -170,17 +170,21 @@ namespace VF_RealmPlayersDatabase.PlayerData
             string petFamily = petDatas[2];
             string petType = petDatas[3];
 
-            var petIndex = Pets.FindIndex((_Value) => (_Value.Name == petName && _Value.Level == petLevel && _Value.CreatureFamily == petFamily && _Value.CreatureType == petType));
+            _AddPet(petName, petLevel, petFamily, petType, _Uploader);
+        }
+        public void _AddPet(string _PetName, int _PetLevel, string _PetFamily, string _PetType, UploadID _Uploader)
+        {
+            var petIndex = Pets.FindIndex((_Value) => (_Value.Name == _PetName && _Value.Level == _PetLevel && _Value.CreatureFamily == _PetFamily && _Value.CreatureType == _PetType));
             if (petIndex != -1)
             {
                 Pets[petIndex].AddUploader(_Uploader);
             }
             else
             {
-                Pets.Add(new PetData(petName, petLevel, petFamily, petType, _Uploader));
+                Pets.Add(new PetData(_PetName, _PetLevel, _PetFamily, _PetType, _Uploader));
             }
         }
-        private void AddCompanion(string _CompanionData, UploadID _Uploader)
+        private void _AddCompanion(string _CompanionData, UploadID _Uploader)
         {
             var companionDatas = _CompanionData.Split(':');
             if (companionDatas.Length != 2)
@@ -191,14 +195,18 @@ namespace VF_RealmPlayersDatabase.PlayerData
             if (int.TryParse(companionDatas[1], out companionLevel) == false)
                 return;
 
-            var companionIndex = Companions.FindIndex((_Value) => (_Value.Name == companionName && _Value.Level == companionLevel));
+            _AddCompanion(companionName, companionLevel, _Uploader);
+        }
+        public void _AddCompanion(string _CompanionName, int _CompanionLevel, UploadID _Uploader)
+        {
+            var companionIndex = Companions.FindIndex((_Value) => (_Value.Name == _CompanionName && _Value.Level == _CompanionLevel));
             if (companionIndex != -1)
             {
                 Companions[companionIndex].AddUploader(_Uploader);
             }
             else
             {
-                Companions.Add(new CompanionData(companionName, companionLevel, _Uploader));
+                Companions.Add(new CompanionData(_CompanionName, _CompanionLevel, _Uploader));
             }
         }
         public void AddData(UploadID _Uploader, string _ExtraDataString)
@@ -212,17 +220,17 @@ namespace VF_RealmPlayersDatabase.PlayerData
                     if (extraData.StartsWith("M:"))
                     {
                         //Mount
-                        AddMount(extraData.Substring(2), _Uploader);
+                        _AddMount(extraData.Substring(2), _Uploader);
                     }
                     else if (extraData.StartsWith("P:"))
                     {
                         //Pet
-                        AddPet(extraData.Substring(2), _Uploader);
+                        _AddPet(extraData.Substring(2), _Uploader);
                     }
                     else if (extraData.StartsWith("C:"))
                     {
                         //Companion
-                        AddCompanion(extraData.Substring(2), _Uploader);
+                        _AddCompanion(extraData.Substring(2), _Uploader);
                     }
                 }
             }
