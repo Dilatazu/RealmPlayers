@@ -111,8 +111,9 @@ namespace VF_WoWLauncherServer
 
                                     if (binItem == null && sqlItem != null)
                                     {
-                                        gearItemsDebugInfo += "\tSQL{" + sqlItem.Slot.ToString() + ", " + sqlItem.ItemID + ", " + sqlItem.EnchantID + ", " + sqlItem.SuffixID + ", " + sqlItem.UniqueID + "}!=" +
-                                            "BIN{null}\n";
+                                        //lets just assume this is not an error!
+                                        //gearItemsDebugInfo += "\tSQL{" + sqlItem.Slot.ToString() + ", " + sqlItem.ItemID + ", " + sqlItem.EnchantID + ", " + sqlItem.SuffixID + ", " + sqlItem.UniqueID + "}!=" +
+                                        //    "BIN{null}\n";
                                     }
                                     else if(binItem != null && sqlItem == null)
                                     {
@@ -138,47 +139,177 @@ namespace VF_WoWLauncherServer
                                 Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" Gear data was not same!\n" + gearItemsDebugInfo);
                             }
 
-                            if (sqlHistory.CharacterHistory.Count != binHistory.CharacterHistory.Count)
+                            if (sqlHistory.CharacterHistory.Count > binHistory.CharacterHistory.Count || sqlHistory.CharacterHistory.Count == 0)
                             {
+                                Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" Character history was not same! SQLCount(" + sqlHistory.CharacterHistory.Count + ") > BINCount(" + binHistory.CharacterHistory.Count + ")\n");
+                            }
+                            { 
                                 string charHistoryDebugInfo = "";
-                                for (int i = 0; i < sqlHistory.CharacterHistory.Count; ++i)
+                                foreach (var binItem in binHistory.CharacterHistory)
                                 {
-                                    charHistoryDebugInfo += "\tSQL[" + i + "]=" + sqlHistory.CharacterHistory[i].GetAsString() + "\n";
+                                    var sqlItem = sqlHistory.GetCharacterItemAtTime(binItem.Uploader.GetTime());
+                                    if (sqlItem.Data.IsSame(binItem.Data) == false)
+                                    {
+                                        charHistoryDebugInfo += "\tSQL" + sqlItem.GetAsString() + " != BIN" + binItem.GetAsString() + "\n";
+                                    }
                                 }
-                                for (int i = 0; i < binHistory.CharacterHistory.Count; ++i)
+                                if (charHistoryDebugInfo != "")
                                 {
-                                    charHistoryDebugInfo += "\tBIN[" + i + "]=" + binHistory.CharacterHistory[i].GetAsString() + "\n";
+                                    Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" Character history was not same!\n" + charHistoryDebugInfo);
                                 }
-                                Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" Character history was not same! SQLCount(" + sqlHistory.CharacterHistory.Count + ") != BINCount(" + binHistory.CharacterHistory.Count + ")\n" + charHistoryDebugInfo);
                             }
-                            for(int i = 0; i < sqlHistory.CharacterHistory.Count; ++i)
+                            
+                            if (sqlHistory.HonorHistory.Count > binHistory.HonorHistory.Count || sqlHistory.HonorHistory.Count == 0)
                             {
-                                if (i >= binHistory.CharacterHistory.Count)
-                                    break;
+                                Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" Honor history was not same! SQLCount(" + sqlHistory.HonorHistory.Count + ") > BINCount(" + binHistory.HonorHistory.Count + ")");
+                            }
+                            {
+                                string honorHistoryDebugInfo = "";
+                                foreach (var binItem in binHistory.HonorHistory)
+                                {
+                                    var sqlItem = sqlHistory.GetHonorItemAtTime(binItem.Uploader.GetTime());
+                                    if (sqlItem.Data.IsSame(binItem.Data) == false)
+                                    {
+                                        honorHistoryDebugInfo += "\tSQL" + sqlItem.GetAsString() + " != BIN" + binItem.GetAsString() + "\n";
+                                    }
+                                }
+                                if (honorHistoryDebugInfo != "")
+                                {
+                                    Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" Honor history was not same!\n" + honorHistoryDebugInfo);
+                                }
+                            }
+                            if (sqlHistory.GearHistory.Count > binHistory.GearHistory.Count || sqlHistory.GearHistory.Count == 0)
+                            {
+                                Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" Gear history was not same! SQLCount(" + sqlHistory.GearHistory.Count + ") > BINCount(" + binHistory.GearHistory.Count + ")");
+                            }
+                            {
+                                string gearHistoryDebugInfo = "";
+                                foreach (var binItem in binHistory.GearHistory)
+                                {
+                                    var sqlItem = sqlHistory.GetGearItemAtTime(binItem.Uploader.GetTime());
+                                    if (sqlItem.Data.IsSame(binItem.Data) == false)
+                                    {
+                                        TimeSpan closestTimeFound = TimeSpan.MaxValue;
+                                        foreach(var sqlItem2 in sqlHistory.GearHistory)
+                                        {
+                                            if(sqlItem2.Data.IsSame(binItem.Data) == true)
+                                            {
+                                                TimeSpan thisTimeSpan = (sqlItem2.Uploader.GetTime() - binItem.Uploader.GetTime());
+                                                if (thisTimeSpan.TotalSeconds < 0)
+                                                    thisTimeSpan = thisTimeSpan.Negate();
 
-                                var sqlChar = sqlHistory.CharacterHistory[i];
-                                var binChar = binHistory.CharacterHistory[i];
+                                                if (thisTimeSpan < closestTimeFound)
+                                                    closestTimeFound = thisTimeSpan;
+                                            }
+                                        }
+                                        if(closestTimeFound == TimeSpan.MaxValue)
+                                        {
+                                            gearHistoryDebugInfo += "\tSQL != BIN DiffString: " + sqlItem.GetDiffString(binItem) + "\n";
+                                        }
+                                        else
+                                        {
+                                            if(closestTimeFound.TotalSeconds > 5)
+                                            {
+                                                if (closestTimeFound.TotalHours <= 1)
+                                                {
+                                                    gearHistoryDebugInfo += "\tSQL != BIN TIME SECDIFF: " + (int)closestTimeFound.TotalSeconds + " seconds\n";
+                                                }
+                                                else if (closestTimeFound.TotalDays <= 1)
+                                                {
+                                                    gearHistoryDebugInfo += "\tSQL != BIN TIME MINDIFF: " + (int)closestTimeFound.TotalMinutes + " minutes\n";
+                                                }
+                                                else
+                                                {
+                                                    gearHistoryDebugInfo += "\tSQL != BIN TIME HOURDIFF: " + (int)closestTimeFound.TotalHours + " hours\n";
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                if (gearHistoryDebugInfo != "")
+                                {
+                                    Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" Gear history was not same!\n" + gearHistoryDebugInfo);
+                                }
+                            }
+                            if (sqlHistory.GuildHistory.Count > binHistory.GuildHistory.Count || sqlHistory.GuildHistory.Count == 0)
+                            {
+                                Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" Guild history was not same! SQLCount(" + sqlHistory.GuildHistory.Count + ") > BINCount(" + binHistory.GuildHistory.Count + ")");
+                            }
+                            {
+                                string guildHistoryDebugInfo = "";
+                                foreach (var binItem in binHistory.GuildHistory)
+                                {
+                                    var sqlItem = sqlHistory.GetGuildItemAtTime(binItem.Uploader.GetTime());
+                                    if (sqlItem.Data.IsSame(binItem.Data) == false)
+                                    {
+                                        guildHistoryDebugInfo += "\tSQL" + sqlItem.GetAsString() + " != BIN" + binItem.GetAsString() + "\n";
+                                    }
+                                }
+                                if (guildHistoryDebugInfo != "")
+                                {
+                                    Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" Guild history was not same!\n" + guildHistoryDebugInfo);
+                                }
+                            }
+                            if(sqlHistory.ArenaHistory != null && binHistory.ArenaHistory != null)
+                            {
+                                if (sqlHistory.ArenaHistory.Count > binHistory.ArenaHistory.Count || sqlHistory.ArenaHistory.Count == 0 && binHistory.ArenaHistory.Count != 0)
+                                {
+                                    Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" Arena history was not same! SQLCount(" + sqlHistory.ArenaHistory.Count + ") > BINCount(" + binHistory.ArenaHistory.Count + ")");
+                                }
+                                {
+                                    string arenaHistoryDebugInfo = "";
+                                    foreach (var binItem in binHistory.ArenaHistory)
+                                    {
+                                        var sqlItem = sqlHistory.GetArenaItemAtTime(binItem.Uploader.GetTime());
+                                        if (sqlItem.Data.IsSame(binItem.Data) == false)
+                                        {
+                                            arenaHistoryDebugInfo += "\tSQL" + sqlItem.GetAsString() + " != BIN" + binItem.GetAsString() + "\n";
+                                        }
+                                    }
+                                    if (arenaHistoryDebugInfo != "")
+                                    {
+                                        Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" Arena history was not same!\n" + arenaHistoryDebugInfo);
+                                    }
+                                }
+                            }
+                            else if (sqlHistory.ArenaHistory != null && binHistory.ArenaHistory == null)
+                            {
+                                Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" Arena history was not same! SQLCount(" + sqlHistory.ArenaHistory.Count + ") != BIN(null)");
+                            }
+                            else if (sqlHistory.ArenaHistory == null && binHistory.ArenaHistory != null)
+                            {
+                                Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" Arena history was not same! SQL(null) != BINCount(" + binHistory.ArenaHistory.Count + ")");
+                            }
 
-                                if(sqlChar.Uploader.GetTime() != binChar.Uploader.GetTime())
+                            if(sqlHistory.TalentsHistory != null && binHistory.TalentsHistory != null)
+                            {
+                                if (sqlHistory.TalentsHistory.Count > binHistory.TalentsHistory.Count || sqlHistory.TalentsHistory.Count == 0 && binHistory.TalentsHistory.Count != 0)
                                 {
-                                    Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" Character history item[" + i + "] was not same update datetime! SQL(" + sqlChar.Uploader.GetTime() + ") != BIN(" + binChar.Uploader.GetTime() + ")");
+                                    Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" Talents history was not same! SQLCount(" + sqlHistory.TalentsHistory.Count + ") > BINCount(" + binHistory.TalentsHistory.Count + ")");
                                 }
-                                else if (sqlChar.Data.IsSame(binChar.Data) == false)
                                 {
-                                    Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" Character history item[" + i + "] was not same update datetime! SQL" + sqlChar.Data.GetAsString() + " != BIN" + binChar.Data.GetAsString() + "");
+                                    string talentsHistoryDebugInfo = "";
+                                    foreach (var binItem in binHistory.TalentsHistory)
+                                    {
+                                        var sqlItem = sqlHistory.GetTalentsItemAtTime(binItem.Uploader.GetTime());
+                                        if (sqlItem.Data != binItem.Data)
+                                        {
+                                            talentsHistoryDebugInfo += "\tSQL" + sqlItem.GetAsString() + " != BIN" + binItem.GetAsString() + "\n";
+                                        }
+                                    }
+                                    if (talentsHistoryDebugInfo != "")
+                                    {
+                                        Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" Talents history was not same!\n" + talentsHistoryDebugInfo);
+                                    }
                                 }
                             }
-                            if (sqlHistory.HonorHistory.Count != binHistory.HonorHistory.Count)
+                            else if ((sqlHistory.TalentsHistory != null && sqlHistory.TalentsHistory.Count > 0) && binHistory.TalentsHistory == null)
                             {
-                                Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" Honor history was not same! SQLCount(" + sqlHistory.HonorHistory.Count + ") != BINCount(" + binHistory.HonorHistory.Count + ")");
+                                Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" Talents history was not same! SQLCount(" + sqlHistory.TalentsHistory.Count + ") != BIN(null)");
                             }
-                            if (sqlHistory.GearHistory.Count != binHistory.GearHistory.Count)
+                            else if (sqlHistory.TalentsHistory == null && (binHistory.TalentsHistory != null && binHistory.TalentsHistory.Count > 0))
                             {
-                                Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" Gear history was not same! SQLCount(" + sqlHistory.GearHistory.Count + ") != BINCount(" + binHistory.GearHistory.Count + ")");
-                            }
-                            if (sqlHistory.GuildHistory.Count != binHistory.GuildHistory.Count)
-                            {
-                                Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" Guild history was not same! SQLCount(" + sqlHistory.GuildHistory.Count + ") != BINCount(" + binHistory.GuildHistory.Count + ")");
+                                Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" Talents history was not same! SQL(null) != BINCount(" + binHistory.TalentsHistory.Count + ")");
                             }
                         }
                         catch (Exception ex)

@@ -40,6 +40,11 @@ namespace VF_RealmPlayersDatabase.PlayerData
         [ProtoMember(14)]
         public int LifetimeHighestRank = 0;
 
+        public string GetAsString()
+        {
+            return "{" + CurrentRank + ", " + CurrentRankProgress + ", " + TodayHK + ", " + TodayDK + ", " + YesterdayHK + ", " + YesterdayHonor + ", " + ThisWeekHK + ", " + ThisWeekHonor + ", " + LastWeekHK + ", " + LastWeekHonor + ", " + LastWeekStanding + ", " + LifetimeHK + ", " + LifetimeDK + ", " + LifetimeHighestRank + "}";
+        }
+
         public int TodayHonorTBC
         {
             //Använd ThisWeekHonor, denna används inte i Vanilla så det är lungt
