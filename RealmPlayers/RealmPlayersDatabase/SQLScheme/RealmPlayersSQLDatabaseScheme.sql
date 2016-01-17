@@ -191,7 +191,6 @@ CREATE TABLE PlayerDataTable (
 	PRIMARY KEY (PlayerID, UploadID)
 );
 
-
 --Unique for Character and Realm
 CREATE TABLE PlayerTable (
 	ID				serial,
@@ -200,6 +199,58 @@ CREATE TABLE PlayerTable (
 	UploadID		integer REFERENCES UploadTable(ID), --Use along with ID to find PlayerDataTable ID
 	FOREIGN KEY (ID, UploadID) REFERENCES PlayerDataTable(PlayerID, UploadID),
 	PRIMARY KEY (ID)
+);
+
+CREATE TABLE IngameMountTable (
+	ID				serial,
+	Name			text,
+	PRIMARY KEY (ID)
+);
+
+INSERT INTO IngameMountTable VALUES(0, '');
+
+CREATE TABLE IngamePetTable (
+	ID				serial,
+	Name			text,
+	Level			smallint,
+	CreatureFamily	text,
+	CreatureType	text,
+	PRIMARY KEY (ID)
+);
+
+INSERT INTO IngamePetTable VALUES(0, '', 0, '', '');
+
+CREATE TABLE IngameCompanionTable (
+	ID				serial,
+	Name			text,
+	Level			smallint,
+	PRIMARY KEY (ID)
+);
+
+INSERT INTO IngameCompanionTable VALUES(0, '', 0);
+
+CREATE TABLE PlayerMountTable (
+	PlayerID		integer REFERENCES PlayerTable(ID),
+	UploadID		integer REFERENCES UploadTable(ID),
+	UpdateTime		timestamp,
+	MountID			integer REFERENCES IngameMountTable(ID),
+	PRIMARY KEY(PlayerID, UploadID, MountID)
+);
+
+CREATE TABLE PlayerPetTable (
+	PlayerID		integer REFERENCES PlayerTable(ID),
+	UploadID		integer REFERENCES UploadTable(ID),
+	UpdateTime		timestamp,
+	PetID			integer REFERENCES IngamePetTable(ID),
+	PRIMARY KEY(PlayerID, UploadID, PetID)
+);
+
+CREATE TABLE PlayerCompanionTable (
+	PlayerID		integer REFERENCES PlayerTable(ID),
+	UploadID		integer REFERENCES UploadTable(ID),
+	UpdateTime		timestamp,
+	CompanionID		integer REFERENCES IngameCompanionTable(ID),
+	PRIMARY KEY(PlayerID, UploadID, CompanionID)
 );
 
 COMMIT;

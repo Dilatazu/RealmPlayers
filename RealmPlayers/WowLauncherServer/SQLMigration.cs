@@ -353,6 +353,29 @@ namespace VF_WoWLauncherServer
             public int ArenaDataIDCounter = 1;
 
             public int UploadTableIDCounter = 0;
+
+            public int IngameMountIDCounter = 1;
+            public int IngamePetIDCounter = 1;
+            public int IngameCompanionIDCounter = 1;
+
+            List<KeyValuePair<UploadID, int>> m_AddedUploadIDs = new List<KeyValuePair<UploadID, int>>();
+            public int GenerateUploadTableID(UploadID _Uploader, NpgsqlConnection _Conn)
+            {
+                int foundIndex = m_AddedUploadIDs.FindIndex((_V) => _V.Key.GetContributorID() == _Uploader.GetContributorID() && _V.Key.GetTime() == _Uploader.GetTime());
+                if (foundIndex != -1) return m_AddedUploadIDs[foundIndex].Value;
+
+                int currUploadTableID = UploadTableIDCounter++;
+                using (var cmdUpload = _Conn.BeginBinaryImport("COPY UploadTable (id, uploadtime, contributor) FROM STDIN BINARY"))
+                {
+                    cmdUpload.StartRow();
+                    cmdUpload.Write(currUploadTableID, NpgsqlDbType.Integer);
+                    cmdUpload.Write(_Uploader.GetTime(), NpgsqlDbType.Timestamp);
+                    cmdUpload.Write(_Uploader.GetContributorID(), NpgsqlDbType.Integer);
+                    cmdUpload.Close();
+                }
+                m_AddedUploadIDs.Add(new KeyValuePair<UploadID, int>(_Uploader, currUploadTableID));
+                return currUploadTableID;
+            }
         }
 
 
@@ -505,6 +528,196 @@ namespace VF_WoWLauncherServer
                 cmdPlayerData.Close();
             }
         }
+
+        public static void UploadPlayerExtraData(NpgsqlConnection _Connection
+                                        , ref SQLIDCounters _SQLIDCounters
+                                        , WowVersionEnum _WowVersion
+                                        , int _PlayerID
+                                        , string _PlayerNane
+                                        , ExtraData _ExtraData)
+        {
+            if (_ExtraData == null)
+                return;
+
+            using (var cmdPlayerMount = _Connection.BeginBinaryImport("COPY PlayerMountTable (playerid, uploadid, mountid) FROM STDIN BINARY"))
+            {
+                foreach (var playerMount in _ExtraData.Mounts)
+                {
+                    int currMountID = _SQLIDCounters.IngameMountIDCounter++;
+                    using (var cmdMounts = _Connection2.BeginBinaryImport("COPY IngameMountTable (id, name) FROM STDIN BINARY"))
+                    {
+                        cmdMounts.StartRow();
+                        cmdMounts.Write(currMountID, NpgsqlDbType.Integer);
+                        cmdMounts.Write(playerMount.Mount, NpgsqlDbType.Text);
+                        cmdMounts.Close();
+                    }
+
+                    foreach (var uploader in playerMount.Uploaders)
+                    {
+                        int currUploadTableID = _SQLIDCounters.GenerateUploadTableID(uploader, _Connection3);
+
+                        cmdPlayerMount.StartRow();
+                        cmdPlayerMount.Write(_PlayerID, NpgsqlDbType.Integer);
+                        cmdPlayerMount.Write(currUploadTableID, NpgsqlDbType.Integer);
+                        cmdPlayerMount.Write(uploader.GetTime(), NpgsqlDbType.Timestamp);
+                        cmdPlayerMount.Write(currMountID, NpgsqlDbType.Integer);
+                    }
+                }
+                cmdPlayerMount.Close();
+            }
+
+            using (var cmdPlayerPet = _Connection.BeginBinaryImport("COPY PlayerPetTable (playerid, uploadid, petid) FROM STDIN BINARY"))
+            {
+                foreach (var playerPet in _ExtraData.Pets)
+                {
+                    int currPetID = _SQLIDCounters.IngamePetIDCounter++;
+                    using (var cmdPets = _Connection2.BeginBinaryImport("COPY IngamePetTable (id, name, level, creaturefamily, creaturetype) FROM STDIN BINARY"))
+                    {
+                        cmdPets.StartRow();
+                        cmdPets.Write(currPetID, NpgsqlDbType.Integer);
+                        cmdPets.Write(playerPet.Name, NpgsqlDbType.Text);
+                        cmdPets.Write(playerPet.Level, NpgsqlDbType.Smallint);
+                        cmdPets.Write(playerPet.CreatureFamily, NpgsqlDbType.Text);
+                        cmdPets.Write(playerPet.CreatureType, NpgsqlDbType.Text);
+                        cmdPets.Close();
+                    }
+
+                    foreach (var uploader in playerPet.Uploaders)
+                    {
+                        int currUploadTableID = _SQLIDCounters.GenerateUploadTableID(uploader, _Connection3);
+
+                        cmdPlayerPet.StartRow();
+                        cmdPlayerPet.Write(_PlayerID, NpgsqlDbType.Integer);
+                        cmdPlayerPet.Write(currUploadTableID, NpgsqlDbType.Integer);
+                        cmdPlayerPet.Write(uploader.GetTime(), NpgsqlDbType.Timestamp);
+                        cmdPlayerPet.Write(currPetID, NpgsqlDbType.Integer);
+                    }
+                }
+                cmdPlayerPet.Close();
+            }
+
+            using (var cmdPlayerCompanion = _Connection.BeginBinaryImport("COPY PlayerCompanionTable (playerid, uploadid, companionid) FROM STDIN BINARY"))
+            {
+                foreach (var playerCompanion in _ExtraData.Companions)
+                {
+                    int currCompanionID = _SQLIDCounters.IngameCompanionIDCounter++;
+                    using (var cmdPets = _Connection2.BeginBinaryImport("COPY IngameCompanionTable (id, name, level) FROM STDIN BINARY"))
+                    {
+                        cmdPets.StartRow();
+                        cmdPets.Write(currCompanionID, NpgsqlDbType.Integer);
+                        cmdPets.Write(playerCompanion.Name, NpgsqlDbType.Text);
+                        cmdPets.Write(playerCompanion.Level, NpgsqlDbType.Smallint);
+                        cmdPets.Close();
+                    }
+
+                    foreach (var uploader in playerCompanion.Uploaders)
+                    {
+                        int currUploadTableID = _SQLIDCounters.GenerateUploadTableID(uploader, _Connection3);
+
+                        cmdPlayerCompanion.StartRow();
+                        cmdPlayerCompanion.Write(_PlayerID, NpgsqlDbType.Integer);
+                        cmdPlayerCompanion.Write(currUploadTableID, NpgsqlDbType.Integer);
+                        cmdPlayerCompanion.Write(uploader.GetTime(), NpgsqlDbType.Timestamp);
+                        cmdPlayerCompanion.Write(currCompanionID, NpgsqlDbType.Integer);
+                    }
+                }
+                cmdPlayerCompanion.Close();
+            }
+        }
+
+        public static void SaveRealmDatabase(RealmDatabase _RealmDatabase)
+        {
+            var realmPlayers = _RealmDatabase.Players;
+            var realmPlayersHistory = _RealmDatabase.PlayersHistory;
+            var realmPlayersExtraData = _RealmDatabase.PlayersExtraData;
+
+            int playerTableIDCounter = 0;
+            int u = 0;
+            SQLIDCounters counters = new SQLIDCounters();
+            using (var conn = new NpgsqlConnection("Host=localhost;Port=5432;Username=RealmPlayers;Password=TestPass;Database=testdb"))
+            {
+                conn.Open();
+                using (var conn2 = new NpgsqlConnection("Host=localhost;Port=5432;Username=RealmPlayers;Password=TestPass;Database=testdb"))
+                {
+                    conn2.Open();
+                    _Connection2 = conn2;
+                    using (var conn3 = new NpgsqlConnection("Host=localhost;Port=5432;Username=RealmPlayers;Password=TestPass;Database=testdb"))
+                    {
+                        conn3.Open();
+                        _Connection3 = conn3;
+                        using (var connPrivate = new NpgsqlConnection("Host=localhost;Port=5432;Username=RealmPlayers;Password=TestPass;Database=testdb"))
+                        {
+                            connPrivate.Open();
+                            foreach (var playerHistory in realmPlayersHistory)
+                            {
+                                var thisPlayer = realmPlayers[playerHistory.Key];
+                                var thisPlayerExtraData = realmPlayersExtraData[playerHistory.Key];
+                                UploadID earliestUploader = playerHistory.Value.GetEarliestUploader();
+                                if (thisPlayer.Uploader.GetTime() < earliestUploader.GetTime())
+                                    earliestUploader = thisPlayer.Uploader;
+
+                                if (playerHistory.Value.GearHistory.Count == 0)
+                                {
+                                    playerHistory.Value.AddToHistory(thisPlayer.Gear, earliestUploader);
+                                }
+                                if (playerHistory.Value.GuildHistory.Count == 0)
+                                {
+                                    playerHistory.Value.AddToHistory(thisPlayer.Guild, earliestUploader);
+                                }
+                                if (playerHistory.Value.HonorHistory.Count == 0)
+                                {
+                                    playerHistory.Value.AddToHistory(thisPlayer.Honor, earliestUploader);
+                                }
+                                if (playerHistory.Value.CharacterHistory.Count == 0)
+                                {
+                                    playerHistory.Value.AddToHistory(thisPlayer.Character, earliestUploader);
+                                }
+                                if (thisPlayer.Arena != null && (playerHistory.Value.ArenaHistory == null || playerHistory.Value.ArenaHistory.Count == 0))
+                                {
+                                    playerHistory.Value.AddToHistory(thisPlayer.Arena, earliestUploader);
+                                }
+                                if (thisPlayer.TalentPointsData != null && (playerHistory.Value.TalentsHistory == null || playerHistory.Value.TalentsHistory.Count == 0))
+                                {
+                                    playerHistory.Value.AddTalentsToHistory(thisPlayer.TalentPointsData, earliestUploader);
+                                }
+
+                                int currPlayerTableID = playerTableIDCounter++;
+
+                                List<KeyValuePair<UploadID, int>> uploadItems;
+                                UploadPlayerDataHistory(conn, ref counters, WowVersionEnum.Vanilla, currPlayerTableID, playerHistory, out uploadItems);
+                                if (uploadItems.Count > 0)
+                                {
+                                    using (var cmdPlayer = connPrivate.BeginBinaryImport("COPY PlayerTable (id, name, realm, uploadid) FROM STDIN BINARY"))
+                                    {
+                                        cmdPlayer.StartRow();
+                                        cmdPlayer.Write(currPlayerTableID, NpgsqlDbType.Integer);
+                                        cmdPlayer.Write(playerHistory.Key, NpgsqlDbType.Text);
+                                        cmdPlayer.Write(_RealmDatabase.Realm, NpgsqlDbType.Integer);
+                                        cmdPlayer.Write(uploadItems.Last().Value, NpgsqlDbType.Integer);
+                                    }
+                                    UploadPlayerExtraData(conn, ref counters, WowVersionEnum.Vanilla, currPlayerTableID, playerHistory.Key, thisPlayerExtraData);
+                                }
+                                else
+                                {
+                                    Logger.ConsoleWriteLine("This is unexpected, uploadItems.Count was 0!!! should never happen!!! But did for player \"" + playerHistory.Key + "\"");
+                                }
+
+                                if (++u % 100 == 0)
+                                {
+                                    Logger.ConsoleWriteLine("player save iteration progress(" + u + " / " + realmPlayersHistory.Count + ")");
+                                }
+                            }
+                        }
+                        _Connection3 = null;
+                    }
+                    _Connection2 = null;
+                }
+            }
+
+            Logger.ConsoleWriteLine("Items duplicate skipped due to Optimizaiton count = " + ingameItemsDuplicateCount);
+            Logger.ConsoleWriteLine("Saved Items Count = " + ingameItemsUniqueCount);
+        }
+
         public static RealmDatabase LoadRealmDatabase(WowRealm _Realm)
         {
             var timer = System.Diagnostics.Stopwatch.StartNew();
@@ -518,7 +731,7 @@ namespace VF_WoWLauncherServer
                 using (var reader = conn.BeginBinaryExport("COPY (SELECT id, name FROM PlayerTable WHERE realm = " + (int)_Realm + ") TO STDIN BINARY"))
                 {
                     int u = 0;
-                    while(reader.StartRow() != -1) //-1 means end of data
+                    while (reader.StartRow() != -1) //-1 means end of data
                     {
                         int id = reader.Read<int>(NpgsqlDbType.Integer);
                         string name = reader.Read<string>(NpgsqlDbType.Text);
@@ -658,19 +871,19 @@ namespace VF_WoWLauncherServer
                             if (reader.IsNull) continue;
                             string talents = reader.Read<string>(NpgsqlDbType.Text);
                         }
-                        if(playerProgress % 100 == 0)
+                        if (playerProgress % 100 == 0)
                         {
                             Logger.ConsoleWriteLine("" + playerProgress + " / " + playerProgressMax + ":\tplayer \"" + player.Key + "\"\thad " + u + " updates!" +
-                                "\n\tCharacterHistoryCount=" + playerHistory.CharacterHistory.Count + 
+                                "\n\tCharacterHistoryCount=" + playerHistory.CharacterHistory.Count +
                                 "\n\tHonorHistoryCount=" + playerHistory.HonorHistory.Count +
                                 "\n\tGuildHistoryCount=" + playerHistory.GuildHistory.Count);
                         }
                         reader.Dispose();
                     }
                     conn.Close();
-                    if(uniqueGearItems.Count > 0)
+                    if (uniqueGearItems.Count > 0)
                     {
-                        Dictionary <int, ItemInfo> itemTranslation = new Dictionary<int, ItemInfo>();
+                        Dictionary<int, ItemInfo> itemTranslation = new Dictionary<int, ItemInfo>();
                         string sqlSearchIds = String.Join(", ", uniqueGearItems);
                         //Console.WriteLine(sqlSearchIds);
 
@@ -727,95 +940,6 @@ namespace VF_WoWLauncherServer
 
             Logger.ConsoleWriteLine("Done with loading Database FROM SQL " + _Realm.ToString() + ", it took " + (timer.ElapsedMilliseconds / 1000) + " seconds", ConsoleColor.Green);
             return realmDatabase;
-        }
-        public static void SaveRealmDatabase(RealmDatabase _RealmDatabase)
-        {
-            var realmPlayers = _RealmDatabase.Players;
-            var realmPlayersHistory = _RealmDatabase.PlayersHistory;
-
-            int playerTableIDCounter = 0;
-            int u = 0;
-            SQLIDCounters counters = new SQLIDCounters();
-            using (var conn = new NpgsqlConnection("Host=localhost;Port=5432;Username=RealmPlayers;Password=TestPass;Database=testdb"))
-            {
-                conn.Open();
-                using (var conn2 = new NpgsqlConnection("Host=localhost;Port=5432;Username=RealmPlayers;Password=TestPass;Database=testdb"))
-                {
-                    conn2.Open();
-                    _Connection2 = conn2;
-                    using (var conn3 = new NpgsqlConnection("Host=localhost;Port=5432;Username=RealmPlayers;Password=TestPass;Database=testdb"))
-                    {
-                        conn3.Open();
-                        _Connection3 = conn3;
-                        using (var connPrivate = new NpgsqlConnection("Host=localhost;Port=5432;Username=RealmPlayers;Password=TestPass;Database=testdb"))
-                        {
-                            connPrivate.Open();
-                            foreach (var playerHistory in realmPlayersHistory)
-                            {
-                                var thisPlayer = realmPlayers[playerHistory.Key];
-                                UploadID earliestUploader = playerHistory.Value.GetEarliestUploader();
-                                if (thisPlayer.Uploader.GetTime() < earliestUploader.GetTime())
-                                    earliestUploader = thisPlayer.Uploader;
-
-                                if (playerHistory.Value.GearHistory.Count == 0)
-                                {
-                                    playerHistory.Value.AddToHistory(thisPlayer.Gear, earliestUploader);
-                                }
-                                if (playerHistory.Value.GuildHistory.Count == 0)
-                                {
-                                    playerHistory.Value.AddToHistory(thisPlayer.Guild, earliestUploader);
-                                }
-                                if (playerHistory.Value.HonorHistory.Count == 0)
-                                {
-                                    playerHistory.Value.AddToHistory(thisPlayer.Honor, earliestUploader);
-                                }
-                                if (playerHistory.Value.CharacterHistory.Count == 0)
-                                {
-                                    playerHistory.Value.AddToHistory(thisPlayer.Character, earliestUploader);
-                                }
-                                if (thisPlayer.Arena != null && (playerHistory.Value.ArenaHistory == null || playerHistory.Value.ArenaHistory.Count == 0))
-                                {
-                                    playerHistory.Value.AddToHistory(thisPlayer.Arena, earliestUploader);
-                                }
-                                if (thisPlayer.TalentPointsData != null && (playerHistory.Value.TalentsHistory == null || playerHistory.Value.TalentsHistory.Count == 0))
-                                {
-                                    playerHistory.Value.AddTalentsToHistory(thisPlayer.TalentPointsData, earliestUploader);
-                                }
-
-                                int currPlayerTableID = playerTableIDCounter++;
-
-                                List<KeyValuePair<UploadID, int>> uploadItems;
-                                UploadPlayerDataHistory(conn, ref counters, WowVersionEnum.Vanilla, currPlayerTableID, playerHistory, out uploadItems);
-                                if (uploadItems.Count > 0)
-                                {
-                                    using (var cmdPlayer = connPrivate.BeginBinaryImport("COPY PlayerTable (id, name, realm, uploadid) FROM STDIN BINARY"))
-                                    {
-                                        cmdPlayer.StartRow();
-                                        cmdPlayer.Write(currPlayerTableID, NpgsqlDbType.Integer);
-                                        cmdPlayer.Write(playerHistory.Key, NpgsqlDbType.Text);
-                                        cmdPlayer.Write(_RealmDatabase.Realm, NpgsqlDbType.Integer);
-                                        cmdPlayer.Write(uploadItems.Last().Value, NpgsqlDbType.Integer);
-                                    }
-                                }
-                                else
-                                {
-                                    Logger.ConsoleWriteLine("This is unexpected, uploadItems.Count was 0!!! should never happen!!! But did for player \"" + playerHistory.Key + "\"");
-                                }
-
-                                if (++u % 100 == 0)
-                                {
-                                    Logger.ConsoleWriteLine("player save iteration progress(" + u + " / " + realmPlayersHistory.Count + ")");
-                                }
-                            }
-                        }
-                        _Connection3 = null;
-                    }
-                    _Connection2 = null;
-                }
-            }
-
-            Logger.ConsoleWriteLine("Items duplicate skipped due to Optimizaiton count = " + ingameItemsDuplicateCount);
-            Logger.ConsoleWriteLine("Saved Items Count = " + ingameItemsUniqueCount);
         }
     }
 }
