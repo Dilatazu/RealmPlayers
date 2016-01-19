@@ -190,7 +190,7 @@ CREATE TABLE PlayerTable (
 	ID				serial,
 	Name			text,
 	Realm			integer,
-	UploadID		integer REFERENCES UploadTable(ID), --Use along with ID to find PlayerDataTable ID
+	UploadID		integer REFERENCES UploadTable(ID), --Use along with ID to find PlayerDataTable ID Maybe should be renamed to "LatestUploadID"?
 	FOREIGN KEY (ID, UploadID) REFERENCES PlayerDataTable(PlayerID, UploadID),
 	PRIMARY KEY (ID)
 );
