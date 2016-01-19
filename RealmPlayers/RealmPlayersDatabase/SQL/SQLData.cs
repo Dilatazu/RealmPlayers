@@ -45,32 +45,4 @@ namespace VF
             return new SQLIngameItemID(-1);
         }
     }
-    public struct SQLPlayerData
-    {
-        public SQLPlayerID PlayerID;
-        public SQLUploadID UploadID;
-        public DateTime UpdateTime;
-        public PlayerData.CharacterData PlayerCharacter;
-        public int PlayerGuildID;
-        public int PlayerHonorID;
-        public int PlayerGearID;
-        public int PlayerArenaID;
-        public int PlayerTalentsID;
-        public static SQLPlayerData Invalid()
-        {
-            var value = new SQLPlayerData();
-            value.PlayerID = SQLPlayerID.Invalid();
-            return value;
-        }
-    }
-    public struct SQLGearItems
-    {
-        public Dictionary<ItemSlot, SQLIngameItemID> Items;
-        public static SQLGearItems CreateEmpty()
-        {
-            SQLGearItems value = new SQLGearItems();
-            value.Items = new Dictionary<ItemSlot, SQLIngameItemID>();
-            return value;
-        }
-    }
 }

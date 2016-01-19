@@ -107,11 +107,13 @@
     <Compile Include="ItemDatabase\ItemTranslations.cs" />
     <Compile Include="PlayerData\ArenaData.cs" />
     <Compile Include="RealmPlayersDB.cs" />
+    <Compile Include="SQL\SQLArenaTeams.cs" />
     <Compile Include="SQL\SQLComm.cs" />
     <Compile Include="SQL\SQLComm_Read.cs" />
     <Compile Include="SQL\SQLComm_Write.cs" />
     <Compile Include="SQL\SQLData.cs" />
     <Compile Include="SQL\SQLGearItems.cs" />
+    <Compile Include="SQL\SQLPlayerData.cs" />
     <Compile Include="SummaryDatabases\GuildSummary\GuildSummaryDatabase.cs" />
     <Compile Include="SummaryDatabases\GuildSummary\GuildSummary.cs" />
     <Compile Include="SummaryDatabases\PlayerSummary\PlayerSummaryDatabase.cs" />
