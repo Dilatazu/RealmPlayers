@@ -356,7 +356,7 @@ namespace VF_WoWLauncherServer
             public int IngamePetIDCounter = 1;
             public int IngameCompanionIDCounter = 1;
 
-            int m_UploadTableIDCounter = 0;
+            int m_UploadTableIDCounter = 1;
 
             Dictionary<UploadID, int> m_AddedUploadIDs = new Dictionary<UploadID, int>();
             public int GenerateUploadTableID(UploadID _Uploader, NpgsqlConnection _Conn, bool _ForceNew = false)

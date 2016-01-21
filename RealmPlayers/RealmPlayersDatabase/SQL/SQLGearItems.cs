@@ -33,6 +33,24 @@ namespace VF
         public int GemID2;
         public int GemID3;
         public int GemID4;
+        public SQLGemInfo(int[] _GemIDs)
+        {
+            GemID1 = 0;
+            GemID2 = 0;
+            GemID3 = 0;
+            GemID4 = 0;
+            for (int i = 0; i < _GemIDs.Length; ++i)
+            {
+                if (i == 0) GemID1 = _GemIDs[i];
+                if (i == 1) GemID2 = _GemIDs[i];
+                if (i == 2) GemID3 = _GemIDs[i];
+                if (i == 3) GemID4 = _GemIDs[i];
+            }
+        }
+        public bool IsNull()
+        {
+            return GemID1 <= 0 && GemID2 <= 0 && GemID3 <= 0 && GemID4 <= 0;
+        }
     }
     public struct SQLPlayerGearGems
     {
@@ -51,6 +69,13 @@ namespace VF
         public int SuffixID;
         public int UniqueID;
 
+        public SQLIngameItemInfo(PlayerData.ItemInfo _ItemInfo)
+        {
+            ItemID = _ItemInfo.ItemID;
+            EnchantID = _ItemInfo.EnchantID;
+            SuffixID = _ItemInfo.SuffixID;
+            UniqueID = _ItemInfo.UniqueID;
+        }
         public PlayerData.ItemInfo GenerateItemInfo(ItemSlot _Slot, int[] _GemIDs = null)
         {
             PlayerData.ItemInfo itemInfo = new PlayerData.ItemInfo();

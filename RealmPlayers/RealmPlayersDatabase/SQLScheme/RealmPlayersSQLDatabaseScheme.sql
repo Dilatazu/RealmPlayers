@@ -160,6 +160,8 @@ CREATE TABLE ContributorTable (
 	PRIMARY KEY (ID)
 );
 
+INSERT INTO ContributorTable VALUES(0, '', '', '');
+
 --Unique for Upload from Contributor
 CREATE TABLE UploadTable (
 	ID				serial,
@@ -167,6 +169,8 @@ CREATE TABLE UploadTable (
 	Contributor		integer REFERENCES ContributorTable(ID),
 	PRIMARY KEY (ID)
 );
+
+INSERT INTO UploadTable VALUES(0, current_timestamp(), 0);
 
 --Unique for Player and Time
 CREATE TABLE PlayerDataTable (
@@ -185,6 +189,8 @@ CREATE TABLE PlayerDataTable (
 	PRIMARY KEY (PlayerID, UploadID)
 );
 
+INSERT INTO PlayerDataTable VALUES(0, 0, current_timestamp(), 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
 --Unique for Character and Realm
 CREATE TABLE PlayerTable (
 	ID				serial,
@@ -194,6 +200,8 @@ CREATE TABLE PlayerTable (
 	FOREIGN KEY (ID, UploadID) REFERENCES PlayerDataTable(PlayerID, UploadID),
 	PRIMARY KEY (ID)
 );
+
+INSERT INTO PlayerTable VALUES(0, '', 0, 0);
 
 CREATE TABLE IngameMountTable (
 	ID				serial,

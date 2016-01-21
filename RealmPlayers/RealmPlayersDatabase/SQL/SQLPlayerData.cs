@@ -234,5 +234,34 @@ namespace VF
             _ResultCharacterData.Level = _PlayerData.PlayerCharacter.Level;
             return true;
         }
+        public bool GetPlayerTalentsData(SQLPlayerData _PlayerData, out string _ResultTalentsData)
+        {
+            if(_PlayerData.PlayerTalentsID != 0)
+            {
+                using (var conn = new NpgsqlConnection(g_ConnectionString))
+                {
+                    conn.Open();
+                    const int TALENTS_COLUMN = 0;
+                    using (var cmd = new NpgsqlCommand("SELECT talents FROM PlayerTalentsInfoTable WHERE id=:ID", conn))
+                    {
+                        {
+                            var idParam = new NpgsqlParameter("ID", NpgsqlDbType.Integer);
+                            idParam.Value = _PlayerData.PlayerTalentsID;
+                            cmd.Parameters.Add(idParam);
+                        }
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read() == true)
+                            {
+                                _ResultTalentsData = reader.GetString(TALENTS_COLUMN);
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+            _ResultTalentsData = "";
+            return false;
+        }
     }
 }
