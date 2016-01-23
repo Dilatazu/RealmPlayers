@@ -153,7 +153,7 @@ INSERT INTO PlayerTalentsInfoTable VALUES(0, '');
 
 --Unique for UserID
 CREATE TABLE ContributorTable (
-	ID 				integer,
+	ID 				serial,
 	UserID			text,
 	Name			text,
 	IP				text,
@@ -170,7 +170,7 @@ CREATE TABLE UploadTable (
 	PRIMARY KEY (ID)
 );
 
-INSERT INTO UploadTable VALUES(0, current_timestamp(), 0);
+INSERT INTO UploadTable VALUES(0, current_timestamp, 0);
 
 --Unique for Player and Time
 CREATE TABLE PlayerDataTable (
@@ -189,15 +189,15 @@ CREATE TABLE PlayerDataTable (
 	PRIMARY KEY (PlayerID, UploadID)
 );
 
-INSERT INTO PlayerDataTable VALUES(0, 0, current_timestamp(), 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO PlayerDataTable VALUES(0, 0, current_timestamp, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
 --Unique for Character and Realm
 CREATE TABLE PlayerTable (
 	ID				serial,
 	Name			text,
 	Realm			integer,
-	UploadID		integer REFERENCES UploadTable(ID), --Use along with ID to find PlayerDataTable ID Maybe should be renamed to "LatestUploadID"?
-	FOREIGN KEY (ID, UploadID) REFERENCES PlayerDataTable(PlayerID, UploadID),
+	LatestUploadID	integer REFERENCES UploadTable(ID), --Use along with ID to find PlayerDataTable ID Maybe should be renamed to "LatestUploadID"?
+	FOREIGN KEY (ID, LatestUploadID) REFERENCES PlayerDataTable(PlayerID, UploadID),
 	PRIMARY KEY (ID)
 );
 

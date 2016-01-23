@@ -396,11 +396,11 @@ namespace VF
             using (var conn = new NpgsqlConnection(g_ConnectionString))
             {
                 conn.Open();
-                using (var cmd = new NpgsqlCommand("INSERT INTO playertable(id, name, realm, uploadid) VALUES (DEFAULT, :Name, :Realm, :UploadID) RETURNING id", conn))
+                using (var cmd = new NpgsqlCommand("INSERT INTO playertable(id, name, realm, latestuploadid) VALUES (DEFAULT, :Name, :Realm, :LatestUploadID) RETURNING id", conn))
                 {
                     cmd.Parameters.Add(new NpgsqlParameter("Name", NpgsqlDbType.Text)).Value = _PlayerData.Name;
                     cmd.Parameters.Add(new NpgsqlParameter("Realm", NpgsqlDbType.Integer)).Value = (int)_PlayerData.Realm;
-                    cmd.Parameters.Add(new NpgsqlParameter("UploadID", NpgsqlDbType.Integer)).Value = 0;
+                    cmd.Parameters.Add(new NpgsqlParameter("LatestUploadID", NpgsqlDbType.Integer)).Value = 0;
                     using (var reader = cmd.ExecuteReader())
                     {
                         if (reader.Read() == true)

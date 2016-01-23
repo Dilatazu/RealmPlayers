@@ -54,7 +54,7 @@ namespace VF
                 const int ARENAINFO_COLUMN = 9;
                 const int TALENTSINFO_COLUMN = 10;
                 using (var cmd = new NpgsqlCommand("SELECT pd.uploadid, pd.updatetime, pd.race, pd.class, pd.sex, pd.level, pd.guildinfo, pd.honorinfo, pd.gearinfo, pd.arenainfo, pd.talentsinfo FROM playertable player" +
-                    " INNER JOIN playerdatatable pd ON player.id = pd.playerid AND player.uploadid = pd.uploadid" +
+                    " INNER JOIN playerdatatable pd ON player.id = pd.playerid AND player.latestuploadid = pd.uploadid" +
                     " WHERE player.id=:ID", conn))
                 {
                     {

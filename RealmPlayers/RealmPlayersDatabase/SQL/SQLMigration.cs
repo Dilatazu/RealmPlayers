@@ -48,7 +48,7 @@ namespace VF
     {
         public static NpgsqlConnection _Connection2;
         public static NpgsqlConnection _Connection3;
-        public static void UploadFakeContributorData()
+        public static void UploadFakeContributorData(SQLIDCounters _SQLCounters)
         {
             using (var conn = new NpgsqlConnection(SQLComm.g_ConnectionString))
             {
@@ -67,10 +67,11 @@ namespace VF
 
                     for (int i = 0; i < 3000; ++i)
                     {
-                        Contributor testContributorVIP = new Contributor(i, "Test.123456");
+                        int contributorID = _SQLCounters.ContributorIDCounter++;
+                        Contributor testContributorVIP = new Contributor(contributorID, "Test.123456");
                         WriteContributor(testContributorVIP);
-                        Contributor testContributorNormal = new Contributor(i + Contributor.ContributorTrustworthyIDBound, "Test.123456");
-                        WriteContributor(testContributorNormal);
+                        //Contributor testContributorNormal = new Contributor(i + Contributor.ContributorTrustworthyIDBound, "Test.123456");
+                        //WriteContributor(testContributorNormal);
 
                         if (i % 100 == 0)
                         {
@@ -344,6 +345,10 @@ namespace VF
 
         public class SQLIDCounters
         {
+            public int PlayerTableIDCounter = 1;
+
+            public int ContributorIDCounter = 1;
+
             public int HonorHistoryIDCounter = 1;
             public int GuildHistoryIDCounter = 1;
             public int GearHistoryIDCounter = 1;
@@ -384,6 +389,90 @@ namespace VF
                     }
                 }
                 return currUploadTableID;
+            }
+
+            public SQLIDCounters()
+            {
+                using (var conn = new NpgsqlConnection(SQLComm.g_ConnectionString))
+                {
+                    conn.Open();
+                    Func<string, string, int> FetchSeqCounter = (string _TableName, string _ColumnName) =>
+                    {
+                        using (var cmd = new NpgsqlCommand("SELECT currval(pg_get_serial_sequence('" + _TableName + "','" + _ColumnName + "'))", conn))
+                        {
+                            using (var reader = cmd.ExecuteReader())
+                            {
+                                if (reader.Read() == true)
+                                {
+                                    return reader.GetInt32(0) + 1;//We need to add 1 because SQL treats the counter differently than we do!
+                                }
+                            }
+                        }
+                        Logger.ConsoleWriteLine("Unexpected Error! Could not Fetch SeqCounter!!!");
+                        return 1;
+                    };
+
+                    PlayerTableIDCounter = FetchSeqCounter("playertable", "id");
+
+                    ContributorIDCounter = FetchSeqCounter("contributortable", "id");
+                    
+                    HonorHistoryIDCounter = FetchSeqCounter("playerhonortable", "id");
+                    GuildHistoryIDCounter = FetchSeqCounter("playerguildtable", "id");
+                    GearHistoryIDCounter = FetchSeqCounter("playergeartable", "id");
+                    ArenaHistoryIDCounter = FetchSeqCounter("playerarenainfotable", "id");
+                    TalentsHistoryIDCounter = FetchSeqCounter("playertalentsinfotable", "id");
+
+                    IngameItemIDCounter = FetchSeqCounter("ingameitemtable", "id");
+                    ArenaDataIDCounter = FetchSeqCounter("playerarenadatatable", "id");
+
+                    IngameMountIDCounter = FetchSeqCounter("ingamemounttable", "id");
+                    IngamePetIDCounter = FetchSeqCounter("ingamepettable", "id");
+                    IngameCompanionIDCounter = FetchSeqCounter("ingamecompaniontable", "id");
+
+                    m_UploadTableIDCounter = FetchSeqCounter("uploadtable", "id");
+                }
+            }
+
+            public void UploadNewSequenceCounterValues()
+            {
+                using (var conn = new NpgsqlConnection(SQLComm.g_ConnectionString))
+                {
+                    conn.Open();
+                    Action<string, string, int> UploadSeqCounter = (string _TableName, string _ColumnName, int _NewSeqValue) =>
+                    {
+                        _NewSeqValue = _NewSeqValue - 1;//We need to subtract 1 because SQL treats the counter differently than we do!
+                        using (var cmd = new NpgsqlCommand("SELECT setval(pg_get_serial_sequence('" + _TableName + "','" + _ColumnName + "'), " + _NewSeqValue + ")", conn))
+                        {
+                            using (var reader = cmd.ExecuteReader())
+                            {
+                                if (reader.Read() == true)
+                                {
+                                    if (reader.GetInt32(0) != _NewSeqValue)
+                                        Logger.ConsoleWriteLine("Unexpected Error, UploadSeqCounter failed!");
+                                }
+                            }
+                        }
+                    };
+
+                    UploadSeqCounter("playertable", "id", PlayerTableIDCounter);
+
+                    UploadSeqCounter("contributortable", "id", ContributorIDCounter);
+
+                    UploadSeqCounter("playerhonortable", "id", HonorHistoryIDCounter);
+                    UploadSeqCounter("playerguildtable", "id", GuildHistoryIDCounter);
+                    UploadSeqCounter("playergeartable", "id", GearHistoryIDCounter);
+                    UploadSeqCounter("playerarenainfotable", "id", ArenaHistoryIDCounter);
+                    UploadSeqCounter("playertalentsinfotable", "id", TalentsHistoryIDCounter);
+
+                    UploadSeqCounter("ingameitemtable", "id", IngameItemIDCounter);
+                    UploadSeqCounter("playerarenadatatable", "id", ArenaDataIDCounter);
+
+                    UploadSeqCounter("ingamemounttable", "id", IngameMountIDCounter);
+                    UploadSeqCounter("ingamepettable", "id", IngamePetIDCounter);
+                    UploadSeqCounter("ingamecompaniontable", "id", IngameCompanionIDCounter);
+
+                    UploadSeqCounter("uploadtable", "id", m_UploadTableIDCounter);
+                }
             }
         }
 
@@ -624,15 +713,18 @@ namespace VF
             }
         }
 
-        public static void UploadRealmDatabase(RealmDatabase _RealmDatabase)
+        public static void UploadRealmDatabase(SQLIDCounters _SQLCounters, RealmDatabase _RealmDatabase)
         {
             var realmPlayers = _RealmDatabase.Players;
             var realmPlayersHistory = _RealmDatabase.PlayersHistory;
             var realmPlayersExtraData = _RealmDatabase.PlayersExtraData;
 
-            int playerTableIDCounter = 0;
+            if(_SQLCounters.ContributorIDCounter < 1000)
+            {
+                VF.SQLMigration.UploadFakeContributorData(_SQLCounters);
+            }
+
             int u = 0;
-            SQLIDCounters counters = new SQLIDCounters();
             using (var conn = new NpgsqlConnection(SQLComm.g_ConnectionString))
             {
                 conn.Open();
@@ -689,13 +781,13 @@ namespace VF
                                     playerHistory.Value.AddTalentsToHistory(thisPlayer.TalentPointsData, earliestUploader);
                                 }
 
-                                int currPlayerTableID = playerTableIDCounter++;
+                                int currPlayerTableID = _SQLCounters.PlayerTableIDCounter++;
 
                                 List<KeyValuePair<UploadID, int>> uploadItems;
-                                UploadPlayerDataHistory(conn, ref counters, StaticValues.GetWowVersion(_RealmDatabase.Realm), currPlayerTableID, playerHistory, out uploadItems);
+                                UploadPlayerDataHistory(conn, ref _SQLCounters, StaticValues.GetWowVersion(_RealmDatabase.Realm), currPlayerTableID, playerHistory, out uploadItems);
                                 if (uploadItems.Count > 0)
                                 {
-                                    using (var cmdPlayer = connPrivate.BeginBinaryImport("COPY PlayerTable (id, name, realm, uploadid) FROM STDIN BINARY"))
+                                    using (var cmdPlayer = connPrivate.BeginBinaryImport("COPY PlayerTable (id, name, realm, latestuploadid) FROM STDIN BINARY"))
                                     {
                                         cmdPlayer.StartRow();
                                         cmdPlayer.Write(currPlayerTableID, NpgsqlDbType.Integer);
@@ -704,7 +796,7 @@ namespace VF
                                         cmdPlayer.Write(uploadItems.Last().Value, NpgsqlDbType.Integer);
                                     }
                                     if (thisPlayerExtraData != null)
-                                        UploadPlayerExtraData(conn, ref counters, StaticValues.GetWowVersion(_RealmDatabase.Realm), currPlayerTableID, playerHistory.Key, thisPlayerExtraData);
+                                        UploadPlayerExtraData(conn, ref _SQLCounters, StaticValues.GetWowVersion(_RealmDatabase.Realm), currPlayerTableID, playerHistory.Key, thisPlayerExtraData);
                                 }
                                 else
                                 {
