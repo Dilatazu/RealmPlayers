@@ -113,6 +113,7 @@
     <Compile Include="SQL\SQLComm_Write.cs" />
     <Compile Include="SQL\SQLData.cs" />
     <Compile Include="SQL\SQLGearItems.cs" />
+    <Compile Include="SQL\SQLMigration.cs" />
     <Compile Include="SQL\SQLPlayerData.cs" />
     <Compile Include="SummaryDatabases\GuildSummary\GuildSummaryDatabase.cs" />
     <Compile Include="SummaryDatabases\GuildSummary\GuildSummary.cs" />

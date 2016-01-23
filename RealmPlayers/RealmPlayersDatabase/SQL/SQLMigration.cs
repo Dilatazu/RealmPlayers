@@ -10,6 +10,7 @@ using VF_RealmPlayersDatabase;
 using VF_RealmPlayersDatabase.PlayerData;
 
 
+
 public static class extensions
 {
     public static int IndexOfMin<TValue, TPredicateValue>(this TValue[] self, Func<TValue, TPredicateValue> _Predicate) where TPredicateValue : IComparable
@@ -41,15 +42,15 @@ public static class extensions
     }
 }
 
-namespace VF_WoWLauncherServer
+namespace VF
 {
-    class SQLMigration
+    public class SQLMigration
     {
         public static NpgsqlConnection _Connection2;
         public static NpgsqlConnection _Connection3;
-        public static void SaveFakeContributorData()
+        public static void UploadFakeContributorData()
         {
-            using (var conn = new NpgsqlConnection("Host=localhost;Port=5432;Username=RealmPlayers;Password=TestPass;Database=testdb"))
+            using (var conn = new NpgsqlConnection(SQLComm.g_ConnectionString))
             {
                 conn.Open();
                 Logger.ConsoleWriteLine("Started writing contributortable!!!");
@@ -112,7 +113,7 @@ namespace VF_WoWLauncherServer
                     cmd.Write(playerHonor.Data.LifetimeHK, NpgsqlDbType.Integer);
                 }
             }
-            if(_WowVersion == WowVersionEnum.Vanilla)
+            if (_WowVersion == WowVersionEnum.Vanilla)
             {
                 playerHonorTableIDCounter = _PlayerHonorTableIDCounter;
                 using (var cmd = _Connection.BeginBinaryImport("COPY PlayerHonorVanillaTable (playerhonorid, currentrank, currentrankprogress, todaydk, thisweekhk, thisweekhonor, lastweekhk, lastweekhonor, lastweekstanding, lifetimedk, lifetimehighestrank) FROM STDIN BINARY"))
@@ -197,9 +198,9 @@ namespace VF_WoWLauncherServer
                                 if (playerGear.Data.Items.TryGetValue(_Slot, out itemInfo) == false) return 0;//0 index is empty ItemInfo
 
                                 List<KeyValuePair<int, ItemInfo>> distinctItemInfos;
-                                if(distinctItemIDs.TryGetValue(itemInfo.ItemID, out distinctItemInfos) == true)
+                                if (distinctItemIDs.TryGetValue(itemInfo.ItemID, out distinctItemInfos) == true)
                                 {
-                                    foreach(var distinctItem in distinctItemInfos)
+                                    foreach (var distinctItem in distinctItemInfos)
                                     {
                                         if (distinctItem.Value.IsSame(itemInfo) == true)
                                         {
@@ -362,7 +363,7 @@ namespace VF_WoWLauncherServer
             public int GenerateUploadTableID(UploadID _Uploader, NpgsqlConnection _Conn, bool _ForceNew = false)
             {
                 int currUploadTableID;
-                if(_ForceNew == true || m_AddedUploadIDs.TryGetValue(_Uploader, out currUploadTableID) == false)
+                if (_ForceNew == true || m_AddedUploadIDs.TryGetValue(_Uploader, out currUploadTableID) == false)
                 {
                     currUploadTableID = m_UploadTableIDCounter++;
                     using (var cmdUpload = _Conn.BeginBinaryImport("COPY UploadTable (id, uploadtime, contributor) FROM STDIN BINARY"))
@@ -373,7 +374,7 @@ namespace VF_WoWLauncherServer
                         cmdUpload.Write(_Uploader.GetContributorID(), NpgsqlDbType.Integer);
                         cmdUpload.Close();
                     }
-                    if(_ForceNew == true)
+                    if (_ForceNew == true)
                     {
                         m_AddedUploadIDs.AddOrSet(_Uploader, currUploadTableID);
                     }
@@ -454,7 +455,7 @@ namespace VF_WoWLauncherServer
                 itemCurrUploadIDs[i] = itemHistoryItems[i][itemCurrIndexs[i]].Key;
                 itemNextUploadIDs[i] = itemHistoryItems[i][itemCurrIndexs[i] + 1].Key;
             }
-            
+
             using (var cmdPlayerData = _Connection.BeginBinaryImport("COPY PlayerDataTable (playerid, uploadid, updatetime, race, class, sex, level, guildinfo, honorinfo, gearinfo, arenainfo, talentsinfo) FROM STDIN BINARY"))
             {
                 while (true)
@@ -471,7 +472,7 @@ namespace VF_WoWLauncherServer
 
                         if ((itemCurrIndexs[i] == 0 && itemHistoryItems[i].Count > 2) || itemNextUploadIDs[i].GetTime() == itemCurrUploadIDs[nextIterateIndex].GetTime())
                         {
-                            if(!(itemCurrIndexs[i] == 0 && itemHistoryItems[i].Count > 2) && itemNextUploadIDs[i].GetContributorID() != itemCurrUploadIDs[nextIterateIndex].GetContributorID())
+                            if (!(itemCurrIndexs[i] == 0 && itemHistoryItems[i].Count > 2) && itemNextUploadIDs[i].GetContributorID() != itemCurrUploadIDs[nextIterateIndex].GetContributorID())
                                 Logger.ConsoleWriteLine("This is unexpected, should never happen!!! ContributorID(" + itemNextUploadIDs[i].GetContributorID() + ") != ContributorID(" + itemCurrUploadIDs[nextIterateIndex].GetContributorID() + ")");
                             //Iterate all that have same time and contributor
                             IterateNextHistoryItem(i);
@@ -623,7 +624,7 @@ namespace VF_WoWLauncherServer
             }
         }
 
-        public static void SaveRealmDatabase(RealmDatabase _RealmDatabase)
+        public static void UploadRealmDatabase(RealmDatabase _RealmDatabase)
         {
             var realmPlayers = _RealmDatabase.Players;
             var realmPlayersHistory = _RealmDatabase.PlayersHistory;
@@ -632,18 +633,18 @@ namespace VF_WoWLauncherServer
             int playerTableIDCounter = 0;
             int u = 0;
             SQLIDCounters counters = new SQLIDCounters();
-            using (var conn = new NpgsqlConnection("Host=localhost;Port=5432;Username=RealmPlayers;Password=TestPass;Database=testdb"))
+            using (var conn = new NpgsqlConnection(SQLComm.g_ConnectionString))
             {
                 conn.Open();
-                using (var conn2 = new NpgsqlConnection("Host=localhost;Port=5432;Username=RealmPlayers;Password=TestPass;Database=testdb"))
+                using (var conn2 = new NpgsqlConnection(SQLComm.g_ConnectionString))
                 {
                     conn2.Open();
                     _Connection2 = conn2;
-                    using (var conn3 = new NpgsqlConnection("Host=localhost;Port=5432;Username=RealmPlayers;Password=TestPass;Database=testdb"))
+                    using (var conn3 = new NpgsqlConnection(SQLComm.g_ConnectionString))
                     {
                         conn3.Open();
                         _Connection3 = conn3;
-                        using (var connPrivate = new NpgsqlConnection("Host=localhost;Port=5432;Username=RealmPlayers;Password=TestPass;Database=testdb"))
+                        using (var connPrivate = new NpgsqlConnection(SQLComm.g_ConnectionString))
                         {
                             connPrivate.Open();
                             foreach (var playerHistory in realmPlayersHistory)
@@ -691,7 +692,7 @@ namespace VF_WoWLauncherServer
                                 int currPlayerTableID = playerTableIDCounter++;
 
                                 List<KeyValuePair<UploadID, int>> uploadItems;
-                                UploadPlayerDataHistory(conn, ref counters, WowVersionEnum.Vanilla, currPlayerTableID, playerHistory, out uploadItems);
+                                UploadPlayerDataHistory(conn, ref counters, StaticValues.GetWowVersion(_RealmDatabase.Realm), currPlayerTableID, playerHistory, out uploadItems);
                                 if (uploadItems.Count > 0)
                                 {
                                     using (var cmdPlayer = connPrivate.BeginBinaryImport("COPY PlayerTable (id, name, realm, uploadid) FROM STDIN BINARY"))
@@ -702,8 +703,8 @@ namespace VF_WoWLauncherServer
                                         cmdPlayer.Write(_RealmDatabase.Realm, NpgsqlDbType.Integer);
                                         cmdPlayer.Write(uploadItems.Last().Value, NpgsqlDbType.Integer);
                                     }
-                                    if(thisPlayerExtraData != null)
-                                        UploadPlayerExtraData(conn, ref counters, WowVersionEnum.Vanilla, currPlayerTableID, playerHistory.Key, thisPlayerExtraData);
+                                    if (thisPlayerExtraData != null)
+                                        UploadPlayerExtraData(conn, ref counters, StaticValues.GetWowVersion(_RealmDatabase.Realm), currPlayerTableID, playerHistory.Key, thisPlayerExtraData);
                                 }
                                 else
                                 {
@@ -732,7 +733,7 @@ namespace VF_WoWLauncherServer
             Logger.ConsoleWriteLine("Started Loading Database FROM SQL" + _Realm.ToString(), ConsoleColor.Green);
             RealmDatabase realmDatabase = new RealmDatabase(_Realm);
 
-            using (var conn = new NpgsqlConnection("Host=localhost;Port=5432;Username=RealmPlayers;Password=TestPass;Database=testdb"))
+            using (var conn = new NpgsqlConnection(SQLComm.g_ConnectionString))
             {
                 conn.Open();
                 Dictionary<string, int> playerIDs = new Dictionary<string, int>();

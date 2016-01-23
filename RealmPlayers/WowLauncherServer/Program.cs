@@ -46,21 +46,21 @@ namespace VF_WoWLauncherServer
             {
                 RealmDatabase binRealm = new RealmDatabase(WowRealm.Al_Akir);
                 Logger.ConsoleWriteLine("Started Loading!!!");
-                binRealm.LoadDatabase("D:\\VF_RealmPlayersData\\RPPDatabase\\Database\\Al_Akir", new DateTime(2012, 5, 1, 0, 0, 0));//new DateTime(2015, 9, 1, 0, 0, 0));//, 
+                binRealm.LoadDatabase("D:\\VF_RealmPlayersData\\RPPDatabase\\Database\\" + binRealm.Realm.ToString(), new DateTime(2012, 5, 1, 0, 0, 0));//new DateTime(2015, 9, 1, 0, 0, 0));//, 
                 Logger.ConsoleWriteLine("Loading...");
                 binRealm.WaitForLoad(RealmDatabase.LoadStatus.EverythingLoaded);
                 Logger.ConsoleWriteLine("Everything Loaded!!!");
                 if(false)
                 {
                     Logger.ConsoleWriteLine("Starting Saving to SQL!!!");
-                    SQLMigration.SaveFakeContributorData();
-                    SQLMigration.SaveRealmDatabase(binRealm);
+                    VF.SQLMigration.UploadFakeContributorData();
+                    VF.SQLMigration.UploadRealmDatabase(binRealm);
                     Logger.ConsoleWriteLine("Done Saving to SQL!!!");
                 }
                 //else
                 {
                     Logger.ConsoleWriteLine("Starting Load from SQL!!!");
-                    RealmDatabase sqlRealm = SQLMigration.LoadRealmDatabase(WowRealm.Al_Akir);
+                    RealmDatabase sqlRealm = VF.SQLMigration.LoadRealmDatabase(binRealm.Realm);
                     Logger.ConsoleWriteLine("Done Loading from SQL!!!");
 
                     Logger.ConsoleWriteLine("Starting Comparing realm datas!!!");

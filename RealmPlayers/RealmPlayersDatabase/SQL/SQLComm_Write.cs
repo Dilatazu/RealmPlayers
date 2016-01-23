@@ -280,6 +280,85 @@ namespace VF
             return true;
         }
 
+        public int GenerateNewPlayerArenaInfoEntry(PlayerData.ArenaData _ArenaData)
+        {
+            if (_ArenaData == null || (_ArenaData.Team2v2 == null && _ArenaData.Team3v3 == null && _ArenaData.Team5v5 == null))
+                return 0;
+
+            using (var conn = new NpgsqlConnection(g_ConnectionString))
+            {
+                conn.Open();
+                Func<PlayerData.ArenaPlayerData, int> _GenerateNewPlayerArenaTeamDataEntry = (PlayerData.ArenaPlayerData _Data) =>
+                {
+                    if (_Data == null) return 0;
+
+                    using (var cmd = new NpgsqlCommand("INSERT INTO playerarenadatatable(id, teamname, teamrating, gamesplayed, gameswon, playergamesplayed, playerrating) VALUES (DEFAULT, :TeamName, :TeamRating, :GamesPlayed, :GamesWon, :PlayerGamesPlayed, :PlayerRating) RETURNING id", conn))
+                    {
+                        cmd.Parameters.Add(new NpgsqlParameter("TeamName", NpgsqlDbType.Text)).Value = _Data.TeamName;
+                        cmd.Parameters.Add(new NpgsqlParameter("TeamRating", NpgsqlDbType.Integer)).Value = _Data.TeamRating;
+                        cmd.Parameters.Add(new NpgsqlParameter("GamesPlayed", NpgsqlDbType.Integer)).Value = _Data.GamesPlayed;
+                        cmd.Parameters.Add(new NpgsqlParameter("GamesWon", NpgsqlDbType.Integer)).Value = _Data.GamesWon;
+                        cmd.Parameters.Add(new NpgsqlParameter("PlayerGamesPlayed", NpgsqlDbType.Integer)).Value = _Data.PlayerPlayed;
+                        cmd.Parameters.Add(new NpgsqlParameter("PlayerRating", NpgsqlDbType.Integer)).Value = _Data.PlayerRating;
+
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read() == true)
+                            {
+                                return reader.GetInt32(0);
+                            }
+                        }
+                    }
+
+                    return 0;
+                };
+
+                int team_2v2_ID = _GenerateNewPlayerArenaTeamDataEntry(_ArenaData.Team2v2);
+                int team_3v3_ID = _GenerateNewPlayerArenaTeamDataEntry(_ArenaData.Team3v3);
+                int team_5v5_ID = _GenerateNewPlayerArenaTeamDataEntry(_ArenaData.Team5v5);
+
+                using (var cmd = new NpgsqlCommand("INSERT INTO playerarenainfotable(id, team_2v2, team_3v3, team_5v5) VALUES (DEFAULT, :Team2v2, :Team3v3, :Team5v5) RETURNING id", conn))
+                {
+                    cmd.Parameters.Add(new NpgsqlParameter("Team2v2", NpgsqlDbType.Integer)).Value = team_2v2_ID;
+                    cmd.Parameters.Add(new NpgsqlParameter("Team3v3", NpgsqlDbType.Integer)).Value = team_3v3_ID;
+                    cmd.Parameters.Add(new NpgsqlParameter("Team5v5", NpgsqlDbType.Integer)).Value = team_5v5_ID;
+                    
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read() == true)
+                        {
+                            return reader.GetInt32(0);
+                        }
+                    }
+                }
+            }
+            return 0;
+        }
+
+        public int GenerateNewPlayerTalentsDataEntry(string _TalentsData)
+        {
+            if (_TalentsData == null || _TalentsData == "")
+                return 0;
+
+            using (var conn = new NpgsqlConnection(g_ConnectionString))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand("INSERT INTO playertalentsinfotable(id, talents) VALUES (DEFAULT, :Talents) RETURNING id", conn))
+                {
+                    cmd.Parameters.Add(new NpgsqlParameter("Talents", NpgsqlDbType.Text)).Value = _TalentsData;
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read() == true)
+                        {
+                            return reader.GetInt32(0);
+                        }
+                    }
+                }
+            }
+
+            return 0;
+        }
+
         public bool GenerateNewPlayerDataEntry(SQLPlayerData _PlayerData)
         {
             if (_PlayerData.PlayerID.ID == 0 || _PlayerData.UploadID.ID == 0 || _PlayerData.PlayerCharacter == null)
@@ -343,7 +422,7 @@ namespace VF
             playerData.PlayerGearID = GenerateNewPlayerGearDataEntry(_PlayerData.Gear, wowVersion);
             if(wowVersion != WowVersionEnum.Vanilla)
             {
-                playerData.PlayerArenaID = GenerateNewPlayerArenaDataEntry(_PlayerData.Arena);
+                playerData.PlayerArenaID = GenerateNewPlayerArenaInfoEntry(_PlayerData.Arena);
                 playerData.PlayerTalentsID = GenerateNewPlayerTalentsDataEntry(_PlayerData.TalentPointsData);
             }
             else
@@ -351,6 +430,10 @@ namespace VF
                 playerData.PlayerArenaID = 0;
                 playerData.PlayerTalentsID = 0;
             }
+            if (GenerateNewPlayerDataEntry(playerData) == false)
+                VF_RealmPlayersDatabase.Logger.ConsoleWriteLine("Error, could not GenerateNewPlayerDataEntry!!!");
+
+            return playerData.PlayerID;
         }
     }
 }
