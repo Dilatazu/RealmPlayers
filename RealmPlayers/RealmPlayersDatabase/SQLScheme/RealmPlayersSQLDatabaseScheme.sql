@@ -1,4 +1,4 @@
-
+--/*
 DROP TABLE PlayerMountTable;
 DROP TABLE PlayerPetTable;
 DROP TABLE PlayerCompanionTable;
@@ -20,8 +20,13 @@ DROP TABLE IngameItemTable;
 DROP TABLE IngameMountTable;
 DROP TABLE IngamePetTable;
 DROP TABLE IngameCompanionTable;
+--*/
 
+--CREATE DATABASE RealmPlayersDB WITH ENCODING 'UTF8';
+
+--/*
 BEGIN;
+--SET CLIENT_ENCODING TO 'UTF8';
 
 --UNIQUE FOR PLAYER AND TIME
 CREATE TABLE PlayerGuildTable (
@@ -256,3 +261,4 @@ CREATE TABLE PlayerCompanionTable (
 );
 
 COMMIT;
+--*/

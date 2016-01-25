@@ -264,7 +264,7 @@ namespace VF_RealmPlayersDatabase
                 PlayersHistory.Remove(player);
             }
         }
-        public static Dictionary<string, PlayerData.PlayerHistory> _LoadPlayersHistoryChunked(string _RealmPath, DateTime _HistoryEarliestDateTime)
+        public static Dictionary<string, PlayerData.PlayerHistory> _LoadPlayersHistoryChunked(string _RealmPath, WowRealm _Realm, DateTime _HistoryEarliestDateTime)
         {
             Dictionary<string, PlayerData.PlayerHistory> loadedPlayersHistory = new Dictionary<string, PlayerData.PlayerHistory>();
             DateTime dateToLoad = DateTime.UtcNow;
@@ -278,6 +278,7 @@ namespace VF_RealmPlayersDatabase
             {
                 if (System.IO.File.Exists(_RealmPath + "\\PlayersHistoryData_" + dateToLoad.ToString("yyyy_MM") + ".dat") == true)
                 {////BORDE BRYTAS UT TILL EN FUNKTION???
+                    GC.Collect();
                     Dictionary<string, PlayerData.PlayerHistory> extraPlayerHistory = null;
                     Utility.LoadSerialize<Dictionary<string, PlayerData.PlayerHistory>>
                         (_RealmPath + "\\PlayersHistoryData_" + dateToLoad.ToString("yyyy_MM") + ".dat", out extraPlayerHistory);
@@ -295,6 +296,7 @@ namespace VF_RealmPlayersDatabase
                     {
                         loadedPlayersHistory.Add(playerHistory.Key, playerHistory.Value);
                     }
+                    Logger.ConsoleWriteLine("Loaded \"PlayersHistoryData_" + dateToLoad.ToString("yyyy_MM") + ".dat\" for Database " + _Realm.ToString(), ConsoleColor.White);
                 }////BORDE BRYTAS UT TILL EN FUNKTION???
                 dateToLoad = dateToLoad.AddMonths(-1);
             }
@@ -318,6 +320,7 @@ namespace VF_RealmPlayersDatabase
                 {
                     loadedPlayersHistory.Add(playerHistory.Key, playerHistory.Value);
                 }
+                Logger.ConsoleWriteLine("Loaded \"PlayersHistoryData_ManuallyAdded.dat\" for Database " + _Realm.ToString(), ConsoleColor.White);
             }////BORDE BRYTAS UT TILL EN FUNKTION???
 
             return loadedPlayersHistory;
@@ -351,6 +354,7 @@ namespace VF_RealmPlayersDatabase
                         m_Players = loadedPlayers;
                         m_LoadStatus = LoadStatus.PlayersLoaded;
                     }
+                    Logger.ConsoleWriteLine("Loaded \"PlayersData.dat\" for Database " + Realm.ToString(), ConsoleColor.White);
                 }
                 if (System.IO.File.Exists(_RealmPath + "\\PlayersHistoryData_Now.dat") == true)
                 {
@@ -359,13 +363,14 @@ namespace VF_RealmPlayersDatabase
                         loadDate = _HistoryEarliestDateTime.Value;
 
                     Dictionary<string, PlayerData.PlayerHistory> loadedPlayersHistory = null;
-                    loadedPlayersHistory = _LoadPlayersHistoryChunked(_RealmPath, loadDate);
+                    loadedPlayersHistory = _LoadPlayersHistoryChunked(_RealmPath, Realm, loadDate);
 
                     lock (m_LockObj)
                     {
                         m_History.m_PlayersHistory = loadedPlayersHistory;
                         m_LoadStatus = LoadStatus.PlayersHistoryLoaded;
                     }
+                    Logger.ConsoleWriteLine("Loaded \"PlayersHistoryData_Now.dat\" for Database " + Realm.ToString(), ConsoleColor.White);
                 }
                 if (System.IO.File.Exists(_RealmPath + "\\PlayersExtraData.dat") == true)
                 {
@@ -381,6 +386,7 @@ namespace VF_RealmPlayersDatabase
                         m_PlayersExtraData = loadedPlayersExtraData;
                         m_LoadStatus = LoadStatus.PlayersExtraDataLoaded;
                     }
+                    Logger.ConsoleWriteLine("Loaded \"PlayersExtraData.dat\" for Database " + Realm.ToString(), ConsoleColor.White);
                 }
 
                 lock (m_LockObj)
