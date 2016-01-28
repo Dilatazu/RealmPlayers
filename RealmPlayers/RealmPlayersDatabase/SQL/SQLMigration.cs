@@ -244,7 +244,7 @@ namespace VF
                             cmdGear.Write(WriteGearItem(ItemSlot.Ranged), NpgsqlDbType.Integer);
                             cmdGear.Write(WriteGearItem(ItemSlot.Tabard), NpgsqlDbType.Integer);
 
-                            if (_WowVersion == WowVersionEnum.TBC)
+                            if (_WowVersion != WowVersionEnum.Vanilla)
                             {
                                 foreach (var itemInfo in playerGear.Data.Items)
                                 {
@@ -905,6 +905,7 @@ namespace VF
 
         public static RealmDatabase LoadRealmDatabase(WowRealm _Realm)
         {
+            WowVersionEnum wowVersion = StaticValues.GetWowVersion(_Realm);
             var timer = System.Diagnostics.Stopwatch.StartNew();
             Logger.ConsoleWriteLine("Started Loading Database FROM SQL" + _Realm.ToString(), ConsoleColor.Green);
             RealmDatabase realmDatabase = new RealmDatabase(_Realm);
@@ -934,271 +935,372 @@ namespace VF
                 int playerProgressMax = playerIDs.Count;
                 foreach (var player in playerIDs)
                 {
-                    PlayerHistory playerHistory = new PlayerHistory();
-                    ++playerProgress;
-
-                    //List<KeyValuePair<CharacterData, UploadID>> charHistoryItems = new List<KeyValuePair<CharacterData, UploadID>>();
-                    //List<KeyValuePair<HonorData, UploadID>> honorHistoryItems = new List<KeyValuePair<HonorData, UploadID>>();
-                    //List<KeyValuePair<GuildData, UploadID>> guildHistoryItems = new List<KeyValuePair<GuildData, UploadID>>();
-                    //List<KeyValuePair<GearData, UploadID>> gearHistoryItems = new List<KeyValuePair<GearData, UploadID>>();
-
-                    List<KeyValuePair<UploadID, List<KeyValuePair<ItemSlot, int>>>> allGearItems = new List<KeyValuePair<UploadID, List<KeyValuePair<ItemSlot, int>>>>();
-                    List<int> uniqueGearItems = new List<int>();
-                    conn.Open();
-                    using (var reader = conn.BeginBinaryExport("COPY (SELECT upload.id, upload.uploadtime, upload.contributor, character.updatetime, character.race, character.class, character.sex, character.level" +
-                        ", guild.guildname, guild.guildrank, guild.guildranknr" +
-                        ", honor.todayhk, honor.todayhonor, honor.yesterdayhk, honor.yesterdayhonor, honor.lifetimehk" +
-                        ", honor2.currentrank, honor2.currentrankprogress, honor2.todaydk, honor2.thisweekhk, honor2.thisweekhonor, honor2.lastweekhk, honor2.lastweekhonor, honor2.lastweekstanding, honor2.lifetimedk, honor2.lifetimehighestrank" +
-                        ", gear.head, gear.neck, gear.shoulder, gear.shirt, gear.chest, gear.belt, gear.legs, gear.feet, gear.wrist, gear.gloves, gear.finger_1, gear.finger_2, gear.trinket_1, gear.trinket_2, gear.back, gear.main_hand, gear.off_hand, gear.ranged, gear.tabard" +
-                        ", arena.team_2v2, arena.team_3v3, arena.team_5v5" +
-                        ", talents.talents" +
-                        " FROM PlayerDataTable character" +
-                        " INNER JOIN UploadTable upload ON character.UploadID = upload.ID" +
-                        " INNER JOIN PlayerGuildTable guild ON character.GuildInfo = guild.ID" +
-                        " INNER JOIN PlayerHonorTable honor ON character.HonorInfo = honor.ID" +
-                        " INNER JOIN PlayerHonorVanillaTable honor2 ON character.HonorInfo = honor2.PlayerHonorID" +
-                        " INNER JOIN PlayerGearTable gear ON character.GearInfo = gear.ID" +
-                        " INNER JOIN PlayerArenaInfoTable arena ON character.ArenaInfo = arena.ID" +
-                        " INNER JOIN PlayerTalentsInfoTable talents ON character.TalentsInfo = talents.ID" +
-                        " WHERE character.playerid = " + player.Value + " ORDER BY character.updatetime) TO STDIN BINARY"))
+                    try
                     {
-                        //Logger.ConsoleWriteLine("Starting read for player \"" + player.Key + "\"!");
-                        int u = 0;
-                        while (reader.StartRow() != -1) //-1 means end of data
+                        PlayerHistory playerHistory = new PlayerHistory();
+                        ++playerProgress;
+
+                        int playerUpdateCount = 0;
+
+                        //List<KeyValuePair<CharacterData, UploadID>> charHistoryItems = new List<KeyValuePair<CharacterData, UploadID>>();
+                        //List<KeyValuePair<HonorData, UploadID>> honorHistoryItems = new List<KeyValuePair<HonorData, UploadID>>();
+                        //List<KeyValuePair<GuildData, UploadID>> guildHistoryItems = new List<KeyValuePair<GuildData, UploadID>>();
+                        //List<KeyValuePair<GearData, UploadID>> gearHistoryItems = new List<KeyValuePair<GearData, UploadID>>();
+
+                        List<KeyValuePair<UploadID, List<KeyValuePair<ItemSlot, int>>>> allGearItems = new List<KeyValuePair<UploadID, List<KeyValuePair<ItemSlot, int>>>>();
+                        List<KeyValuePair<UploadID, SQLArenaInfo>> allArenaInfos = new List<KeyValuePair<UploadID, SQLArenaInfo>>();
+                        List<int> gearIDs = new List<int>();
+                        List<int> uniqueGearItems = new List<int>();
+                        List<int> uniqueArenaIDs = new List<int>();
+                        conn.Open();
+                        using (var reader = conn.BeginBinaryExport("COPY (SELECT upload.id, upload.uploadtime, upload.contributor, character.updatetime, character.race, character.class, character.sex, character.level" +
+                            ", guild.guildname, guild.guildrank, guild.guildranknr" +
+                            ", honor.todayhk, honor.todayhonor, honor.yesterdayhk, honor.yesterdayhonor, honor.lifetimehk" +
+                            ", honor2.currentrank, honor2.currentrankprogress, honor2.todaydk, honor2.thisweekhk, honor2.thisweekhonor, honor2.lastweekhk, honor2.lastweekhonor, honor2.lastweekstanding, honor2.lifetimedk, honor2.lifetimehighestrank" +
+                            ", gear.id, gear.head, gear.neck, gear.shoulder, gear.shirt, gear.chest, gear.belt, gear.legs, gear.feet, gear.wrist, gear.gloves, gear.finger_1, gear.finger_2, gear.trinket_1, gear.trinket_2, gear.back, gear.main_hand, gear.off_hand, gear.ranged, gear.tabard" +
+                            ", arena.team_2v2, arena.team_3v3, arena.team_5v5" +
+                            ", talents.talents" +
+                            " FROM PlayerDataTable character" +
+                            " INNER JOIN UploadTable upload ON character.UploadID = upload.ID" +
+                            " INNER JOIN PlayerGuildTable guild ON character.GuildInfo = guild.ID" +
+                            " INNER JOIN PlayerHonorTable honor ON character.HonorInfo = honor.ID" +
+                            " LEFT JOIN PlayerHonorVanillaTable honor2 ON character.HonorInfo = honor2.PlayerHonorID" +
+                            " INNER JOIN PlayerGearTable gear ON character.GearInfo = gear.ID" +
+                            " INNER JOIN PlayerArenaInfoTable arena ON character.ArenaInfo = arena.ID" +
+                            " INNER JOIN PlayerTalentsInfoTable talents ON character.TalentsInfo = talents.ID" +
+                            " WHERE character.playerid = " + player.Value + " ORDER BY character.updatetime) TO STDIN BINARY"))
                         {
-                            ++u;
-                            //Logger.ConsoleWriteLine("Reading PlayerDataTable!");
-                            //PlayerDataTable
-                            int uploadID = reader.Read<int>(NpgsqlDbType.Integer);
-                            DateTime uploadDate = reader.Read<DateTime>(NpgsqlDbType.Timestamp);
-                            int contributorID = reader.Read<int>(NpgsqlDbType.Integer);
-
-                            DateTime updateTime = reader.Read<DateTime>(NpgsqlDbType.Timestamp);
-
-                            UploadID uploader = new UploadID(contributorID, updateTime);
-
-                            CharacterData characterData = new CharacterData();
-                            characterData.Race = (PlayerRace)reader.Read<int>(NpgsqlDbType.Smallint);
-                            characterData.Class = (PlayerClass)reader.Read<int>(NpgsqlDbType.Smallint);
-                            characterData.Sex = (PlayerSex)reader.Read<int>(NpgsqlDbType.Smallint);
-                            characterData.Level = reader.Read<int>(NpgsqlDbType.Smallint);
-                            playerHistory.AddToHistory(characterData, uploader);
-
-                            //JOINED DATA BELOW
-                            //Logger.ConsoleWriteLine("Reading PlayerGuildTable!");
-                            //PlayerGuildTable
-                            if (reader.IsNull) continue;
-                            GuildData guildData = new GuildData();
-                            guildData.GuildName = reader.Read<string>(NpgsqlDbType.Text);
-                            guildData.GuildRank = reader.Read<string>(NpgsqlDbType.Text);
-                            guildData.GuildRankNr = reader.Read<int>(NpgsqlDbType.Smallint);
-                            playerHistory.AddToHistory(guildData, uploader);
-
-                            //Logger.ConsoleWriteLine("Reading PlayerHonorTable!");
-                            //PlayerHonorTable
-                            if (reader.IsNull) continue;
-                            HonorData honorData = new HonorData();
-                            honorData.TodayHK = reader.Read<int>(NpgsqlDbType.Integer);
-                            honorData.TodayHonorTBC = reader.Read<int>(NpgsqlDbType.Integer);
-                            honorData.YesterdayHK = reader.Read<int>(NpgsqlDbType.Integer);
-                            honorData.YesterdayHonor = reader.Read<int>(NpgsqlDbType.Integer);
-                            honorData.LifetimeHK = reader.Read<int>(NpgsqlDbType.Integer);
-
-                            //Logger.ConsoleWriteLine("Reading PlayerHonorVanillaTable!");
-                            //PlayerHonorVanillaTable
-                            if (reader.IsNull) continue;
-                            honorData.CurrentRank = reader.Read<int>(NpgsqlDbType.Smallint);
-                            honorData.CurrentRankProgress = reader.Read<float>(NpgsqlDbType.Real);
-                            honorData.TodayDK = reader.Read<int>(NpgsqlDbType.Integer);
-                            honorData.ThisWeekHK = reader.Read<int>(NpgsqlDbType.Integer);
-                            honorData.ThisWeekHonor = reader.Read<int>(NpgsqlDbType.Integer);
-                            honorData.LastWeekHK = reader.Read<int>(NpgsqlDbType.Integer);
-                            honorData.LastWeekHonor = reader.Read<int>(NpgsqlDbType.Integer);
-                            honorData.LastWeekStanding = reader.Read<int>(NpgsqlDbType.Integer);
-                            honorData.LifetimeDK = reader.Read<int>(NpgsqlDbType.Integer);
-                            honorData.LifetimeHighestRank = reader.Read<int>(NpgsqlDbType.Smallint);
-                            playerHistory.AddToHistory(honorData, uploader);
-
-                            //Logger.ConsoleWriteLine("Reading PlayerGearTable!");
-                            //PlayerGearTable
-                            if (reader.IsNull) continue;
-                            List<KeyValuePair<ItemSlot, int>> gearItems = new List<KeyValuePair<ItemSlot, int>>();
-                            gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Head, reader.Read<int>(NpgsqlDbType.Integer)));
-                            gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Neck, reader.Read<int>(NpgsqlDbType.Integer)));
-                            gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Shoulder, reader.Read<int>(NpgsqlDbType.Integer)));
-                            gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Shirt, reader.Read<int>(NpgsqlDbType.Integer)));
-                            gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Chest, reader.Read<int>(NpgsqlDbType.Integer)));
-                            gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Belt, reader.Read<int>(NpgsqlDbType.Integer)));
-                            gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Legs, reader.Read<int>(NpgsqlDbType.Integer)));
-                            gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Feet, reader.Read<int>(NpgsqlDbType.Integer)));
-                            gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Wrist, reader.Read<int>(NpgsqlDbType.Integer)));
-                            gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Gloves, reader.Read<int>(NpgsqlDbType.Integer)));
-                            gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Finger_1, reader.Read<int>(NpgsqlDbType.Integer)));
-                            gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Finger_2, reader.Read<int>(NpgsqlDbType.Integer)));
-                            gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Trinket_1, reader.Read<int>(NpgsqlDbType.Integer)));
-                            gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Trinket_2, reader.Read<int>(NpgsqlDbType.Integer)));
-                            gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Back, reader.Read<int>(NpgsqlDbType.Integer)));
-                            gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Main_Hand, reader.Read<int>(NpgsqlDbType.Integer)));
-                            gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Off_Hand, reader.Read<int>(NpgsqlDbType.Integer)));
-                            gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Ranged, reader.Read<int>(NpgsqlDbType.Integer)));
-                            gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Tabard, reader.Read<int>(NpgsqlDbType.Integer)));
-                            uniqueGearItems.AddRangeUnique(gearItems.Select((_V) => _V.Value));
-                            allGearItems.Add(new KeyValuePair<UploadID, List<KeyValuePair<ItemSlot, int>>>(uploader, gearItems));
-                            //Logger.ConsoleWriteLine("Reading PlayerArenaInfoTable!");
-                            //PlayerArenaInfoTable
-                            if (reader.IsNull) continue;
-                            int team2v2 = reader.Read<int>(NpgsqlDbType.Integer);
-                            int team3v3 = reader.Read<int>(NpgsqlDbType.Integer);
-                            int team5v5 = reader.Read<int>(NpgsqlDbType.Integer);
-
-                            //Logger.ConsoleWriteLine("Reading PlayerTalentsInfoTable!");
-                            //PlayerTalentsInfoTable
-                            if (reader.IsNull) continue;
-                            string talents = reader.Read<string>(NpgsqlDbType.Text);
-                        }
-                        if (playerProgress % 100 == 0)
-                        {
-                            Logger.ConsoleWriteLine("" + playerProgress + " / " + playerProgressMax + ":\tplayer \"" + player.Key + "\"\thad " + u + " updates!" +
-                                "\n\tCharacterHistoryCount=" + playerHistory.CharacterHistory.Count +
-                                "\n\tHonorHistoryCount=" + playerHistory.HonorHistory.Count +
-                                "\n\tGuildHistoryCount=" + playerHistory.GuildHistory.Count);
-                        }
-                        reader.Dispose();
-                    }
-                    conn.Close();
-                    if (uniqueGearItems.Count > 0)
-                    {
-                        Dictionary<int, ItemInfo> itemTranslation = new Dictionary<int, ItemInfo>();
-                        string sqlSearchIds = String.Join(", ", uniqueGearItems);
-                        //Console.WriteLine(sqlSearchIds);
-
-                        if (sqlSearchIds != "" && sqlSearchIds != ", ")
-                        {
-                            Action<string> _GrabIngameItemTable = (_SearchIDs) =>
+                            //Logger.ConsoleWriteLine("Starting read for player \"" + player.Key + "\"!");
+                            while (reader.StartRow() != -1) //-1 means end of data
                             {
-                                conn.Open();
-                                using (var reader = conn.BeginBinaryExport("COPY (SELECT id, itemid, enchantid, suffixid, uniqueid FROM ingameitemtable WHERE id IN (" + sqlSearchIds + ")) TO STDIN BINARY"))
+                                ++playerUpdateCount;
+                                //Logger.ConsoleWriteLine("Reading PlayerDataTable!");
+                                //PlayerDataTable
+                                int uploadID = reader.Read<int>(NpgsqlDbType.Integer);
+                                DateTime uploadDate = reader.Read<DateTime>(NpgsqlDbType.Timestamp);
+                                int contributorID = reader.Read<int>(NpgsqlDbType.Integer);
+
+                                DateTime updateTime = reader.Read<DateTime>(NpgsqlDbType.Timestamp);
+
+                                UploadID uploader = new UploadID(contributorID, updateTime);
+
+                                CharacterData characterData = new CharacterData();
+                                characterData.Race = (PlayerRace)reader.Read<int>(NpgsqlDbType.Smallint);
+                                characterData.Class = (PlayerClass)reader.Read<int>(NpgsqlDbType.Smallint);
+                                characterData.Sex = (PlayerSex)reader.Read<int>(NpgsqlDbType.Smallint);
+                                characterData.Level = reader.Read<int>(NpgsqlDbType.Smallint);
+                                playerHistory.AddToHistory(characterData, uploader);
+
+                                //JOINED DATA BELOW
+                                //Logger.ConsoleWriteLine("Reading PlayerGuildTable!");
+                                //PlayerGuildTable
+                                if (reader.IsNull) continue;
+                                GuildData guildData = new GuildData();
+                                guildData.GuildName = reader.Read<string>(NpgsqlDbType.Text);
+                                guildData.GuildRank = reader.Read<string>(NpgsqlDbType.Text);
+                                guildData.GuildRankNr = reader.Read<int>(NpgsqlDbType.Smallint);
+                                playerHistory.AddToHistory(guildData, uploader);
+
+                                //Logger.ConsoleWriteLine("Reading PlayerHonorTable!");
+                                //PlayerHonorTable
+                                if (reader.IsNull) continue;
+                                HonorData honorData = new HonorData();
+                                honorData.TodayHK = reader.Read<int>(NpgsqlDbType.Integer);
+                                int todayHonorTBC = reader.Read<int>(NpgsqlDbType.Integer);
+                                honorData.YesterdayHK = reader.Read<int>(NpgsqlDbType.Integer);
+                                honorData.YesterdayHonor = reader.Read<int>(NpgsqlDbType.Integer);
+                                honorData.LifetimeHK = reader.Read<int>(NpgsqlDbType.Integer);
+
+                                //Logger.ConsoleWriteLine("Reading PlayerHonorVanillaTable!");
+                                //PlayerHonorVanillaTable
+                                if (reader.IsNull)
                                 {
-                                    while (reader.StartRow() != -1)
-                                    {
-                                        ItemInfo itemInfo = new ItemInfo();
-                                        int itemSQLIndex = reader.Read<int>(NpgsqlDbType.Integer);
-                                        itemInfo.ItemID = reader.Read<int>(NpgsqlDbType.Integer);
-                                        itemInfo.EnchantID = reader.Read<int>(NpgsqlDbType.Integer);
-                                        itemInfo.SuffixID = reader.Read<int>(NpgsqlDbType.Integer);
-                                        itemInfo.UniqueID = reader.Read<int>(NpgsqlDbType.Integer);
-                                        itemTranslation.AddIfKeyNotExist(itemSQLIndex, itemInfo);
-                                    }
+                                    honorData.CurrentRank = 0; reader.Skip();
+                                    honorData.CurrentRankProgress = 0; reader.Skip();
+                                    honorData.TodayDK = 0; reader.Skip();
+                                    honorData.ThisWeekHK = 0; reader.Skip();
+                                    honorData.ThisWeekHonor = 0; reader.Skip();
+                                    honorData.LastWeekHK = 0; reader.Skip();
+                                    honorData.LastWeekHonor = 0; reader.Skip();
+                                    honorData.LastWeekStanding = 0; reader.Skip();
+                                    honorData.LifetimeDK = 0; reader.Skip();
+                                    honorData.LifetimeHighestRank = 0; reader.Skip();
+
+                                    honorData.TodayHonorTBC = todayHonorTBC;
+                                    playerHistory.AddToHistory(honorData, uploader);
                                 }
-                                conn.Close();
-                            };
-                            try
-                            {
-                                _GrabIngameItemTable(sqlSearchIds);
-                            }
-                            catch (Exception ex)
-                            {
-                                Logger.ConsoleWriteLine("Recovered(hopefully) from exception: " + ex.ToString());
-                                int countDiv4 = uniqueGearItems.Count / 4;
-                                List<int> chunkedGearItems = new List<int>();
-                                for (int i = 0; i < uniqueGearItems.Count; ++i)
+                                else
                                 {
-                                    chunkedGearItems.Add(uniqueGearItems[i]);
-                                    if (i > countDiv4)
+                                    honorData.CurrentRank = reader.Read<int>(NpgsqlDbType.Smallint);
+                                    honorData.CurrentRankProgress = reader.Read<float>(NpgsqlDbType.Real);
+                                    honorData.TodayDK = reader.Read<int>(NpgsqlDbType.Integer);
+                                    honorData.ThisWeekHK = reader.Read<int>(NpgsqlDbType.Integer);
+                                    honorData.ThisWeekHonor = reader.Read<int>(NpgsqlDbType.Integer);
+                                    honorData.LastWeekHK = reader.Read<int>(NpgsqlDbType.Integer);
+                                    honorData.LastWeekHonor = reader.Read<int>(NpgsqlDbType.Integer);
+                                    honorData.LastWeekStanding = reader.Read<int>(NpgsqlDbType.Integer);
+                                    honorData.LifetimeDK = reader.Read<int>(NpgsqlDbType.Integer);
+                                    honorData.LifetimeHighestRank = reader.Read<int>(NpgsqlDbType.Smallint);
+                                    playerHistory.AddToHistory(honorData, uploader);
+                                }
+
+                                //Logger.ConsoleWriteLine("Reading PlayerGearTable!");
+                                //PlayerGearTable
+                                if (reader.IsNull) continue;
+                                int gearID = reader.Read<int>(NpgsqlDbType.Integer);
+
+                                List<KeyValuePair<ItemSlot, int>> gearItems = new List<KeyValuePair<ItemSlot, int>>();
+                                gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Head, reader.Read<int>(NpgsqlDbType.Integer)));
+                                gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Neck, reader.Read<int>(NpgsqlDbType.Integer)));
+                                gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Shoulder, reader.Read<int>(NpgsqlDbType.Integer)));
+                                gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Shirt, reader.Read<int>(NpgsqlDbType.Integer)));
+                                gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Chest, reader.Read<int>(NpgsqlDbType.Integer)));
+                                gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Belt, reader.Read<int>(NpgsqlDbType.Integer)));
+                                gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Legs, reader.Read<int>(NpgsqlDbType.Integer)));
+                                gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Feet, reader.Read<int>(NpgsqlDbType.Integer)));
+                                gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Wrist, reader.Read<int>(NpgsqlDbType.Integer)));
+                                gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Gloves, reader.Read<int>(NpgsqlDbType.Integer)));
+                                gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Finger_1, reader.Read<int>(NpgsqlDbType.Integer)));
+                                gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Finger_2, reader.Read<int>(NpgsqlDbType.Integer)));
+                                gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Trinket_1, reader.Read<int>(NpgsqlDbType.Integer)));
+                                gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Trinket_2, reader.Read<int>(NpgsqlDbType.Integer)));
+                                gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Back, reader.Read<int>(NpgsqlDbType.Integer)));
+                                gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Main_Hand, reader.Read<int>(NpgsqlDbType.Integer)));
+                                gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Off_Hand, reader.Read<int>(NpgsqlDbType.Integer)));
+                                gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Ranged, reader.Read<int>(NpgsqlDbType.Integer)));
+                                gearItems.Add(new KeyValuePair<ItemSlot, int>(ItemSlot.Tabard, reader.Read<int>(NpgsqlDbType.Integer)));
+                                uniqueGearItems.AddRangeUnique(gearItems.Select((_V) => _V.Value));
+                                allGearItems.Add(new KeyValuePair<UploadID, List<KeyValuePair<ItemSlot, int>>>(uploader, gearItems));
+                                gearIDs.Add(gearID);
+                                //Logger.ConsoleWriteLine("Reading PlayerArenaInfoTable!");
+                                //PlayerArenaInfoTable
+                                if (reader.IsNull) continue;
+                                SQLArenaInfo arenaInfo = new SQLArenaInfo();
+                                arenaInfo.Team2v2 = reader.Read<int>(NpgsqlDbType.Integer);
+                                arenaInfo.Team3v3 = reader.Read<int>(NpgsqlDbType.Integer);
+                                arenaInfo.Team5v5 = reader.Read<int>(NpgsqlDbType.Integer);
+                                uniqueArenaIDs.AddUnique(arenaInfo.Team2v2);
+                                uniqueArenaIDs.AddUnique(arenaInfo.Team3v3);
+                                uniqueArenaIDs.AddUnique(arenaInfo.Team5v5);
+                                allArenaInfos.Add(new KeyValuePair<UploadID, SQLArenaInfo>(uploader, arenaInfo));
+                                //Logger.ConsoleWriteLine("Reading PlayerTalentsInfoTable!");
+                                //PlayerTalentsInfoTable
+                                if (reader.IsNull) continue;
+                                string talents = reader.Read<string>(NpgsqlDbType.Text);
+                                playerHistory.AddTalentsToHistory(talents, uploader);
+                            }
+                            reader.Dispose();
+                        }
+                        conn.Close();
+                        if (uniqueGearItems.Count > 0)
+                        {
+                            Dictionary<int, ItemInfo> itemTranslation = new Dictionary<int, ItemInfo>();
+                            string sqlSearchIds = String.Join(", ", uniqueGearItems);
+                            //Console.WriteLine(sqlSearchIds);
+
+                            if (sqlSearchIds != "" && sqlSearchIds != ", ")
+                            {
+                                Action<string> _GrabIngameItemTable = (_SearchIDs) =>
+                                {
+                                    conn.Open();
+                                    using (var reader = conn.BeginBinaryExport("COPY (SELECT id, itemid, enchantid, suffixid, uniqueid FROM ingameitemtable WHERE id IN (" + sqlSearchIds + ")) TO STDIN BINARY"))
+                                    {
+                                        while (reader.StartRow() != -1)
+                                        {
+                                            ItemInfo itemInfo = new ItemInfo();
+                                            int itemSQLIndex = reader.Read<int>(NpgsqlDbType.Integer);
+                                            itemInfo.ItemID = reader.Read<int>(NpgsqlDbType.Integer);
+                                            itemInfo.EnchantID = reader.Read<int>(NpgsqlDbType.Integer);
+                                            itemInfo.SuffixID = reader.Read<int>(NpgsqlDbType.Integer);
+                                            itemInfo.UniqueID = reader.Read<int>(NpgsqlDbType.Integer);
+                                            itemTranslation.AddIfKeyNotExist(itemSQLIndex, itemInfo);
+                                        }
+                                    }
+                                    conn.Close();
+                                };
+                                try
+                                {
+                                    _GrabIngameItemTable(sqlSearchIds);
+                                }
+                                catch (Exception ex)
+                                {
+                                    Logger.ConsoleWriteLine("Recovered(hopefully) from exception: " + ex.ToString());
+                                    int countDiv4 = uniqueGearItems.Count / 4;
+                                    List<int> chunkedGearItems = new List<int>();
+                                    for (int i = 0; i < uniqueGearItems.Count; ++i)
+                                    {
+                                        chunkedGearItems.Add(uniqueGearItems[i]);
+                                        if (i > countDiv4)
+                                        {
+                                            _GrabIngameItemTable(String.Join(", ", chunkedGearItems));
+                                            chunkedGearItems.Clear();
+                                        }
+                                    }
+                                    if(chunkedGearItems.Count > 0)
                                     {
                                         _GrabIngameItemTable(String.Join(", ", chunkedGearItems));
-                                        chunkedGearItems.Clear();
                                     }
                                 }
-                                if(chunkedGearItems.Count > 0)
+                                //using (var cmd = new NpgsqlCommand("SELECT id, itemid, enchantid, suffixid, uniqueid FROM ingameitemtable WHERE id IN (" + sqlSearchIds + ")", conn))
+                                //{
+                                //    using (var reader = cmd.ExecuteReader())
+                                //    {
+                                //        if (reader.HasRows == false)
+                                //            Logger.ConsoleWriteLine("UNEXPECTED ERROR!!!");
+
+                                //    }
+                                //}
+
+                                for(int gI = 0; gI < allGearItems.Count; ++gI)
                                 {
-                                    _GrabIngameItemTable(String.Join(", ", chunkedGearItems));
+                                    var gearItems = allGearItems[gI];
+                                    int gearID = gearIDs[gI];
+                                    GearData gearData = new GearData();
+                                    foreach (var itemSlot in gearItems.Value)
+                                    {
+                                        if (itemSlot.Value == 0) continue; //Skip 0s they means no gear was recorded at slot!
+                                        ItemInfo itemInfo = itemTranslation[itemSlot.Value];
+                                        itemInfo.Slot = itemSlot.Key;
+                                        gearData.Items.Add(itemSlot.Key, itemInfo);
+                                    }
+                                    if(wowVersion != WowVersionEnum.Vanilla)
+                                    {
+                                        conn.Open();
+                                        using (var reader = conn.BeginBinaryExport("COPY(SELECT itemslot, gemid1, gemid2, gemid3, gemid4 FROM PlayerGearGemsTable WHERE gearid=" + gearID + ") TO STDIN BINARY"))
+                                        {
+                                            while (reader.StartRow() != -1)
+                                            {
+                                                if (reader.IsNull == true) continue;
+                                                ItemSlot slot = (ItemSlot)reader.Read<int>(NpgsqlDbType.Smallint);
+                                                int gemID1 = reader.Read<int>(NpgsqlDbType.Integer);
+                                                int gemID2 = reader.Read<int>(NpgsqlDbType.Integer);
+                                                int gemID3 = reader.Read<int>(NpgsqlDbType.Integer);
+                                                int gemID4 = reader.Read<int>(NpgsqlDbType.Integer);
+                                                if (gemID1 != 0 || gemID2 != 0 || gemID3 != 0 || gemID4 != 0)
+                                                {
+                                                    gearData.Items[slot].GemIDs = new int[4] { gemID1, gemID2, gemID3, gemID4 };
+                                                }
+                                            }
+                                        }
+                                        conn.Close();
+                                    }
+                                    playerHistory.AddToHistory(gearData, gearItems.Key);
                                 }
                             }
-                            //using (var cmd = new NpgsqlCommand("SELECT id, itemid, enchantid, suffixid, uniqueid FROM ingameitemtable WHERE id IN (" + sqlSearchIds + ")", conn))
-                            //{
-                            //    using (var reader = cmd.ExecuteReader())
-                            //    {
-                            //        if (reader.HasRows == false)
-                            //            Logger.ConsoleWriteLine("UNEXPECTED ERROR!!!");
+                        }
+                        if(uniqueArenaIDs.Count > 0 && (uniqueArenaIDs.Count > 1 || uniqueArenaIDs[0] != 0))
+                        {
+                            Dictionary<int, ArenaPlayerData> arenaTranslation = new Dictionary<int, ArenaPlayerData>();
+                            string sqlSearchIds = String.Join(", ", uniqueArenaIDs);
 
-                            //    }
-                            //}
-
-                            foreach (var gearItems in allGearItems)
+                            conn.Open();
+                            using (var reader = conn.BeginBinaryExport("COPY (SELECT id, teamname, teamrating, gamesplayed, gameswon, playergamesplayed, playerrating FROM PlayerArenaDataTable WHERE id IN (" + sqlSearchIds + ")) TO STDIN BINARY"))
                             {
-                                GearData gearData = new GearData();
-                                foreach (var itemSlot in gearItems.Value)
+                                while (reader.StartRow() != -1)
                                 {
-                                    if (itemSlot.Value == 0) continue; //Skip 0s they means no gear was recorded at slot!
-                                    ItemInfo itemInfo = itemTranslation[itemSlot.Value];
-                                    itemInfo.Slot = itemSlot.Key;
-                                    gearData.Items.Add(itemSlot.Key, itemInfo);
-
+                                    ArenaPlayerData arenaPlayerData = new ArenaPlayerData();
+                                    int arenaDataSQLIndex = reader.Read<int>(NpgsqlDbType.Integer);
+                                    arenaPlayerData.TeamName = reader.Read<string>(NpgsqlDbType.Text);
+                                    arenaPlayerData.TeamRating = reader.Read<int>(NpgsqlDbType.Integer);
+                                    arenaPlayerData.GamesPlayed = reader.Read<int>(NpgsqlDbType.Integer);
+                                    arenaPlayerData.GamesWon = reader.Read<int>(NpgsqlDbType.Integer);
+                                    arenaPlayerData.PlayerPlayed = reader.Read<int>(NpgsqlDbType.Integer);
+                                    arenaPlayerData.PlayerRating = reader.Read<int>(NpgsqlDbType.Integer);
+                                    arenaTranslation.AddIfKeyNotExist(arenaDataSQLIndex, arenaPlayerData);
                                 }
-                                playerHistory.AddToHistory(gearData, gearItems.Key);
                             }
-                        }
-                    }
-                    realmDatabase.PlayersHistory.Add(player.Key, playerHistory);
-                    Player playerData = new Player();
-                    if (playerHistory.GetPlayerAtTime(player.Key, _Realm, DateTime.MaxValue, out playerData) == true)
-                    {
-                        realmDatabase.Players.Add(player.Key, playerData);
-                    }
+                            conn.Close();
 
+                            foreach(var arenaInfo in allArenaInfos)
+                            {
+                                ArenaData arenaData = new ArenaData();
+                                if (arenaInfo.Value.Team2v2 == 0 || arenaTranslation.TryGetValue(arenaInfo.Value.Team2v2, out arenaData.Team2v2) == false)
+                                    arenaData.Team2v2 = null;
+                                if (arenaInfo.Value.Team3v3 == 0 || arenaTranslation.TryGetValue(arenaInfo.Value.Team3v3, out arenaData.Team3v3) == false)
+                                    arenaData.Team3v3 = null;
+                                if (arenaInfo.Value.Team5v5 == 0 || arenaTranslation.TryGetValue(arenaInfo.Value.Team5v5, out arenaData.Team5v5) == false)
+                                    arenaData.Team5v5 = null;
+
+                                playerHistory.AddToHistory(arenaData, arenaInfo.Key);
+                            }
+                        }
+                        if (playerHistory.TalentsHistory.Count == 1 && playerHistory.TalentsHistory[0].Data == "")
+                            playerHistory.TalentsHistory = null; //Remove if unused
+
+                        realmDatabase.PlayersHistory.Add(player.Key, playerHistory);
+                        Player playerData = new Player();
+                        if (playerHistory.GetPlayerAtTime(player.Key, _Realm, DateTime.MaxValue, out playerData) == true)
+                        {
+                            realmDatabase.Players.Add(player.Key, playerData);
+                        }
+
+                        {
+                            ExtraData extraData = new ExtraData();
+                            conn.Open();
+                            using (var reader = conn.BeginBinaryExport("COPY (SELECT upload.contributor, playerseen.updatetime, mount.name FROM playermounttable playerseen" +
+                                " INNER JOIN ingamemounttable mount ON playerseen.mountid = mount.ID" +
+                                " INNER JOIN uploadtable upload ON playerseen.uploadid = upload.ID" +
+                                " WHERE playerseen.playerid = " + player.Value + ") TO STDIN BINARY"))
+                            {
+                                while (reader.StartRow() != -1)
+                                {
+                                    int contributorID = reader.Read<int>(NpgsqlDbType.Integer);
+                                    DateTime updateTime = reader.Read<DateTime>(NpgsqlDbType.Timestamp);
+                                    string mountName = reader.Read<string>(NpgsqlDbType.Text);
+                                    extraData._AddMount(mountName, new UploadID(contributorID, updateTime));
+                                }
+                            }
+                            conn.Close();
+                            conn.Open();
+                            using (var reader = conn.BeginBinaryExport("COPY (SELECT upload.contributor, playerseen.updatetime, pet.name, pet.level, pet.creaturefamily, pet.creaturetype FROM playerpettable playerseen" +
+                                " INNER JOIN ingamepettable pet ON playerseen.petid = pet.ID" +
+                                " INNER JOIN uploadtable upload ON playerseen.uploadid = upload.ID" +
+                                " WHERE playerseen.playerid = " + player.Value + ") TO STDIN BINARY"))
+                            {
+                                while (reader.StartRow() != -1)
+                                {
+                                    int contributorID = reader.Read<int>(NpgsqlDbType.Integer);
+                                    DateTime updateTime = reader.Read<DateTime>(NpgsqlDbType.Timestamp);
+                                    string petName = reader.Read<string>(NpgsqlDbType.Text);
+                                    int petLevel = reader.Read<int>(NpgsqlDbType.Smallint);
+                                    string petFamily = reader.Read<string>(NpgsqlDbType.Text);
+                                    string petType = reader.Read<string>(NpgsqlDbType.Text);
+                                    extraData._AddPet(petName, petLevel, petFamily, petType, new UploadID(contributorID, updateTime));
+                                }
+                            }
+                            conn.Close();
+                            conn.Open();
+                            using (var reader = conn.BeginBinaryExport("COPY (SELECT upload.contributor, playerseen.updatetime, companion.name, companion.level FROM playercompaniontable playerseen" +
+                                " INNER JOIN ingamecompaniontable companion ON playerseen.companionid = companion.ID" +
+                                " INNER JOIN uploadtable upload ON playerseen.uploadid = upload.ID" +
+                                " WHERE playerseen.playerid = " + player.Value + ") TO STDIN BINARY"))
+                            {
+                                while (reader.StartRow() != -1)
+                                {
+                                    int contributorID = reader.Read<int>(NpgsqlDbType.Integer);
+                                    DateTime updateTime = reader.Read<DateTime>(NpgsqlDbType.Timestamp);
+                                    string companionName = reader.Read<string>(NpgsqlDbType.Text);
+                                    int companionLevel = reader.Read<int>(NpgsqlDbType.Smallint);
+                                    extraData._AddCompanion(companionName, companionLevel, new UploadID(contributorID, updateTime));
+                                }
+                            }
+                            conn.Close();
+                            realmDatabase.PlayersExtraData.Add(player.Key, extraData);
+                        }
+
+                        if (playerProgress % 100 == 0)
+                        {
+                            Logger.ConsoleWriteLine("" + playerProgress + " / " + playerProgressMax + ": \"" + player.Key + "\" had " + playerUpdateCount + " updates! HistoryCount: Character=" + playerHistory.CharacterHistory.Count +
+                                ", Honor=" + playerHistory.HonorHistory.Count +
+                                ", Guild=" + playerHistory.GuildHistory.Count +
+                                ", Gear=" + playerHistory.GearHistory.Count +
+                                ", Arena=" + (playerHistory.ArenaHistory != null ? playerHistory.ArenaHistory.Count : 0) +
+                                ", Talents=" + (playerHistory.TalentsHistory != null ? playerHistory.TalentsHistory.Count : 0));
+                        }
+                    }
+                    catch (Exception ex)
                     {
-                        ExtraData extraData = new ExtraData();
-                        conn.Open();
-                        using (var reader = conn.BeginBinaryExport("COPY (SELECT upload.contributor, playerseen.updatetime, mount.name FROM playermounttable playerseen" +
-                            " INNER JOIN ingamemounttable mount ON playerseen.mountid = mount.ID" +
-                            " INNER JOIN uploadtable upload ON playerseen.uploadid = upload.ID" +
-                            " WHERE playerseen.playerid = " + player.Value + ") TO STDIN BINARY"))
-                        {
-                            while (reader.StartRow() != -1)
-                            {
-                                int contributorID = reader.Read<int>(NpgsqlDbType.Integer);
-                                DateTime updateTime = reader.Read<DateTime>(NpgsqlDbType.Timestamp);
-                                string mountName = reader.Read<string>(NpgsqlDbType.Text);
-                                extraData._AddMount(mountName, new UploadID(contributorID, updateTime));
-                            }
-                        }
-                        conn.Close();
-                        conn.Open();
-                        using (var reader = conn.BeginBinaryExport("COPY (SELECT upload.contributor, playerseen.updatetime, pet.name, pet.level, pet.creaturefamily, pet.creaturetype FROM playerpettable playerseen" +
-                            " INNER JOIN ingamepettable pet ON playerseen.petid = pet.ID" +
-                            " INNER JOIN uploadtable upload ON playerseen.uploadid = upload.ID" +
-                            " WHERE playerseen.playerid = " + player.Value + ") TO STDIN BINARY"))
-                        {
-                            while (reader.StartRow() != -1)
-                            {
-                                int contributorID = reader.Read<int>(NpgsqlDbType.Integer);
-                                DateTime updateTime = reader.Read<DateTime>(NpgsqlDbType.Timestamp);
-                                string petName = reader.Read<string>(NpgsqlDbType.Text);
-                                int petLevel = reader.Read<int>(NpgsqlDbType.Smallint);
-                                string petFamily = reader.Read<string>(NpgsqlDbType.Text);
-                                string petType = reader.Read<string>(NpgsqlDbType.Text);
-                                extraData._AddPet(petName, petLevel, petFamily, petType, new UploadID(contributorID, updateTime));
-                            }
-                        }
-                        conn.Close();
-                        conn.Open();
-                        using (var reader = conn.BeginBinaryExport("COPY (SELECT upload.contributor, playerseen.updatetime, companion.name, companion.level FROM playercompaniontable playerseen" +
-                            " INNER JOIN ingamecompaniontable companion ON playerseen.companionid = companion.ID" +
-                            " INNER JOIN uploadtable upload ON playerseen.uploadid = upload.ID" +
-                            " WHERE playerseen.playerid = " + player.Value + ") TO STDIN BINARY"))
-                        {
-                            while (reader.StartRow() != -1)
-                            {
-                                int contributorID = reader.Read<int>(NpgsqlDbType.Integer);
-                                DateTime updateTime = reader.Read<DateTime>(NpgsqlDbType.Timestamp);
-                                string companionName = reader.Read<string>(NpgsqlDbType.Text);
-                                int companionLevel = reader.Read<int>(NpgsqlDbType.Smallint);
-                                extraData._AddCompanion(companionName, companionLevel, new UploadID(contributorID, updateTime));
-                            }
-                        }
-                        conn.Close();
-                        realmDatabase.PlayersExtraData.Add(player.Key, extraData);
+                        Logger.ConsoleWriteLine("Failed to load player \"" + player.Key + "\" due to exception! " + ex.ToString());
                     }
                 }
             }

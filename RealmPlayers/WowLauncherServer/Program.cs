@@ -43,18 +43,44 @@ namespace VF_WoWLauncherServer
 
             /*Some Testing*/
 
-            List<WowRealm> realmsToTry = new List<WowRealm> { WowRealm.VanillaGaming, WowRealm.Al_Akir, WowRealm.Nefarian, WowRealm.NostalGeek, WowRealm.Nostalrius, WowRealm.Warsong, WowRealm.Archangel, WowRealm.NostalriusPVE, WowRealm.Kronos, WowRealm.Rebirth };
-            foreach(var realmToTry in realmsToTry)
+            WowRealm[] ALL_REALMS = new WowRealm[] {
+                WowRealm.Archangel,
+                WowRealm.Kronos,
+                WowRealm.NostalGeek,
+                WowRealm.Nostalrius,
+                WowRealm.NostalriusPVE,
+                WowRealm.Emerald_Dream,
+                WowRealm.Warsong,
+                WowRealm.Al_Akir,
+                WowRealm.Valkyrie,
+                WowRealm.VanillaGaming,
+                WowRealm.Nefarian,
+                WowRealm.Rebirth,
+                WowRealm.WarsongTBC };
+            //List<WowRealm> realmsToTry = new List<WowRealm> { WowRealm.VanillaGaming, WowRealm.Al_Akir, WowRealm.Nefarian, WowRealm.NostalGeek, WowRealm.Nostalrius, WowRealm.Warsong, WowRealm.Archangel, WowRealm.NostalriusPVE, WowRealm.Kronos, WowRealm.Rebirth };
+            foreach(var realmToTry in ALL_REALMS)
             {
                 try
                 {
+                    const bool MIGRATE_DATABASE = true;
+                    WowVersionEnum wowVersion = StaticValues.GetWowVersion(realmToTry);
+
+                    RealmDatabase sqlRealm = null;
+
+                    //if(MIGRATE_DATABASE == false)
+                    //{
+                    //    Logger.ConsoleWriteLine("Starting Load " + realmToTry.ToString() + " from SQL!!!");
+                    //    sqlRealm = VF.SQLMigration.LoadRealmDatabase(realmToTry);
+                    //    Logger.ConsoleWriteLine("Done Loading " + realmToTry.ToString() + " from SQL!!!");
+                    //}
+
                     RealmDatabase binRealm = new RealmDatabase(realmToTry);
                     Logger.ConsoleWriteLine("Started Loading " + realmToTry.ToString() + " from binary!!!");
                     binRealm.LoadDatabase("D:\\VF_RealmPlayersData\\RPPDatabase\\Database\\" + binRealm.Realm.ToString(), new DateTime(2012, 5, 1, 0, 0, 0));//new DateTime(2015, 9, 1, 0, 0, 0));//, 
                     Logger.ConsoleWriteLine("Loading...");
                     binRealm.WaitForLoad(RealmDatabase.LoadStatus.EverythingLoaded);
                     Logger.ConsoleWriteLine("Everything Loaded " + realmToTry.ToString() + " from binary!!!");
-                    if (false)
+                    if (MIGRATE_DATABASE == true)
                     {
                         Logger.ConsoleWriteLine("Starting Saving " + realmToTry.ToString() + " to SQL!!!");
                         VF.SQLMigration.SQLIDCounters sqlCounters = new VF.SQLMigration.SQLIDCounters();
@@ -64,9 +90,12 @@ namespace VF_WoWLauncherServer
                     }
                     //else
                     {
-                        Logger.ConsoleWriteLine("Starting Load " + realmToTry.ToString() + " from SQL!!!");
-                        RealmDatabase sqlRealm = VF.SQLMigration.LoadRealmDatabase(binRealm.Realm);
-                        Logger.ConsoleWriteLine("Done Loading " + realmToTry.ToString() + " from SQL!!!");
+                        if (sqlRealm == null)
+                        {
+                            Logger.ConsoleWriteLine("Starting Load " + realmToTry.ToString() + " from SQL!!!");
+                            sqlRealm = VF.SQLMigration.LoadRealmDatabase(realmToTry);
+                            Logger.ConsoleWriteLine("Done Loading " + realmToTry.ToString() + " from SQL!!!");
+                        }
 
                         Logger.ConsoleWriteLine("Starting Comparing realm datas for " + realmToTry.ToString() + "!!!");
                         foreach (var binPlayer in binRealm.Players)
@@ -115,13 +144,13 @@ namespace VF_WoWLauncherServer
                                     {
                                         Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" Character data was not same!");
                                     }
-                                    if (binPlayer.Value.Honor.IsSame(sqlPlayer.Honor) == false)
+                                    if (binPlayer.Value.Honor.IsSame(sqlPlayer.Honor, wowVersion) == false)
                                     {
                                         Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" Honor data was not same!");
                                     }
                                     if (binPlayer.Value.Gear.IsSame(sqlPlayer.Gear) == false)
                                     {
-                                        string gearItemsDebugInfo = " GearDifferences:";
+                                        string gearItemsDebugInfo = "";
                                         List<ItemSlot> diffCheckedSlots = new List<ItemSlot>();
                                         foreach (ItemSlot slot in Enum.GetValues(typeof(ItemSlot)))
                                         {
@@ -133,20 +162,19 @@ namespace VF_WoWLauncherServer
                                             if (binItem == null && sqlItem != null)
                                             {
                                                 //lets just assume this is not an error!
-                                                //gearItemsDebugInfo += "\tSQL{" + sqlItem.Slot.ToString() + ", " + sqlItem.ItemID + ", " + sqlItem.EnchantID + ", " + sqlItem.SuffixID + ", " + sqlItem.UniqueID + "}!=" +
-                                                //    "BIN{null}\n";
+                                                //gearItemsDebugInfo += "\n\tSQL" + sqlItem.GetAsString() + "!=BIN{null}";
                                             }
                                             else if (binItem != null && sqlItem == null)
                                             {
                                                 gearItemsDebugInfo += "\n\tSQL{null}!=" +
-                                                    "BIN{" + binItem.Slot.ToString() + ", " + binItem.ItemID + ", " + binItem.EnchantID + ", " + binItem.SuffixID + ", " + binItem.UniqueID + "}";
+                                                    "BIN" + binItem.GetAsString();
                                             }
                                             else if (binItem != null && sqlItem != null)
                                             {
                                                 if (sqlItem.IsSame(binItem) == false)
                                                 {
-                                                    gearItemsDebugInfo += "\n\tSQL{" + sqlItem.Slot.ToString() + ", " + sqlItem.ItemID + ", " + sqlItem.EnchantID + ", " + sqlItem.SuffixID + ", " + sqlItem.UniqueID + "}!=" +
-                                                        "BIN{" + binItem.Slot.ToString() + ", " + binItem.ItemID + ", " + binItem.EnchantID + ", " + binItem.SuffixID + ", " + binItem.UniqueID + "}";
+                                                    gearItemsDebugInfo += "\n\tSQL" + sqlItem.GetAsString() + "!=" +
+                                                        "BIN" + binItem.GetAsString();
                                                 }
                                             }
                                             else
@@ -157,7 +185,34 @@ namespace VF_WoWLauncherServer
                                                 }
                                             }
                                         }
-                                        Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" Gear data was not same!" + gearItemsDebugInfo);
+                                        if(gearItemsDebugInfo != "")
+                                        {
+                                            Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" Gear data was not same! GearDifferences:" + gearItemsDebugInfo);
+                                        }
+                                    }
+                                    if (binPlayer.Value.Arena != null)
+                                    {
+                                        if(sqlPlayer.Arena != null)
+                                        {
+                                            if(binPlayer.Value.Arena.IsSame(sqlPlayer.Arena) == false) Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" Arena data was not same!");
+                                        }
+                                        else if (sqlPlayer.Arena == null)
+                                        {
+                                            if(binPlayer.Value.Arena.Team2v2 != null) Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" Arena data was not same! BIN Team2v2 != null");
+                                            if(binPlayer.Value.Arena.Team3v3 != null) Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" Arena data was not same! BIN Team3v3 != null");
+                                            if(binPlayer.Value.Arena.Team5v5 != null) Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" Arena data was not same! BIN Team5v5 != null");
+                                        }
+                                    }
+                                    if (binPlayer.Value.TalentPointsData != null && binPlayer.Value.TalentPointsData != sqlPlayer.TalentPointsData)
+                                    {
+                                        if(sqlPlayer.TalentPointsData == null && binPlayer.Value.TalentPointsData == "")
+                                        {
+                                            //Skip this case, we dont care, null == ""
+                                        }
+                                        else
+                                        {
+                                            Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" Talents data was not same!");
+                                        }
                                     }
                                 }
                                 if (sqlHistory != null && binHistory != null)
@@ -193,7 +248,7 @@ namespace VF_WoWLauncherServer
                                         foreach (var binItem in binHistory.HonorHistory)
                                         {
                                             var sqlItem = sqlHistory.GetHonorItemAtTime(binItem.Uploader.GetTime());
-                                            if (sqlItem.Data.IsSame(binItem.Data) == false)
+                                            if (sqlItem.Data.IsSame(binItem.Data, wowVersion) == false)
                                             {
                                                 honorHistoryDebugInfo += "\tSQL" + sqlItem.GetAsString() + " != BIN" + binItem.GetAsString() + "\n";
                                             }
@@ -205,7 +260,10 @@ namespace VF_WoWLauncherServer
                                     }
                                     if (sqlHistory.GearHistory.Count > binHistory.GearHistory.Count || sqlHistory.GearHistory.Count == 0)
                                     {
-                                        Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" Gear history was not same! SQLCount(" + sqlHistory.GearHistory.Count + ") > BINCount(" + binHistory.GearHistory.Count + ")");
+                                        if(binHistory.GearHistory.Count != 0)
+                                        {
+                                            Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" Gear history was not same! SQLCount(" + sqlHistory.GearHistory.Count + ") > BINCount(" + binHistory.GearHistory.Count + ")");
+                                        }
                                     }
                                     if (sqlHistory.GearHistory.Count > 0)
                                     {
@@ -230,7 +288,7 @@ namespace VF_WoWLauncherServer
                                                 }
                                                 if (closestTimeFound == TimeSpan.MaxValue)
                                                 {
-                                                    gearHistoryDebugInfo += "\tSQL != BIN DiffString: " + sqlItem.GetDiffString(binItem) + "\n";
+                                                    gearHistoryDebugInfo += "\n\tSQL != BIN DiffString: " + sqlItem.GetDiffString(binItem);
                                                 }
                                                 else
                                                 {
@@ -238,15 +296,15 @@ namespace VF_WoWLauncherServer
                                                     {
                                                         if (closestTimeFound.TotalHours <= 1)
                                                         {
-                                                            gearHistoryDebugInfo += "\tSQL != BIN TIME SECDIFF: " + (int)closestTimeFound.TotalSeconds + " seconds\n";
+                                                            gearHistoryDebugInfo += "\n\tSQL != BIN TIME SECDIFF: " + (int)closestTimeFound.TotalSeconds + " seconds";
                                                         }
                                                         else if (closestTimeFound.TotalDays <= 1)
                                                         {
-                                                            gearHistoryDebugInfo += "\tSQL != BIN TIME MINDIFF: " + (int)closestTimeFound.TotalMinutes + " minutes\n";
+                                                            gearHistoryDebugInfo += "\n\tSQL != BIN TIME MINDIFF: " + (int)closestTimeFound.TotalMinutes + " minutes";
                                                         }
                                                         else
                                                         {
-                                                            gearHistoryDebugInfo += "\tSQL != BIN TIME HOURDIFF: " + (int)closestTimeFound.TotalHours + " hours\n";
+                                                            gearHistoryDebugInfo += "\n\tSQL != BIN TIME HOURDIFF: " + (int)closestTimeFound.TotalHours + " hours";
                                                         }
                                                     }
                                                 }
@@ -254,7 +312,7 @@ namespace VF_WoWLauncherServer
                                         }
                                         if (gearHistoryDebugInfo != "")
                                         {
-                                            Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" Gear history was not same!\n" + gearHistoryDebugInfo);
+                                            Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" Gear history was not same!" + (gearHistoryDebugInfo.Count((_V) => _V == '\n') == 1 ? gearHistoryDebugInfo.Substring(2) : gearHistoryDebugInfo));
                                         }
                                     }
                                     if (sqlHistory.GuildHistory.Count > binHistory.GuildHistory.Count || sqlHistory.GuildHistory.Count == 0)
@@ -306,7 +364,14 @@ namespace VF_WoWLauncherServer
                                     }
                                     else if (sqlHistory.ArenaHistory == null && binHistory.ArenaHistory != null)
                                     {
-                                        Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" Arena history was not same! SQL(null) != BINCount(" + binHistory.ArenaHistory.Count + ")");
+                                        foreach(var binItem in binHistory.ArenaHistory)
+                                        {
+                                            if(binItem.Data != null && (binItem.Data.Team2v2 != null || binItem.Data.Team3v3 != null || binItem.Data.Team5v5 != null))
+                                            {
+                                                Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" Arena history was not same! SQL(null) != BINCount(" + binHistory.ArenaHistory.Count + ")");
+                                                break;
+                                            }
+                                        }
                                     }
 
                                     if (sqlHistory.TalentsHistory != null && binHistory.TalentsHistory != null)
@@ -323,12 +388,19 @@ namespace VF_WoWLauncherServer
                                                 var sqlItem = sqlHistory.GetTalentsItemAtTime(binItem.Uploader.GetTime());
                                                 if (sqlItem.Data != binItem.Data)
                                                 {
-                                                    talentsHistoryDebugInfo += "\tSQL" + sqlItem.GetAsString() + " != BIN" + binItem.GetAsString() + "\n";
+                                                    if (binItem.Data == "")
+                                                    {
+                                                        //Ignore this case...
+                                                    }
+                                                    else
+                                                    {
+                                                        talentsHistoryDebugInfo += "\n\tSQL" + sqlItem.GetAsString() + " != BIN" + binItem.GetAsString();
+                                                    }
                                                 }
                                             }
                                             if (talentsHistoryDebugInfo != "")
                                             {
-                                                Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" Talents history was not same!\n" + talentsHistoryDebugInfo);
+                                                Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" Talents history was not same! " + talentsHistoryDebugInfo);
                                             }
                                         }
                                     }
@@ -338,7 +410,14 @@ namespace VF_WoWLauncherServer
                                     }
                                     else if (sqlHistory.TalentsHistory == null && (binHistory.TalentsHistory != null && binHistory.TalentsHistory.Count > 0))
                                     {
-                                        Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" Talents history was not same! SQL(null) != BINCount(" + binHistory.TalentsHistory.Count + ")");
+                                        if (binHistory.TalentsHistory.Count == 1 && binHistory.TalentsHistory[0].Data == "")
+                                        {
+                                            //Skip this case. It basically means there was no talentshistory!
+                                        }
+                                        else
+                                        {
+                                            Logger.ConsoleWriteLine("\"" + binPlayer.Key + "\" Talents history was not same! SQL(null) != BINCount(" + binHistory.TalentsHistory.Count + ")");
+                                        }
                                     }
                                 }
                                 if (sqlExtraData != null && binExtraData != null)

@@ -134,22 +134,22 @@ namespace VF_RealmPlayersDatabase.PlayerData
                 if (Items.TryGetValue(slot, out myItem) == false) myItem = null;
                 if (_Gear.Items.TryGetValue(slot, out otherItem) == false) otherItem = null;
 
-                if (myItem == null && otherItem != null)
+                if (myItem != null && otherItem == null) 
                 {
-                    gearItemsDebugInfo += "My" + otherItem.GetAsString() + "!=" +
+                    gearItemsDebugInfo += "My" + myItem.GetAsString() + "!=" +
                         "Other{null}, ";
                 }
-                else if (myItem != null && otherItem == null)
+                else if (myItem == null && otherItem != null)
                 {
                     gearItemsDebugInfo += "My{null}!=" +
-                        "Other" + myItem.GetAsString() + ", ";
+                        "Other" + otherItem.GetAsString() + ", ";
                 }
                 else if (myItem != null && otherItem != null)
                 {
-                    if (otherItem.IsSame(myItem) == false)
+                    if (myItem.IsSame(otherItem) == false)
                     {
-                        gearItemsDebugInfo += "My" + otherItem.GetAsString() + "!=" +
-                            "Other" + myItem.GetAsString() + ", ";
+                        gearItemsDebugInfo += "My" + myItem.GetAsString() + "!=" +
+                            "Other" + otherItem.GetAsString() + ", ";
                     }
                 }
                 else

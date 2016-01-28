@@ -118,23 +118,29 @@ namespace VF_RealmPlayersDatabase.PlayerData
             LifetimeDK = _HonorData.LifetimeDK;
             LifetimeHighestRank = _HonorData.LifetimeHighestRank;
         }
-        public bool IsSame(HonorData _HonorData)
+        public bool IsSame(HonorData _HonorData, WowVersionEnum _WowVersion = WowVersionEnum.Vanilla)
         {
-            if(CurrentRank != _HonorData.CurrentRank) return false;
-            if (CurrentRankProgress != _HonorData.CurrentRankProgress) return false;
             if (TodayHK != _HonorData.TodayHK) return false;
-            if (TodayDK != _HonorData.TodayDK) return false;
             if (YesterdayHK != _HonorData.YesterdayHK) return false;
             if (YesterdayHonor != _HonorData.YesterdayHonor) return false;
-            if(ThisWeekHK != _HonorData.ThisWeekHK) return false;
-            if(ThisWeekHonor != _HonorData.ThisWeekHonor) return false;
-            if(LastWeekHK != _HonorData.LastWeekHK) return false;
-            if(LastWeekHonor != _HonorData.LastWeekHonor) return false;
-            if(LastWeekStanding != _HonorData.LastWeekStanding) return false;
-            if(LifetimeHK != _HonorData.LifetimeHK) return false;
-            if(LifetimeDK != _HonorData.LifetimeDK) return false;
-            if(LifetimeHighestRank != _HonorData.LifetimeHighestRank) return false;
-
+            if (LifetimeHK != _HonorData.LifetimeHK) return false;
+            if (_WowVersion != WowVersionEnum.Vanilla)
+            {
+                if (TodayHonorTBC != _HonorData.TodayHonorTBC) return false;
+            }
+            else
+            {
+                if (ThisWeekHK != _HonorData.ThisWeekHK) return false;
+                if (ThisWeekHonor != _HonorData.ThisWeekHonor) return false;
+                if (LastWeekHK != _HonorData.LastWeekHK) return false;
+                if (LastWeekHonor != _HonorData.LastWeekHonor) return false;
+                if (CurrentRank != _HonorData.CurrentRank) return false;
+                if (CurrentRankProgress != _HonorData.CurrentRankProgress) return false;
+                if (TodayDK != _HonorData.TodayDK) return false;
+                if (LastWeekStanding != _HonorData.LastWeekStanding) return false;
+                if (LifetimeDK != _HonorData.LifetimeDK) return false;
+                if (LifetimeHighestRank != _HonorData.LifetimeHighestRank) return false;
+            }
             return true;
         }
         public bool IsRealisticChange(HonorData _HonorData, TimeSpan _TimeSpan)
