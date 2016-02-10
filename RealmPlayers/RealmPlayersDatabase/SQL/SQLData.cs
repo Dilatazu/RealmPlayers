@@ -16,6 +16,10 @@ namespace VF
         {
             ID = _ID;
         }
+        public bool IsValid()
+        {
+            return ID > 0;
+        }
         public static SQLPlayerID Invalid()
         {
             return new SQLPlayerID(-1);
@@ -27,6 +31,10 @@ namespace VF
         public SQLUploadID(int _ID)
         {
             ID = _ID;
+        }
+        public bool IsValid()
+        {
+            return ID > 0;
         }
         public static SQLUploadID Invalid()
         {

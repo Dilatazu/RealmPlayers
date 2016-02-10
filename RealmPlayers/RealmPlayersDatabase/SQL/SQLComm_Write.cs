@@ -45,6 +45,7 @@ namespace VF
                         }
                     }
                 }
+                conn.Close();
             }
             return new SQLUploadID(0);
         }
@@ -67,6 +68,7 @@ namespace VF
                         }
                     }
                 }
+                conn.Close();
             }
             return new SQLIngameItemID(0);
         }
@@ -103,6 +105,7 @@ namespace VF
                         }
                     }
                 }
+                conn.Close();
             }
             return 0;
         }
@@ -179,6 +182,7 @@ namespace VF
                         }
                     }
                 }
+                conn.Close();
             }
             return resultHonorID;
         }
@@ -251,6 +255,7 @@ namespace VF
                         GenerateNewPlayerGearGemEntries(gearDataEntryID, gems);
                     }
                 }
+                conn.Close();
             }
             return gearDataEntryID;
         }
@@ -276,6 +281,7 @@ namespace VF
                     }
                     cmdGearGems.Close();
                 }
+                conn.Close();
             }
             return true;
         }

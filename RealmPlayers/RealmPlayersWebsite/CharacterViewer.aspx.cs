@@ -1,4 +1,7 @@
-﻿using System;
+﻿
+//#define ENABLE_NAME_CHANGE_DETECTION
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -106,6 +109,7 @@ namespace RealmPlayersServer
 
                     var realm = PageUtility.GetQueryRealm(Request);
                     string playerStr = PageUtility.GetQueryString(Request, "player");
+#if ENABLE_NAME_CHANGE_DETECTION
                     string oldName = "";
                     var realmHistory = DatabaseAccess.GetRealmPlayersHistory(this, PageUtility.GetQueryRealm(Request), NotLoadedDecision.SpinWait);
                     if (Code.PlayerAnalyze.HasPlayerNameChanged(realmHistory, playerStr, wowVersion, out oldName) == true)
@@ -113,7 +117,8 @@ namespace RealmPlayersServer
                         statsInfo += "<h5 class='hnoextraline'>Name Changes</h5>";
                         statsInfo += PageUtility.CreatePlayerLink(oldName, realm) + " -> " + PageUtility.CreatePlayerLink(playerStr, realm) + "<br/>";
                     }
-                    
+#endif
+
                     var raceOrSexChanges = _PlayerHistory.GetRaceOrSexChanges();
                     if (raceOrSexChanges.Count > 1)
                     {
@@ -507,7 +512,7 @@ namespace RealmPlayersServer
                 gearStatsStr += "<table style='width:555px;'><tbody><tr><td style='vertical-align:top'>";
                 var gearStats = Code.GearAnalyze.GenerateGearStats(_Gear, _WowVersion);
 
-                #region GearStats Ordering
+#region GearStats Ordering
                 var gearStatsSorted = gearStats.OrderBy((_Value) =>
                 {
                     switch (_Value.StatType)
@@ -621,7 +626,7 @@ namespace RealmPlayersServer
                             return -1;
                     }
                 }).ToList();
-                #endregion
+#endregion
 
                 int column2Start = (int)Math.Ceiling((float)gearStatsSorted.Count / 3.0f);
                 int column3Start = (int)Math.Floor(2.0f * ((float)gearStatsSorted.Count / 3.0f));
@@ -799,8 +804,7 @@ namespace RealmPlayersServer
             Player player;
             PlayerHistory playerHistory = null;
             PlayerExtraData playerExtraData = null;
-            if(DatabaseAccess.TryGetRealmPlayersHistory(this, realm) != null)
-                playerHistory = DatabaseAccess.FindRealmPlayerHistory(this, realm, playerStr);
+            playerHistory = DatabaseAccess.FindRealmPlayerHistory(this, realm, playerStr);
             
             playerExtraData = DatabaseAccess.FindRealmPlayerExtraData(this, realm, playerStr, NotLoadedDecision.ReturnNull);
 

@@ -68,9 +68,9 @@ namespace RealmPlayersServer
         //        return null;
         //    }
         //}
-        public static RealmDatabase FindRealmDB(System.Web.UI.Page _Page, WowRealm _Realm, NotLoadedDecision _Decision = NotLoadedDecision.SpinWait)
+        public static RealmDatabase _FindRealmDB(System.Web.UI.Page _Page, WowRealm _Realm, NotLoadedDecision _Decision = NotLoadedDecision.SpinWait)
         {
-            var rppDatabase = Hidden.ApplicationInstance.Instance.GetRPPDatabase(_Decision == NotLoadedDecision.SpinWait);
+            var rppDatabase = Hidden.ApplicationInstance.Instance._GetRPPDatabase(_Decision == NotLoadedDecision.SpinWait);
             if (rppDatabase == null)
             {
                 if (_Decision == NotLoadedDecision.RedirectAndWait)
@@ -79,40 +79,56 @@ namespace RealmPlayersServer
             }
             return rppDatabase.GetRealm(_Realm);
         }
-        public static Dictionary<WowRealm, RealmDatabase> GetRealmDBs(System.Web.UI.Page _Page)
+        public static Dictionary<WowRealm, RealmDatabase> _GetRealmDBs(System.Web.UI.Page _Page)
         {
-            return Hidden.ApplicationInstance.Instance.GetRPPDatabase(true).GetRealms();
+            return Hidden.ApplicationInstance.Instance._GetRPPDatabase(true).GetRealms();
         }
         public static PlayerData.PlayerHistory FindRealmPlayerHistory(System.Web.UI.Page _Page, WowRealm _Realm, string _Player)
         {
-            var realm = FindRealmDB(_Page, _Realm);
+            PlayerData.PlayerHistory playerHistory;
+#if NO_SQL_LOADING
+            
+#else
+            if (VF.SQLMigration.LoadPlayer(_Player, _Realm, VF.SQLPlayerID.Invalid(), out playerHistory) > 0)
+            {
+                return playerHistory;
+            }
+#endif
+            var realm = _FindRealmDB(_Page, _Realm);
             if (realm == null/* || realm.IsPlayersHistoryLoadComplete() == false*/)
                 return null;
-            PlayerData.PlayerHistory playerHistory;
             if (realm.PlayersHistory.TryGetValue(_Player, out playerHistory) == false)
                 return null;
             return playerHistory;
         }
         public static PlayerData.ExtraData FindRealmPlayerExtraData(System.Web.UI.Page _Page, WowRealm _Realm, string _Player, NotLoadedDecision _Decision = NotLoadedDecision.ReturnNull)
         {
-            var realm = FindRealmDB(_Page, _Realm);
+            PlayerData.ExtraData playerExtraData;
+#if NO_SQL_LOADING
+            
+#else
+            if(VF.SQLMigration.LoadPlayer(_Player, _Realm, VF.SQLPlayerID.Invalid(), out playerExtraData) > 0)
+            {
+                return playerExtraData;
+            }
+#endif
+            var realm = _FindRealmDB(_Page, _Realm);
             if (realm == null || (realm.IsPlayersExtraDataLoadComplete() == false && _Decision != NotLoadedDecision.SpinWait))
                 return null;
-            PlayerData.ExtraData playerExtraData;
             if (realm.PlayersExtraData.TryGetValue(_Player, out playerExtraData) == false)
                 return null;
             return playerExtraData;
         }
-        public static Dictionary<string, PlayerData.PlayerHistory> TryGetRealmPlayersHistory(System.Web.UI.Page _Page, WowRealm _Realm)
+        public static Dictionary<string, PlayerData.PlayerHistory> _TryGetRealmPlayersHistory(System.Web.UI.Page _Page, WowRealm _Realm)
         {
-            var realm = FindRealmDB(_Page, _Realm);
+            var realm = _FindRealmDB(_Page, _Realm);
             if (realm == null || realm.IsPlayersHistoryLoadComplete() == false)
                 return null;
             return realm.PlayersHistory;
         }
-        public static Dictionary<string, PlayerData.PlayerHistory> GetRealmPlayersHistory(System.Web.UI.Page _Page, WowRealm _Realm, NotLoadedDecision _Decision = NotLoadedDecision.RedirectAndWait)
+        public static Dictionary<string, PlayerData.PlayerHistory> _GetRealmPlayersHistory(System.Web.UI.Page _Page, WowRealm _Realm, NotLoadedDecision _Decision = NotLoadedDecision.RedirectAndWait)
         {
-            var realm = FindRealmDB(_Page, _Realm);
+            var realm = _FindRealmDB(_Page, _Realm);
             if (realm == null || (realm.IsPlayersHistoryLoadComplete() == false && _Decision != NotLoadedDecision.SpinWait))
             {
                 if(_Decision == NotLoadedDecision.RedirectAndWait)
@@ -123,7 +139,7 @@ namespace RealmPlayersServer
         }
         public static Dictionary<string, PlayerData.Player> GetRealmPlayers(System.Web.UI.Page _Page, WowRealm _Realm, NotLoadedDecision _Decision = NotLoadedDecision.SpinWait)
         {
-            var realm = FindRealmDB(_Page, _Realm, _Decision);
+            var realm = _FindRealmDB(_Page, _Realm, _Decision);
             if (realm == null || (realm.IsPlayersLoadComplete() == false && _Decision != NotLoadedDecision.SpinWait))
             {
                 if (_Decision == NotLoadedDecision.RedirectAndWait)
@@ -202,7 +218,7 @@ namespace RealmPlayersServer
         }
         public static Dictionary<VF_RealmPlayersDatabase.WowRealm, Dictionary<int, Code.ContributorStatisticItem>> GetContributorStatistics()
         {
-            var db = Hidden.ApplicationInstance.Instance.GetRPPDatabase(false);
+            var db = Hidden.ApplicationInstance.Instance._GetRPPDatabase(false);
             if (db == null)
                 return null;
             return Hidden.ApplicationInstance.Instance.GetContributorStatistics();

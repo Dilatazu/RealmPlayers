@@ -175,7 +175,7 @@ namespace RealmPlayersServer
             table += "<tbody>";
 
             var playerArray = DatabaseAccess.GetRealmPlayers(this, _Realm, NotLoadedDecision.RedirectAndWait).OrderByDescending(_SortLambda);
-            var playersHistoryArray = DatabaseAccess.GetRealmPlayersHistory(this, _Realm, NotLoadedDecision.ReturnNull);
+            var playersHistoryArray = DatabaseAccess._GetRealmPlayersHistory(this, _Realm, NotLoadedDecision.ReturnNull);
             int nr = 0;
             foreach (var player in playerArray)
             {

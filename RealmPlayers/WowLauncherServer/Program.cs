@@ -62,17 +62,17 @@ namespace VF_WoWLauncherServer
             {
                 try
                 {
-                    const bool MIGRATE_DATABASE = true;
+                    const bool MIGRATE_DATABASE = false;
                     WowVersionEnum wowVersion = StaticValues.GetWowVersion(realmToTry);
 
                     RealmDatabase sqlRealm = null;
 
-                    //if(MIGRATE_DATABASE == false)
-                    //{
-                    //    Logger.ConsoleWriteLine("Starting Load " + realmToTry.ToString() + " from SQL!!!");
-                    //    sqlRealm = VF.SQLMigration.LoadRealmDatabase(realmToTry);
-                    //    Logger.ConsoleWriteLine("Done Loading " + realmToTry.ToString() + " from SQL!!!");
-                    //}
+                    if (MIGRATE_DATABASE == false)
+                    {
+                        Logger.ConsoleWriteLine("Starting Load " + realmToTry.ToString() + " from SQL!!!");
+                        sqlRealm = VF.SQLMigration.LoadRealmDatabase(realmToTry);
+                        Logger.ConsoleWriteLine("Done Loading " + realmToTry.ToString() + " from SQL!!!");
+                    }
 
                     RealmDatabase binRealm = new RealmDatabase(realmToTry);
                     Logger.ConsoleWriteLine("Started Loading " + realmToTry.ToString() + " from binary!!!");

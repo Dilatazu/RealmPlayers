@@ -31,7 +31,7 @@ namespace RealmPlayersServer
         protected void Page_Init(object sender, EventArgs e)
         {
             Constants.AssertInitialize();
-            var dataBase = Hidden.ApplicationInstance.Instance.GetRPPDatabase(false);
+            var dataBase = Hidden.ApplicationInstance.Instance._GetRPPDatabase(false);
             var itemInfoCache = Hidden.ApplicationInstance.Instance.GetItemInfoCache(VF_RealmPlayersDatabase.WowVersionEnum.Vanilla, false);
             var itemInfoCacheTBC = Hidden.ApplicationInstance.Instance.GetItemInfoCache(VF_RealmPlayersDatabase.WowVersionEnum.TBC, false);
             if ((dataBase == null || itemInfoCache == null || itemInfoCacheTBC == null) && Request.Url.AbsolutePath.ToLower().StartsWith("/error.aspx") == false)
