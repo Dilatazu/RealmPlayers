@@ -251,7 +251,13 @@ namespace RealmPlayersServer
                         Logger.LogException(ex);
                     }
                 })).Start();
-                ContributorDB.Initialize();
+                Constants.AssertInitialize();
+                ContributorDB.Initialize(Constants.DevMode);
+                while (ContributorDB.GetMongoDB() == null)
+                {
+                    ContributorDB.Initialize(Constants.DevMode);
+                    System.Threading.Thread.Sleep(1000);
+                }
             }
             public void BackupItemInfos()
             {

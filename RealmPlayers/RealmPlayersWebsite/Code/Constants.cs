@@ -8,6 +8,7 @@ namespace RealmPlayersServer
     public class Constants
     {
         public static bool DebugMode = false;
+        public static bool DevMode = false;
         public static string RPPDbDir = VF_RealmPlayersDatabase.Utility.DefaultServerLocation + "VF_RealmPlayersData\\RPPDatabase\\";
         public static string RDDbDir = VF_RealmPlayersDatabase.Utility.DefaultServerLocation + "VF_RealmPlayersData\\RDDatabase\\";
         public static string RPPDbWriteDir = VF_RealmPlayersDatabase.Utility.DefaultServerLocation + "VF_RealmPlayersData\\RPPDatabase\\";
@@ -23,6 +24,7 @@ namespace RealmPlayersServer
                 }
                 if (System.IO.Directory.Exists(RPPDbDir) == false)
                 {
+                    DevMode = true;
                     RPPDbDir = RPPDbDir.Replace(VF_RealmPlayersDatabase.Utility.DefaultServerLocation, VF_RealmPlayersDatabase.Utility.DefaultDebugLocation);
                     RPPDbWriteDir = RPPDbWriteDir.Replace(VF_RealmPlayersDatabase.Utility.DefaultServerLocation, VF_RealmPlayersDatabase.Utility.DefaultDebugLocation);
 
