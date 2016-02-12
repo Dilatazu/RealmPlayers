@@ -509,12 +509,13 @@ namespace VF_WoWLauncherServer
             return;
             /*Some Testing*/
 
-            if (debugMode == false)
+            //if (debugMode == false)
             {
                 Console.WriteLine("Waiting for ContributorDB to load");
+                ContributorDB.Initialize(debugMode);
                 while (ContributorDB.GetMongoDB() == null)
                 {
-                    ContributorDB.Initialize();
+                    ContributorDB.Initialize(debugMode);
                     System.Threading.Thread.Sleep(100);
                     Console.Write(".");
                 }

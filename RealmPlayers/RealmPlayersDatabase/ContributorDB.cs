@@ -83,7 +83,7 @@ namespace VF_RealmPlayersDatabase
         {
             return sm_ContributorDB;
         }
-        public static void Initialize()
+        public static void Initialize(bool _DebugMode = false)
         {
             if (_sm_ContributorMetaDB_Internal == null)
             {
@@ -91,7 +91,7 @@ namespace VF_RealmPlayersDatabase
                 {
                     if (_sm_ContributorMetaDB_Internal == null)
                     {
-                        VF.MongoDatabase databaseClient = RealmPlayersDB.GetInstance();
+                        VF.MongoDatabase databaseClient = RealmPlayersDB.GetInstance(_DebugMode);
                         _sm_ContributorMetaDB_Internal = databaseClient.GetCollection<ContributorMetaDBElement>("ContributorsMeta");
                         _sm_ContributorDB_Internal = databaseClient.GetCollection<ContributorDBElement>("Contributors");
                     }
