@@ -357,6 +357,7 @@ namespace VF_RealmPlayersDatabase.PlayerData
 	        {
                 if (HaveValidHistory() == false)
                 {
+                    Logger.ConsoleWriteLine("Player \"" + _Name + "\" did not have Valid History!", ConsoleColor.Red);
                     _RetPlayer = null;
                     return false;
                 }
@@ -369,8 +370,9 @@ namespace VF_RealmPlayersDatabase.PlayerData
                     , GetTalentsItemAtTime(_DateTime));
                 return true;
 	        }
-	        catch (Exception)
+	        catch (Exception ex)
 	        {
+                Logger.LogException(ex);
                 _RetPlayer = null;
                 return false;
 	        }
