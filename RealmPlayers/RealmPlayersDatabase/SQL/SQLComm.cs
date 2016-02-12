@@ -18,8 +18,6 @@ namespace VF
 {
     public partial class SQLComm
     {
-        public static string g_ConnectionString = "Host=localhost;Port=5433;Username=RealmPlayers;Password=" + VF.HiddenStrings.SQLDatabase_Password + ";Database=testdb2";
-        
-        
+        public static string g_ConnectionString = "Host=localhost;Port=5433;Username=RealmPlayers;Password=" + VF.HiddenStrings.SQLDatabase_Password + ";Database=RealmPlayersDB";
     }
 }

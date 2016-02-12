@@ -37,6 +37,16 @@ namespace VF
     }
     public partial class SQLComm
     {
+        public bool GetLatestPlayerData(string _PlayerName, WowRealm _Realm, out SQLPlayerData _ResultPlayerData)
+        {
+            SQLPlayerID playerID;
+            if (GetPlayerID(_Realm, _PlayerName, out playerID) == true)
+            {
+                return GetLatestPlayerData(playerID, out _ResultPlayerData);
+            }
+            _ResultPlayerData = SQLPlayerData.Invalid();
+            return false;
+        }
         public bool GetLatestPlayerData(SQLPlayerID _PlayerID, out SQLPlayerData _ResultPlayerData)
         {
             using (var conn = new NpgsqlConnection(g_ConnectionString))
@@ -59,8 +69,73 @@ namespace VF
                 {
                     {
                         var idParam = new NpgsqlParameter("ID", NpgsqlDbType.Integer);
-                        idParam.Value = _PlayerID.ID;
+                        idParam.Value = (int)_PlayerID;
                         cmd.Parameters.Add(idParam);
+                    }
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read() == true)
+                        {
+                            _ResultPlayerData = new SQLPlayerData();
+                            _ResultPlayerData.PlayerID = _PlayerID;
+                            _ResultPlayerData.UploadID = new SQLUploadID(reader.GetInt32(UPLOADID_COLUMN));
+                            _ResultPlayerData.UpdateTime = reader.GetTimeStamp(UPDATETIME_COLUMN).DateTime;
+                            _ResultPlayerData.PlayerCharacter = new PlayerData.CharacterData();
+                            _ResultPlayerData.PlayerCharacter.Race = (PlayerRace)reader.GetInt16(RACE_COLUMN);
+                            _ResultPlayerData.PlayerCharacter.Class = (PlayerClass)reader.GetInt16(CLASS_COLUMN);
+                            _ResultPlayerData.PlayerCharacter.Sex = (PlayerSex)reader.GetInt16(SEX_COLUMN);
+                            _ResultPlayerData.PlayerCharacter.Level = reader.GetInt16(LEVEL_COLUMN);
+                            _ResultPlayerData.PlayerGuildID = reader.GetInt32(GUILDINFO_COLUMN);
+                            _ResultPlayerData.PlayerHonorID = reader.GetInt32(HONORINFO_COLUMN);
+                            _ResultPlayerData.PlayerGearID = reader.GetInt32(GEARINFO_COLUMN);
+                            _ResultPlayerData.PlayerArenaID = reader.GetInt32(ARENAINFO_COLUMN);
+                            _ResultPlayerData.PlayerTalentsID = reader.GetInt32(TALENTSINFO_COLUMN);
+                            return true;
+                        }
+                    }
+                }
+            }
+            _ResultPlayerData = SQLPlayerData.Invalid();
+            return false;
+        }
+        public bool GetPlayerDataAtTime(string _PlayerName, WowRealm _Realm, DateTime _DateTime, out SQLPlayerData _ResultPlayerData)
+        {
+            SQLPlayerID playerID;
+            if(GetPlayerID(_Realm, _PlayerName, out playerID) == true)
+            {
+                return GetPlayerDataAtTime(playerID, _DateTime, out _ResultPlayerData);
+            }
+            _ResultPlayerData = SQLPlayerData.Invalid();
+            return false;
+        }
+        public bool GetPlayerDataAtTime(SQLPlayerID _PlayerID, DateTime _DateTime, out SQLPlayerData _ResultPlayerData)
+        {
+            using (var conn = new NpgsqlConnection(g_ConnectionString))
+            {
+                conn.Open();
+                const int UPLOADID_COLUMN = 0;
+                const int UPDATETIME_COLUMN = 1;
+                const int RACE_COLUMN = 2;
+                const int CLASS_COLUMN = 3;
+                const int SEX_COLUMN = 4;
+                const int LEVEL_COLUMN = 5;
+                const int GUILDINFO_COLUMN = 6;
+                const int HONORINFO_COLUMN = 7;
+                const int GEARINFO_COLUMN = 8;
+                const int ARENAINFO_COLUMN = 9;
+                const int TALENTSINFO_COLUMN = 10;
+                using (var cmd = new NpgsqlCommand("SELECT pd.uploadid, pd.updatetime, pd.race, pd.class, pd.sex, pd.level, pd.guildinfo, pd.honorinfo, pd.gearinfo, pd.arenainfo, pd.talentsinfo FROM playerdatatable pd" +
+                    " WHERE pd.playerid = :ID AND pd.updatetime = (SELECT MAX(updatetime) FROM playerdatatable WHERE playerid = :ID AND updatetime < :DateTime)", conn))
+                {
+                    {
+                        var idParam = new NpgsqlParameter("ID", NpgsqlDbType.Integer);
+                        idParam.Value = (int)_PlayerID;
+                        cmd.Parameters.Add(idParam);
+                    }
+                    {
+                        var dateParam = new NpgsqlParameter("DateTime", NpgsqlDbType.Timestamp);
+                        dateParam.Value = _DateTime;
+                        cmd.Parameters.Add(dateParam);
                     }
                     using (var reader = cmd.ExecuteReader())
                     {
@@ -110,11 +185,11 @@ namespace VF
                 const int LIFETIMEHIGHESTRANK_COLUMN = 14;
                 using (var cmd = new NpgsqlCommand("SELECT h1.todayhk, h1.todayhonor, h1.yesterdayhk, h1.yesterdayhonor, h1.lifetimehk, h2.currentrank, h2.currentrankprogress, h2.todaydk, h2.thisweekhk, h2.thisweekhonor, h2.lastweekhk, h2.lastweekhonor, h2.lastweekstanding, h2.lifetimedk, h2.lifetimehighestrank FROM playerhonortable h1" +
                     " INNER JOIN PlayerHonorVanillaTable h2 ON h1.id = h2.playerhonorid" +
-                    " WHERE honor.id=:ID", conn))
+                    " WHERE h1.id=:ID", conn))
                 {
                     {
                         var idParam = new NpgsqlParameter("ID", NpgsqlDbType.Integer);
-                        idParam.Value = _PlayerData.PlayerHonorID;
+                        idParam.Value = (int)_PlayerData.PlayerHonorID;
                         cmd.Parameters.Add(idParam);
                     }
                     using (var reader = cmd.ExecuteReader())
@@ -166,7 +241,7 @@ namespace VF
                 {
                     {
                         var idParam = new NpgsqlParameter("ID", NpgsqlDbType.Integer);
-                        idParam.Value = _PlayerData.PlayerGuildID;
+                        idParam.Value = (int)_PlayerData.PlayerGuildID;
                         cmd.Parameters.Add(idParam);
                     }
                     using (var reader = cmd.ExecuteReader())
@@ -246,7 +321,7 @@ namespace VF
                     {
                         {
                             var idParam = new NpgsqlParameter("ID", NpgsqlDbType.Integer);
-                            idParam.Value = _PlayerData.PlayerTalentsID;
+                            idParam.Value = (int)_PlayerData.PlayerTalentsID;
                             cmd.Parameters.Add(idParam);
                         }
                         using (var reader = cmd.ExecuteReader())

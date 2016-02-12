@@ -59,7 +59,7 @@ namespace VF
                     Action<Contributor> WriteContributor = (Contributor _Contributor) =>
                     {
                         cmd.StartRow();
-                        cmd.Write(_Contributor.ContributorID, NpgsqlDbType.Integer);
+                        cmd.Write((int)_Contributor.ContributorID, NpgsqlDbType.Integer);
                         cmd.Write(_Contributor.UserID, NpgsqlDbType.Text);
                         cmd.Write(_Contributor.Name, NpgsqlDbType.Text);
                         cmd.Write(_Contributor.IP, NpgsqlDbType.Text);
@@ -223,7 +223,7 @@ namespace VF
                             };
 
                             cmdGear.StartRow();
-                            cmdGear.Write(currGearTableID, NpgsqlDbType.Integer);
+                            cmdGear.Write((int)currGearTableID, NpgsqlDbType.Integer);
                             cmdGear.Write(WriteGearItem(ItemSlot.Head), NpgsqlDbType.Integer);
                             cmdGear.Write(WriteGearItem(ItemSlot.Neck), NpgsqlDbType.Integer);
                             cmdGear.Write(WriteGearItem(ItemSlot.Shoulder), NpgsqlDbType.Integer);
@@ -251,7 +251,7 @@ namespace VF
                                     if (itemInfo.Value.GemIDs != null)
                                     {
                                         cmdGearGems.StartRow();
-                                        cmdGearGems.Write(currGearTableID, NpgsqlDbType.Integer);
+                                        cmdGearGems.Write((int)currGearTableID, NpgsqlDbType.Integer);
                                         cmdGearGems.Write(itemInfo.Key, NpgsqlDbType.Smallint);
                                         cmdGearGems.Write(itemInfo.Value.GemIDs[0], NpgsqlDbType.Integer);
                                         cmdGearGems.Write(itemInfo.Value.GemIDs[1], NpgsqlDbType.Integer);
@@ -1339,8 +1339,12 @@ namespace VF
                         ExtraData extraData = null;
 
                         int playerUpdateCount = LoadFullPlayer(conn, player.Key, _Realm, new SQLPlayerID(player.Value), out playerHistory, out playerData, out extraData);
-                        if (playerUpdateCount > 1)
+                        if (playerUpdateCount > 0)
                         {
+                            if(playerHistory != null && playerData == null)
+                            {
+                                Logger.ConsoleWriteLine("Unexpected Error!!! PlayerHistory existed but not PlayerData!!! LoadFullPlayer function must be bugged!!!", ConsoleColor.Red);
+                            }
                             if(playerHistory != null)
                             {
                                 realmDatabase.PlayersHistory.Add(player.Key, playerHistory);

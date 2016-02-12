@@ -202,9 +202,10 @@ CREATE TABLE PlayerTable (
 	Name			text,
 	Realm			integer,
 	LatestUploadID	integer REFERENCES UploadTable(ID), --Use along with ID to find PlayerDataTable ID Maybe should be renamed to "LatestUploadID"?
-	FOREIGN KEY (ID, LatestUploadID) REFERENCES PlayerDataTable(PlayerID, UploadID),
+	--This foreign key causes too much headache atm FOREIGN KEY (ID, LatestUploadID) REFERENCES PlayerDataTable(PlayerID, UploadID),
 	PRIMARY KEY (ID)
 );
+--ALTER TABLE playertable DROP CONSTRAINT playertable_id_fkey
 
 INSERT INTO PlayerTable VALUES(0, '', 0, 0);
 

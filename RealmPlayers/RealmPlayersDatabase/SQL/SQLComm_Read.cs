@@ -49,5 +49,119 @@ namespace VF
             _ResultPlayerID = SQLPlayerID.Invalid();
             return false;
         }
+        public int GetInspectsForContributor(Contributor _Contributor)
+        {
+            using (var conn = new NpgsqlConnection(g_ConnectionString))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand("SELECT COUNT(*) FROM uploadtable up INNER JOIN playerdatatable pd ON up.id = pd.uploadid WHERE up.contributor = :ContributorID", conn))
+                {
+                    cmd.Parameters.Add(new NpgsqlParameter("ContributorID", NpgsqlDbType.Integer)).Value = _Contributor.ContributorID;
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read() == true)
+                        {
+                            return reader.GetInt32(0);
+                        }
+                    }
+                }
+            }
+            return -1;
+        }
+        public int GetRealmInspectsForContributor(Contributor _Contributor, WowRealm _Realm)
+        {
+            using (var conn = new NpgsqlConnection(g_ConnectionString))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand("SELECT COUNT(*) FROM uploadtable up INNER JOIN playerdatatable pd ON up.id = pd.uploadid INNER JOIN playertable player ON player.id = pd.playerid WHERE up.contributor = :ContributorID AND player.realm = :Realm", conn))
+                {
+                    cmd.Parameters.Add(new NpgsqlParameter("ContributorID", NpgsqlDbType.Integer)).Value = _Contributor.ContributorID;
+                    cmd.Parameters.Add(new NpgsqlParameter("Realm", NpgsqlDbType.Integer)).Value = (int)_Realm;
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read() == true)
+                        {
+                            return reader.GetInt32(0);
+                        }
+                    }
+                }
+            }
+            return -1;
+        }
+        public DateTime GetEarliestInspectForContributor(Contributor _Contributor)
+        {
+            using (var conn = new NpgsqlConnection(g_ConnectionString))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand("SELECT MIN(pd.updatetime) FROM uploadtable up INNER JOIN playerdatatable pd ON up.id = pd.uploadid WHERE up.contributor = :ContributorID", conn))
+                {
+                    cmd.Parameters.Add(new NpgsqlParameter("ContributorID", NpgsqlDbType.Integer)).Value = _Contributor.ContributorID;
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read() == true)
+                        {
+                            return reader.GetTimeStamp(0).DateTime;
+                        }
+                    }
+                }
+            }
+            return DateTime.MaxValue;
+        }
+        public DateTime GetLatestInspectForContributor(Contributor _Contributor)
+        {
+            using (var conn = new NpgsqlConnection(g_ConnectionString))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand("SELECT MAX(pd.updatetime) FROM uploadtable up INNER JOIN playerdatatable pd ON up.id = pd.uploadid WHERE up.contributor = :ContributorID", conn))
+                {
+                    cmd.Parameters.Add(new NpgsqlParameter("ContributorID", NpgsqlDbType.Integer)).Value = _Contributor.ContributorID;
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read() == true)
+                        {
+                            return reader.GetTimeStamp(0).DateTime;
+                        }
+                    }
+                }
+            }
+            return DateTime.MinValue;
+        }
+        public int GetRealmInspectsTotal(WowRealm _Realm)
+        {
+            using (var conn = new NpgsqlConnection(g_ConnectionString))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand("SELECT COUNT(*) FROM playerdatatable pd INNER JOIN playertable player ON player.id = pd.playerid WHERE player.realm = :Realm", conn))
+                {
+                    cmd.Parameters.Add(new NpgsqlParameter("Realm", NpgsqlDbType.Integer)).Value = (int)_Realm;
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read() == true)
+                        {
+                            return reader.GetInt32(0);
+                        }
+                    }
+                }
+            }
+            return -1;
+        }
+        public int GetInspectsTotal()
+        {
+            using (var conn = new NpgsqlConnection(g_ConnectionString))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand("SELECT COUNT(*) FROM playerdatatable", conn))
+                {
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read() == true)
+                        {
+                            return reader.GetInt32(0);
+                        }
+                    }
+                }
+            }
+            return -1;
+        }
     }
 }

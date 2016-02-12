@@ -161,7 +161,7 @@ namespace VF
                 {
                     using (var cmd = new NpgsqlCommand("INSERT INTO playerhonorvanillatable(playerhonorid, currentrank, currentrankprogress, todaydk, thisweekhk, thisweekhonor, lastweekhk, lastweekhonor, lastweekstanding, lifetimedk, lifetimehighestrank) VALUES (:ID, :CurrentRank, :CurrentRankProgress, :TodayDK, :ThisWeekHK, :ThisWeekHonor, :LastWeekHK, :LastWeekHonor, :LastWeekStanding, :LifetimeDK, :LifetimeHighestRank) RETURNING playerhonorid", conn))
                     {
-                        cmd.Parameters.Add(new NpgsqlParameter("ID"                 , NpgsqlDbType.Integer)).Value = resultHonorID;
+                        cmd.Parameters.Add(new NpgsqlParameter("ID"                 , NpgsqlDbType.Integer)).Value = (int)resultHonorID;
                         cmd.Parameters.Add(new NpgsqlParameter("CurrentRank"        , NpgsqlDbType.Smallint)).Value = _HonorData.CurrentRank;
                         cmd.Parameters.Add(new NpgsqlParameter("CurrentRankProgress", NpgsqlDbType.Real)).Value = _HonorData.CurrentRankProgress;
                         cmd.Parameters.Add(new NpgsqlParameter("TodayDK"            , NpgsqlDbType.Integer)).Value = _HonorData.TodayDK;
@@ -208,25 +208,25 @@ namespace VF
                 conn.Open();
                 using (var cmd = new NpgsqlCommand("INSERT INTO playergeartable(id, head, neck, shoulder, shirt, chest, belt, legs, feet, wrist, gloves, finger_1, finger_2, trinket_1, trinket_2, back, main_hand, off_hand, ranged, tabard) VALUES (DEFAULT, :Head, :Neck, :Shoulder, :Shirt, :Chest, :Belt, :Legs, :Feet, :Wrist, :Gloves, :Finger_1, :Finger_2, :Trinket_1, :Trinket_2, :Back, :Main_Hand, :Off_Hand, :Ranged, :Tabard) RETURNING id", conn))
                 {
-                    cmd.Parameters.Add(new NpgsqlParameter("Head", NpgsqlDbType.Integer)).Value = ingameItemIDs[ItemSlot.Head];
-                    cmd.Parameters.Add(new NpgsqlParameter("Neck", NpgsqlDbType.Integer)).Value = ingameItemIDs[ItemSlot.Neck];
-                    cmd.Parameters.Add(new NpgsqlParameter("Shoulder", NpgsqlDbType.Integer)).Value = ingameItemIDs[ItemSlot.Shoulder];
-                    cmd.Parameters.Add(new NpgsqlParameter("Shirt", NpgsqlDbType.Integer)).Value = ingameItemIDs[ItemSlot.Shirt];
-                    cmd.Parameters.Add(new NpgsqlParameter("Chest", NpgsqlDbType.Integer)).Value = ingameItemIDs[ItemSlot.Chest];
-                    cmd.Parameters.Add(new NpgsqlParameter("Belt", NpgsqlDbType.Integer)).Value = ingameItemIDs[ItemSlot.Belt];
-                    cmd.Parameters.Add(new NpgsqlParameter("Legs", NpgsqlDbType.Integer)).Value = ingameItemIDs[ItemSlot.Legs];
-                    cmd.Parameters.Add(new NpgsqlParameter("Feet", NpgsqlDbType.Integer)).Value = ingameItemIDs[ItemSlot.Feet];
-                    cmd.Parameters.Add(new NpgsqlParameter("Wrist", NpgsqlDbType.Integer)).Value = ingameItemIDs[ItemSlot.Wrist];
-                    cmd.Parameters.Add(new NpgsqlParameter("Gloves", NpgsqlDbType.Integer)).Value = ingameItemIDs[ItemSlot.Gloves];
-                    cmd.Parameters.Add(new NpgsqlParameter("Finger_1", NpgsqlDbType.Integer)).Value = ingameItemIDs[ItemSlot.Finger_1];
-                    cmd.Parameters.Add(new NpgsqlParameter("Finger_2", NpgsqlDbType.Integer)).Value = ingameItemIDs[ItemSlot.Finger_2];
-                    cmd.Parameters.Add(new NpgsqlParameter("Trinket_1", NpgsqlDbType.Integer)).Value = ingameItemIDs[ItemSlot.Trinket_1];
-                    cmd.Parameters.Add(new NpgsqlParameter("Trinket_2", NpgsqlDbType.Integer)).Value = ingameItemIDs[ItemSlot.Trinket_2];
-                    cmd.Parameters.Add(new NpgsqlParameter("Back", NpgsqlDbType.Integer)).Value = ingameItemIDs[ItemSlot.Back];
-                    cmd.Parameters.Add(new NpgsqlParameter("Main_Hand", NpgsqlDbType.Integer)).Value = ingameItemIDs[ItemSlot.Main_Hand];
-                    cmd.Parameters.Add(new NpgsqlParameter("Off_Hand", NpgsqlDbType.Integer)).Value = ingameItemIDs[ItemSlot.Off_Hand];
-                    cmd.Parameters.Add(new NpgsqlParameter("Ranged", NpgsqlDbType.Integer)).Value = ingameItemIDs[ItemSlot.Ranged];
-                    cmd.Parameters.Add(new NpgsqlParameter("Tabard", NpgsqlDbType.Integer)).Value = ingameItemIDs[ItemSlot.Tabard];
+                    cmd.Parameters.Add(new NpgsqlParameter("Head", NpgsqlDbType.Integer)).Value = (int)ingameItemIDs[ItemSlot.Head];
+                    cmd.Parameters.Add(new NpgsqlParameter("Neck", NpgsqlDbType.Integer)).Value = (int)ingameItemIDs[ItemSlot.Neck];
+                    cmd.Parameters.Add(new NpgsqlParameter("Shoulder", NpgsqlDbType.Integer)).Value = (int)ingameItemIDs[ItemSlot.Shoulder];
+                    cmd.Parameters.Add(new NpgsqlParameter("Shirt", NpgsqlDbType.Integer)).Value = (int)ingameItemIDs[ItemSlot.Shirt];
+                    cmd.Parameters.Add(new NpgsqlParameter("Chest", NpgsqlDbType.Integer)).Value = (int)ingameItemIDs[ItemSlot.Chest];
+                    cmd.Parameters.Add(new NpgsqlParameter("Belt", NpgsqlDbType.Integer)).Value = (int)ingameItemIDs[ItemSlot.Belt];
+                    cmd.Parameters.Add(new NpgsqlParameter("Legs", NpgsqlDbType.Integer)).Value = (int)ingameItemIDs[ItemSlot.Legs];
+                    cmd.Parameters.Add(new NpgsqlParameter("Feet", NpgsqlDbType.Integer)).Value = (int)ingameItemIDs[ItemSlot.Feet];
+                    cmd.Parameters.Add(new NpgsqlParameter("Wrist", NpgsqlDbType.Integer)).Value = (int)ingameItemIDs[ItemSlot.Wrist];
+                    cmd.Parameters.Add(new NpgsqlParameter("Gloves", NpgsqlDbType.Integer)).Value = (int)ingameItemIDs[ItemSlot.Gloves];
+                    cmd.Parameters.Add(new NpgsqlParameter("Finger_1", NpgsqlDbType.Integer)).Value = (int)ingameItemIDs[ItemSlot.Finger_1];
+                    cmd.Parameters.Add(new NpgsqlParameter("Finger_2", NpgsqlDbType.Integer)).Value = (int)ingameItemIDs[ItemSlot.Finger_2];
+                    cmd.Parameters.Add(new NpgsqlParameter("Trinket_1", NpgsqlDbType.Integer)).Value = (int)ingameItemIDs[ItemSlot.Trinket_1];
+                    cmd.Parameters.Add(new NpgsqlParameter("Trinket_2", NpgsqlDbType.Integer)).Value = (int)ingameItemIDs[ItemSlot.Trinket_2];
+                    cmd.Parameters.Add(new NpgsqlParameter("Back", NpgsqlDbType.Integer)).Value = (int)ingameItemIDs[ItemSlot.Back];
+                    cmd.Parameters.Add(new NpgsqlParameter("Main_Hand", NpgsqlDbType.Integer)).Value = (int)ingameItemIDs[ItemSlot.Main_Hand];
+                    cmd.Parameters.Add(new NpgsqlParameter("Off_Hand", NpgsqlDbType.Integer)).Value = (int)ingameItemIDs[ItemSlot.Off_Hand];
+                    cmd.Parameters.Add(new NpgsqlParameter("Ranged", NpgsqlDbType.Integer)).Value = (int)ingameItemIDs[ItemSlot.Ranged];
+                    cmd.Parameters.Add(new NpgsqlParameter("Tabard", NpgsqlDbType.Integer)).Value = (int)ingameItemIDs[ItemSlot.Tabard];
                     using (var reader = cmd.ExecuteReader())
                     {
                         if (reader.Read() == true)
@@ -273,7 +273,7 @@ namespace VF
                     {
                         cmdGearGems.StartRow();
                         cmdGearGems.Write(_GearID, NpgsqlDbType.Integer);
-                        cmdGearGems.Write(gemInfo.Key, NpgsqlDbType.Smallint);
+                        cmdGearGems.Write((int)gemInfo.Key, NpgsqlDbType.Smallint);
                         cmdGearGems.Write(gemInfo.Value.GemID1, NpgsqlDbType.Integer);
                         cmdGearGems.Write(gemInfo.Value.GemID2, NpgsqlDbType.Integer);
                         cmdGearGems.Write(gemInfo.Value.GemID3, NpgsqlDbType.Integer);
@@ -325,9 +325,9 @@ namespace VF
 
                 using (var cmd = new NpgsqlCommand("INSERT INTO playerarenainfotable(id, team_2v2, team_3v3, team_5v5) VALUES (DEFAULT, :Team2v2, :Team3v3, :Team5v5) RETURNING id", conn))
                 {
-                    cmd.Parameters.Add(new NpgsqlParameter("Team2v2", NpgsqlDbType.Integer)).Value = team_2v2_ID;
-                    cmd.Parameters.Add(new NpgsqlParameter("Team3v3", NpgsqlDbType.Integer)).Value = team_3v3_ID;
-                    cmd.Parameters.Add(new NpgsqlParameter("Team5v5", NpgsqlDbType.Integer)).Value = team_5v5_ID;
+                    cmd.Parameters.Add(new NpgsqlParameter("Team2v2", NpgsqlDbType.Integer)).Value = (int)team_2v2_ID;
+                    cmd.Parameters.Add(new NpgsqlParameter("Team3v3", NpgsqlDbType.Integer)).Value = (int)team_3v3_ID;
+                    cmd.Parameters.Add(new NpgsqlParameter("Team5v5", NpgsqlDbType.Integer)).Value = (int)team_5v5_ID;
                     
                     using (var reader = cmd.ExecuteReader())
                     {
@@ -376,18 +376,18 @@ namespace VF
                 using (var cmdPlayerData = conn.BeginBinaryImport("COPY PlayerDataTable (playerid, uploadid, updatetime, race, class, sex, level, guildinfo, honorinfo, gearinfo, arenainfo, talentsinfo) FROM STDIN BINARY"))
                 {
                     cmdPlayerData.StartRow();
-                    cmdPlayerData.Write(_PlayerData.PlayerID, NpgsqlDbType.Integer);
-                    cmdPlayerData.Write(_PlayerData.UploadID, NpgsqlDbType.Integer);
+                    cmdPlayerData.Write((int)_PlayerData.PlayerID, NpgsqlDbType.Integer);
+                    cmdPlayerData.Write((int)_PlayerData.UploadID, NpgsqlDbType.Integer);
                     cmdPlayerData.Write(_PlayerData.UpdateTime, NpgsqlDbType.Timestamp);
                     cmdPlayerData.Write((int)_PlayerData.PlayerCharacter.Race, NpgsqlDbType.Smallint);
                     cmdPlayerData.Write((int)_PlayerData.PlayerCharacter.Class, NpgsqlDbType.Smallint);
                     cmdPlayerData.Write((int)_PlayerData.PlayerCharacter.Sex, NpgsqlDbType.Smallint);
-                    cmdPlayerData.Write(_PlayerData.PlayerCharacter.Level, NpgsqlDbType.Smallint);
-                    cmdPlayerData.Write(_PlayerData.PlayerGuildID, NpgsqlDbType.Integer);
-                    cmdPlayerData.Write(_PlayerData.PlayerHonorID, NpgsqlDbType.Integer);
-                    cmdPlayerData.Write(_PlayerData.PlayerGearID, NpgsqlDbType.Integer);
-                    cmdPlayerData.Write(_PlayerData.PlayerArenaID, NpgsqlDbType.Integer);
-                    cmdPlayerData.Write(_PlayerData.PlayerTalentsID, NpgsqlDbType.Integer);
+                    cmdPlayerData.Write((int)_PlayerData.PlayerCharacter.Level, NpgsqlDbType.Smallint);
+                    cmdPlayerData.Write((int)_PlayerData.PlayerGuildID, NpgsqlDbType.Integer);
+                    cmdPlayerData.Write((int)_PlayerData.PlayerHonorID, NpgsqlDbType.Integer);
+                    cmdPlayerData.Write((int)_PlayerData.PlayerGearID, NpgsqlDbType.Integer);
+                    cmdPlayerData.Write((int)_PlayerData.PlayerArenaID, NpgsqlDbType.Integer);
+                    cmdPlayerData.Write((int)_PlayerData.PlayerTalentsID, NpgsqlDbType.Integer);
 
                     cmdPlayerData.Close();
                 }
@@ -395,38 +395,46 @@ namespace VF
             return true;
         }
 
-        public SQLPlayerID GenerateNewPlayerEntry(SQLUploadID _UploadID, PlayerData.Player _PlayerData)
+        public bool UpdatePlayerEntry(SQLPlayerID _PlayerID, SQLUploadID _UploadID)
         {
-            WowVersionEnum wowVersion = VF_RealmPlayersDatabase.StaticValues.GetWowVersion(_PlayerData.Realm);
-            SQLPlayerData playerData = new SQLPlayerData();
+            if (_PlayerID.IsValid() == false || _UploadID.IsValid() == false)
+                return false;
+
+            int affectedRows = 0;
             using (var conn = new NpgsqlConnection(g_ConnectionString))
             {
                 conn.Open();
-                using (var cmd = new NpgsqlCommand("INSERT INTO playertable(id, name, realm, latestuploadid) VALUES (DEFAULT, :Name, :Realm, :LatestUploadID) RETURNING id", conn))
+                using (var cmd = new NpgsqlCommand("UPDATE playertable SET latestuploadid = :LatestUploadID WHERE id = :ID", conn))
                 {
-                    cmd.Parameters.Add(new NpgsqlParameter("Name", NpgsqlDbType.Text)).Value = _PlayerData.Name;
-                    cmd.Parameters.Add(new NpgsqlParameter("Realm", NpgsqlDbType.Integer)).Value = (int)_PlayerData.Realm;
-                    cmd.Parameters.Add(new NpgsqlParameter("LatestUploadID", NpgsqlDbType.Integer)).Value = 0;
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        if (reader.Read() == true)
-                        {
-                            playerData.PlayerID = new SQLPlayerID(reader.GetInt32(0));
-                        }
-                    }
+                    cmd.Parameters.Add(new NpgsqlParameter("ID", NpgsqlDbType.Integer)).Value = (int)_PlayerID;
+                    cmd.Parameters.Add(new NpgsqlParameter("LatestUploadID", NpgsqlDbType.Integer)).Value = (int)_UploadID;
+                    affectedRows = cmd.ExecuteNonQuery();
                 }
+                conn.Close();
             }
 
-            if (playerData.PlayerID.ID == 0)
-                return playerData.PlayerID;
+            if (affectedRows == 1)
+                return true;
 
+            if (affectedRows > 1)
+            {
+                VF_RealmPlayersDatabase.Logger.ConsoleWriteLine("Error, UpdatePlayerEntry somehow modified more than 1 line. This is pretty weird and unexpected!!!");
+            }
+            return false;
+        }
+
+        public SQLPlayerID UpdateLatestPlayerDataEntry(SQLPlayerID _PlayerID, SQLUploadID _UploadID, PlayerData.Player _PlayerData)
+        {
+            WowVersionEnum wowVersion = VF_RealmPlayersDatabase.StaticValues.GetWowVersion(_PlayerData.Realm);
+            SQLPlayerData playerData = new SQLPlayerData();
+            playerData.PlayerID = _PlayerID;
             playerData.UploadID = _UploadID;
             playerData.UpdateTime = _PlayerData.LastSeen;
             playerData.PlayerCharacter = _PlayerData.Character;
             playerData.PlayerGuildID = GenerateNewPlayerGuildDataEntry(_PlayerData.Guild);
             playerData.PlayerHonorID = GenerateNewPlayerHonorDataEntry(_PlayerData.Honor, wowVersion);
             playerData.PlayerGearID = GenerateNewPlayerGearDataEntry(_PlayerData.Gear, wowVersion);
-            if(wowVersion != WowVersionEnum.Vanilla)
+            if (wowVersion != WowVersionEnum.Vanilla)
             {
                 playerData.PlayerArenaID = GenerateNewPlayerArenaInfoEntry(_PlayerData.Arena);
                 playerData.PlayerTalentsID = GenerateNewPlayerTalentsDataEntry(_PlayerData.TalentPointsData);
@@ -436,10 +444,268 @@ namespace VF
                 playerData.PlayerArenaID = 0;
                 playerData.PlayerTalentsID = 0;
             }
-            if (GenerateNewPlayerDataEntry(playerData) == false)
-                VF_RealmPlayersDatabase.Logger.ConsoleWriteLine("Error, could not GenerateNewPlayerDataEntry!!!");
+            if (GenerateNewPlayerDataEntry(playerData) == true)
+            {
+                if(UpdatePlayerEntry(playerData.PlayerID, playerData.UploadID) == false)
+                {
+                    VF_RealmPlayersDatabase.Logger.ConsoleWriteLine("Error in UpdateLatestPlayerDataEntry, could not UpdatePlayerEntry!!!");
+                    return SQLPlayerID.Invalid();
+                }
+            }
+            else
+            {
+                VF_RealmPlayersDatabase.Logger.ConsoleWriteLine("Error in UpdateLatestPlayerDataEntry, could not GenerateNewPlayerDataEntry!!!");
+                return SQLPlayerID.Invalid();
+            }
+            return _PlayerID;
+        }
+        public SQLPlayerID GenerateNewPlayerEntry(SQLUploadID _UploadID, PlayerData.Player _PlayerData)
+        {
+            WowVersionEnum wowVersion = VF_RealmPlayersDatabase.StaticValues.GetWowVersion(_PlayerData.Realm);
+            SQLPlayerID playerID = new SQLPlayerID();
+            using (var conn = new NpgsqlConnection(g_ConnectionString))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand("INSERT INTO playertable(id, name, realm, latestuploadid) VALUES (DEFAULT, :Name, :Realm, :LatestUploadID) RETURNING id", conn))
+                {
+                    cmd.Parameters.Add(new NpgsqlParameter("Name", NpgsqlDbType.Text)).Value = _PlayerData.Name;
+                    cmd.Parameters.Add(new NpgsqlParameter("Realm", NpgsqlDbType.Integer)).Value = (int)_PlayerData.Realm;
+                    cmd.Parameters.Add(new NpgsqlParameter("LatestUploadID", NpgsqlDbType.Integer)).Value = (int)0;
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read() == true)
+                        {
+                            playerID = new SQLPlayerID(reader.GetInt32(0));
+                        }
+                    }
+                }
+                conn.Close();
+            }
 
-            return playerData.PlayerID;
+            if (playerID.IsValid() == false)
+                return playerID;
+
+            return UpdateLatestPlayerDataEntry(playerID, _UploadID, _PlayerData);
+        }
+
+        public int GenerateMountID(string _MountName)
+        {
+            using (var conn = new NpgsqlConnection(g_ConnectionString))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand("SELECT id FROM ingamemounttable WHERE name = :Name", conn))
+                {
+                    {
+                        var nameParam = new NpgsqlParameter("Name", NpgsqlDbType.Text);
+                        nameParam.Value = _MountName;
+                        cmd.Parameters.Add(nameParam);
+                    }
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read() == true)
+                        {
+                            return reader.GetInt32(0);
+                        }
+                    }
+                }
+                conn.Close();
+                conn.Open();
+                using (var cmd = new NpgsqlCommand("INSERT INTO ingamemounttable(id, name) VALUES(DEFAULT, :Name) RETURNING id", conn))
+                {
+                    {
+                        var nameParam = new NpgsqlParameter("Name", NpgsqlDbType.Text);
+                        nameParam.Value = _MountName;
+                        cmd.Parameters.Add(nameParam);
+                    }
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read() == true)
+                        {
+                            return reader.GetInt32(0);
+                        }
+                    }
+                }
+                conn.Close();
+            }
+            return 0;
+        }
+
+        public int GeneratePetID(string _PetName, int _PetLevel, string _PetCreatureFamily, string _PetCreatureType)
+        {
+            using (var conn = new NpgsqlConnection(g_ConnectionString))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand("SELECT id FROM ingamepettable WHERE name = :Name AND level = :Level AND creaturefamily = :CreatureFamily AND creaturetype = :CreatureType", conn))
+                {
+                    cmd.Parameters.Add(new NpgsqlParameter("Name", NpgsqlDbType.Text)).Value = _PetName;
+                    cmd.Parameters.Add(new NpgsqlParameter("Level", NpgsqlDbType.Smallint)).Value = _PetLevel;
+                    cmd.Parameters.Add(new NpgsqlParameter("CreatureFamily", NpgsqlDbType.Text)).Value = _PetCreatureFamily;
+                    cmd.Parameters.Add(new NpgsqlParameter("CreatureType", NpgsqlDbType.Text)).Value = _PetCreatureType;
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read() == true)
+                        {
+                            return reader.GetInt32(0);
+                        }
+                    }
+                }
+                conn.Close();
+                conn.Open();
+                using (var cmd = new NpgsqlCommand("INSERT INTO ingamepettable(id, name, level, creaturefamily, creaturetype) VALUES(DEFAULT, :Name, :Level, :CreatureFamily, :CreatureType) RETURNING id", conn))
+                {
+                    cmd.Parameters.Add(new NpgsqlParameter("Name", NpgsqlDbType.Text)).Value = _PetName;
+                    cmd.Parameters.Add(new NpgsqlParameter("Level", NpgsqlDbType.Smallint)).Value = _PetLevel;
+                    cmd.Parameters.Add(new NpgsqlParameter("CreatureFamily", NpgsqlDbType.Text)).Value = _PetCreatureFamily;
+                    cmd.Parameters.Add(new NpgsqlParameter("CreatureType", NpgsqlDbType.Text)).Value = _PetCreatureType;
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read() == true)
+                        {
+                            return reader.GetInt32(0);
+                        }
+                    }
+                }
+                conn.Close();
+            }
+            return 0;
+        }
+
+        public int GenerateCompanionID(string _CompanionName, int _CompanionLevel)
+        {
+            using (var conn = new NpgsqlConnection(g_ConnectionString))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand("SELECT id FROM ingamecompaniontable WHERE name = :Name AND level = :Level", conn))
+                {
+                    cmd.Parameters.Add(new NpgsqlParameter("Name", NpgsqlDbType.Text)).Value = _CompanionName;
+                    cmd.Parameters.Add(new NpgsqlParameter("Level", NpgsqlDbType.Smallint)).Value = _CompanionLevel;
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read() == true)
+                        {
+                            return reader.GetInt32(0);
+                        }
+                    }
+                }
+                conn.Close();
+                conn.Open();
+                using (var cmd = new NpgsqlCommand("INSERT INTO ingamecompaniontable(id, name, level) VALUES(DEFAULT, :Name, :Level) RETURNING id", conn))
+                {
+                    cmd.Parameters.Add(new NpgsqlParameter("Name", NpgsqlDbType.Text)).Value = _CompanionName;
+                    cmd.Parameters.Add(new NpgsqlParameter("Level", NpgsqlDbType.Smallint)).Value = _CompanionLevel;
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read() == true)
+                        {
+                            return reader.GetInt32(0);
+                        }
+                    }
+                }
+                conn.Close();
+            }
+            return 0;
+        }
+        public bool AddPlayerMount(VF.SQLPlayerID _PlayerID, VF.SQLUploadID _UploadID, DateTime _UpdateTime, int _MountID)
+        {
+            try
+            {
+                using (var conn = new NpgsqlConnection(g_ConnectionString))
+                {
+                    conn.Open();
+                    using (var cmd = new NpgsqlCommand("INSERT INTO playermounttable(playerid, uploadid, updatetime, mountid) VALUES(:PlayerID, :UploadID, :UpdateTime, :MountID)", conn))
+                    {
+                        cmd.Parameters.Add(new NpgsqlParameter("PlayerID", NpgsqlDbType.Integer)).Value = (int)_PlayerID;
+                        cmd.Parameters.Add(new NpgsqlParameter("UploadID", NpgsqlDbType.Integer)).Value = (int)_UploadID;
+                        cmd.Parameters.Add(new NpgsqlParameter("UpdateTime", NpgsqlDbType.Timestamp)).Value = _UpdateTime;
+                        cmd.Parameters.Add(new NpgsqlParameter("MountID", NpgsqlDbType.Integer)).Value = _MountID;
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                    }
+                    conn.Close();
+                }
+                return true;
+            }
+            catch (NpgsqlException ex)
+            {
+                if(ex.Code == "23505") //unique key violation
+                {
+                    //Ignore error, this just means the data was already in the DB!
+                    return true;
+                }
+                else
+                {
+                    VF_RealmPlayersDatabase.Logger.ConsoleWriteLine("AddPlayerMount() Failed to add PlayerID(" + (int)_PlayerID + "), UploadID(" + (int)_UploadID + ") UpdateTime(" + _UpdateTime + ") MountID(" + _MountID + ")");
+                    VF_RealmPlayersDatabase.Logger.LogException(ex);
+                }
+            }
+            return false;
+        }
+        public bool AddPlayerPet(VF.SQLPlayerID _PlayerID, VF.SQLUploadID _UploadID, DateTime _UpdateTime, int _PetID)
+        {
+            try
+            {
+                using (var conn = new NpgsqlConnection(g_ConnectionString))
+                {
+                    conn.Open();
+                    using (var cmd = new NpgsqlCommand("INSERT INTO playerpettable(playerid, uploadid, updatetime, petid) VALUES(:PlayerID, :UploadID, :UpdateTime, :PetID)", conn))
+                    {
+                        cmd.Parameters.Add(new NpgsqlParameter("PlayerID", NpgsqlDbType.Integer)).Value = (int)_PlayerID;
+                        cmd.Parameters.Add(new NpgsqlParameter("UploadID", NpgsqlDbType.Integer)).Value = (int)_UploadID;
+                        cmd.Parameters.Add(new NpgsqlParameter("UpdateTime", NpgsqlDbType.Timestamp)).Value = _UpdateTime;
+                        cmd.Parameters.Add(new NpgsqlParameter("PetID", NpgsqlDbType.Integer)).Value = _PetID;
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                    }
+                    conn.Close();
+                }
+                return true;
+            }
+            catch (NpgsqlException ex)
+            {
+                if (ex.Code == "23505") //unique key violation
+                {
+                    //Ignore error, this just means the data was already in the DB!
+                    return true;
+                }
+                else
+                {
+                    VF_RealmPlayersDatabase.Logger.ConsoleWriteLine("AddPlayerPet() Failed to add PlayerID(" + (int)_PlayerID + "), UploadID(" + (int)_UploadID + ") UpdateTime(" + _UpdateTime + ") PetID(" + _PetID + ")");
+                    VF_RealmPlayersDatabase.Logger.LogException(ex);
+                }
+            }
+            return false;
+        }
+        public bool AddPlayerCompanion(VF.SQLPlayerID _PlayerID, VF.SQLUploadID _UploadID, DateTime _UpdateTime, int _CompanionID)
+        {
+            try
+            {
+                using (var conn = new NpgsqlConnection(g_ConnectionString))
+                {
+                    conn.Open();
+                    using (var cmd = new NpgsqlCommand("INSERT INTO playercompaniontable(playerid, uploadid, updatetime, companionid) VALUES(:PlayerID, :UploadID, :UpdateTime, :CompanionID)", conn))
+                    {
+                        cmd.Parameters.Add(new NpgsqlParameter("PlayerID", NpgsqlDbType.Integer)).Value = (int)_PlayerID;
+                        cmd.Parameters.Add(new NpgsqlParameter("UploadID", NpgsqlDbType.Integer)).Value = (int)_UploadID;
+                        cmd.Parameters.Add(new NpgsqlParameter("UpdateTime", NpgsqlDbType.Timestamp)).Value = _UpdateTime;
+                        cmd.Parameters.Add(new NpgsqlParameter("CompanionID", NpgsqlDbType.Integer)).Value = _CompanionID;
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                    }
+                    conn.Close();
+                }
+                return true;
+            }
+            catch (NpgsqlException ex)
+            {
+                if (ex.Code == "23505") //unique key violation
+                {
+                    //Ignore error, this just means the data was already in the DB!
+                    return true;
+                }
+                else
+                {
+                    VF_RealmPlayersDatabase.Logger.ConsoleWriteLine("AddPlayerCompanion() Failed to add PlayerID(" + (int)_PlayerID + "), UploadID(" + (int)_UploadID + ") UpdateTime(" + _UpdateTime + ") CompanionID(" + _CompanionID + ")");
+                    VF_RealmPlayersDatabase.Logger.LogException(ex);
+                }
+            }
+            return false;
         }
     }
 }

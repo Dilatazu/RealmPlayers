@@ -128,7 +128,7 @@ namespace VF
                 {
                     {
                         var idParam = new NpgsqlParameter("ID", NpgsqlDbType.Integer);
-                        idParam.Value = _PlayerData.PlayerGearID;
+                        idParam.Value = (int)_PlayerData.PlayerGearID;
                         cmd.Parameters.Add(idParam);
                     }
                     using (var reader = cmd.ExecuteReader())
@@ -178,7 +178,7 @@ namespace VF
                 {
                     {
                         var idParam = new NpgsqlParameter("ID", NpgsqlDbType.Integer);
-                        idParam.Value = _PlayerData.PlayerGearID;
+                        idParam.Value = (int)_PlayerData.PlayerGearID;
                         cmd.Parameters.Add(idParam);
                     }
                     using (var reader = cmd.ExecuteReader())
@@ -233,7 +233,7 @@ namespace VF
                 const int ENCHANTID_COLUMN = 2;
                 const int SUFFIXID_COLUMN = 3;
                 const int UNIQUEID_COLUMN = 4;
-                using (var cmd = new NpgsqlCommand("SELECT id, itemid, enchantid, suffixid, uniqueid FROM IngameItemTable WHERE id IN (:IDs)", conn))
+                using (var cmd = new NpgsqlCommand("SELECT id, itemid, enchantid, suffixid, uniqueid FROM IngameItemTable WHERE id = ANY(:IDs)", conn))
                 {
                     {
                         var idArrayParam = new NpgsqlParameter("IDs", NpgsqlDbType.Array | NpgsqlDbType.Integer);

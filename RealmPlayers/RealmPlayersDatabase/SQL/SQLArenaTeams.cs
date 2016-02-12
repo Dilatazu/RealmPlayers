@@ -35,6 +35,16 @@ namespace VF
     }
     public partial class SQLComm
     {
+        public bool GetPlayerArenaData(SQLPlayerData _PlayerData, out PlayerData.ArenaData _ResultArenaData)
+        {
+            SQLArenaInfo arenaInfo;
+            if(GetPlayerArenaInfo(_PlayerData, out arenaInfo) == true)
+            {
+                return GetPlayerArenaData(arenaInfo, out _ResultArenaData);
+            }
+            _ResultArenaData = null;
+            return false;
+        }
         public bool GetPlayerArenaInfo(SQLPlayerData _PlayerData, out SQLArenaInfo _ResultArenaInfo)
         {
             _ResultArenaInfo = new SQLArenaInfo(0, 0, 0);
@@ -50,7 +60,7 @@ namespace VF
                 {
                     {
                         var idParam = new NpgsqlParameter("ID", NpgsqlDbType.Integer);
-                        idParam.Value = _PlayerData.PlayerArenaID;
+                        idParam.Value = (int)_PlayerData.PlayerArenaID;
                         cmd.Parameters.Add(idParam);
                     }
                     using (var reader = cmd.ExecuteReader())
@@ -98,7 +108,7 @@ namespace VF
                 const int PLAYERGAMESPLAYED_COLUMN = 5;
                 const int PLAYERRATING_COLUMN = 6;
 
-                using (var cmd = new NpgsqlCommand("SELECT id, teamname, teamrating, gamesplayed, gameswon, playergamesplayed, playerrating FROM PlayerArenaDataTable WHERE id IN (:IDs)", conn))
+                using (var cmd = new NpgsqlCommand("SELECT id, teamname, teamrating, gamesplayed, gameswon, playergamesplayed, playerrating FROM PlayerArenaDataTable WHERE id = ANY(:IDs)", conn))
                 {
                     {
                         var idsParam = new NpgsqlParameter("IDs", NpgsqlDbType.Array | NpgsqlDbType.Integer);

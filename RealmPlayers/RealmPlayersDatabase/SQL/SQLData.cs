@@ -24,6 +24,10 @@ namespace VF
         {
             return new SQLPlayerID(-1);
         }
+        static public explicit operator int (SQLPlayerID _SQLPlayerID)
+        {
+            return _SQLPlayerID.ID;
+        }
     }
     public struct SQLUploadID
     {
@@ -40,6 +44,10 @@ namespace VF
         {
             return new SQLUploadID(-1);
         }
+        static public explicit operator int (SQLUploadID _SQLUploadID)
+        {
+            return _SQLUploadID.ID;
+        }
     }
     public struct SQLIngameItemID
     {
@@ -51,6 +59,10 @@ namespace VF
         public static SQLIngameItemID Invalid()
         {
             return new SQLIngameItemID(-1);
+        }
+        static public explicit operator int (SQLIngameItemID _IngameItemID)
+        {
+            return _IngameItemID.ID;
         }
     }
 }
