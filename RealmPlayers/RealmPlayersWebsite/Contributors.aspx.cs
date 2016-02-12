@@ -22,12 +22,12 @@ namespace RealmPlayersServer
         protected void Page_Load(object sender, EventArgs e)
         {
             this.Title = "Contributors | RealmPlayers";
-            var statisticsData = DatabaseAccess.GetContributorStatistics();
-            if (statisticsData == null)
-            {
-                PageUtility.RedirectErrorLoading(this, "contributors");
-                return;
-            }
+            //var statisticsData = DatabaseAccess.GetContributorStatistics();
+            //if (statisticsData == null)
+            //{
+            //    PageUtility.RedirectErrorLoading(this, "contributors");
+            //    return;
+            //}
             m_BreadCrumbHTML = new MvcHtmlString(PageUtility.BreadCrumb_AddHome() + PageUtility.BreadCrumb_AddFinish("Contributors"));
 
             var statsRealms = new WowRealm[] { WowRealm.Emerald_Dream, WowRealm.Warsong, WowRealm.Al_Akir, WowRealm.Rebirth, WowRealm.Nostalrius, WowRealm.Kronos, WowRealm.Archangel };
@@ -51,47 +51,62 @@ namespace RealmPlayersServer
             SortedList<int, string> tableRows = new SortedList<int, string>();
             string tableBody = "";
 
+            VF.SQLComm comm = new VF.SQLComm();
+            
             var contributors = ContributorDB.GetAllTrustWorthyContributors();
-            foreach (var data in contributors)
+            foreach (var statRealm in statsRealms)
             {
-                DateTime earliestActive = DateTime.MaxValue;
-                DateTime latestActive = DateTime.MinValue;
-                int totalInspects = 0;
-                string realmInspectsColumns = "";
-                foreach(var statRealm in statsRealms)
+                totalRealmInspects[statRealm] = comm.GetRealmInspectsTotal(statRealm);
+            }
+
+            //return DynamicReloader.GetData<ContributorStatistics>(() =>
+            //{
+            //    VF_RPDatabase.GuildSummaryDatabase summaryDB = null;
+            //    summaryDB = VF_RPDatabase.GuildSummaryDatabase.LoadSummaryDatabase(Constants.RPPDbDir);
+            //    return summaryDB;
+            //}, (_ContributorStatistics, _LastLoadTime) => { return (DateTime.UtcNow - _LastLoadTime).TotalMinutes > 30; });
+
+            //DynamicReloader.GetData(() => { }, () => { return true; }, TimeSpan.FromMinutes(30), false)
+            int contributorCounter = 0;
+            if(false)
+            {
+                foreach (var data in contributors)
                 {
-                    int inspects = 0;
-                    Code.ContributorStatisticItem stats = null;
-                    if (statisticsData[statRealm].TryGetValue(data.ContributorID, out stats) == false)
+                    var contributor = data.GetAsContributor();
+
+                    DateTime earliestActive;
+                    DateTime latestActive;
+                    int totalInspects;
+                    if (comm.GetInspectsInfoForContributor(contributor, out earliestActive, out latestActive, out totalInspects) == true)
                     {
-                        stats = new Code.ContributorStatisticItem(-1);
+                        string realmInspectsColumns = "";
+
+                        if (totalInspects > 0 && data.Name != "Unknown"
+                            && ((DateTime.UtcNow - latestActive).TotalDays < 15
+                            || (totalInspects > 5000 && (DateTime.UtcNow - latestActive).TotalDays < 60)))
+                        {
+                            foreach (var statRealm in statsRealms)
+                            {
+                                int inspects = comm.GetRealmInspectsForContributor(contributor, statRealm);
+                                realmInspectsColumns += PageUtility.CreateTableColumn(inspects.ToString());
+                            }
+
+                            int keyToUse = int.MaxValue - totalInspects * 100;
+                            while (tableRows.ContainsKey(keyToUse) == true)
+                                keyToUse += 1;
+
+
+                            tableRows.Add(keyToUse, PageUtility.CreateTableColumn(data.Name)
+                                + PageUtility.CreateTableColumn(totalInspects.ToString())
+                                + realmInspectsColumns
+                                + PageUtility.CreateTableColumn(earliestActive.ToString("yyy-MM-dd"))
+                                + PageUtility.CreateTableColumn(StaticValues.GetTimeSinceLastSeenUTC(latestActive)));
+                        }
                     }
-                    earliestActive = (stats.m_EarliestActiveUTC < earliestActive ? stats.m_EarliestActiveUTC : earliestActive);
-                    latestActive = (stats.m_LatestActiveUTC > latestActive ? stats.m_LatestActiveUTC : latestActive);
-
-                    foreach (var inspection in stats.m_PlayerInspects)
-                    {
-                        inspects += inspection.Value;
-                    }
-                    totalInspects += inspects;
-                    totalRealmInspects[statRealm] += inspects;
-                    realmInspectsColumns += PageUtility.CreateTableColumn(inspects.ToString());
-                }
-
-                if (totalInspects > 0 && data.Name != "Unknown" 
-                    && ((DateTime.UtcNow - latestActive).TotalDays < 15 
-                    || (totalInspects > 5000 && (DateTime.UtcNow - latestActive).TotalDays < 60)))
-                {
-                    int keyToUse = int.MaxValue - totalInspects * 100;
-                    while (tableRows.ContainsKey(keyToUse) == true)
-                        keyToUse += 1;
 
 
-                    tableRows.Add(keyToUse, PageUtility.CreateTableColumn(data.Name)
-                        + PageUtility.CreateTableColumn(totalInspects.ToString())
-                        + realmInspectsColumns
-                        + PageUtility.CreateTableColumn(earliestActive.ToString("yyy-MM-dd"))
-                        + PageUtility.CreateTableColumn(StaticValues.GetTimeSinceLastSeenUTC(latestActive)));
+                    if (contributorCounter++ % 100 == 0)
+                        Logger.ConsoleWriteLine("Generated Contributor Inspects Info for Contributor Nr " + contributorCounter);
                 }
             }
             int totalALLInspects = 0;

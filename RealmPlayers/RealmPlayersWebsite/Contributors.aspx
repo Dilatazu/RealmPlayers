@@ -1,6 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterFrame.Master" AutoEventWireup="true" CodeBehind="Contributors.aspx.cs" Inherits="RealmPlayersServer.Contributors" %>
 
-<%@OutputCache Duration="60" VaryByParam="*" %>
+<%@OutputCache Duration="600" VaryByParam="*" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeaderContent" runat="server">
 </asp:Content>

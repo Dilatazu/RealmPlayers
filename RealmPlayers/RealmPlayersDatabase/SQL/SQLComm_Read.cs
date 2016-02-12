@@ -59,7 +59,7 @@ namespace VF
                     cmd.Parameters.Add(new NpgsqlParameter("ContributorID", NpgsqlDbType.Integer)).Value = _Contributor.ContributorID;
                     using (var reader = cmd.ExecuteReader())
                     {
-                        if (reader.Read() == true)
+                        if (reader.Read() == true && reader.IsDBNull(0) == false)
                         {
                             return reader.GetInt32(0);
                         }
@@ -67,6 +67,31 @@ namespace VF
                 }
             }
             return -1;
+        }
+        public bool GetInspectsInfoForContributor(Contributor _Contributor, out DateTime _Earliest, out DateTime _Latest, out int _Count)
+        {
+            _Earliest = DateTime.MaxValue;
+            _Latest = DateTime.MinValue;
+            _Count = 0;
+            using (var conn = new NpgsqlConnection(g_ConnectionString))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand("SELECT MIN(pd.updatetime), MAX(pd.updatetime), COUNT(*) FROM uploadtable up INNER JOIN playerdatatable pd ON up.id = pd.uploadid WHERE up.contributor = :ContributorID", conn))
+                {
+                    cmd.Parameters.Add(new NpgsqlParameter("ContributorID", NpgsqlDbType.Integer)).Value = _Contributor.ContributorID;
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read() == true && reader.IsDBNull(0) == false)
+                        {
+                            _Earliest = reader.GetTimeStamp(0).DateTime;
+                            _Latest = reader.GetTimeStamp(1).DateTime;
+                            _Count = reader.GetInt32(2);
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
         }
         public int GetRealmInspectsForContributor(Contributor _Contributor, WowRealm _Realm)
         {
@@ -79,7 +104,7 @@ namespace VF
                     cmd.Parameters.Add(new NpgsqlParameter("Realm", NpgsqlDbType.Integer)).Value = (int)_Realm;
                     using (var reader = cmd.ExecuteReader())
                     {
-                        if (reader.Read() == true)
+                        if (reader.Read() == true && reader.IsDBNull(0) == false)
                         {
                             return reader.GetInt32(0);
                         }
@@ -98,7 +123,7 @@ namespace VF
                     cmd.Parameters.Add(new NpgsqlParameter("ContributorID", NpgsqlDbType.Integer)).Value = _Contributor.ContributorID;
                     using (var reader = cmd.ExecuteReader())
                     {
-                        if (reader.Read() == true)
+                        if (reader.Read() == true && reader.IsDBNull(0) == false)
                         {
                             return reader.GetTimeStamp(0).DateTime;
                         }
@@ -117,7 +142,7 @@ namespace VF
                     cmd.Parameters.Add(new NpgsqlParameter("ContributorID", NpgsqlDbType.Integer)).Value = _Contributor.ContributorID;
                     using (var reader = cmd.ExecuteReader())
                     {
-                        if (reader.Read() == true)
+                        if (reader.Read() == true && reader.IsDBNull(0) == false)
                         {
                             return reader.GetTimeStamp(0).DateTime;
                         }
@@ -136,7 +161,7 @@ namespace VF
                     cmd.Parameters.Add(new NpgsqlParameter("Realm", NpgsqlDbType.Integer)).Value = (int)_Realm;
                     using (var reader = cmd.ExecuteReader())
                     {
-                        if (reader.Read() == true)
+                        if (reader.Read() == true && reader.IsDBNull(0) == false)
                         {
                             return reader.GetInt32(0);
                         }
@@ -154,7 +179,7 @@ namespace VF
                 {
                     using (var reader = cmd.ExecuteReader())
                     {
-                        if (reader.Read() == true)
+                        if (reader.Read() == true && reader.IsDBNull(0) == false)
                         {
                             return reader.GetInt32(0);
                         }
