@@ -158,7 +158,7 @@ namespace VF_RealmPlayersDatabase
             return PlayersExtraData[_Name];
         }
         static DateTime DATE_HONOR_CORRUPTION = new DateTime(2014, 1, 17, 10, 0, 0);
-        public void UpdatePlayer(System.Xml.XmlNode _PlayerNode, Contributor _Contributor)
+        public void UpdatePlayer(System.Xml.XmlNode _PlayerNode, Contributor _Contributor, Func<int, VF.SQLUploadID> _GetSQLUploadIDFunc)
         {
             string playerName = PlayerData.DataParser.ParsePlayerName(_PlayerNode);
             DateTime lastSeen = PlayerData.DataParser.ParseLastSeenUTC(_PlayerNode);
@@ -183,17 +183,27 @@ namespace VF_RealmPlayersDatabase
 
             PlayerData.Player currPlayer = GetPlayer(playerName);
             PlayerData.PlayerHistory currPlayerHistory = GetPlayerHistory(playerName);
-            currPlayer.Update(_PlayerNode, uploadID, lastSeen, currPlayerHistory, WowVersion);
+            currPlayer.Update(_PlayerNode, uploadID, lastSeen, currPlayerHistory, WowVersion, _GetSQLUploadIDFunc);
             try 
 	        {
                 //ANVÄND INTE = tecken innuti savedvariables data!!!!!!!!! då buggar det ur totalt
                 string extraData = XMLUtility.GetChildValue(_PlayerNode, "ExtraData", "");
                 if (extraData != "")
                 {
+                    VF.SQLComm comm = new VF.SQLComm();
+                    VF.SQLPlayerID playerID;
+                    if(comm.GetPlayerID(Realm, playerName, out playerID) == false)
+                    {
+                        Logger.ConsoleWriteLine("Could not find SQL PlayerID for Player \"" + playerName + "\"");
+                    }
                     var currPlayerExtraData = GetPlayerExtraData(playerName);
-                    currPlayerExtraData.AddData(uploadID, extraData);
+                    currPlayerExtraData.AddData(uploadID, extraData, playerID, _GetSQLUploadIDFunc);
                 }
 	        }
+            catch(NpgsqlException ex)
+            {
+                throw ex;
+            }
 	        catch (Exception ex)
 	        {
                 Logger.LogException(ex);
@@ -401,6 +411,7 @@ namespace VF_RealmPlayersDatabase
             {
                 m_LoadStatus = LoadStatus.Load_Failed;
                 Logger.LogException(ex);
+                Logger.ConsoleWriteLine("EXCEPTION CAUSED FAILURE TO LOAD FOR REALM " + Realm.ToString());
             }
         }
         public void LoadDatabase(string _RealmPath, DateTime? _HistoryEarliestDateTime = null)

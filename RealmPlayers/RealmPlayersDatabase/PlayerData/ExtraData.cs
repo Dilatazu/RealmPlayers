@@ -141,12 +141,22 @@ namespace VF_RealmPlayersDatabase.PlayerData
 
         public ExtraData()
         { }
-        public void AddData(UploadID _Uploader, System.Xml.XmlNode _PlayerNode)
+        public void AddData(UploadID _Uploader, System.Xml.XmlNode _PlayerNode, VF.SQLPlayerID? _PlayerID = null, Func<int, VF.SQLUploadID> _GetSQLUploadIDFunc = null)
         {
-            AddData(_Uploader, XMLUtility.GetChildValue(_PlayerNode, "ExtraData", ""));
+            AddData(_Uploader, XMLUtility.GetChildValue(_PlayerNode, "ExtraData", ""), _PlayerID, _GetSQLUploadIDFunc);
         }
-        public void _AddMount(string _MountName, UploadID _Uploader)
+        public void _AddMount(string _MountName, UploadID _Uploader, VF.SQLPlayerID? _PlayerID = null, Func<int, VF.SQLUploadID> _GetSQLUploadIDFunc = null)
         {
+            if (_PlayerID.HasValue && _PlayerID.Value.IsValid() && _GetSQLUploadIDFunc != null)
+            {
+                VF.SQLComm comm = new VF.SQLComm();
+                int mountID = comm.GenerateMountID(_MountName);
+                if (mountID > 0)
+                {
+                    comm.AddPlayerMount(_PlayerID.Value, _GetSQLUploadIDFunc(0), _Uploader.GetTime(), mountID);
+                }
+            }
+
             var mountIndex = Mounts.FindIndex((_Value) => _Value.Mount == _MountName);
             if (mountIndex != -1)
             {
@@ -157,7 +167,7 @@ namespace VF_RealmPlayersDatabase.PlayerData
                 Mounts.Add(new MountData(_MountName, _Uploader));
             }
         }
-        private void _AddPet(string _PetData, UploadID _Uploader)
+        private void _AddPet(string _PetData, UploadID _Uploader, VF.SQLPlayerID? _PlayerID = null, Func<int, VF.SQLUploadID> _GetSQLUploadIDFunc = null)
         {
             var petDatas = _PetData.Split(':');
             if (petDatas.Length != 4)
@@ -170,6 +180,15 @@ namespace VF_RealmPlayersDatabase.PlayerData
             string petFamily = petDatas[2];
             string petType = petDatas[3];
 
+            if (_PlayerID.HasValue && _PlayerID.Value.IsValid() && _GetSQLUploadIDFunc != null)
+            {
+                VF.SQLComm comm = new VF.SQLComm();
+                int petID = comm.GeneratePetID(petName, petLevel, petFamily, petType);
+                if (petID > 0)
+                {
+                    comm.AddPlayerPet(_PlayerID.Value, _GetSQLUploadIDFunc(0), _Uploader.GetTime(), petID);
+                }
+            }
             _AddPet(petName, petLevel, petFamily, petType, _Uploader);
         }
         public void _AddPet(string _PetName, int _PetLevel, string _PetFamily, string _PetType, UploadID _Uploader)
@@ -184,7 +203,7 @@ namespace VF_RealmPlayersDatabase.PlayerData
                 Pets.Add(new PetData(_PetName, _PetLevel, _PetFamily, _PetType, _Uploader));
             }
         }
-        private void _AddCompanion(string _CompanionData, UploadID _Uploader)
+        private void _AddCompanion(string _CompanionData, UploadID _Uploader, VF.SQLPlayerID? _PlayerID = null, Func<int, VF.SQLUploadID> _GetSQLUploadIDFunc = null)
         {
             var companionDatas = _CompanionData.Split(':');
             if (companionDatas.Length != 2)
@@ -195,6 +214,15 @@ namespace VF_RealmPlayersDatabase.PlayerData
             if (int.TryParse(companionDatas[1], out companionLevel) == false)
                 return;
 
+            if(_PlayerID.HasValue && _PlayerID.Value.IsValid() && _GetSQLUploadIDFunc != null)
+            {
+                VF.SQLComm comm = new VF.SQLComm();
+                int companionID = comm.GenerateCompanionID(companionName, companionLevel);
+                if(companionID > 0)
+                {
+                    comm.AddPlayerCompanion(_PlayerID.Value, _GetSQLUploadIDFunc(0), _Uploader.GetTime(), companionID);
+                }
+            }
             _AddCompanion(companionName, companionLevel, _Uploader);
         }
         public void _AddCompanion(string _CompanionName, int _CompanionLevel, UploadID _Uploader)
@@ -209,7 +237,7 @@ namespace VF_RealmPlayersDatabase.PlayerData
                 Companions.Add(new CompanionData(_CompanionName, _CompanionLevel, _Uploader));
             }
         }
-        public void AddData(UploadID _Uploader, string _ExtraDataString)
+        public void AddData(UploadID _Uploader, string _ExtraDataString, VF.SQLPlayerID? _PlayerID = null, Func<int, VF.SQLUploadID> _GetSQLUploadIDFunc = null)
         {
             try
             {
@@ -220,17 +248,18 @@ namespace VF_RealmPlayersDatabase.PlayerData
                     if (extraData.StartsWith("M:"))
                     {
                         //Mount
-                        _AddMount(extraData.Substring(2), _Uploader);
+                        _AddMount(extraData.Substring(2), _Uploader, _PlayerID, _GetSQLUploadIDFunc);
+
                     }
                     else if (extraData.StartsWith("P:"))
                     {
                         //Pet
-                        _AddPet(extraData.Substring(2), _Uploader);
+                        _AddPet(extraData.Substring(2), _Uploader, _PlayerID, _GetSQLUploadIDFunc);
                     }
                     else if (extraData.StartsWith("C:"))
                     {
                         //Companion
-                        _AddCompanion(extraData.Substring(2), _Uploader);
+                        _AddCompanion(extraData.Substring(2), _Uploader, _PlayerID, _GetSQLUploadIDFunc);
                     }
                 }
             }
