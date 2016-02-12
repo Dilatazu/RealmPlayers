@@ -169,7 +169,7 @@ namespace VF_RealmPlayersDatabase
         {
             return m_Realms;
         }
-        public void AddContribution(RPPContribution _Contribution)
+        public bool AddContribution(RPPContribution _Contribution)
         {
             int loggedExceptions = 0;
             try
@@ -184,7 +184,7 @@ namespace VF_RealmPlayersDatabase
                     if (addonVersion.Split('.').Length == 2) //VF_RealmPlayers
                     {
                         if (Utility.ParseDouble(addonVersion) <= 1.58)
-                            return;
+                            return false;
                         wowVersion = WowVersionEnum.Vanilla;
                     }
                     else //VF_RealmPlayersTBC
@@ -196,7 +196,9 @@ namespace VF_RealmPlayersDatabase
                 {
                     Logger.LogException(ex);
                 }
+                List<VF.SQLUploadID> uploadIDs = new List<VF.SQLUploadID>();
                 var dataNode = XMLUtility.GetChild(xmlDoc.DocumentElement, "VF_RealmPlayersData");
+                int wowVersionWrongGuessCount = 0;
                 foreach (System.Xml.XmlNode playerNode in dataNode.ChildNodes)
                 {
                     try
@@ -209,7 +211,7 @@ namespace VF_RealmPlayersDatabase
                             {
                                 if((realm != WowRealm.Archangel && realm != WowRealm.WarsongTBC) || wowVersion != WowVersionEnum.TBC)
                                 {
-                                    Logger.ConsoleWriteLine("RealmPlayers WoWversion guess was wrong!!!", ConsoleColor.Red);
+                                    ++wowVersionWrongGuessCount;
                                 }
                             }
 
@@ -219,10 +221,24 @@ namespace VF_RealmPlayersDatabase
                             }
                             else
                             {
+                                Func<int, VF.SQLUploadID> getUploadID = (int _Index) =>
+                                {
+                                    while(uploadIDs.Count <= _Index)
+                                    {
+                                        VF.SQLComm comm = new VF.SQLComm();
+                                        var uploadID = comm.GenerateNewUploadEntry(_Contribution.GetContributor(), DateTime.UtcNow);
+                                        uploadIDs.Add(uploadID);
+                                    }
+                                    return uploadIDs[_Index];
+                                };
                                 RealmDatabase realmDB = m_Realms[realm];
-                                realmDB.UpdatePlayer(playerNode, _Contribution.GetContributor());
+                                realmDB.UpdatePlayer(playerNode, _Contribution.GetContributor(), getUploadID);
                             }
                         }
+                    }
+                    catch(Npgsql.NpgsqlException ex)
+                    {
+                        throw ex;
                     }
                     catch (Exception ex)
                     {
@@ -231,12 +247,18 @@ namespace VF_RealmPlayersDatabase
                         ++loggedExceptions;
                     }
                 }
+                if (wowVersionWrongGuessCount > 0)
+                {
+                    Logger.ConsoleWriteLine("RealmPlayers WoWversion guess was wrong " + wowVersionWrongGuessCount + " times!!!", ConsoleColor.Red);
+                }
                 Logger.ConsoleWriteLine(_Contribution.GetContributor().GetFilename() + " just updated database successfully!");
+                return true;
             }
             catch (Exception ex)
             {
                 Logger.LogException(ex);
             }
+            return false;
         }
         public void PurgeGearContribution(WowRealm _Realm, string _Character, UploadID _UploadID)
         {

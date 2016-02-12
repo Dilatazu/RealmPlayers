@@ -48,8 +48,10 @@ namespace VF_RealmPlayersDatabase
             RPPContribution data;
             while (m_Communicator.GetNextRPPContribution(out data))
             {
-                m_Database.AddContribution(data);
-                m_AddedContributions.Add(data);
+                if(m_Database.AddContribution(data) == true)
+                {
+                    m_AddedContributions.Add(data);
+                }
             }
             if (m_AddedContributions.Count > 0)
             {
