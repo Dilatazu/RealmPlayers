@@ -3,6 +3,7 @@
 
 <%@ Register Src="~/ModelViewerOptions.ascx" TagPrefix="uc1" TagName="ModelViewerOptions" %>
 
+<%@OutputCache Duration="300" VaryByParam="*" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeaderContent" runat="server">
 </asp:Content>

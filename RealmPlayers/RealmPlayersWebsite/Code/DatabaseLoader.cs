@@ -18,7 +18,7 @@ namespace RealmPlayersServer
         public static RPPDatabase LoadRPPDatabase(bool _FirstTimeLoading = false)
         {
             GC.Collect();
-            RPPDatabase database = new RPPDatabase(Constants.RPPDbDir + "Database\\", new DateTime(2016, 1, 1, 0, 0, 0));
+            RPPDatabase database = new RPPDatabase(Constants.RPPDbDir + "Database\\");//, new DateTime(2016, 1, 1, 0, 0, 0));
 
             database.PurgeRealmDBs(true, true, (_FirstTimeLoading == false));
             GC.Collect();
@@ -28,7 +28,7 @@ namespace RealmPlayersServer
         {
             GC.Collect();
             bool reloadResult = _RPPDatabase.ReloadAllRealmDBs(Constants.RPPDbDir + "Database\\"
-                , true, _SynchronizationLockObject, new DateTime(2016, 1, 1, 0, 0, 0));
+                , true, _SynchronizationLockObject);//, new DateTime(2016, 1, 1, 0, 0, 0));
             GC.Collect();
             return reloadResult;
         }

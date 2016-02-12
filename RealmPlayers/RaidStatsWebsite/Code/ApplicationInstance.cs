@@ -264,6 +264,11 @@ namespace VF.RaidDamageWebsite
                     if (unloadFiles.Count > 0)
                     {
                         Logger.ConsoleWriteLine("Unloaded " + unloadFiles.Count + " files", ConsoleColor.Yellow);
+                        if (currMemory > 9L * 1024L * 1024L * 1024L || unloadFiles.Count > 50)
+                        {
+                            Logger.ConsoleWriteLine(HttpContext.Current.Request.UserHostAddress + " Forced a big garbage collect!", ConsoleColor.Red);
+                            GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced);
+                        }
                         if (currMemory > 4L * 1024L * 1024L * 1024L || unloadFiles.Count > 50)
                         {
                             Logger.ConsoleWriteLine(HttpContext.Current.Request.UserHostAddress + " Forced a garbage collect!", ConsoleColor.White);
