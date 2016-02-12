@@ -179,14 +179,18 @@ namespace VF_RealmPlayersDatabase.UploaderCommunication
         public void Shutdown()
         {
             var serverSocket = m_ServerSocket;
-            serverSocket = null;
+            m_ServerSocket = null;
             serverSocket.Close(5);
             //m_TCPListener = null;
         }
         public void WaitForClosed()
         {
+            Console.Write("Waiting for ListenerThread");
             while (m_ListenerThread != null)
-            { }
+            {
+                System.Threading.Thread.Sleep(500);
+                Console.Write(".");
+            }
         }
     }
 }

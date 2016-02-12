@@ -42,7 +42,7 @@ namespace VF_WoWLauncherServer
             VF_WoWLauncher.ConsoleUtility.CreateConsole();
 
             /*Some Testing*/
-#if true
+#if false
             WowRealm[] ALL_REALMS = new WowRealm[] {
                 WowRealm.Kronos,
                 WowRealm.NostalGeek,

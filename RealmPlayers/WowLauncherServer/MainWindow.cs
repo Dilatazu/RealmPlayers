@@ -21,6 +21,8 @@ namespace VF_WoWLauncherServer
         Communication m_Comm = null;
         void MainWindow_FormClosed(object sender, FormClosedEventArgs e)
         {
+            Program.g_RPPDatabaseHandler.Shutdown();
+            Program.g_RDDatabaseHandler.Shutdown();
             m_Comm.Close();
         }
 
