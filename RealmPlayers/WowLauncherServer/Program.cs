@@ -96,6 +96,7 @@ namespace VF_WoWLauncherServer
         static void CurrentDomain_ProcessExit(object sender, EventArgs e)
         {
             g_RPPDatabaseHandler.Shutdown();
+            g_RDDatabaseHandler.Shutdown();
         }
     }
 }

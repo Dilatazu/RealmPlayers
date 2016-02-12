@@ -38,11 +38,20 @@ namespace VF_WoWLauncherServer
         }
         public void Shutdown()
         {
+            Logger.ConsoleWriteLine("Shutdown for RDDatabaseHandler is triggered!", ConsoleColor.White);
             m_MainThread = null;
-            ProcessData();
+            try
+            {
+                ProcessData();
+            }
+            catch (Exception ex)
+            {
+                Logger.LogException(ex);
+            }
         }
         private void MainThread()
         {
+            Logger.ConsoleWriteLine("MainThread for RDDatabaseHandler is started!", ConsoleColor.Green);
             while (m_MainThread != null)
             {
                 try
@@ -56,6 +65,7 @@ namespace VF_WoWLauncherServer
                 if(m_MainThread != null)
                     System.Threading.Thread.Sleep(30000);
             }
+            Logger.ConsoleWriteLine("MainThread for RDDatabaseHandler is exited!", ConsoleColor.Green);
         }
         public void Pause()
         {
