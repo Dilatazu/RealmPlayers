@@ -65,7 +65,7 @@ namespace VF_RealmPlayersDatabase.PlayerData
             LastSeen = Uploader.GetTime();
         }
 
-        public bool Update(System.Xml.XmlNode _PlayerNode, UploadID _Uploader/*Contains LastSeen*/, DateTime _LastSeen, PlayerHistory _PlayerHistory, WowVersionEnum _WowVersion)
+        public bool Update(System.Xml.XmlNode _PlayerNode, UploadID _Uploader/*Contains LastSeen*/, DateTime _LastSeen, PlayerHistory _PlayerHistory, WowVersionEnum _WowVersion, Func<int, VF.SQLUploadID> _GetSQLUploadIDFunc = null)
         {
             var newCharacter = new PlayerData.CharacterData(_PlayerNode);
             var newGuild = new PlayerData.GuildData(_PlayerNode);
@@ -80,27 +80,229 @@ namespace VF_RealmPlayersDatabase.PlayerData
             if (_WowVersion == WowVersionEnum.TBC)
             {
                 newArena = new PlayerData.ArenaData(_PlayerNode);
-                _PlayerHistory.AddToHistory(newArena, _Uploader);
                 newTalentPointsData = XMLUtility.GetChildValue(_PlayerNode, "TalentsData", "");
-                _PlayerHistory.AddTalentsToHistory(newTalentPointsData, _Uploader);
+            }
+            if(_GetSQLUploadIDFunc != null)
+            {
+                UpdateSQL(_GetSQLUploadIDFunc, Uploader, _LastSeen, _PlayerHistory, _WowVersion, newCharacter, newGuild, newGear, newHonor, newArena, newTalentPointsData);
+            }
+            return Update(_Uploader, _LastSeen, _PlayerHistory, _WowVersion, newCharacter, newGuild, newGear, newHonor, newArena, newTalentPointsData);
+        }
+        public void UpdateSQL(Func<int, VF.SQLUploadID> _GetSQLUploadIDFunc, UploadID _Uploader/*Contains LastSeen*/, DateTime _LastSeen, PlayerHistory _PlayerHistory, WowVersionEnum _WowVersion
+            , PlayerData.CharacterData _NewCharacter, PlayerData.GuildData _NewGuild, PlayerData.GearData _NewGear, PlayerData.HonorData _NewHonor, PlayerData.ArenaData _NewArena = null, string _NewTalents = null)
+        {
+            VF.SQLComm comm = new VF.SQLComm();
+
+            VF.SQLPlayerData playerData = VF.SQLPlayerData.Invalid();
+            bool validPlayerData = false;
+
+            VF.SQLPlayerID playerID;
+            bool validPlayerID = false;
+            if (comm.GetPlayerID(Realm, Name, out playerID) == true)
+            {
+                validPlayerID = true;
+                if (_LastSeen < LastSeen)
+                {
+                    if (comm.GetPlayerDataAtTime(playerID, _LastSeen, out playerData) == true)
+                    {
+                        validPlayerData = true;
+                    }
+                }
+
+                if (validPlayerData == false)
+                {
+                    if (comm.GetLatestPlayerData(playerID, out playerData) == true)
+                    {
+                        validPlayerData = true;
+                    }
+                }
             }
 
-            _PlayerHistory.AddToHistory(newCharacter, _Uploader);
-            _PlayerHistory.AddToHistory(newGuild, _Uploader);
-            if(newGear.Items.Count > 0)
-                _PlayerHistory.AddToHistory(newGear, _Uploader);
-            _PlayerHistory.AddToHistory(newHonor, _Uploader);
+            if (validPlayerData == true)
+            {
+                bool playerDataChanged = false;
+                if (playerData.PlayerCharacter.IsSame(_NewCharacter) == false)
+                {
+                    playerData.PlayerCharacter = _NewCharacter;
+                    playerDataChanged = true;
+                }
+
+                PlayerData.GuildData playerDataGuildData;
+                if (comm.GetPlayerGuildData(playerData, out playerDataGuildData) == true)
+                {
+                    if (playerDataGuildData.IsSame(_NewGuild) == false)
+                    {
+                        playerData.PlayerGuildID = comm.GenerateNewPlayerGuildDataEntry(_NewGuild);
+                        playerDataChanged = true;
+                    }
+                }
+                else if (playerData.PlayerGuildID == 0)
+                {
+                    playerData.PlayerGuildID = comm.GenerateNewPlayerGuildDataEntry(_NewGuild);
+                    if (playerData.PlayerGuildID != 0)
+                    {
+                        playerDataChanged = true;
+                    }
+                }
+
+                PlayerData.GearData playerDataGearData;
+                if (comm.GetPlayerGearData(playerData, out playerDataGearData) == true)
+                {
+                    if (playerDataGearData.IsSame(_NewGear) == false)
+                    {
+                        playerData.PlayerGearID = comm.GenerateNewPlayerGearDataEntry(_NewGear, _WowVersion);
+                        playerDataChanged = true;
+                    }
+                }
+                else if (playerData.PlayerGearID == 0)
+                {
+                    playerData.PlayerGearID = comm.GenerateNewPlayerGearDataEntry(_NewGear, _WowVersion);
+                    if (playerData.PlayerGearID != 0)
+                    {
+                        playerDataChanged = true;
+                    }
+                }
+
+                PlayerData.HonorData playerDataHonorData;
+                if (comm.GetPlayerHonorData(playerData, out playerDataHonorData) == true)
+                {
+                    if (playerDataHonorData.IsSame(_NewHonor, _WowVersion) == false)
+                    {
+                        playerData.PlayerHonorID = comm.GenerateNewPlayerHonorDataEntry(_NewHonor, _WowVersion);
+                        playerDataChanged = true;
+                    }
+                }
+                else if (playerData.PlayerHonorID == 0)
+                {
+                    playerData.PlayerHonorID = comm.GenerateNewPlayerHonorDataEntry(_NewHonor, _WowVersion);
+                    if (playerData.PlayerHonorID != 0)
+                    {
+                        playerDataChanged = true;
+                    }
+                }
+
+                if (_WowVersion == WowVersionEnum.TBC)
+                {
+                    PlayerData.ArenaData playerDataArenaData;
+                    if (comm.GetPlayerArenaData(playerData, out playerDataArenaData) == true)
+                    {
+                        if (playerDataArenaData.IsSame(_NewArena) == false)
+                        {
+                            playerData.PlayerArenaID = comm.GenerateNewPlayerArenaInfoEntry(_NewArena);
+                            playerDataChanged = true;
+                        }
+                    }
+                    else if (playerData.PlayerArenaID == 0)
+                    {
+                        playerData.PlayerArenaID = comm.GenerateNewPlayerArenaInfoEntry(_NewArena);
+                        if (playerData.PlayerArenaID != 0)
+                        {
+                            playerDataChanged = true;
+                        }
+                    }
+
+                    string playerDataTalentsData;
+                    if (comm.GetPlayerTalentsData(playerData, out playerDataTalentsData) == true)
+                    {
+                        if (playerDataTalentsData == _NewTalents)
+                        {
+                            playerData.PlayerTalentsID = comm.GenerateNewPlayerTalentsDataEntry(_NewTalents);
+                            playerDataChanged = true;
+                        }
+                    }
+                    else if (playerData.PlayerTalentsID == 0)
+                    {
+                        playerData.PlayerTalentsID = comm.GenerateNewPlayerTalentsDataEntry(_NewTalents);
+                        if (playerData.PlayerTalentsID != 0)
+                        {
+                            playerDataChanged = true;
+                        }
+                    }
+                }
+
+                if (playerDataChanged == true)
+                {
+                    playerData.UpdateTime = _LastSeen;
+                    playerData.UploadID = _GetSQLUploadIDFunc(0);
+
+                    if (comm.GenerateNewPlayerDataEntry(playerData) == false)
+                    {
+                        Logger.ConsoleWriteLine("Failed to update PlayerData for player \"" + Name + "\"", ConsoleColor.Red);
+                    }
+
+                    if (_LastSeen > LastSeen)
+                    {
+                        //Also update the latestupdateid in playertable since this is the latest available data!
+                        if (comm.UpdatePlayerEntry(playerData.PlayerID, playerData.UploadID) == false)
+                        {
+                            Logger.ConsoleWriteLine("Failed to update LatestUploadID for player \"" + Name + "\"", ConsoleColor.Red);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                Player newPlayer = new Player();
+                newPlayer.Name = Name;
+                newPlayer.Realm = Realm;
+                newPlayer.Character = _NewCharacter;
+                newPlayer.Guild = _NewGuild;
+                newPlayer.Gear = _NewGear;
+                newPlayer.Honor = _NewHonor;
+                newPlayer.Arena = _NewArena;
+                newPlayer.TalentPointsData = _NewTalents;
+                newPlayer.LastSeen = _LastSeen;
+
+                //Assume PlayerID did not exist!!!
+                if (validPlayerID == true)
+                {
+                    //OK PlayerID exists, so maybe this is just an earlier data than currently exists at all for player.
+                    //This case should be handled above though, so if this happens something is very weird and unexpected!
+                    //This issue can be resolved automatically, it should never happen normally. But if it does...
+                    Logger.ConsoleWriteLine("Unexpected problem when updating PlayerData for player \"" + Name + "\"", ConsoleColor.Red);
+                    if (comm.UpdateLatestPlayerDataEntry(playerID, _GetSQLUploadIDFunc(0), newPlayer).ID == playerID.ID)
+                    {
+                        Logger.ConsoleWriteLine("Unexpected problem was resolved successfully!", ConsoleColor.Green);
+                    }
+                    else
+                    {
+                        Logger.ConsoleWriteLine("\n--------------------------------------------\nERROR ERROR ERRO ERROR ERROR\nWhen attempting to fix unexpected problem for player \"" + Name + "\" it did not work!!!\n--------------------------------------------\n", ConsoleColor.Red);
+                    }
+                }
+                else
+                {
+                    if (comm.GenerateNewPlayerEntry(_GetSQLUploadIDFunc(0), newPlayer).IsValid() == false)
+                    {
+                        Logger.ConsoleWriteLine("Unexpected problem when creating new SQLPlayerID for player \"" + Name + "\"", ConsoleColor.Red);
+                    }
+                }
+            }
+        }
+        public bool Update(UploadID _Uploader/*Contains LastSeen*/, DateTime _LastSeen, PlayerHistory _PlayerHistory, WowVersionEnum _WowVersion
+            , PlayerData.CharacterData _NewCharacter, PlayerData.GuildData _NewGuild, PlayerData.GearData _NewGear, PlayerData.HonorData _NewHonor, PlayerData.ArenaData _NewArena = null, string _NewTalents = null)
+        {
+            if(_WowVersion == WowVersionEnum.TBC)
+            {
+                if(_NewArena != null) _PlayerHistory.AddToHistory(_NewArena, _Uploader);
+                if(_NewTalents != null) _PlayerHistory.AddTalentsToHistory(_NewTalents, _Uploader);
+            }
+
+            _PlayerHistory.AddToHistory(_NewCharacter, _Uploader);
+            _PlayerHistory.AddToHistory(_NewGuild, _Uploader);
+            if (_NewGear.Items.Count > 0)
+                _PlayerHistory.AddToHistory(_NewGear, _Uploader);
+            _PlayerHistory.AddToHistory(_NewHonor, _Uploader);
             if (_LastSeen > LastSeen)
             {
                 Uploader = _Uploader;
                 LastSeen = _LastSeen;
-                Character = newCharacter;
-                Guild = newGuild;
-                if (newGear.Items.Count > 0)
-                    Gear = newGear;
-                Honor = newHonor;
-                Arena = newArena;
-                TalentPointsData = newTalentPointsData;
+                Character = _NewCharacter;
+                Guild = _NewGuild;
+                if (_NewGear.Items.Count > 0)
+                    Gear = _NewGear;
+                Honor = _NewHonor;
+                Arena = _NewArena;
+                TalentPointsData = _NewTalents;
                 return false;
             }
 

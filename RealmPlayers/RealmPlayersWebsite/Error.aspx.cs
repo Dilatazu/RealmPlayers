@@ -27,7 +27,7 @@ namespace RealmPlayersServer
                 else
                     returnStr = "";
 
-                var rppDatabase = Hidden.ApplicationInstance.Instance.GetRPPDatabase(false);
+                var rppDatabase = Hidden.ApplicationInstance.Instance._GetRPPDatabase(false);
                 var itemInfoCache = Hidden.ApplicationInstance.Instance.GetItemInfoCache(VF_RealmPlayersDatabase.WowVersionEnum.Vanilla, false);
                 var itemInfoCacheTBC = Hidden.ApplicationInstance.Instance.GetItemInfoCache(VF_RealmPlayersDatabase.WowVersionEnum.TBC, false);
 

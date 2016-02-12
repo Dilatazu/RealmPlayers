@@ -69,6 +69,7 @@ namespace RealmPlayersServer.Code
         }
         public static void Thread_GenerateData(RPPDatabase _Database)
         {
+            Logger.ConsoleWriteLine("TODO: Fix this!!!!!");
             for (int i = 0; i < 5; ++i)
             {
                 var generatedContributorStatisticData = new Dictionary<WowRealm, Dictionary<int, ContributorStatisticItem>>();

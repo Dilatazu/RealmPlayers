@@ -341,7 +341,7 @@ namespace RealmPlayersServer
                 for (int i = (int)WowBoss.WBFirst; i <= (int)WowBoss.WBLast; ++i) m_MembersWithBossItems.Add((WowBoss)i, 0);
 
                 var itemDropdatabase = DatabaseAccess.GetItemDropDatabase(_Page, wowVersion, NotLoadedDecision.RedirectAndWait).GetDatabase();
-                var playersHistory = DatabaseAccess.GetRealmPlayersHistory(_Page, _Realm, NotLoadedDecision.RedirectAndWait);
+                var playersHistory = DatabaseAccess._GetRealmPlayersHistory(_Page, _Realm, NotLoadedDecision.RedirectAndWait);
                 foreach (var guildPlayer in _Guild.Players)
                 {
                     if (guildPlayer.Value.IsInGuild == false)

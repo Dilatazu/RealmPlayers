@@ -131,7 +131,7 @@ namespace RealmPlayersServer
             }
 
             List<Player> playerMatchList = new List<Player>(100000);
-            foreach (var _RealmDB in DatabaseAccess.GetRealmDBs(this))
+            foreach (var _RealmDB in DatabaseAccess._GetRealmDBs(this))
             {
                 if (_Realm != WowRealm.All && _Realm != _RealmDB.Key)
                     continue;

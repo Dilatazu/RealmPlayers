@@ -43,7 +43,20 @@ namespace VF_RealmPlayersDatabase
         {
             return new UploadID(-1, DateTime.Now);
         }
-        
+        public static UploadID NullMin()
+        {
+            return new UploadID(-1, DateTime.MinValue);
+        }
+        public static UploadID NullMax()
+        {
+            return new UploadID(-1, DateTime.MaxValue);
+        }
+
+        public string GetAsString()
+        {
+            return "{ContributorID=" + ContributorID + ", Time=" + Time.ToDateTimeStr() + "}";
+        }
+
         #region Serializing
         public UploadID(SerializationInfo _Info, StreamingContext _Context)
         {

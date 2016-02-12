@@ -26,6 +26,11 @@ namespace VF_RealmPlayersDatabase.PlayerData
         [ProtoMember(6)]
         public int[] GemIDs = null;
 
+        public string GetAsString()
+        {
+            return "{" + Slot.ToString() + ", " + ItemID + ", " + EnchantID + ", " + SuffixID + ", " + UniqueID + ", " + (GemIDs == null ? "null" : ("(" + GemIDs[0].ToString() + ", " + GemIDs[1].ToString() + ", " + GemIDs[2].ToString() + ", " + GemIDs[3].ToString() + ")")) + "}";
+        }
+
         public int GetGemIDCount()
         {
             if (GemIDs == null)
@@ -109,6 +114,54 @@ namespace VF_RealmPlayersDatabase.PlayerData
         [ProtoMember(1)]
         public Dictionary<ItemSlot, ItemInfo> Items = new Dictionary<ItemSlot, ItemInfo>();
         private List<ItemInfo> ExtraItems = null;//NOT SAVED THROUGH PROTOBUF
+
+        public string GetAsString()
+        {
+            string itemsData = "{";
+            foreach(var item in Items)
+            {
+                itemsData += item.Key.ToString() + "=" + item.Value.GetAsString() + ", ";
+            }
+            return itemsData + "}";
+        }
+        public string GetDiffString(GearData _Gear)
+        {
+            string gearItemsDebugInfo = "";
+            foreach (ItemSlot slot in Enum.GetValues(typeof(ItemSlot)))
+            {
+                ItemInfo myItem = null;
+                ItemInfo otherItem = null;
+                if (Items.TryGetValue(slot, out myItem) == false) myItem = null;
+                if (_Gear.Items.TryGetValue(slot, out otherItem) == false) otherItem = null;
+
+                if (myItem != null && otherItem == null) 
+                {
+                    gearItemsDebugInfo += "My" + myItem.GetAsString() + "!=" +
+                        "Other{null}, ";
+                }
+                else if (myItem == null && otherItem != null)
+                {
+                    gearItemsDebugInfo += "My{null}!=" +
+                        "Other" + otherItem.GetAsString() + ", ";
+                }
+                else if (myItem != null && otherItem != null)
+                {
+                    if (myItem.IsSame(otherItem) == false)
+                    {
+                        gearItemsDebugInfo += "My" + myItem.GetAsString() + "!=" +
+                            "Other" + otherItem.GetAsString() + ", ";
+                    }
+                }
+                else
+                {
+                    if (myItem != null || otherItem != null)
+                    {
+                        Logger.ConsoleWriteLine("ERROR\nERROR\nERROR\nERROR\nERROR\nERROR\nERROR\nERROR\n, this is unexpected and should never happen!\nERROR\nERROR\nERROR\nERROR\nERROR\nERROR");
+                    }
+                }
+            }
+            return "{" + gearItemsDebugInfo + "}";
+        }
 
         public ItemInfo GetItem(ItemSlot _ItemSlot)
         {

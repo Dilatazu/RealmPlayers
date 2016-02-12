@@ -73,6 +73,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RDDatabaseHandler.cs" />
     <Compile Include="RPPDatabaseHandler.cs" />
+    <Compile Include="SQLDatabaseMigration.cs" />
     <Compile Include="VersionTools.cs" />
     <EmbeddedResource Include="MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>

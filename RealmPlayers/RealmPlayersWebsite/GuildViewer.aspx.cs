@@ -179,7 +179,7 @@ namespace RealmPlayersServer
             {
                 List<Tuple<DateTime, Player, List<Tuple<PlayerItemInfo, ItemInfo>>>> latestItems = new List<Tuple<DateTime, Player, List<Tuple<PlayerItemInfo, ItemInfo>>>>();
 
-                var realmHistory = DatabaseAccess.GetRealmPlayersHistory(this, realm, NotLoadedDecision.SpinWait);
+                var realmHistory = DatabaseAccess._GetRealmPlayersHistory(this, realm, NotLoadedDecision.SpinWait);
                 foreach (var data in orderedPlayersArray)
                 {
                     Player player = data.Item1;

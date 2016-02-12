@@ -56,7 +56,12 @@ namespace VF_RealmPlayersDatabase.PlayerData
 
             return true;
         }
-        
+
+        public string GetAsString()
+        {
+            return "{" + GuildName + ", " + GuildRank + ", " + GuildRankNr + "}";
+        }
+
         #region Serializing
         public GuildData(SerializationInfo _Info, StreamingContext _Context)
         {

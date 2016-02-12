@@ -518,7 +518,7 @@ namespace RealmPlayersServer
                     return null;
                 }
             }
-            public RPPDatabase GetRPPDatabase(bool _WaitUntilLoaded = true)
+            public RPPDatabase _GetRPPDatabase(bool _WaitUntilLoaded = true)
             {
                 if (m_RPPDatabase == null && _WaitUntilLoaded == false)
                 {
@@ -572,7 +572,7 @@ namespace RealmPlayersServer
             }
             public Dictionary<VF_RealmPlayersDatabase.WowRealm, Dictionary<int, Code.ContributorStatisticItem>> GetContributorStatistics()
             {
-                Code.ContributorStatistics.AssertInitialize(GetRPPDatabase());
+                Code.ContributorStatistics.AssertInitialize(_GetRPPDatabase());
                 return Code.ContributorStatistics.GetData();
             }
             public static ApplicationInstance Instance

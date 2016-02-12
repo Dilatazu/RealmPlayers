@@ -17,7 +17,7 @@ namespace DatabaseHelper
                 //var history1 = new Dictionary<string, PlayerHistory>();
 
                 Console.WriteLine("Start loading history1");
-                var history1 = VF_RealmPlayersDatabase.RealmDatabase._LoadPlayersHistoryChunked(Environment.CurrentDirectory + "\\", DateTime.UtcNow.AddMonths(-12));
+                var history1 = VF_RealmPlayersDatabase.RealmDatabase._LoadPlayersHistoryChunked(Environment.CurrentDirectory + "\\", VF_RealmPlayersDatabase.WowRealm.Unknown, DateTime.UtcNow.AddMonths(-12));
                 Console.WriteLine("Done loading history1, It took " + (timer.ElapsedMilliseconds / 1000) + " seconds to load history1!");
                 Dictionary<string, PlayerHistory> history2 = null;
                 VF_RealmPlayersDatabase.Utility.LoadSerialize<Dictionary<string, PlayerHistory>>(Environment.CurrentDirectory + "\\PlayersHistoryData.dat", out history2);

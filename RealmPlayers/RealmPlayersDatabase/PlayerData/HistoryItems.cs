@@ -38,6 +38,11 @@ namespace VF_RealmPlayersDatabase.PlayerData
         }
         #endregion
 
+        public string GetAsString()
+        {
+            return "{Data=" + Data.GetAsString() + ", Uploader=" + Uploader.GetAsString() + "}";
+        }
+
         public static bool IsSame(CharacterDataHistoryItem _Item1, CharacterDataHistoryItem _Item2)
         {
             return _Item1.Data.IsSame(_Item2.Data);
@@ -81,6 +86,11 @@ namespace VF_RealmPlayersDatabase.PlayerData
             _Info.AddValue("Uploader", Uploader);
         }
         #endregion
+
+        public string GetAsString()
+        {
+            return "{Data=" + Data.GetAsString() + ", Uploader=" + Uploader.GetAsString() + "}";
+        }
 
         public static bool IsSame(GuildDataHistoryItem _Item1, GuildDataHistoryItem _Item2)
         {
@@ -126,6 +136,11 @@ namespace VF_RealmPlayersDatabase.PlayerData
         }
         #endregion
 
+        public string GetAsString()
+        {
+            return "{Data=" + Data.GetAsString() + ", Uploader=" + Uploader.GetAsString() + "}";
+        }
+
         public static bool IsSame(HonorDataHistoryItem _Item1, HonorDataHistoryItem _Item2)
         {
             return _Item1.Data.IsSame(_Item2.Data);
@@ -170,6 +185,18 @@ namespace VF_RealmPlayersDatabase.PlayerData
         }
         #endregion
 
+        public string GetAsString()
+        {
+            return "{Data=" + Data.GetAsString() + ", Uploader=" + Uploader.GetAsString() + "}";
+        }
+        public string GetDiffString(GearDataHistoryItem _Item)
+        {
+            string diffStr = "(";
+            if (Uploader.GetTime() != _Item.Uploader.GetTime())
+                diffStr += Uploader.GetTime().ToDateTimeStr() + " != " + _Item.Uploader.GetTime().ToDateTimeStr() + ", ";
+            return diffStr + Data.GetDiffString(_Item.Data) + ")";
+        }
+
         public static bool IsSame(GearDataHistoryItem _Item1, GearDataHistoryItem _Item2)
         {
             return _Item1.Data.IsSame(_Item2.Data);
@@ -199,6 +226,11 @@ namespace VF_RealmPlayersDatabase.PlayerData
             Uploader = _Uploader;
         }
 
+        public string GetAsString()
+        {
+            return "{Data=" + Data.GetAsString() + ", Uploader=" + Uploader.GetAsString() + "}";
+        }
+
         public static bool IsSame(ArenaDataHistoryItem _Item1, ArenaDataHistoryItem _Item2)
         {
             return _Item1.Data.IsSame(_Item2.Data);
@@ -226,6 +258,11 @@ namespace VF_RealmPlayersDatabase.PlayerData
         {
             Data = _Talents;
             Uploader = _Uploader;
+        }
+
+        public string GetAsString()
+        {
+            return "{Data=" + Data + ", Uploader=" + Uploader.GetAsString() + "}";
         }
 
         public static bool IsSame(TalentsDataHistoryItem _Item1, TalentsDataHistoryItem _Item2)

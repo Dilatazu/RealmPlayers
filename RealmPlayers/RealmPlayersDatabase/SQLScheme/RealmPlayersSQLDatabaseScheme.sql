@@ -1,29 +1,63 @@
+--/*
+DROP TABLE PlayerMountTable;
+DROP TABLE PlayerPetTable;
+DROP TABLE PlayerCompanionTable;
+DROP TABLE PlayerTable;
+DROP TABLE PlayerDataTable;
+
+DROP TABLE UploadTable;
+DROP TABLE ContributorTable;
+DROP TABLE PlayerTalentsInfoTable;
+DROP TABLE PlayerArenaInfoTable;
+DROP TABLE PlayerArenaDataTable;
+DROP TABLE PlayerGearGemsTable;
+DROP TABLE PlayerGearTable;
+DROP TABLE PlayerHonorVanillaTable;
+DROP TABLE PlayerHonorTable;
+DROP TABLE PlayerGuildTable;
+
+DROP TABLE IngameItemTable;
+DROP TABLE IngameMountTable;
+DROP TABLE IngamePetTable;
+DROP TABLE IngameCompanionTable;
+--*/
+
+--CREATE DATABASE RealmPlayersDB WITH ENCODING 'UTF8';
+
+--/*
 BEGIN;
+--SET CLIENT_ENCODING TO 'UTF8';
+
 --UNIQUE FOR PLAYER AND TIME
 CREATE TABLE PlayerGuildTable (
-	ID				integer,
+	ID				serial,
 	GuildName		text,
 	GuildRank		text,
 	GuildRankNr		smallint,
 	PRIMARY KEY (ID)
 );
 
+INSERT INTO PlayerGuildTable VALUES(0, '', '', 0);
+
 --UNIQUE FOR PLAYER AND TIME
 CREATE TABLE PlayerHonorTable (
-	ID				integer,
+	ID				serial,
 	TodayHK			integer,
-	TodayDKVanilla_Or_TodayHonorTBC integer,
+	TodayHonor		integer,--Not used for vanilla
 	YesterdayHK		integer,
 	YesterdayHonor	integer,
 	LifetimeHK		integer,
 	PRIMARY KEY (ID)
 );
 
+INSERT INTO PlayerHonorTable VALUES(0, 0, 0, 0, 0, 0);
+
 --UNIQUE FOR PLAYER AND TIME
 CREATE TABLE PlayerHonorVanillaTable (
 	PlayerHonorID	integer REFERENCES PlayerHonorTable(ID),
 	CurrentRank		smallint,
 	CurrentRankProgress	real,
+	TodayDK			integer,
 	ThisWeekHK		integer,
 	ThisWeekHonor	integer,
 	LastWeekHK		integer,
@@ -34,9 +68,11 @@ CREATE TABLE PlayerHonorVanillaTable (
 	PRIMARY KEY (PlayerHonorID)
 );
 
+INSERT INTO PlayerHonorVanillaTable VALUES(0, 0, 0.0, 0, 0, 0, 0, 0, 0, 0, 0);
+
 --Not unique for Player
 CREATE TABLE IngameItemTable (
-	ID				integer,
+	ID				serial,
 	ItemID			integer,
 	EnchantID		integer,
 	SuffixID		integer,
@@ -44,9 +80,11 @@ CREATE TABLE IngameItemTable (
 	PRIMARY KEY (ID)
 );
 
+INSERT INTO IngameItemTable VALUES(0, 0, 0, 0, 0);
+
 --Unique for Player and Time
 CREATE TABLE PlayerGearTable (
-	ID				integer,
+	ID				serial,
 	Head			integer REFERENCES IngameItemTable(ID),
 	Neck			integer REFERENCES IngameItemTable(ID),
 	Shoulder		integer REFERENCES IngameItemTable(ID),
@@ -69,6 +107,8 @@ CREATE TABLE PlayerGearTable (
 	PRIMARY KEY (ID)
 );
 
+INSERT INTO PlayerGearTable VALUES(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
 --Unique for Player, Time and Slot
 CREATE TABLE PlayerGearGemsTable (
 	GearID			integer REFERENCES PlayerGearTable(ID),
@@ -80,9 +120,11 @@ CREATE TABLE PlayerGearGemsTable (
 	PRIMARY KEY (GearID, ItemSlot)
 );
 
+INSERT INTO PlayerGearGemsTable VALUES(0, 0, 0, 0, 0, 0);
+
 --Unique for Player and Time
-CREATE TABLE PlayerArenaTeamTable (
-	ID				integer,
+CREATE TABLE PlayerArenaDataTable (
+	ID				serial,
 	TeamName		text,
 	TeamRating		integer,
 	GamesPlayed		integer,
@@ -92,44 +134,54 @@ CREATE TABLE PlayerArenaTeamTable (
 	PRIMARY KEY (ID)
 );
 
+INSERT INTO PlayerArenaDataTable VALUES(0, '', 0, 0, 0, 0, 0);
+
 --Unique for Player and Time
 CREATE TABLE PlayerArenaInfoTable (
-	ID				integer,
-	Team_2v2		integer REFERENCES PlayerArenaTeamTable(ID),
-	Team_3v3		integer REFERENCES PlayerArenaTeamTable(ID),
-	Team_5v5		integer REFERENCES PlayerArenaTeamTable(ID),
+	ID				serial,
+	Team_2v2		integer REFERENCES PlayerArenaDataTable(ID),
+	Team_3v3		integer REFERENCES PlayerArenaDataTable(ID),
+	Team_5v5		integer REFERENCES PlayerArenaDataTable(ID),
 	PRIMARY KEY (ID)
 );
 
+INSERT INTO PlayerArenaInfoTable VALUES(0, 0, 0, 0);
+
 --Unique for Player and Time
-CREATE TABLE TalentsInfoTable (
-	ID				integer,
+CREATE TABLE PlayerTalentsInfoTable (
+	ID				serial,
 	Talents			text,
 	PRIMARY KEY (ID)
 );
 
+INSERT INTO PlayerTalentsInfoTable VALUES(0, '');
+
 --Unique for UserID
 CREATE TABLE ContributorTable (
-	ID 				integer,
-	ContributorID 	integer,
+	ID 				serial,
 	UserID			text,
 	Name			text,
 	IP				text,
 	PRIMARY KEY (ID)
 );
 
+INSERT INTO ContributorTable VALUES(0, '', '', '');
+
 --Unique for Upload from Contributor
-CREATE TABLE UpdateTable (
-	ID				integer,
-	DateTime		date,
+CREATE TABLE UploadTable (
+	ID				serial,
+	UploadTime		timestamp,
 	Contributor		integer REFERENCES ContributorTable(ID),
 	PRIMARY KEY (ID)
 );
 
+INSERT INTO UploadTable VALUES(0, current_timestamp, 0);
+
 --Unique for Player and Time
 CREATE TABLE PlayerDataTable (
 	PlayerID		integer,-- REFERENCES PlayerTable(ID),
-	UpdateID		integer REFERENCES UpdateTable(ID),
+	UploadID		integer REFERENCES UploadTable(ID),
+	UpdateTime		timestamp,
 	Race			smallint,
 	Class			smallint,
 	Sex				smallint,
@@ -138,18 +190,76 @@ CREATE TABLE PlayerDataTable (
 	HonorInfo		integer REFERENCES PlayerHonorTable(ID),
 	GearInfo		integer REFERENCES PlayerGearTable(ID),
 	ArenaInfo		integer REFERENCES PlayerArenaInfoTable(ID),
-	TalentsInfo		integer REFERENCES TalentsInfoTable(ID),
-	PRIMARY KEY (PlayerID, UpdateID)
+	TalentsInfo		integer REFERENCES PlayerTalentsInfoTable(ID),
+	PRIMARY KEY (PlayerID, UploadID)
 );
+
+INSERT INTO PlayerDataTable VALUES(0, 0, current_timestamp, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
 --Unique for Character and Realm
 CREATE TABLE PlayerTable (
-	ID				integer,
+	ID				serial,
 	Name			text,
 	Realm			integer,
-	UpdateID		integer REFERENCES UpdateTable(ID), --Use along with ID to find PlayerDataTable ID
-	FOREIGN KEY (ID, UpdateID) REFERENCES PlayerDataTable(PlayerID, UpdateID),
+	LatestUploadID	integer REFERENCES UploadTable(ID), --Use along with ID to find PlayerDataTable ID Maybe should be renamed to "LatestUploadID"?
+	--This foreign key causes too much headache atm FOREIGN KEY (ID, LatestUploadID) REFERENCES PlayerDataTable(PlayerID, UploadID),
+	PRIMARY KEY (ID)
+);
+--ALTER TABLE playertable DROP CONSTRAINT playertable_id_fkey
+
+INSERT INTO PlayerTable VALUES(0, '', 0, 0);
+
+CREATE TABLE IngameMountTable (
+	ID				serial,
+	Name			text,
 	PRIMARY KEY (ID)
 );
 
+INSERT INTO IngameMountTable VALUES(0, '');
+
+CREATE TABLE IngamePetTable (
+	ID				serial,
+	Name			text,
+	Level			smallint,
+	CreatureFamily	text,
+	CreatureType	text,
+	PRIMARY KEY (ID)
+);
+
+INSERT INTO IngamePetTable VALUES(0, '', 0, '', '');
+
+CREATE TABLE IngameCompanionTable (
+	ID				serial,
+	Name			text,
+	Level			smallint,
+	PRIMARY KEY (ID)
+);
+
+INSERT INTO IngameCompanionTable VALUES(0, '', 0);
+
+CREATE TABLE PlayerMountTable (
+	PlayerID		integer REFERENCES PlayerTable(ID),
+	UploadID		integer REFERENCES UploadTable(ID),
+	UpdateTime		timestamp,
+	MountID			integer REFERENCES IngameMountTable(ID),
+	PRIMARY KEY(PlayerID, UploadID, MountID)
+);
+
+CREATE TABLE PlayerPetTable (
+	PlayerID		integer REFERENCES PlayerTable(ID),
+	UploadID		integer REFERENCES UploadTable(ID),
+	UpdateTime		timestamp,
+	PetID			integer REFERENCES IngamePetTable(ID),
+	PRIMARY KEY(PlayerID, UploadID, PetID)
+);
+
+CREATE TABLE PlayerCompanionTable (
+	PlayerID		integer REFERENCES PlayerTable(ID),
+	UploadID		integer REFERENCES UploadTable(ID),
+	UpdateTime		timestamp,
+	CompanionID		integer REFERENCES IngameCompanionTable(ID),
+	PRIMARY KEY(PlayerID, UploadID, CompanionID)
+);
+
 COMMIT;
+--*/

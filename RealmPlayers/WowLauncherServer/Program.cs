@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 
 using VF_RealmPlayersDatabase;
+using VF_RealmPlayersDatabase.PlayerData;
 using UploaderCommunication = VF_RealmPlayersDatabase.UploaderCommunication;
 
 namespace VF_WoWLauncherServer
@@ -40,12 +41,34 @@ namespace VF_WoWLauncherServer
 
             VF_WoWLauncher.ConsoleUtility.CreateConsole();
 
-            if (debugMode == false)
+            /*Some Testing*/
+#if true
+            WowRealm[] ALL_REALMS = new WowRealm[] {
+                WowRealm.Kronos,
+                WowRealm.NostalGeek,
+                WowRealm.Al_Akir,
+                WowRealm.Valkyrie,
+                WowRealm.VanillaGaming,
+                WowRealm.Nefarian,
+                WowRealm.Rebirth,
+                WowRealm.Archangel,
+                WowRealm.Nostalrius,
+                WowRealm.NostalriusPVE,
+                WowRealm.Emerald_Dream,
+                WowRealm.Warsong,
+                WowRealm.WarsongTBC };
+
+            SQLDatabaseMigration.Migrate(SQLDatabaseMigration.MigrationChoice.TestOnly, ALL_REALMS);
+#endif
+            /*Some Testing*/
+
+            //if (debugMode == false)
             {
                 Console.WriteLine("Waiting for ContributorDB to load");
+                ContributorDB.Initialize(debugMode);
                 while (ContributorDB.GetMongoDB() == null)
                 {
-                    ContributorDB.Initialize();
+                    ContributorDB.Initialize(debugMode);
                     System.Threading.Thread.Sleep(100);
                     Console.Write(".");
                 }
@@ -73,6 +96,7 @@ namespace VF_WoWLauncherServer
         static void CurrentDomain_ProcessExit(object sender, EventArgs e)
         {
             g_RPPDatabaseHandler.Shutdown();
+            g_RDDatabaseHandler.Shutdown();
         }
     }
 }

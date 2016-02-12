@@ -22,6 +22,11 @@ namespace VF_RealmPlayersDatabase.PlayerData
         [ProtoMember(6)]
         public int PlayerRating = 0;
 
+        public string GetAsString()
+        {
+            return "{" + TeamName + ", " + TeamRating + ", " + GamesPlayed + ", " + GamesWon + ", " + PlayerPlayed + ", " + PlayerRating + "}";
+        }
+
         public bool IsSame(ArenaPlayerData _ArenaPlayerData)
         {
             if (TeamName != _ArenaPlayerData.TeamName) return false;
@@ -43,6 +48,11 @@ namespace VF_RealmPlayersDatabase.PlayerData
         public ArenaPlayerData Team3v3 = null;
         [ProtoMember(3)]
         public ArenaPlayerData Team5v5 = null;
+
+        public string GetAsString()
+        {
+            return "{" + (Team2v2 == null ? "null" : Team2v2.GetAsString()) + ", " + (Team3v3 == null ? "null" : Team3v3.GetAsString()) + ", " + (Team5v5 == null ? "null" : Team5v5.GetAsString()) + "}";
+        }
 
         public ArenaData()
         { }

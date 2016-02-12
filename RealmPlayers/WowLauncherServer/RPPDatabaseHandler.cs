@@ -56,18 +56,34 @@ namespace VF_WoWLauncherServer
         }
         public void Shutdown()
         {
+            Logger.ConsoleWriteLine("Shutdown for RPPDatabaseHandler is triggered!", ConsoleColor.White);
             m_MainThread = null;
             if (m_Communicator != null)
             {
                 m_Communicator.Shutdown();
-                ProcessData();
+                try
+                {
+                    ProcessData();
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogException(ex);
+                }
                 m_Communicator.WaitForClosed();
-                ProcessData();
+                try
+                {
+                    ProcessData();
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogException(ex);
+                }
                 m_Communicator = null;
             }
         }
         private void MainThread()
         {
+            Logger.ConsoleWriteLine("MainThread for RPPDatabaseHandler is started!", ConsoleColor.Green);
             while (m_Communicator != null && m_MainThread != null)
             {
                 try
@@ -79,8 +95,9 @@ namespace VF_WoWLauncherServer
                     Logger.LogException(ex);
                 }
                 if(m_MainThread != null)
-                System.Threading.Thread.Sleep(30000);
+                    System.Threading.Thread.Sleep(30000);
             }
+            Logger.ConsoleWriteLine("MainThread for RPPDatabaseHandler is exited!", ConsoleColor.Green);
         }
         void ProcessData()
         {

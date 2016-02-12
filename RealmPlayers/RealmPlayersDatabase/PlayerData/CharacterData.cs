@@ -57,6 +57,11 @@ namespace VF_RealmPlayersDatabase.PlayerData
             return true;
         }
         
+        public string GetAsString()
+        {
+            return "{" + Race.ToString() + ", " + Class.ToString() + ", " + Sex.ToString() + ", " + Level + "}";
+        }
+
         #region Serializing
         public CharacterData(SerializationInfo _Info, StreamingContext _Context)
         {
