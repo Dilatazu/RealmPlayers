@@ -190,11 +190,13 @@ namespace VF_RealmPlayersDatabase
                 string extraData = XMLUtility.GetChildValue(_PlayerNode, "ExtraData", "");
                 if (extraData != "")
                 {
-                    VF.SQLComm comm = new VF.SQLComm();
                     VF.SQLPlayerID playerID;
-                    if(comm.GetPlayerID(Realm, playerName, out playerID) == false)
+                    using (VF.SQLComm comm = new VF.SQLComm())
                     {
-                        Logger.ConsoleWriteLine("Could not find SQL PlayerID for Player \"" + playerName + "\"");
+                        if (comm.GetPlayerID(Realm, playerName, out playerID) == false)
+                        {
+                            Logger.ConsoleWriteLine("Could not find SQL PlayerID for Player \"" + playerName + "\"");
+                        }
                     }
                     var currPlayerExtraData = GetPlayerExtraData(playerName);
                     currPlayerExtraData.AddData(uploadID, extraData, playerID, _GetSQLUploadIDFunc);

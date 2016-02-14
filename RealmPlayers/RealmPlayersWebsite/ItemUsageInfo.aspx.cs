@@ -45,109 +45,115 @@ namespace RealmPlayersServer
 
             var itemSummaryDB = Hidden.ApplicationInstance.Instance.GetItemSummaryDatabase();
 
-            List<Tuple<DateTime, string>> players = null;
-            players = itemSummaryDB.GetItemUsage(realm, itemID, suffixID);//, out players) == true)
+            using (VF.SQLComm comm = new VF.SQLComm())
             {
-                string currentItemDatabase = DatabaseAccess.GetCurrentItemDatabaseAddress();
-
-                var itemInfo = DatabaseAccess.GetItemInfo(itemID, wowVersion);
-                m_ItemUsageInfoHTML = new MvcHtmlString("<div style='overflow: hidden; display: table;'><div style='display: table-cell;'><h1>Players with&nbsp;<h1></div>"
-                    + "<div class='inventory' style='background: none; width: 58px; height: 58px; display: table-cell;'><div>"
-                            + "<img class='itempic' src='" + "http://realmplayers.com/" + itemInfo.GetIconImageAddress() + "'/>"
-                            + "<div class='quality' id='" + CharacterViewer.ItemQualityConversion[itemInfo.ItemQuality] + "'></div>"
-                            + "<img class='itemframe' src='assets/img/icons/ItemNormalFrame.png'/>"
-                            + CharacterViewer.GenerateItemLink(currentItemDatabase, itemID, suffixID, wowVersion)
-                            + "</div></div>"
-                    + "<span class='badge badge-inverse'>" + players.Count + " Players</span></div>" + "<p>Sorted by date \"aquired\"</p>");
-
-                Dictionary<PlayerColumn, string[]> extraColumns = new Dictionary<PlayerColumn, string[]>();
-                PlayerColumn ItemAndAquiredDateAfterColumn = PlayerColumn.Number;
-                extraColumns.Add(ItemAndAquiredDateAfterColumn, new string[] { "Item", "Date Aquired" });
-                m_TableHeadHTML = new MvcHtmlString(PageUtility.CreatePlayerTableHeaderRow(Table_Columns, extraColumns));
-
-                string tableBody = "";
-                int nr = 0;
-                Func<Tuple<DateTime, string>, DateTime> lambdaComparison = (_Tuple) => { return _Tuple.Item1; };
-                players = players.OrderBy(lambdaComparison).ToList();
-                foreach (var playerDateAndName in players)
+                List<Tuple<DateTime, string>> players = null;
+                players = itemSummaryDB.GetItemUsage(realm, itemID, suffixID);//, out players) == true)
                 {
-                    Player player = DatabaseAccess.FindRealmPlayer(this, realm, playerDateAndName.Item2);
-                    if (player != null)
-                    {
-                        //string itemLink = "";
-                        VF_RealmPlayersDatabase.PlayerData.ItemInfo playerItemData = null;
-                        try
-                        {
-                            playerItemData = player.Gear.Items.First((_Item) => { return _Item.Value.ItemID == itemID; }).Value;
-                        }
-                        catch (Exception)
-                        {
-                            playerItemData = null;
-                        }
-                        if (playerItemData != null)
-                        {
-                            //Data fanns i gearen som playern använder för tillfället!
-                            //itemLink = currentItemDatabase + "?item=" + playerItemData.ItemID + "' rel='rand=" + playerItemData.SuffixID + ";ench=" + playerItemData.EnchantID;
-                        }
-                        else
-                        {
-                            //Måste titta igenom history!
-                            PlayerHistory playerHistory = DatabaseAccess.FindRealmPlayerHistory(this, realm, playerDateAndName.Item2);
-                            if (playerHistory != null)
-                            {
-                                for (int i = playerHistory.GearHistory.Count - 1; i >= 0; --i)
-                                {
-                                    try
-                                    {
-                                        playerItemData = playerHistory.GearHistory[i].Data.Items.First((_Item) => { return _Item.Value.ItemID == itemID; }).Value;
-                                    }
-                                    catch (Exception)
-                                    {
-                                        playerItemData = null;
-                                    }
-                                    if (playerItemData != null)
-                                    {
-                                        //Data fanns i gearen som playern använder för tillfället!
-                                        //itemLink = currentItemDatabase + "?item=" + playerItemData.ItemID + "' rel='rand=" + playerItemData.SuffixID + ";ench=" + playerItemData.EnchantID;
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                        if (playerItemData == null)
-                        {
-                            playerItemData = new VF_RealmPlayersDatabase.PlayerData.ItemInfo{ Slot = VF_RealmPlayersDatabase.ItemSlot.Unknown, ItemID = itemID, SuffixID = 0, EnchantID = 0, UniqueID = 0, GemIDs = null};
-                        }
-                        ++nr;
-                        // style='position: absolute; margin: auto; width:58px; height:58px;'
-                        if (nr > pageIndex * count && nr <= (pageIndex + 1) * count)
-                        {
-                            extraColumns[ItemAndAquiredDateAfterColumn] = new string[]{
-                                "<div class='inventory' style='background: none; width: 58px; height: 58px;'><div>"
+                    string currentItemDatabase = DatabaseAccess.GetCurrentItemDatabaseAddress();
+
+                    var itemInfo = DatabaseAccess.GetItemInfo(itemID, wowVersion);
+                    m_ItemUsageInfoHTML = new MvcHtmlString("<div style='overflow: hidden; display: table;'><div style='display: table-cell;'><h1>Players with&nbsp;<h1></div>"
+                        + "<div class='inventory' style='background: none; width: 58px; height: 58px; display: table-cell;'><div>"
                                 + "<img class='itempic' src='" + "http://realmplayers.com/" + itemInfo.GetIconImageAddress() + "'/>"
                                 + "<div class='quality' id='" + CharacterViewer.ItemQualityConversion[itemInfo.ItemQuality] + "'></div>"
                                 + "<img class='itemframe' src='assets/img/icons/ItemNormalFrame.png'/>"
-                                + CharacterViewer.GenerateItemLink(currentItemDatabase, playerItemData, wowVersion)
+                                + CharacterViewer.GenerateItemLink(currentItemDatabase, itemID, suffixID, wowVersion)
                                 + "</div></div>"
-                                , playerDateAndName.Item1.ToString("yyyy-MM-dd")
-                            };
-                            tableBody += PageUtility.CreatePlayerRow(nr, realm, player, Table_Columns, null, extraColumns);
+                        + "<span class='badge badge-inverse'>" + players.Count + " Players</span></div>" + "<p>Sorted by date \"aquired\"</p>");
+
+                    Dictionary<PlayerColumn, string[]> extraColumns = new Dictionary<PlayerColumn, string[]>();
+                    PlayerColumn ItemAndAquiredDateAfterColumn = PlayerColumn.Number;
+                    extraColumns.Add(ItemAndAquiredDateAfterColumn, new string[] { "Item", "Date Aquired" });
+                    m_TableHeadHTML = new MvcHtmlString(PageUtility.CreatePlayerTableHeaderRow(Table_Columns, extraColumns));
+
+                    string tableBody = "";
+                    int nr = 0;
+                    Func<Tuple<DateTime, string>, DateTime> lambdaComparison = (_Tuple) => { return _Tuple.Item1; };
+                    players = players.OrderBy(lambdaComparison).ToList();
+                    foreach (var playerDateAndName in players)
+                    {
+                        Player player = DatabaseAccess.FindRealmPlayer(this, realm, playerDateAndName.Item2);
+                        if (player != null)
+                        {
+                            ++nr;
+                            // style='position: absolute; margin: auto; width:58px; height:58px;'
+                            if (nr > pageIndex * count && nr <= (pageIndex + 1) * count)
+                            {
+                                //string itemLink = "";
+                                VF_RealmPlayersDatabase.PlayerData.ItemInfo playerItemData = null;
+                                try
+                                {
+                                    playerItemData = player.Gear.Items.First((_Item) => { return _Item.Value.ItemID == itemID; }).Value;
+                                }
+                                catch (Exception)
+                                {
+                                    playerItemData = null;
+                                }
+                                if (playerItemData != null)
+                                {
+                                    //Data fanns i gearen som playern använder för tillfället!
+                                    //itemLink = currentItemDatabase + "?item=" + playerItemData.ItemID + "' rel='rand=" + playerItemData.SuffixID + ";ench=" + playerItemData.EnchantID;
+                                }
+                                else
+                                {
+                                    //Måste titta igenom history!
+#if NO_SQL
+                                    PlayerHistory playerHistory = DatabaseAccess.FindRealmPlayerHistory(this, realm, playerDateAndName.Item2);
+                                    if (playerHistory != null)
+                                    {
+                                        for (int i = playerHistory.GearHistory.Count - 1; i >= 0; --i)
+                                        {
+                                            try
+                                            {
+                                                playerItemData = playerHistory.GearHistory[i].Data.Items.First((_Item) => { return _Item.Value.ItemID == itemID; }).Value;
+                                            }
+                                            catch (Exception)
+                                            {
+                                                playerItemData = null;
+                                            }
+                                            if (playerItemData != null)
+                                            {
+                                                //Data fanns i gearen som playern använder för tillfället!
+                                                //itemLink = currentItemDatabase + "?item=" + playerItemData.ItemID + "' rel='rand=" + playerItemData.SuffixID + ";ench=" + playerItemData.EnchantID;
+                                                break;
+                                            }
+                                        }
+                                    }
+#else
+                                    playerItemData = comm.GetLatestItemInfoForPlayer(playerDateAndName.Item2, realm, itemID);
+#endif
+                                }
+                                if (playerItemData == null)
+                                {
+                                    playerItemData = new VF_RealmPlayersDatabase.PlayerData.ItemInfo{ Slot = VF_RealmPlayersDatabase.ItemSlot.Unknown, ItemID = itemID, SuffixID = 0, EnchantID = 0, UniqueID = 0, GemIDs = null};
+                                }
+                                extraColumns[ItemAndAquiredDateAfterColumn] = new string[]{
+                                    "<div class='inventory' style='background: none; width: 58px; height: 58px;'><div>"
+                                    + "<img class='itempic' src='" + "http://realmplayers.com/" + itemInfo.GetIconImageAddress() + "'/>"
+                                    + "<div class='quality' id='" + CharacterViewer.ItemQualityConversion[itemInfo.ItemQuality] + "'></div>"
+                                    + "<img class='itemframe' src='assets/img/icons/ItemNormalFrame.png'/>"
+                                    + CharacterViewer.GenerateItemLink(currentItemDatabase, playerItemData, wowVersion)
+                                    + "</div></div>"
+                                    , playerDateAndName.Item1.ToString("yyyy-MM-dd")
+                                };
+                                tableBody += PageUtility.CreatePlayerRow(nr, realm, player, Table_Columns, null, extraColumns);
+                            }
+                            if (nr >= (pageIndex + 1) * count)
+                                break;
                         }
-                        if (nr >= (pageIndex + 1) * count)
-                            break;
                     }
-                }
-                if (nr != 0 && nr <= pageIndex * count)
-                {
-                    pageIndex = (nr - 1) / count;
-                    Response.Redirect(PageUtility.CreateUrlWithNewQueryValue(Request, "page", (pageIndex + 1).ToString()));
-                }
-                m_TableBodyHTML = new MvcHtmlString(tableBody);
+                    if (nr != 0 && nr <= pageIndex * count)
+                    {
+                        pageIndex = (nr - 1) / count;
+                        Response.Redirect(PageUtility.CreateUrlWithNewQueryValue(Request, "page", (pageIndex + 1).ToString()));
+                    }
+                    m_TableBodyHTML = new MvcHtmlString(tableBody);
 
-                int maxPageNr = 1000000 / count;
-                m_PaginationHTML = new MvcHtmlString(PageUtility.CreatePagination(Request, pageNr, ((players.Count - 1) / count) + 1));
+                    int maxPageNr = 1000000 / count;
+                    m_PaginationHTML = new MvcHtmlString(PageUtility.CreatePagination(Request, pageNr, ((players.Count - 1) / count) + 1));
+                }
             }
-
         }
     }
 }

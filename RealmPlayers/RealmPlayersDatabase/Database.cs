@@ -225,9 +225,11 @@ namespace VF_RealmPlayersDatabase
                                 {
                                     while(uploadIDs.Count <= _Index)
                                     {
-                                        VF.SQLComm comm = new VF.SQLComm();
-                                        var uploadID = comm.GenerateNewUploadEntry(_Contribution.GetContributor(), DateTime.UtcNow);
-                                        uploadIDs.Add(uploadID);
+                                        using (VF.SQLComm comm = new VF.SQLComm())
+                                        {
+                                            var uploadID = comm.GenerateNewUploadEntry(_Contribution.GetContributor(), DateTime.UtcNow);
+                                            uploadIDs.Add(uploadID);
+                                        }
                                     }
                                     return uploadIDs[_Index];
                                 };

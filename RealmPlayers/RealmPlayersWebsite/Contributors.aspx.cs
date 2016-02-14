@@ -51,62 +51,63 @@ namespace RealmPlayersServer
             SortedList<int, string> tableRows = new SortedList<int, string>();
             string tableBody = "";
 
-            VF.SQLComm comm = new VF.SQLComm();
-            
-            var contributors = ContributorDB.GetAllTrustWorthyContributors();
-            foreach (var statRealm in statsRealms)
+            using (VF.SQLComm comm = new VF.SQLComm())
             {
-                totalRealmInspects[statRealm] = comm.GetRealmInspectsTotal(statRealm);
-            }
-
-            //return DynamicReloader.GetData<ContributorStatistics>(() =>
-            //{
-            //    VF_RPDatabase.GuildSummaryDatabase summaryDB = null;
-            //    summaryDB = VF_RPDatabase.GuildSummaryDatabase.LoadSummaryDatabase(Constants.RPPDbDir);
-            //    return summaryDB;
-            //}, (_ContributorStatistics, _LastLoadTime) => { return (DateTime.UtcNow - _LastLoadTime).TotalMinutes > 30; });
-
-            //DynamicReloader.GetData(() => { }, () => { return true; }, TimeSpan.FromMinutes(30), false)
-            int contributorCounter = 0;
-            if(false)
-            {
-                foreach (var data in contributors)
+                var contributors = ContributorDB.GetAllTrustWorthyContributors();
+                foreach (var statRealm in statsRealms)
                 {
-                    var contributor = data.GetAsContributor();
+                    totalRealmInspects[statRealm] = comm.GetRealmInspectsTotal(statRealm);
+                }
 
-                    DateTime earliestActive;
-                    DateTime latestActive;
-                    int totalInspects;
-                    if (comm.GetInspectsInfoForContributor(contributor, out earliestActive, out latestActive, out totalInspects) == true)
+                //return DynamicReloader.GetData<ContributorStatistics>(() =>
+                //{
+                //    VF_RPDatabase.GuildSummaryDatabase summaryDB = null;
+                //    summaryDB = VF_RPDatabase.GuildSummaryDatabase.LoadSummaryDatabase(Constants.RPPDbDir);
+                //    return summaryDB;
+                //}, (_ContributorStatistics, _LastLoadTime) => { return (DateTime.UtcNow - _LastLoadTime).TotalMinutes > 30; });
+
+                //DynamicReloader.GetData(() => { }, () => { return true; }, TimeSpan.FromMinutes(30), false)
+                int contributorCounter = 0;
+                if (false)
+                {
+                    foreach (var data in contributors)
                     {
-                        string realmInspectsColumns = "";
+                        var contributor = data.GetAsContributor();
 
-                        if (totalInspects > 0 && data.Name != "Unknown"
-                            && ((DateTime.UtcNow - latestActive).TotalDays < 15
-                            || (totalInspects > 5000 && (DateTime.UtcNow - latestActive).TotalDays < 60)))
+                        DateTime earliestActive;
+                        DateTime latestActive;
+                        int totalInspects;
+                        if (comm.GetInspectsInfoForContributor(contributor, out earliestActive, out latestActive, out totalInspects) == true)
                         {
-                            foreach (var statRealm in statsRealms)
+                            string realmInspectsColumns = "";
+
+                            if (totalInspects > 0 && data.Name != "Unknown"
+                                && ((DateTime.UtcNow - latestActive).TotalDays < 15
+                                || (totalInspects > 5000 && (DateTime.UtcNow - latestActive).TotalDays < 60)))
                             {
-                                int inspects = comm.GetRealmInspectsForContributor(contributor, statRealm);
-                                realmInspectsColumns += PageUtility.CreateTableColumn(inspects.ToString());
+                                foreach (var statRealm in statsRealms)
+                                {
+                                    int inspects = comm.GetRealmInspectsForContributor(contributor, statRealm);
+                                    realmInspectsColumns += PageUtility.CreateTableColumn(inspects.ToString());
+                                }
+
+                                int keyToUse = int.MaxValue - totalInspects * 100;
+                                while (tableRows.ContainsKey(keyToUse) == true)
+                                    keyToUse += 1;
+
+
+                                tableRows.Add(keyToUse, PageUtility.CreateTableColumn(data.Name)
+                                    + PageUtility.CreateTableColumn(totalInspects.ToString())
+                                    + realmInspectsColumns
+                                    + PageUtility.CreateTableColumn(earliestActive.ToString("yyy-MM-dd"))
+                                    + PageUtility.CreateTableColumn(StaticValues.GetTimeSinceLastSeenUTC(latestActive)));
                             }
-
-                            int keyToUse = int.MaxValue - totalInspects * 100;
-                            while (tableRows.ContainsKey(keyToUse) == true)
-                                keyToUse += 1;
-
-
-                            tableRows.Add(keyToUse, PageUtility.CreateTableColumn(data.Name)
-                                + PageUtility.CreateTableColumn(totalInspects.ToString())
-                                + realmInspectsColumns
-                                + PageUtility.CreateTableColumn(earliestActive.ToString("yyy-MM-dd"))
-                                + PageUtility.CreateTableColumn(StaticValues.GetTimeSinceLastSeenUTC(latestActive)));
                         }
+
+
+                        if (contributorCounter++ % 100 == 0)
+                            Logger.ConsoleWriteLine("Generated Contributor Inspects Info for Contributor Nr " + contributorCounter);
                     }
-
-
-                    if (contributorCounter++ % 100 == 0)
-                        Logger.ConsoleWriteLine("Generated Contributor Inspects Info for Contributor Nr " + contributorCounter);
                 }
             }
             int totalALLInspects = 0;

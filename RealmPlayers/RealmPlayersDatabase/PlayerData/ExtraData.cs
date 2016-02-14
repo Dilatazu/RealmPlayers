@@ -149,11 +149,13 @@ namespace VF_RealmPlayersDatabase.PlayerData
         {
             if (_PlayerID.HasValue && _PlayerID.Value.IsValid() && _GetSQLUploadIDFunc != null)
             {
-                VF.SQLComm comm = new VF.SQLComm();
-                int mountID = comm.GenerateMountID(_MountName);
-                if (mountID > 0)
+                using (VF.SQLComm comm = new VF.SQLComm())
                 {
-                    comm.AddPlayerMount(_PlayerID.Value, _GetSQLUploadIDFunc(0), _Uploader.GetTime(), mountID);
+                    int mountID = comm.GenerateMountID(_MountName);
+                    if (mountID > 0)
+                    {
+                        comm.AddPlayerMount(_PlayerID.Value, _GetSQLUploadIDFunc(0), _Uploader.GetTime(), mountID);
+                    }
                 }
             }
 
@@ -182,11 +184,13 @@ namespace VF_RealmPlayersDatabase.PlayerData
 
             if (_PlayerID.HasValue && _PlayerID.Value.IsValid() && _GetSQLUploadIDFunc != null)
             {
-                VF.SQLComm comm = new VF.SQLComm();
-                int petID = comm.GeneratePetID(petName, petLevel, petFamily, petType);
-                if (petID > 0)
+                using (VF.SQLComm comm = new VF.SQLComm())
                 {
-                    comm.AddPlayerPet(_PlayerID.Value, _GetSQLUploadIDFunc(0), _Uploader.GetTime(), petID);
+                    int petID = comm.GeneratePetID(petName, petLevel, petFamily, petType);
+                    if (petID > 0)
+                    {
+                        comm.AddPlayerPet(_PlayerID.Value, _GetSQLUploadIDFunc(0), _Uploader.GetTime(), petID);
+                    }
                 }
             }
             _AddPet(petName, petLevel, petFamily, petType, _Uploader);
@@ -216,11 +220,13 @@ namespace VF_RealmPlayersDatabase.PlayerData
 
             if(_PlayerID.HasValue && _PlayerID.Value.IsValid() && _GetSQLUploadIDFunc != null)
             {
-                VF.SQLComm comm = new VF.SQLComm();
-                int companionID = comm.GenerateCompanionID(companionName, companionLevel);
-                if(companionID > 0)
+                using (VF.SQLComm comm = new VF.SQLComm())
                 {
-                    comm.AddPlayerCompanion(_PlayerID.Value, _GetSQLUploadIDFunc(0), _Uploader.GetTime(), companionID);
+                    int companionID = comm.GenerateCompanionID(companionName, companionLevel);
+                    if (companionID > 0)
+                    {
+                        comm.AddPlayerCompanion(_PlayerID.Value, _GetSQLUploadIDFunc(0), _Uploader.GetTime(), companionID);
+                    }
                 }
             }
             _AddCompanion(companionName, companionLevel, _Uploader);
