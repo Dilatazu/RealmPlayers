@@ -328,5 +328,17 @@ namespace VF_WoWLauncherServer
                 Logger.LogException(ex);
             }
         }
+
+        private void button12_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Program.g_RPPDatabaseHandler.MigrateItemSummaryDatabaseToSQL();
+            }
+            catch (Exception ex)
+            {
+                Logger.LogException(ex);
+            }
+        }
     }
 }

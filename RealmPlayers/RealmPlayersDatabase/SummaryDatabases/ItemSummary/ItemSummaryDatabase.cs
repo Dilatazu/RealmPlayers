@@ -446,6 +446,52 @@ namespace VF_RPDatabase
             //}
             return database;
         }
+        public void MigrateToSQL()
+        {
+            Dictionary<ulong, VF.SQLPlayerID> playerIDConverter = new Dictionary<ulong, VF.SQLPlayerID>();
+            using (VF.SQLComm comm = new VF.SQLComm())
+            {
+                int totalItemsCount = m_Items.Count;
+                int itemsProcessedCounter = 0;
+                DateTime startTime = DateTime.UtcNow;
+                DateTime prevLogTime = DateTime.UtcNow;
+                foreach (var itemSummary in m_Items)
+                {
+                    ++itemsProcessedCounter;
+                    foreach (var itemOwner in itemSummary.Value.m_ItemOwners)
+                    {
+                        VF.SQLPlayerID playerID;
+                        if (playerIDConverter.TryGetValue(itemOwner.Item1, out playerID) == false)
+                        {
+                            string playerName = GetPlayerName(itemOwner.Item1);
+                            WowRealm realm = GetPlayerRealm(itemOwner.Item1);
+
+                            if (comm.GetPlayerID(realm, playerName, out playerID) == true)
+                            {
+                                playerIDConverter.Add(itemOwner.Item1, playerID);
+                            }
+                            else
+                            {
+                                VF_RealmPlayersDatabase.Logger.ConsoleWriteLine("playerID was not valid for player \"" + playerName + "\"", ConsoleColor.Red);
+                            }
+                        }
+                        if(playerID.IsValid() == true)
+                        {
+                            if (comm.UpsertItemOwner(itemSummary.Value.m_ItemID, itemSummary.Value.m_SuffixID, playerID, null, itemOwner.Item2) == false)
+                            {
+                                VF_RealmPlayersDatabase.Logger.ConsoleWriteLine("UpsertItemOwner Failed???", ConsoleColor.Red);
+                            }
+                        }
+                    }
+                    if((DateTime.UtcNow - prevLogTime).TotalSeconds > 5)
+                    {
+                        VF_RealmPlayersDatabase.Logger.ConsoleWriteLine("Processed " + itemsProcessedCounter + " / " + totalItemsCount + " items");
+                        prevLogTime = DateTime.UtcNow;
+                    }
+                }
+                VF_RealmPlayersDatabase.Logger.ConsoleWriteLine("Done with processing " + totalItemsCount + " items, it took " + (DateTime.UtcNow - startTime).ToString());
+            }
+        }
         public static void UpdateSummaryDatabase(string _RootDirectory, RPPDatabase _Database, bool _UpdateAllHistory = false)
         {
             ItemSummaryDatabase database = null;

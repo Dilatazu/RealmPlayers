@@ -194,7 +194,15 @@ namespace VF_WoWLauncherServer
             }
             GC.Collect();
         }
-
+        public void MigrateItemSummaryDatabaseToSQL()
+        {
+            lock (m_LockObject)
+            {
+                var itemSummaryDB = VF_RPDatabase.ItemSummaryDatabase.LoadSummaryDatabase(m_RPPDBFolder);
+                itemSummaryDB.MigrateToSQL();
+            }
+            GC.Collect();
+        }
         private DateTime m_LastPlayerSummaryDatabaseUpdateTime = DateTime.UtcNow.AddHours(-5);
         public void UpdatePlayerSummaryDatabase(bool _Force = false)
         {

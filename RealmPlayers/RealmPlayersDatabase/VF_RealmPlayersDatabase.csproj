@@ -109,6 +109,7 @@
     <Compile Include="RealmPlayersDB.cs" />
     <Compile Include="SQL\SQLArenaTeams.cs" />
     <Compile Include="SQL\SQLComm.cs" />
+    <Compile Include="SQL\SQLComm_ItemSummary.cs" />
     <Compile Include="SQL\SQLComm_Read.cs" />
     <Compile Include="SQL\SQLComm_Write.cs" />
     <Compile Include="SQL\SQLData.cs" />
