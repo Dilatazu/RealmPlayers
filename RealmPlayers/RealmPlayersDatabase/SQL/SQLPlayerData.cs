@@ -50,7 +50,7 @@ namespace VF
         public bool GetLatestPlayerData(SQLPlayerID _PlayerID, out SQLPlayerData _ResultPlayerData)
         {
             var conn = GetConnection();
-            conn.Open();
+            OpenConnection();
             try
             {
                 const int UPLOADID_COLUMN = 0;
@@ -98,7 +98,7 @@ namespace VF
             }
             finally
             {
-                conn.Close();
+                CloseConnection();
             }
             _ResultPlayerData = SQLPlayerData.Invalid();
             return false;
@@ -116,7 +116,7 @@ namespace VF
         public bool GetPlayerDataAtTime(SQLPlayerID _PlayerID, DateTime _DateTime, out SQLPlayerData _ResultPlayerData)
         {
             var conn = GetConnection();
-            conn.Open();
+            OpenConnection();
             try
             {
                 const int UPLOADID_COLUMN = 0;
@@ -168,7 +168,7 @@ namespace VF
             }
             finally
             {
-                conn.Close();
+                CloseConnection();
             }
             _ResultPlayerData = SQLPlayerData.Invalid();
             return false;
@@ -176,7 +176,7 @@ namespace VF
         public bool GetPlayerHonorData(SQLPlayerData _PlayerData, out PlayerData.HonorData _ResultHonorData)
         {
             var conn = GetConnection();
-            conn.Open();
+            OpenConnection();
             try
             {
                 const int TODAYHK_COLUMN = 0;
@@ -239,7 +239,7 @@ namespace VF
             }
             finally
             {
-                conn.Close();
+                CloseConnection();
             }
             _ResultHonorData = null;
             return false;
@@ -247,7 +247,7 @@ namespace VF
         public bool GetPlayerGuildData(SQLPlayerData _PlayerData, out PlayerData.GuildData _ResultGuildData)
         {
             var conn = GetConnection();
-            conn.Open();
+            OpenConnection();
             try
             {
                 const int GUILDNAME_COLUMN = 0;
@@ -275,7 +275,7 @@ namespace VF
             }
             finally
             {
-                conn.Close();
+                CloseConnection();
             }
             _ResultGuildData = null;
             return false;
@@ -334,7 +334,7 @@ namespace VF
             if(_PlayerData.PlayerTalentsID != 0)
             {
                 var conn = GetConnection();
-                conn.Open();
+                OpenConnection();
                 try
                 {
                     const int TALENTS_COLUMN = 0;
@@ -357,7 +357,7 @@ namespace VF
                 }
                 finally
                 {
-                    conn.Close();
+                    CloseConnection();
                 }
             }
             _ResultTalentsData = "";

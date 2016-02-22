@@ -51,7 +51,7 @@ namespace VF
             if (_PlayerData.PlayerArenaID == 0) return false;
 
             var conn = GetConnection();
-            conn.Open();
+            OpenConnection();
             try
             {
                 const int TEAM2V2_COLUMN = 0;
@@ -78,7 +78,7 @@ namespace VF
             }
             finally
             {
-                conn.Close();
+                CloseConnection();
             }
             return false;
         }
@@ -103,7 +103,7 @@ namespace VF
             }
 
             var conn = GetConnection();
-            conn.Open();
+            OpenConnection();
             try
             {
                 const int ID_COLUMN = 0;
@@ -149,7 +149,7 @@ namespace VF
             }
             finally
             {
-                conn.Close();
+                CloseConnection();
             }
             return false;
         }

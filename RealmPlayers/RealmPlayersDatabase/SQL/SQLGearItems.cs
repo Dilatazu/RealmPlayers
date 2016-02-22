@@ -103,7 +103,7 @@ namespace VF
         public bool GetPlayerGearItems(SQLPlayerData _PlayerData, out SQLPlayerGearItems _ResultGearItems)
         {
             var conn = GetConnection();
-            conn.Open();
+            OpenConnection();
             try
             {
                 const int HEAD_COLUMN = 0;
@@ -164,7 +164,7 @@ namespace VF
             }
             finally
             {
-                conn.Close();
+                CloseConnection();
             }
             _ResultGearItems = SQLPlayerGearItems.CreateEmpty();
             return false;
@@ -172,7 +172,7 @@ namespace VF
         public bool GetPlayerGearGems(SQLPlayerData _PlayerData, out SQLPlayerGearGems _ResultGearGems)
         {
             var conn = GetConnection();
-            conn.Open();
+            OpenConnection();
             try
             {
                 const int ITEMSLOT_COLUMN = 0;
@@ -209,7 +209,7 @@ namespace VF
             }
             finally
             {
-                conn.Close();
+                CloseConnection();
             }
             _ResultGearGems = SQLPlayerGearGems.CreateEmpty();
             return false;
@@ -236,7 +236,7 @@ namespace VF
                 }
             }
             var conn = GetConnection();
-            conn.Open();
+            OpenConnection();
             try
             {
                 const int ID_COLUMN = 0;
@@ -273,7 +273,7 @@ namespace VF
             }
             finally
             {
-                conn.Close();
+                CloseConnection();
             }
             _ResultItems = null;
             return false;

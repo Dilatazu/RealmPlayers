@@ -22,7 +22,7 @@ namespace VF
         public bool GetPlayerID(WowRealm _Realm, string _PlayerName, out SQLPlayerID _ResultPlayerID)
         {
             var conn = GetConnection();
-            conn.Open();
+            OpenConnection();
             try
             {
                 using (var cmd = new NpgsqlCommand("SELECT id FROM playertable WHERE name=:Name AND realm=:Realm", conn))
@@ -49,7 +49,7 @@ namespace VF
             }
             finally
             {
-                conn.Close();
+                CloseConnection();
             }
             _ResultPlayerID = SQLPlayerID.Invalid();
             return false;
@@ -57,7 +57,7 @@ namespace VF
         public int GetInspectsForContributor(Contributor _Contributor)
         {
             var conn = GetConnection();
-            conn.Open();
+            OpenConnection();
             try
             {
                 using (var cmd = new NpgsqlCommand("SELECT COUNT(*) FROM uploadtable up INNER JOIN playerdatatable pd ON up.id = pd.uploadid WHERE up.contributor = :ContributorID", conn))
@@ -74,7 +74,7 @@ namespace VF
             }
             finally
             {
-                conn.Close();
+                CloseConnection();
             }
             return -1;
         }
@@ -84,7 +84,7 @@ namespace VF
             _Latest = DateTime.MinValue;
             _Count = 0;
             var conn = GetConnection();
-            conn.Open();
+            OpenConnection();
             try
             {
                 using (var cmd = new NpgsqlCommand("SELECT MIN(pd.updatetime), MAX(pd.updatetime), COUNT(*) FROM uploadtable up INNER JOIN playerdatatable pd ON up.id = pd.uploadid WHERE up.contributor = :ContributorID", conn))
@@ -104,14 +104,14 @@ namespace VF
             }
             finally
             {
-                conn.Close();
+                CloseConnection();
             }
             return false;
         }
         public int GetRealmInspectsForContributor(Contributor _Contributor, WowRealm _Realm)
         {
             var conn = GetConnection();
-            conn.Open();
+            OpenConnection();
             try
             {
                 using (var cmd = new NpgsqlCommand("SELECT COUNT(*) FROM uploadtable up INNER JOIN playerdatatable pd ON up.id = pd.uploadid INNER JOIN playertable player ON player.id = pd.playerid WHERE up.contributor = :ContributorID AND player.realm = :Realm", conn))
@@ -129,14 +129,14 @@ namespace VF
             }
             finally
             {
-                conn.Close();
+                CloseConnection();
             }
             return -1;
         }
         public DateTime GetEarliestInspectForContributor(Contributor _Contributor)
         {
             var conn = GetConnection();
-            conn.Open();
+            OpenConnection();
             try
             {
                 using (var cmd = new NpgsqlCommand("SELECT MIN(pd.updatetime) FROM uploadtable up INNER JOIN playerdatatable pd ON up.id = pd.uploadid WHERE up.contributor = :ContributorID", conn))
@@ -153,14 +153,14 @@ namespace VF
             }
             finally
             {
-                conn.Close();
+                CloseConnection();
             }
             return DateTime.MaxValue;
         }
         public DateTime GetLatestInspectForContributor(Contributor _Contributor)
         {
             var conn = GetConnection();
-            conn.Open();
+            OpenConnection();
             try
             {
                 using (var cmd = new NpgsqlCommand("SELECT MAX(pd.updatetime) FROM uploadtable up INNER JOIN playerdatatable pd ON up.id = pd.uploadid WHERE up.contributor = :ContributorID", conn))
@@ -177,14 +177,14 @@ namespace VF
             }
             finally
             {
-                conn.Close();
+                CloseConnection();
             }
             return DateTime.MinValue;
         }
         public int GetRealmInspectsTotal(WowRealm _Realm)
         {
             var conn = GetConnection();
-            conn.Open();
+            OpenConnection();
             try
             {
                 using (var cmd = new NpgsqlCommand("SELECT COUNT(*) FROM playerdatatable pd INNER JOIN playertable player ON player.id = pd.playerid WHERE player.realm = :Realm", conn))
@@ -201,14 +201,14 @@ namespace VF
             }
             finally
             {
-                conn.Close();
+                CloseConnection();
             }
             return -1;
         }
         public int GetInspectsTotal()
         {
             var conn = GetConnection();
-            conn.Open();
+            OpenConnection();
             try
             {
                 using (var cmd = new NpgsqlCommand("SELECT COUNT(*) FROM playerdatatable", conn))
@@ -224,7 +224,7 @@ namespace VF
             }
             finally
             {
-                conn.Close();
+                CloseConnection();
             }
             return -1;
         }

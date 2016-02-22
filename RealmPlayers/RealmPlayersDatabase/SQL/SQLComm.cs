@@ -31,11 +31,42 @@ namespace VF
             }
             return m_Connection;
         }
+        public void OpenConnection()
+        {
+            if (m_Connection != null)
+            {
+                if (m_Connection.State == System.Data.ConnectionState.Closed
+                || m_Connection.State == System.Data.ConnectionState.Broken)
+                {
+                    try
+                    {
+                        m_Connection.Open();
+                    }
+                    catch (Exception ex)
+                    { VF_RealmPlayersDatabase.Logger.LogException(ex); }
+                }
+            }
+        }
+        public void CloseConnection()
+        {
+            if(m_Connection != null)
+            {
+                if (m_Connection.State != System.Data.ConnectionState.Closed)
+                {
+                    try
+                    {
+                        m_Connection.Close();
+                    }
+                    catch (Exception ex)
+                    { VF_RealmPlayersDatabase.Logger.LogException(ex); }
+                }
+            }
+        }
         public void Dispose()
         {
             if(m_Connection != null)
             {
-                m_Connection.Close();
+                CloseConnection();
                 m_Connection.Dispose();
                 m_Connection = null;
             }
