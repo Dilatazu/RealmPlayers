@@ -19,9 +19,10 @@ namespace VF_RDDatabase
     }
     public enum SpecifierType
     {
-        UnknownSpecifier,
-        YellSpecifier,
-        HealthSpecifier
+        UnknownSpecifier = 0,
+        YellSpecifier = 1,
+        HealthSpecifier = 2,
+        CombatEventSpecifier = 3,
     }
     public class AttemptTypeConverter
     {
@@ -120,8 +121,15 @@ namespace VF_RDDatabase
                             m_EndSpecifier = SpecifierType.YellSpecifier;
                             break;
                         }
-                        else
+                        else if (timeSlices[i].IsEvent("Dead_C") == true)
+                        {
+                            m_EndSpecifier = SpecifierType.CombatEventSpecifier;
+                            break;
+                        }
+                        else 
+                        {
                             m_EndSpecifier = SpecifierType.HealthSpecifier;
+                        }
                     }
                 }
             }
@@ -267,6 +275,20 @@ namespace VF_RDDatabase
                     return true;
                 else if (aQualityHigh == false && bQualityHigh == true)
                     return false;
+
+                var aEndSpecifier = m_DataPrecisionDetails.EndSpecifier;
+                var bEndSpecifier = _BossFight.m_DataPrecisionDetails.EndSpecifier;
+
+                if (aEndSpecifier == SpecifierType.CombatEventSpecifier || aEndSpecifier == SpecifierType.YellSpecifier)
+                {
+                    if (bEndSpecifier != SpecifierType.CombatEventSpecifier && bEndSpecifier != SpecifierType.YellSpecifier)
+                        return true;
+                }
+                else if(bEndSpecifier == SpecifierType.CombatEventSpecifier || bEndSpecifier == SpecifierType.YellSpecifier)
+                {
+                    if (aEndSpecifier != SpecifierType.CombatEventSpecifier && aEndSpecifier != SpecifierType.YellSpecifier)
+                        return true;/*if statement not needed but here for clarity*/
+                }
 
                 if (m_PlayerFightData.Sum((_Value) => (long)_Value.Item2.Damage) 
                     + m_PlayerFightData.Sum((_Value) => (long)_Value.Item2.EffectiveHeal)
