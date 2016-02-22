@@ -102,9 +102,10 @@ namespace VF
     {
         public bool GetPlayerGearItems(SQLPlayerData _PlayerData, out SQLPlayerGearItems _ResultGearItems)
         {
-            using (var conn = new NpgsqlConnection(g_ConnectionString))
+            var conn = GetConnection();
+            conn.Open();
+            try
             {
-                conn.Open();
                 const int HEAD_COLUMN = 0;
                 const int NECK_COLUMN = 1;
                 const int SHOULDER_COLUMN = 2;
@@ -161,14 +162,19 @@ namespace VF
                     }
                 }
             }
+            finally
+            {
+                conn.Close();
+            }
             _ResultGearItems = SQLPlayerGearItems.CreateEmpty();
             return false;
         }
         public bool GetPlayerGearGems(SQLPlayerData _PlayerData, out SQLPlayerGearGems _ResultGearGems)
         {
-            using (var conn = new NpgsqlConnection(g_ConnectionString))
+            var conn = GetConnection();
+            conn.Open();
+            try
             {
-                conn.Open();
                 const int ITEMSLOT_COLUMN = 0;
                 const int GEMID1_COLUMN = 1;
                 const int GEMID2_COLUMN = 2;
@@ -201,6 +207,10 @@ namespace VF
                     }
                 }
             }
+            finally
+            {
+                conn.Close();
+            }
             _ResultGearGems = SQLPlayerGearGems.CreateEmpty();
             return false;
         }
@@ -225,9 +235,10 @@ namespace VF
                     itemsArray[i] = oldItemsArray[i];
                 }
             }
-            using (var conn = new NpgsqlConnection(g_ConnectionString))
+            var conn = GetConnection();
+            conn.Open();
+            try
             {
-                conn.Open();
                 const int ID_COLUMN = 0;
                 const int ITEMID_COLUMN = 1;
                 const int ENCHANTID_COLUMN = 2;
@@ -259,6 +270,10 @@ namespace VF
                         }
                     }
                 }
+            }
+            finally
+            {
+                conn.Close();
             }
             _ResultItems = null;
             return false;

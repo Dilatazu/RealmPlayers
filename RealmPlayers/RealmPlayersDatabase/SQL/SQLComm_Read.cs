@@ -21,9 +21,10 @@ namespace VF
     {
         public bool GetPlayerID(WowRealm _Realm, string _PlayerName, out SQLPlayerID _ResultPlayerID)
         {
-            using (var conn = new NpgsqlConnection(g_ConnectionString))
+            var conn = GetConnection();
+            conn.Open();
+            try
             {
-                conn.Open();
                 using (var cmd = new NpgsqlCommand("SELECT id FROM playertable WHERE name=:Name AND realm=:Realm", conn))
                 {
                     {
@@ -46,14 +47,19 @@ namespace VF
                     }
                 }
             }
+            finally
+            {
+                conn.Close();
+            }
             _ResultPlayerID = SQLPlayerID.Invalid();
             return false;
         }
         public int GetInspectsForContributor(Contributor _Contributor)
         {
-            using (var conn = new NpgsqlConnection(g_ConnectionString))
+            var conn = GetConnection();
+            conn.Open();
+            try
             {
-                conn.Open();
                 using (var cmd = new NpgsqlCommand("SELECT COUNT(*) FROM uploadtable up INNER JOIN playerdatatable pd ON up.id = pd.uploadid WHERE up.contributor = :ContributorID", conn))
                 {
                     cmd.Parameters.Add(new NpgsqlParameter("ContributorID", NpgsqlDbType.Integer)).Value = _Contributor.ContributorID;
@@ -66,6 +72,10 @@ namespace VF
                     }
                 }
             }
+            finally
+            {
+                conn.Close();
+            }
             return -1;
         }
         public bool GetInspectsInfoForContributor(Contributor _Contributor, out DateTime _Earliest, out DateTime _Latest, out int _Count)
@@ -73,9 +83,10 @@ namespace VF
             _Earliest = DateTime.MaxValue;
             _Latest = DateTime.MinValue;
             _Count = 0;
-            using (var conn = new NpgsqlConnection(g_ConnectionString))
+            var conn = GetConnection();
+            conn.Open();
+            try
             {
-                conn.Open();
                 using (var cmd = new NpgsqlCommand("SELECT MIN(pd.updatetime), MAX(pd.updatetime), COUNT(*) FROM uploadtable up INNER JOIN playerdatatable pd ON up.id = pd.uploadid WHERE up.contributor = :ContributorID", conn))
                 {
                     cmd.Parameters.Add(new NpgsqlParameter("ContributorID", NpgsqlDbType.Integer)).Value = _Contributor.ContributorID;
@@ -91,13 +102,18 @@ namespace VF
                     }
                 }
             }
+            finally
+            {
+                conn.Close();
+            }
             return false;
         }
         public int GetRealmInspectsForContributor(Contributor _Contributor, WowRealm _Realm)
         {
-            using (var conn = new NpgsqlConnection(g_ConnectionString))
+            var conn = GetConnection();
+            conn.Open();
+            try
             {
-                conn.Open();
                 using (var cmd = new NpgsqlCommand("SELECT COUNT(*) FROM uploadtable up INNER JOIN playerdatatable pd ON up.id = pd.uploadid INNER JOIN playertable player ON player.id = pd.playerid WHERE up.contributor = :ContributorID AND player.realm = :Realm", conn))
                 {
                     cmd.Parameters.Add(new NpgsqlParameter("ContributorID", NpgsqlDbType.Integer)).Value = _Contributor.ContributorID;
@@ -111,13 +127,18 @@ namespace VF
                     }
                 }
             }
+            finally
+            {
+                conn.Close();
+            }
             return -1;
         }
         public DateTime GetEarliestInspectForContributor(Contributor _Contributor)
         {
-            using (var conn = new NpgsqlConnection(g_ConnectionString))
+            var conn = GetConnection();
+            conn.Open();
+            try
             {
-                conn.Open();
                 using (var cmd = new NpgsqlCommand("SELECT MIN(pd.updatetime) FROM uploadtable up INNER JOIN playerdatatable pd ON up.id = pd.uploadid WHERE up.contributor = :ContributorID", conn))
                 {
                     cmd.Parameters.Add(new NpgsqlParameter("ContributorID", NpgsqlDbType.Integer)).Value = _Contributor.ContributorID;
@@ -130,13 +151,18 @@ namespace VF
                     }
                 }
             }
+            finally
+            {
+                conn.Close();
+            }
             return DateTime.MaxValue;
         }
         public DateTime GetLatestInspectForContributor(Contributor _Contributor)
         {
-            using (var conn = new NpgsqlConnection(g_ConnectionString))
+            var conn = GetConnection();
+            conn.Open();
+            try
             {
-                conn.Open();
                 using (var cmd = new NpgsqlCommand("SELECT MAX(pd.updatetime) FROM uploadtable up INNER JOIN playerdatatable pd ON up.id = pd.uploadid WHERE up.contributor = :ContributorID", conn))
                 {
                     cmd.Parameters.Add(new NpgsqlParameter("ContributorID", NpgsqlDbType.Integer)).Value = _Contributor.ContributorID;
@@ -149,13 +175,18 @@ namespace VF
                     }
                 }
             }
+            finally
+            {
+                conn.Close();
+            }
             return DateTime.MinValue;
         }
         public int GetRealmInspectsTotal(WowRealm _Realm)
         {
-            using (var conn = new NpgsqlConnection(g_ConnectionString))
+            var conn = GetConnection();
+            conn.Open();
+            try
             {
-                conn.Open();
                 using (var cmd = new NpgsqlCommand("SELECT COUNT(*) FROM playerdatatable pd INNER JOIN playertable player ON player.id = pd.playerid WHERE player.realm = :Realm", conn))
                 {
                     cmd.Parameters.Add(new NpgsqlParameter("Realm", NpgsqlDbType.Integer)).Value = (int)_Realm;
@@ -168,13 +199,18 @@ namespace VF
                     }
                 }
             }
+            finally
+            {
+                conn.Close();
+            }
             return -1;
         }
         public int GetInspectsTotal()
         {
-            using (var conn = new NpgsqlConnection(g_ConnectionString))
+            var conn = GetConnection();
+            conn.Open();
+            try
             {
-                conn.Open();
                 using (var cmd = new NpgsqlCommand("SELECT COUNT(*) FROM playerdatatable", conn))
                 {
                     using (var reader = cmd.ExecuteReader())
@@ -185,6 +221,10 @@ namespace VF
                         }
                     }
                 }
+            }
+            finally
+            {
+                conn.Close();
             }
             return -1;
         }

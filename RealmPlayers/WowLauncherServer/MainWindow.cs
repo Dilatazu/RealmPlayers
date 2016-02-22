@@ -340,5 +340,17 @@ namespace VF_WoWLauncherServer
                 Logger.LogException(ex);
             }
         }
+
+        private void button13_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Npgsql.NpgsqlConnection.ClearAllPools();
+            }
+            catch (Exception ex)
+            {
+                Logger.LogException(ex);
+            }
+        }
     }
 }

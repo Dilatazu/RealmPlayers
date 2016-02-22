@@ -49,9 +49,10 @@ namespace VF
         }
         public bool GetLatestPlayerData(SQLPlayerID _PlayerID, out SQLPlayerData _ResultPlayerData)
         {
-            using (var conn = new NpgsqlConnection(g_ConnectionString))
+            var conn = GetConnection();
+            conn.Open();
+            try
             {
-                conn.Open();
                 const int UPLOADID_COLUMN = 0;
                 const int UPDATETIME_COLUMN = 1;
                 const int RACE_COLUMN = 2;
@@ -95,6 +96,10 @@ namespace VF
                     }
                 }
             }
+            finally
+            {
+                conn.Close();
+            }
             _ResultPlayerData = SQLPlayerData.Invalid();
             return false;
         }
@@ -110,9 +115,10 @@ namespace VF
         }
         public bool GetPlayerDataAtTime(SQLPlayerID _PlayerID, DateTime _DateTime, out SQLPlayerData _ResultPlayerData)
         {
-            using (var conn = new NpgsqlConnection(g_ConnectionString))
+            var conn = GetConnection();
+            conn.Open();
+            try
             {
-                conn.Open();
                 const int UPLOADID_COLUMN = 0;
                 const int UPDATETIME_COLUMN = 1;
                 const int RACE_COLUMN = 2;
@@ -160,14 +166,19 @@ namespace VF
                     }
                 }
             }
+            finally
+            {
+                conn.Close();
+            }
             _ResultPlayerData = SQLPlayerData.Invalid();
             return false;
         }
         public bool GetPlayerHonorData(SQLPlayerData _PlayerData, out PlayerData.HonorData _ResultHonorData)
         {
-            using (var conn = new NpgsqlConnection(g_ConnectionString))
+            var conn = GetConnection();
+            conn.Open();
+            try
             {
-                conn.Open();
                 const int TODAYHK_COLUMN = 0;
                 const int TODAYHONOR_COLUMN = 1;
                 const int YESTERDAYHK_COLUMN = 2;
@@ -226,14 +237,19 @@ namespace VF
                     }
                 }
             }
+            finally
+            {
+                conn.Close();
+            }
             _ResultHonorData = null;
             return false;
         }
         public bool GetPlayerGuildData(SQLPlayerData _PlayerData, out PlayerData.GuildData _ResultGuildData)
         {
-            using (var conn = new NpgsqlConnection(g_ConnectionString))
+            var conn = GetConnection();
+            conn.Open();
+            try
             {
-                conn.Open();
                 const int GUILDNAME_COLUMN = 0;
                 const int GUILDRANK_COLUMN = 1;
                 const int GUILDRANKNR_COLUMN = 2;
@@ -256,6 +272,10 @@ namespace VF
                         }
                     }
                 }
+            }
+            finally
+            {
+                conn.Close();
             }
             _ResultGuildData = null;
             return false;
@@ -313,9 +333,10 @@ namespace VF
         {
             if(_PlayerData.PlayerTalentsID != 0)
             {
-                using (var conn = new NpgsqlConnection(g_ConnectionString))
+                var conn = GetConnection();
+                conn.Open();
+                try
                 {
-                    conn.Open();
                     const int TALENTS_COLUMN = 0;
                     using (var cmd = new NpgsqlCommand("SELECT talents FROM PlayerTalentsInfoTable WHERE id=:ID", conn))
                     {
@@ -333,6 +354,10 @@ namespace VF
                             }
                         }
                     }
+                }
+                finally
+                {
+                    conn.Close();
                 }
             }
             _ResultTalentsData = "";

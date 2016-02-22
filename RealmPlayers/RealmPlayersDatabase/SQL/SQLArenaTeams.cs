@@ -50,9 +50,10 @@ namespace VF
             _ResultArenaInfo = new SQLArenaInfo(0, 0, 0);
             if (_PlayerData.PlayerArenaID == 0) return false;
 
-            using (var conn = new NpgsqlConnection(g_ConnectionString))
+            var conn = GetConnection();
+            conn.Open();
+            try
             {
-                conn.Open();
                 const int TEAM2V2_COLUMN = 0;
                 const int TEAM3V3_COLUMN = 1;
                 const int TEAM5V5_COLUMN = 2;
@@ -74,6 +75,10 @@ namespace VF
                         }
                     }
                 }
+            }
+            finally
+            {
+                conn.Close();
             }
             return false;
         }
@@ -97,9 +102,10 @@ namespace VF
                 }
             }
 
-            using (var conn = new NpgsqlConnection(g_ConnectionString))
+            var conn = GetConnection();
+            conn.Open();
+            try
             {
-                conn.Open();
                 const int ID_COLUMN = 0;
                 const int TEAMNAME_COLUMN = 1;
                 const int TEAMRATING_COLUMN = 2;
@@ -140,6 +146,10 @@ namespace VF
                         }
                     }
                 }
+            }
+            finally
+            {
+                conn.Close();
             }
             return false;
         }
