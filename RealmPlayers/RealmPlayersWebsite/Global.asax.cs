@@ -91,7 +91,7 @@ namespace RealmPlayersServer
 
         protected void Session_End(object sender, EventArgs e)
         {
-
+            
         }
 
         protected void Application_End(object sender, EventArgs e)
@@ -99,6 +99,14 @@ namespace RealmPlayersServer
             Logger.ConsoleWriteLine("Application_End()", ConsoleColor.Magenta);
             Logger.SaveToDisk();
             //PerformanceStatistics.SaveStatistics();
+            //try
+            //{
+            //    Npgsql.NpgsqlConnection.ClearAllPools();
+            //}
+            //catch (Exception)
+            //{
+
+            //}
         }
     }
 }
