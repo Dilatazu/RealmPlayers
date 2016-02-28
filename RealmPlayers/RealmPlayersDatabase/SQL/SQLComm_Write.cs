@@ -22,8 +22,7 @@ namespace VF
     {
         public SQLUploadID GenerateNewUploadEntry(Contributor _Contributor, DateTime _DateTime/* = DateTime.UtcNow*/)
         {
-            var conn = GetConnection();
-            OpenConnection();
+            var conn = OpenConnection();
             try
             {
                 using (var cmd = new NpgsqlCommand("INSERT INTO uploadtable(id, uploadtime, contributor) VALUES (DEFAULT, :UploadTime, :Contributor) RETURNING id", conn))
@@ -55,8 +54,7 @@ namespace VF
         }
         public SQLIngameItemID GenerateNewIngameItemEntry(SQLIngameItemInfo _ItemInfo)
         {
-            var conn = GetConnection();
-            OpenConnection();
+            var conn = OpenConnection();
             try
             {
                 using (var cmd = new NpgsqlCommand("INSERT INTO ingameitemtable(id, itemid, enchantid, suffixid, uniqueid) VALUES (DEFAULT, :ItemID, :EnchantID, :SuffixID, :UniqueID) RETURNING id", conn))
@@ -85,8 +83,7 @@ namespace VF
             if (_GuildData == null)
                 return 0;
 
-            var conn = GetConnection();
-            OpenConnection();
+            var conn = OpenConnection();
             try
             {
                 using (var cmd = new NpgsqlCommand("INSERT INTO playerguildtable(id, guildname, guildrank, guildranknr) VALUES (DEFAULT, :GuildName, :GuildRank, :GuildRankNr) RETURNING id", conn))
@@ -127,8 +124,7 @@ namespace VF
                 return 0;
 
             int resultHonorID = 0;
-            var conn = GetConnection();
-            OpenConnection();
+            var conn = OpenConnection();
             try
             {
                 using (var cmd = new NpgsqlCommand("INSERT INTO playerhonortable(id, todayhk, todayhonor, yesterdayhk, yesterdayhonor, lifetimehk) VALUES (DEFAULT, :TodayHK, :TodayHonor, :YesterdayHK, :YesterdayHonor, :LifetimeHK) RETURNING id", conn))
@@ -219,8 +215,7 @@ namespace VF
             }
 
             int gearDataEntryID = 0;
-            var conn = GetConnection();
-            OpenConnection();
+            var conn = OpenConnection();
             try
             {
                 using (var cmd = new NpgsqlCommand("INSERT INTO playergeartable(id, head, neck, shoulder, shirt, chest, belt, legs, feet, wrist, gloves, finger_1, finger_2, trinket_1, trinket_2, back, main_hand, off_hand, ranged, tabard) VALUES (DEFAULT, :Head, :Neck, :Shoulder, :Shirt, :Chest, :Belt, :Legs, :Feet, :Wrist, :Gloves, :Finger_1, :Finger_2, :Trinket_1, :Trinket_2, :Back, :Main_Hand, :Off_Hand, :Ranged, :Tabard) RETURNING id", conn))
@@ -284,8 +279,7 @@ namespace VF
             if (_GearID == 0 || _Gems == null || _Gems.Count == 0)
                 return false;
 
-            var conn = GetConnection();
-            OpenConnection();
+            var conn = OpenConnection();
             try
             {
                 using (var cmdGearGems = conn.BeginBinaryImport("COPY PlayerGearGemsTable (gearid, itemslot, gemid1, gemid2, gemid3, gemid4) FROM STDIN BINARY"))
@@ -315,8 +309,7 @@ namespace VF
             if (_ArenaData == null || (_ArenaData.Team2v2 == null && _ArenaData.Team3v3 == null && _ArenaData.Team5v5 == null))
                 return 0;
 
-            var conn = GetConnection();
-            OpenConnection();
+            var conn = OpenConnection();
             try
             {
                 Func<PlayerData.ArenaPlayerData, int> _GenerateNewPlayerArenaTeamDataEntry = (PlayerData.ArenaPlayerData _Data) =>
@@ -375,8 +368,7 @@ namespace VF
             if (_TalentsData == null || _TalentsData == "")
                 return 0;
 
-            var conn = GetConnection();
-            OpenConnection();
+            var conn = OpenConnection();
             try
             {
                 using (var cmd = new NpgsqlCommand("INSERT INTO playertalentsinfotable(id, talents) VALUES (DEFAULT, :Talents) RETURNING id", conn))
@@ -404,8 +396,7 @@ namespace VF
             if (_PlayerData.PlayerID.ID == 0 || _PlayerData.UploadID.ID == 0 || _PlayerData.PlayerCharacter == null)
                 return false;
 
-            var conn = GetConnection();
-            OpenConnection();
+            var conn = OpenConnection();
             try
             {
                 using (var cmdPlayerData = conn.BeginBinaryImport("COPY PlayerDataTable (playerid, uploadid, updatetime, race, class, sex, level, guildinfo, honorinfo, gearinfo, arenainfo, talentsinfo) FROM STDIN BINARY"))
@@ -440,8 +431,7 @@ namespace VF
                 return false;
 
             int affectedRows = 0;
-            var conn = GetConnection();
-            OpenConnection();
+            var conn = OpenConnection();
             try
             {
                 using (var cmd = new NpgsqlCommand("UPDATE playertable SET latestuploadid = :LatestUploadID WHERE id = :ID", conn))
@@ -506,8 +496,7 @@ namespace VF
         {
             WowVersionEnum wowVersion = VF_RealmPlayersDatabase.StaticValues.GetWowVersion(_PlayerData.Realm);
             SQLPlayerID playerID = new SQLPlayerID();
-            var conn = GetConnection();
-            OpenConnection();
+            var conn = OpenConnection();
             try
             {
                 using (var cmd = new NpgsqlCommand("INSERT INTO playertable(id, name, realm, latestuploadid) VALUES (DEFAULT, :Name, :Realm, :LatestUploadID) RETURNING id", conn))
@@ -537,8 +526,7 @@ namespace VF
 
         public int GenerateMountID(string _MountName)
         {
-            var conn = GetConnection();
-            OpenConnection();
+            var conn = OpenConnection();
             try
             {
                 using (var cmd = new NpgsqlCommand("SELECT id FROM ingamemounttable WHERE name = :Name", conn))
@@ -583,8 +571,7 @@ namespace VF
 
         public int GeneratePetID(string _PetName, int _PetLevel, string _PetCreatureFamily, string _PetCreatureType)
         {
-            var conn = GetConnection();
-            OpenConnection();
+            var conn = OpenConnection();
             try
             {
                 using (var cmd = new NpgsqlCommand("SELECT id FROM ingamepettable WHERE name = :Name AND level = :Level AND creaturefamily = :CreatureFamily AND creaturetype = :CreatureType", conn))
@@ -627,8 +614,7 @@ namespace VF
 
         public int GenerateCompanionID(string _CompanionName, int _CompanionLevel)
         {
-            var conn = GetConnection();
-            OpenConnection();
+            var conn = OpenConnection();
             try
             {
                 using (var cmd = new NpgsqlCommand("SELECT id FROM ingamecompaniontable WHERE name = :Name AND level = :Level", conn))
@@ -666,8 +652,7 @@ namespace VF
         }
         public bool AddPlayerMount(VF.SQLPlayerID _PlayerID, VF.SQLUploadID _UploadID, DateTime _UpdateTime, int _MountID)
         {
-            var conn = GetConnection();
-            OpenConnection();
+            var conn = OpenConnection();
             try
             {
                 using (var cmd = new NpgsqlCommand("INSERT INTO playermounttable(playerid, uploadid, updatetime, mountid) VALUES(:PlayerID, :UploadID, :UpdateTime, :MountID)", conn))
@@ -701,8 +686,7 @@ namespace VF
         }
         public bool AddPlayerPet(VF.SQLPlayerID _PlayerID, VF.SQLUploadID _UploadID, DateTime _UpdateTime, int _PetID)
         {
-            var conn = GetConnection();
-            OpenConnection();
+            var conn = OpenConnection();
             try
             {
                 using (var cmd = new NpgsqlCommand("INSERT INTO playerpettable(playerid, uploadid, updatetime, petid) VALUES(:PlayerID, :UploadID, :UpdateTime, :PetID)", conn))
@@ -736,8 +720,7 @@ namespace VF
         }
         public bool AddPlayerCompanion(VF.SQLPlayerID _PlayerID, VF.SQLUploadID _UploadID, DateTime _UpdateTime, int _CompanionID)
         {
-            var conn = GetConnection();
-            OpenConnection();
+            var conn = OpenConnection();
             try
             {
                 using (var cmd = new NpgsqlCommand("INSERT INTO playercompaniontable(playerid, uploadid, updatetime, companionid) VALUES(:PlayerID, :UploadID, :UpdateTime, :CompanionID)", conn))

@@ -89,9 +89,12 @@ namespace RealmPlayersServer
 #if NO_SQL_LOADING
             
 #else
-            if (VF.SQLMigration.LoadPlayer(_Player, _Realm, VF.SQLPlayerID.Invalid(), out playerHistory) > 0)
+            using (var comm = new VF.SQLComm())
             {
-                return playerHistory;
+                if (comm.LoadPlayer(_Player, _Realm, VF.SQLPlayerID.Invalid(), out playerHistory) > 0)
+                {
+                    return playerHistory;
+                }
             }
 #endif
             var realm = _FindRealmDB(_Page, _Realm);
@@ -107,9 +110,12 @@ namespace RealmPlayersServer
 #if NO_SQL_LOADING
             
 #else
-            if(VF.SQLMigration.LoadPlayer(_Player, _Realm, VF.SQLPlayerID.Invalid(), out playerExtraData) > 0)
+            using (var comm = new VF.SQLComm())
             {
-                return playerExtraData;
+                if (comm.LoadPlayer(_Player, _Realm, VF.SQLPlayerID.Invalid(), out playerExtraData) > 0)
+                {
+                    return playerExtraData;
+                }
             }
 #endif
             var realm = _FindRealmDB(_Page, _Realm);

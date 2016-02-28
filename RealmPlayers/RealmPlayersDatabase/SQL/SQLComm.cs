@@ -22,18 +22,18 @@ namespace VF
 
         NpgsqlConnection m_Connection = null;
 
-        public NpgsqlConnection GetConnection()
+        //public NpgsqlConnection _GetConnection()
+        //{
+        //    return m_Connection;
+        //}
+        public NpgsqlConnection OpenConnection()
         {
             if (m_Connection == null)
             {
                 m_Connection = new NpgsqlConnection(g_ConnectionString);
                 m_Connection.Open();
             }
-            return m_Connection;
-        }
-        public void OpenConnection()
-        {
-            if (m_Connection != null)
+            else if (m_Connection != null)
             {
                 if (m_Connection.State == System.Data.ConnectionState.Closed
                 || m_Connection.State == System.Data.ConnectionState.Broken)
@@ -46,6 +46,7 @@ namespace VF
                     { VF_RealmPlayersDatabase.Logger.LogException(ex); }
                 }
             }
+            return m_Connection;
         }
         public void CloseConnection()
         {

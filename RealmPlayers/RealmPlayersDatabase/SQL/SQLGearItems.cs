@@ -102,8 +102,7 @@ namespace VF
     {
         public bool GetPlayerGearItems(SQLPlayerData _PlayerData, out SQLPlayerGearItems _ResultGearItems)
         {
-            var conn = GetConnection();
-            OpenConnection();
+            var conn = OpenConnection();
             try
             {
                 const int HEAD_COLUMN = 0;
@@ -171,8 +170,7 @@ namespace VF
         }
         public bool GetPlayerGearGems(SQLPlayerData _PlayerData, out SQLPlayerGearGems _ResultGearGems)
         {
-            var conn = GetConnection();
-            OpenConnection();
+            var conn = OpenConnection();
             try
             {
                 const int ITEMSLOT_COLUMN = 0;
@@ -235,8 +233,7 @@ namespace VF
                     itemsArray[i] = oldItemsArray[i];
                 }
             }
-            var conn = GetConnection();
-            OpenConnection();
+            var conn = OpenConnection();
             try
             {
                 const int ID_COLUMN = 0;

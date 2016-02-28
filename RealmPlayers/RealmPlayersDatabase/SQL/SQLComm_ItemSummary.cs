@@ -26,8 +26,7 @@ namespace VF
             latestItemInfo.ItemID = _ItemID;
             DateTime latestItemInfoDate = DateTime.MinValue;
 
-            var conn = GetConnection();
-            OpenConnection();
+            var conn = OpenConnection();
             try
             {
                 using (var cmd = new NpgsqlCommand("SELECT DISTINCT ii.enchantid, ii.suffixid, ii.uniqueid, MAX(pdt.updatetime) FROM PlayerTable player"
@@ -77,8 +76,7 @@ namespace VF
             if (_LatestItemInfo.HasValue == false) _LatestItemInfo = new SQLIngameItemID(0);
             if (_DateAquired.HasValue == false) _DateAquired = DateTime.MaxValue;
 
-            var conn = GetConnection();
-            OpenConnection();
+            var conn = OpenConnection();
             try
             {
                 using (var cmd = new NpgsqlCommand("INSERT INTO ItemOwnerTable(ItemID, SuffixID, PlayerID, DateAquired, LatestItemInfo) VALUES(:ItemID, :SuffixID, :PlayerID, :DateAquired, :LatestItemInfo) ON CONFLICT ON CONSTRAINT itemownertable_pkey DO UPDATE SET DateAquired = EXCLUDED.DateAquired, LatestItemInfo  = EXCLUDED.LatestItemInfo", conn))

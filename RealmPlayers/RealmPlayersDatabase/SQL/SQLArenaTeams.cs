@@ -50,8 +50,7 @@ namespace VF
             _ResultArenaInfo = new SQLArenaInfo(0, 0, 0);
             if (_PlayerData.PlayerArenaID == 0) return false;
 
-            var conn = GetConnection();
-            OpenConnection();
+            var conn = OpenConnection();
             try
             {
                 const int TEAM2V2_COLUMN = 0;
@@ -102,8 +101,7 @@ namespace VF
                 }
             }
 
-            var conn = GetConnection();
-            OpenConnection();
+            var conn = OpenConnection();
             try
             {
                 const int ID_COLUMN = 0;
