@@ -658,7 +658,7 @@ namespace VF
                                 conn.Open();
                                 try
                                 {
-                                    using (var cmd = new NpgsqlCommand("SELECT itemslot, gemid1, gemid2, gemid3, gemid4 FROM PlayerGearGemsTable WHERE gearid=" + gearID + ") TO STDIN BINARY", conn))
+                                    using (var cmd = new NpgsqlCommand("SELECT itemslot, gemid1, gemid2, gemid3, gemid4 FROM PlayerGearGemsTable WHERE gearid=" + gearID, conn))
                                     {
                                         using (var reader = cmd.ExecuteReader())
                                         {

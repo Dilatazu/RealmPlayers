@@ -121,7 +121,8 @@ namespace RealmPlayersServer
                                         }
                                     }
 #else
-                                    playerItemData = comm.GetLatestItemInfoForPlayer(playerDateAndName.Item2, realm, itemID);
+                                    /*Disable this for now. it is too slow...*/
+                                    //playerItemData = comm.GetLatestItemInfoForPlayer(playerDateAndName.Item2, realm, itemID);
 #endif
                                 }
                                 if (playerItemData == null)
