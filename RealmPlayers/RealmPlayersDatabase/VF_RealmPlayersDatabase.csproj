@@ -116,6 +116,7 @@
     <Compile Include="SQL\SQLGearItems.cs" />
     <Compile Include="SQL\SQLMigration.cs" />
     <Compile Include="SQL\SQLPlayerData.cs" />
+    <Compile Include="SQL\SQLRaid.cs" />
     <Compile Include="SummaryDatabases\GuildSummary\GuildSummaryDatabase.cs" />
     <Compile Include="SummaryDatabases\GuildSummary\GuildSummary.cs" />
     <Compile Include="SummaryDatabases\PlayerSummary\PlayerSummaryDatabase.cs" />
