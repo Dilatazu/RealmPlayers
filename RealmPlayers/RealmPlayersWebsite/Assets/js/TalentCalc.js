@@ -1939,6 +1939,18 @@ function TalentCalc() {
 				}
 			}
 		}
+		if (be != null)
+		{
+		    if (parseInt(be) > 20) {
+		        //TBC
+		        $(".talentcalc-main").height(460);//.css("height", "460px");
+		        $WowheadTalentCalculator.setLevelCap(70);
+		    }
+		    else {
+		        $(".talentcalc-main").height(360);//.css("height", "460px");
+		        $WowheadTalentCalculator.setLevelCap(60);
+		    }
+		}
 		if (bd) {
 			if (bg_InputBuild.length) {
 				if(g_TalentsCanBeLocked == true) J_TalentsLocked = true;
