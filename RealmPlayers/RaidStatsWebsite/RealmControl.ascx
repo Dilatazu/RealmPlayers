@@ -5,7 +5,7 @@
         <asp:ListItem Text="All" Value="All" />
         <asp:ListItem Text="Rebirth" Value="REB" />
         <asp:ListItem Text="Kronos" Value="KRO" />
-        <asp:ListItem Text="Kronos II" Value="KR2" style="visibility:hidden; height:0px; line-height: 0px; overflow:hidden; display:block;"/>
+        <asp:ListItem Text="Kronos II" Value="KR2" />
         <asp:ListItem Text="VanillaGaming" Value="VG" />
         <asp:ListItem Text="Nefarian(DE)" Value="NEF" />
         <asp:ListItem Text="NostalGeek(FR)" Value="NG" />
