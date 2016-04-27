@@ -77,6 +77,8 @@ namespace RealmPlayersServer.Code.Resources
 	        {WowRealm.NostalGeek , "NG"},
 	        {WowRealm.Nefarian , "NEF"},
 	        {WowRealm.Test_Server , "TSV"},
+	        {WowRealm.Vengeance_Wildhammer , "VWH"},
+	        {WowRealm.ExcaliburTBC , "EXC"},
         };
         public static Dictionary<WowRealm, string> _RealmVisualString = new Dictionary<WowRealm, string>
         {
@@ -97,6 +99,8 @@ namespace RealmPlayersServer.Code.Resources
 	        {WowRealm.NostalGeek , "NostalGeek"},
 	        {WowRealm.Nefarian , "Nefarian"},
 	        {WowRealm.Test_Server , "Test Server"},
+	        {WowRealm.Vengeance_Wildhammer , "Wildhammer"},
+	        {WowRealm.ExcaliburTBC , "ExcaliburTBC"},
         };
         public static Dictionary<int, string> _HordeRankVisualName = new Dictionary<int, string>
         {

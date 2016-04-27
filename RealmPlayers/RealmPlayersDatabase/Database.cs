@@ -21,7 +21,10 @@ namespace VF_RealmPlayersDatabase
             WowRealm.Nefarian, 
             WowRealm.Rebirth,
             WowRealm.Archangel,
-            WowRealm.WarsongTBC };
+            WowRealm.WarsongTBC,
+            WowRealm.Vengeance_Wildhammer,
+            WowRealm.ExcaliburTBC
+        };
 
         Dictionary<WowRealm, RealmDatabase> m_Realms = new Dictionary<WowRealm, RealmDatabase>();
 

@@ -86,6 +86,10 @@ namespace VF_RPDatabase
         public UInt64 m_EntityCounter_WarsongTBC = 0L;
         [ProtoMember(16)]
         public UInt64 m_EntityCounter_KronosII = 0L;
+        [ProtoMember(17)]
+        public UInt64 m_EntityCounter_Vengeance_Wildhammer = 0L;
+        [ProtoMember(18)]
+        public UInt64 m_EntityCounter_ExcaliburTBC = 0L;
 
         private void CalcRealmBits(WowRealm _Realm, out UInt64 _BitMask, out UInt64 _RealmValue)
         {
@@ -134,6 +138,12 @@ namespace VF_RPDatabase
                     break;
                 case WowRealm.KronosII:
                     _RealmValue = 14UL << 56;
+                    break;
+                case WowRealm.Vengeance_Wildhammer:
+                    _RealmValue = 15UL << 56;
+                    break;
+                case WowRealm.ExcaliburTBC:
+                    _RealmValue = 16UL << 56;
                     break;
             }
         }
@@ -264,6 +274,14 @@ namespace VF_RPDatabase
                     entityID = (14UL << 56) | m_EntityCounter_KronosII++;
                     m_PlayerIDs.Add(entityLinkStr, entityID);
                     break;
+                case WowRealm.Vengeance_Wildhammer:
+                    entityID = (15UL << 56) | m_EntityCounter_Vengeance_Wildhammer++;
+                    m_PlayerIDs.Add(entityLinkStr, entityID);
+                    break;
+                case WowRealm.ExcaliburTBC:
+                    entityID = (16UL << 56) | m_EntityCounter_ExcaliburTBC++;
+                    m_PlayerIDs.Add(entityLinkStr, entityID);
+                    break;
             }
             return entityID;
         }
@@ -307,6 +325,10 @@ namespace VF_RPDatabase
                     return WowRealm.WarsongTBC;
                 case 14UL:
                     return WowRealm.KronosII;
+                case 15UL:
+                    return WowRealm.Vengeance_Wildhammer;
+                case 16UL:
+                    return WowRealm.ExcaliburTBC;
                 default:
                     VF_RealmPlayersDatabase.Logger.ConsoleWriteLine("Error GetPlayerRealm failed. Realm(" + realm + ") was not valid!!!");
                     return WowRealm.Unknown;

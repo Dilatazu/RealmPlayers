@@ -24,6 +24,8 @@ namespace VF_RealmPlayersDatabase
         NostalriusPVE = 14,
         WarsongTBC = 15,
         KronosII = 16,
+        Vengeance_Wildhammer = 17,
+        ExcaliburTBC = 18,
     }
     public enum WowVersionEnum
     {
@@ -532,7 +534,11 @@ namespace VF_RealmPlayersDatabase
             {"KR2", WowRealm.KronosII},
             {"NostalGeek 1.12", WowRealm.NostalGeek},
             //{"NostalGeek", WowRealm.NostalGeek},
-            {"NG", WowRealm.NostalGeek}
+            {"NG", WowRealm.NostalGeek},
+            {"Wildhammer", WowRealm.Vengeance_Wildhammer},
+            {"VWH", WowRealm.Vengeance_Wildhammer},
+            {"ExcaliburTBC", WowRealm.ExcaliburTBC},
+            {"EXC", WowRealm.ExcaliburTBC},
         };
         public static WowRealm ConvertRealm(string _Realm)
         {
@@ -553,7 +559,7 @@ namespace VF_RealmPlayersDatabase
             {
                 return WowVersionEnum.Vanilla;
             }
-            else if (_Realm == WowRealm.Archangel || _Realm == WowRealm.WarsongTBC)
+            else if (_Realm == WowRealm.Archangel || _Realm == WowRealm.WarsongTBC || _Realm == WowRealm.Vengeance_Wildhammer || _Realm == WowRealm.ExcaliburTBC)
             {
                 return WowVersionEnum.TBC;
             }
