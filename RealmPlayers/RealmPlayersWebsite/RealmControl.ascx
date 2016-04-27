@@ -10,6 +10,8 @@
         <asp:ListItem Text="Nefarian(DE)" Value="NEF" />
         <asp:ListItem Text="NostalGeek(FR)" Value="NG" />
         <asp:ListItem Text="Archangel(TBC)" Value="ArA" />
+        <asp:ListItem Text="Wildhammer(TBC)" Value="VWH" />
+        <asp:ListItem Text="ExcaliburTBC" Value="EXC" />
         <asp:ListItem Text="Nostalrius" Value="NRB" />
         <asp:ListItem Text="NostalriusPVE" Value="NBE" />
         <asp:ListItem Text="WarsongTBC" Value="WBC" />
