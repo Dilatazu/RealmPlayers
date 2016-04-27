@@ -42,19 +42,20 @@
                         <div class="span12">
                             <asp:DropDownList style="width:140px; margin: 10px 2.5px 0px 2.5px" ID="ddlRealm" runat="server">
                                 <asp:ListItem Text="Any Realm" Value="Any" Selected="true"></asp:ListItem>
-                                <asp:ListItem Text="Emerald Dream" Value="ED"/>
-                                <asp:ListItem Text="Warsong" Value="WSG"/>
-                                <asp:ListItem Text="Al'Akir" Value="AlA"/>
                                 <asp:ListItem Text="Rebirth" Value="REB"/>
-                                <asp:ListItem Text="Nostalrius" Value="NRB"/>
-                                <asp:ListItem Text="NostalriusPVE" Value="NBE" />
                                 <asp:ListItem Text="Kronos" Value="KRO"/>
+                                <asp:ListItem Text="Kronos II" Value="KR2"/>
                                 <asp:ListItem Text="VanillaGaming" Value="VG"/>
                                 <asp:ListItem Text="Valkyrie" Value="VAL"/>
                                 <asp:ListItem Text="Nefarian(DE)" Value="NEF"/>
                                 <asp:ListItem Text="NostalGeek(FR)" Value="NG"/>
                                 <asp:ListItem Text="Archangel(TBC)" Value="ArA"/>
+                                <asp:ListItem Text="Nostalrius" Value="NRB"/>
+                                <asp:ListItem Text="NostalriusPVE" Value="NBE" />
                                 <asp:ListItem Text="WarsongTBC" Value="WBC"/>
+                                <asp:ListItem Text="Emerald Dream" Value="ED"/>
+                                <asp:ListItem Text="Warsong" Value="WSG"/>
+                                <asp:ListItem Text="Al'Akir" Value="AlA"/>
                             </asp:DropDownList>
                             <asp:DropDownList style="width:100px; margin: 10px 2.5px 0px 2.5px" ID="ddlRace" runat="server" onchange="this.style.color = this.options[this.selectedIndex].style.color;">
                                 <asp:ListItem Text="Any Race" style="color:#ffffff" Value="All" Selected="true"></asp:ListItem>
