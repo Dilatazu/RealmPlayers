@@ -23,6 +23,7 @@ namespace VF_RealmPlayersDatabase
         Nefarian = 13,
         NostalriusPVE = 14,
         WarsongTBC = 15,
+        KronosII = 16,
     }
     public enum WowVersionEnum
     {
@@ -524,6 +525,7 @@ namespace VF_RealmPlayersDatabase
             {"NB", WowRealm.Nostalrius},
             {"NBP", WowRealm.Nostalrius},
             {"Kronos", WowRealm.Kronos},
+            {"Kronos II", WowRealm.KronosII},
             {"Nefarian", WowRealm.Nefarian},
             {"NEF", WowRealm.Nefarian},
             {"KRO", WowRealm.Kronos},
@@ -544,6 +546,7 @@ namespace VF_RealmPlayersDatabase
                 || _Realm == WowRealm.Nostalrius
                 || _Realm == WowRealm.NostalriusPVE
                 || _Realm == WowRealm.Kronos
+                || _Realm == WowRealm.KronosII
                 || _Realm == WowRealm.NostalGeek
                 || _Realm == WowRealm.Nefarian)
             {

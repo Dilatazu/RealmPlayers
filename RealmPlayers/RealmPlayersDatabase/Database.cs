@@ -9,6 +9,7 @@ namespace VF_RealmPlayersDatabase
     {
         public static WowRealm[] ALL_REALMS = new WowRealm[] { 
             WowRealm.Kronos, 
+            WowRealm.KronosII, 
             WowRealm.NostalGeek, 
             WowRealm.Nostalrius, 
             WowRealm.NostalriusPVE, 

@@ -181,6 +181,7 @@ namespace VF_WoWLauncher
                 {"Nostalrius", new RealmInfo{RealmList = "login.nostalrius.org", RealmName = "Nostalrius Begins PvP", WowVersion = WowVersionEnum.Vanilla}},
                 {"Nostalrius(PVE)", new RealmInfo{RealmList = "login.nostalrius.org", RealmName = "Nostalrius Begins PvE", WowVersion = WowVersionEnum.Vanilla}},
                 {"Kronos", new RealmInfo{RealmList = "wow.twinstar.cz", RealmName = "Kronos", WowVersion = WowVersionEnum.Vanilla}},
+                {"Kronos II", new RealmInfo{RealmList = "wow.twinstar.cz", RealmName = "Kronos II", WowVersion = WowVersionEnum.Vanilla}},
                 {"Nefarian(DE)", new RealmInfo{RealmList = "logon.classic-wow.org", RealmName = "Nefarian", WowVersion = WowVersionEnum.Vanilla}},
                 {"NostalGeek(FR)", new RealmInfo{RealmList = "auth.nostalgeek-serveur.com", RealmName = "NostalGeek 1.12", WowVersion = WowVersionEnum.Vanilla}},
             };
