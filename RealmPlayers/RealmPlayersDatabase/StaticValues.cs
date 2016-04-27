@@ -529,6 +529,7 @@ namespace VF_RealmPlayersDatabase
             {"Nefarian", WowRealm.Nefarian},
             {"NEF", WowRealm.Nefarian},
             {"KRO", WowRealm.Kronos},
+            {"KR2", WowRealm.KronosII},
             {"NostalGeek 1.12", WowRealm.NostalGeek},
             //{"NostalGeek", WowRealm.NostalGeek},
             {"NG", WowRealm.NostalGeek}
