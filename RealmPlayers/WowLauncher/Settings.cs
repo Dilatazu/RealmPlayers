@@ -184,6 +184,8 @@ namespace VF_WoWLauncher
                 {"Kronos II", new RealmInfo{RealmList = "wow.twinstar.cz", RealmName = "Kronos II", WowVersion = WowVersionEnum.Vanilla}},
                 {"Nefarian(DE)", new RealmInfo{RealmList = "logon.classic-wow.org", RealmName = "Nefarian", WowVersion = WowVersionEnum.Vanilla}},
                 {"NostalGeek(FR)", new RealmInfo{RealmList = "auth.nostalgeek-serveur.com", RealmName = "NostalGeek 1.12", WowVersion = WowVersionEnum.Vanilla}},
+                {"Wildhammer", new RealmInfo{RealmList = "logon.vengeancewow.com", RealmName = "Wildhammer", WowVersion = WowVersionEnum.TBC}},
+                {"ExcaliburTBC", new RealmInfo{RealmList = "exwow-serv.exnw.com", RealmName = "ExcaliburTBC", WowVersion = WowVersionEnum.TBC}},
             };
         }
         public static void Initialize()
