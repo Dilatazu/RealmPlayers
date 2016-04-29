@@ -171,15 +171,15 @@ namespace VF_WoWLauncher
         public static Dictionary<string, RealmInfo> CreateDefaultRealmLists()
         {
             return new Dictionary<string, RealmInfo>{
-                {"Emerald Dream", new RealmInfo{RealmList = "vanillafeenix.servegame.org", RealmName = "Emerald Dream [1x] Blizzlike", WowVersion = WowVersionEnum.Vanilla}},
-                {"Warsong", new RealmInfo{RealmList = "vanillafeenix.servegame.org", RealmName = "Warsong [12x] Blizzlike", WowVersion = WowVersionEnum.Vanilla}},
-                {"Al'Akir", new RealmInfo{RealmList = "vanillafeenix.servegame.org", RealmName = "Al'Akir [instant 60] Blizzlike", WowVersion = WowVersionEnum.Vanilla}},
+                //{"Emerald Dream", new RealmInfo{RealmList = "vanillafeenix.servegame.org", RealmName = "Emerald Dream [1x] Blizzlike", WowVersion = WowVersionEnum.Vanilla}},
+                //{"Warsong", new RealmInfo{RealmList = "vanillafeenix.servegame.org", RealmName = "Warsong [12x] Blizzlike", WowVersion = WowVersionEnum.Vanilla}},
+                //{"Al'Akir", new RealmInfo{RealmList = "vanillafeenix.servegame.org", RealmName = "Al'Akir [instant 60] Blizzlike", WowVersion = WowVersionEnum.Vanilla}},
                 {"Archangel(TBC)", new RealmInfo{RealmList = "vanillafeenix.servegame.org", RealmName = "Archangel [14x] Blizzlike", WowVersion = WowVersionEnum.TBC}},
                 {"VanillaGaming", new RealmInfo{RealmList = "logon.vanillagaming.org", RealmName = "VanillaGaming", WowVersion = WowVersionEnum.Vanilla}},
                 {"Valkyrie", new RealmInfo{RealmList = "logon.valkyrie-wow.com", RealmName = "Valkyrie", WowVersion = WowVersionEnum.Vanilla}},
                 {"Rebirth", new RealmInfo{RealmList = "wow.therebirth.net", RealmName = "Rebirth", WowVersion = WowVersionEnum.Vanilla}},
-                {"Nostalrius", new RealmInfo{RealmList = "login.nostalrius.org", RealmName = "Nostalrius Begins PvP", WowVersion = WowVersionEnum.Vanilla}},
-                {"Nostalrius(PVE)", new RealmInfo{RealmList = "login.nostalrius.org", RealmName = "Nostalrius Begins PvE", WowVersion = WowVersionEnum.Vanilla}},
+                //{"Nostalrius", new RealmInfo{RealmList = "login.nostalrius.org", RealmName = "Nostalrius Begins PvP", WowVersion = WowVersionEnum.Vanilla}},
+                //{"Nostalrius(PVE)", new RealmInfo{RealmList = "login.nostalrius.org", RealmName = "Nostalrius Begins PvE", WowVersion = WowVersionEnum.Vanilla}},
                 {"Kronos", new RealmInfo{RealmList = "wow.twinstar.cz", RealmName = "Kronos", WowVersion = WowVersionEnum.Vanilla}},
                 {"Kronos II", new RealmInfo{RealmList = "wow.twinstar.cz", RealmName = "Kronos II", WowVersion = WowVersionEnum.Vanilla}},
                 {"Nefarian(DE)", new RealmInfo{RealmList = "logon.classic-wow.org", RealmName = "Nefarian", WowVersion = WowVersionEnum.Vanilla}},
