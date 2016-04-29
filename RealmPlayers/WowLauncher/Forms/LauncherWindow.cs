@@ -590,7 +590,7 @@ namespace VF_WoWLauncher
                     };
                     if (Settings.Instance.NewsSources_Kronos == true)
                     {
-                        ForumReader.GetLatestPosts(new string[]{"http://forum.twinstar.cz/external.php?type=RSS2&forumids=969"}
+                        ForumReader.GetLatestPosts(new string[]{ "http://forum.twinstar.cz/external.php?type=RSS2&forumids=960" }
                             , newPostLambda, ForumReader.ForumType.KronosForum, onlyNewest);
                     }
                     if(Settings.Instance.NewsSources_Feenix == true)
