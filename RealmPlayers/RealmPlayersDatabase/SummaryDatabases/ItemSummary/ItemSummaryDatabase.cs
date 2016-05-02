@@ -90,6 +90,8 @@ namespace VF_RPDatabase
         public UInt64 m_EntityCounter_Vengeance_Wildhammer = 0L;
         [ProtoMember(18)]
         public UInt64 m_EntityCounter_ExcaliburTBC = 0L;
+        [ProtoMember(19)]
+        public UInt64 m_EntityCounter_L4G_Hellfire = 0L;
 
         private void CalcRealmBits(WowRealm _Realm, out UInt64 _BitMask, out UInt64 _RealmValue)
         {
@@ -144,6 +146,9 @@ namespace VF_RPDatabase
                     break;
                 case WowRealm.ExcaliburTBC:
                     _RealmValue = 16UL << 56;
+                    break;
+                case WowRealm.L4G_Hellfire:
+                    _RealmValue = 17UL << 56;
                     break;
             }
         }
@@ -282,6 +287,10 @@ namespace VF_RPDatabase
                     entityID = (16UL << 56) | m_EntityCounter_ExcaliburTBC++;
                     m_PlayerIDs.Add(entityLinkStr, entityID);
                     break;
+                case WowRealm.L4G_Hellfire:
+                    entityID = (17UL << 56) | m_EntityCounter_L4G_Hellfire++;
+                    m_PlayerIDs.Add(entityLinkStr, entityID);
+                    break;
             }
             return entityID;
         }
@@ -329,6 +338,8 @@ namespace VF_RPDatabase
                     return WowRealm.Vengeance_Wildhammer;
                 case 16UL:
                     return WowRealm.ExcaliburTBC;
+                case 17UL:
+                    return WowRealm.L4G_Hellfire;
                 default:
                     VF_RealmPlayersDatabase.Logger.ConsoleWriteLine("Error GetPlayerRealm failed. Realm(" + realm + ") was not valid!!!");
                     return WowRealm.Unknown;

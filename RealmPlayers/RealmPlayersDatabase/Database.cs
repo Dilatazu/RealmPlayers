@@ -23,7 +23,8 @@ namespace VF_RealmPlayersDatabase
             WowRealm.Archangel,
             WowRealm.WarsongTBC,
             WowRealm.Vengeance_Wildhammer,
-            WowRealm.ExcaliburTBC
+            WowRealm.ExcaliburTBC,
+            WowRealm.L4G_Hellfire
         };
 
         Dictionary<WowRealm, RealmDatabase> m_Realms = new Dictionary<WowRealm, RealmDatabase>();

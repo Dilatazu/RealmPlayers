@@ -52,6 +52,7 @@
                                 <asp:ListItem Text="Archangel(TBC)" Value="ArA"/>
                                 <asp:ListItem Text="Wildhammer(TBC)" Value="VWH" />
                                 <asp:ListItem Text="ExcaliburTBC" Value="EXC" />
+                                <asp:ListItem Text="Hellfire(TBC)" Value="HLF" />
                                 <asp:ListItem Text="Nostalrius" Value="NRB"/>
                                 <asp:ListItem Text="NostalriusPVE" Value="NBE" />
                                 <asp:ListItem Text="WarsongTBC" Value="WBC"/>

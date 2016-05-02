@@ -79,6 +79,7 @@ namespace RealmPlayersServer.Code.Resources
 	        {WowRealm.Test_Server , "TSV"},
 	        {WowRealm.Vengeance_Wildhammer , "VWH"},
 	        {WowRealm.ExcaliburTBC , "EXC"},
+            {WowRealm.L4G_Hellfire , "HLF"},
         };
         public static Dictionary<WowRealm, string> _RealmVisualString = new Dictionary<WowRealm, string>
         {
@@ -100,7 +101,8 @@ namespace RealmPlayersServer.Code.Resources
 	        {WowRealm.Nefarian , "Nefarian"},
 	        {WowRealm.Test_Server , "Test Server"},
 	        {WowRealm.Vengeance_Wildhammer , "Wildhammer"},
-	        {WowRealm.ExcaliburTBC , "ExcaliburTBC"},
+            {WowRealm.ExcaliburTBC , "ExcaliburTBC"},
+            {WowRealm.L4G_Hellfire , "Hellfire"},
         };
         public static Dictionary<int, string> _HordeRankVisualName = new Dictionary<int, string>
         {

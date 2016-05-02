@@ -26,6 +26,7 @@ namespace VF_RealmPlayersDatabase
         KronosII = 16,
         Vengeance_Wildhammer = 17,
         ExcaliburTBC = 18,
+        L4G_Hellfire = 19,
     }
     public enum WowVersionEnum
     {
@@ -539,6 +540,8 @@ namespace VF_RealmPlayersDatabase
             {"VWH", WowRealm.Vengeance_Wildhammer},
             {"ExcaliburTBC", WowRealm.ExcaliburTBC},
             {"EXC", WowRealm.ExcaliburTBC},
+            {"Hellfire", WowRealm.L4G_Hellfire},
+            {"HLF", WowRealm.L4G_Hellfire},
         };
         public static WowRealm ConvertRealm(string _Realm)
         {
@@ -559,7 +562,7 @@ namespace VF_RealmPlayersDatabase
             {
                 return WowVersionEnum.Vanilla;
             }
-            else if (_Realm == WowRealm.Archangel || _Realm == WowRealm.WarsongTBC || _Realm == WowRealm.Vengeance_Wildhammer || _Realm == WowRealm.ExcaliburTBC)
+            else if (_Realm == WowRealm.Archangel || _Realm == WowRealm.WarsongTBC || _Realm == WowRealm.Vengeance_Wildhammer || _Realm == WowRealm.ExcaliburTBC || _Realm == WowRealm.L4G_Hellfire)
             {
                 return WowVersionEnum.TBC;
             }
