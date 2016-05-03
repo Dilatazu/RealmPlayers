@@ -212,12 +212,9 @@ namespace VF_RealmPlayersDatabase
                         {
                             string realmStr = PlayerData.DataParser.ParseRealm(playerNode);
                             WowRealm realm = StaticValues.ConvertRealm(realmStr);
-                            if(realm == WowRealm.Archangel || realm == WowRealm.WarsongTBC || wowVersion == WowVersionEnum.TBC)
+                            if((StaticValues.GetWowVersion(realm) != wowVersion))
                             {
-                                if((realm != WowRealm.Archangel && realm != WowRealm.WarsongTBC) || wowVersion != WowVersionEnum.TBC)
-                                {
-                                    ++wowVersionWrongGuessCount;
-                                }
+                                ++wowVersionWrongGuessCount;
                             }
 
                             if (realm == WowRealm.Unknown || m_Realms.ContainsKey(realm) == false)
