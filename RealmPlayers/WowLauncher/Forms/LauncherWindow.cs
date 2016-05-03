@@ -235,6 +235,10 @@ namespace VF_WoWLauncher
                     {
                         System.Diagnostics.Process.Start("https://bitbucket.org/looking4group_b2tbc/looking4group/issues?status=new&status=open");
                     })));
+                    links.MenuItems.Add(new MenuItem("Goto Subreddit", new EventHandler((o, ea) =>
+                    {
+                        System.Diagnostics.Process.Start("https://www.reddit.com/r/looking4group");
+                    })));
                     tbcRealmsMenu.MenuItems.Add(links);
                 }
                 {
