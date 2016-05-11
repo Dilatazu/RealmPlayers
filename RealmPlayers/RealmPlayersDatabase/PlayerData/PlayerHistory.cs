@@ -398,6 +398,8 @@ namespace VF_RealmPlayersDatabase.PlayerData
         public Dictionary<string, List<UploadID>> GetUsedTalentSpeccs()
         {
             Dictionary<string, List<UploadID>> result = new Dictionary<string, List<UploadID>>();
+            if (TalentsHistory == null)
+                return result;
             foreach (var talentHistoryItem in TalentsHistory)
             {
                 if (talentHistoryItem.Data != null)
