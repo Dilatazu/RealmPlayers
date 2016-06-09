@@ -27,6 +27,7 @@ namespace VF_RealmPlayersDatabase
         Vengeance_Wildhammer = 17,
         ExcaliburTBC = 18,
         L4G_Hellfire = 19,
+        Warsong2 = 20,
     }
     public enum WowVersionEnum
     {
@@ -641,6 +642,8 @@ namespace VF_RealmPlayersDatabase
             {"EXC", WowRealm.ExcaliburTBC},
             {"Hellfire", WowRealm.L4G_Hellfire},
             {"HLF", WowRealm.L4G_Hellfire},
+            {"Warsong 1.12.1 [8x] Blizzlike", WowRealm.Warsong2 },
+            {"WS2", WowRealm.Warsong2 },
         };
         public static WowRealm ConvertRealm(string _Realm)
         {
@@ -657,7 +660,8 @@ namespace VF_RealmPlayersDatabase
                 || _Realm == WowRealm.Kronos
                 || _Realm == WowRealm.KronosII
                 || _Realm == WowRealm.NostalGeek
-                || _Realm == WowRealm.Nefarian)
+                || _Realm == WowRealm.Nefarian
+                || _Realm == WowRealm.Warsong2)
             {
                 return WowVersionEnum.Vanilla;
             }

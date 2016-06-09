@@ -27,6 +27,7 @@ namespace VF_RealmPlayersDatabase
                 case WowRealm.Al_Akir:
                     return (1U << 24) + _ItemID;
                 case WowRealm.Warsong:
+                case WowRealm.Warsong2:
                     return (1U << 24) + _ItemID;
                 case WowRealm.All:
                     return uint.MaxValue;

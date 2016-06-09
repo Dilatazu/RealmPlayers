@@ -9,6 +9,7 @@
         <asp:ListItem Text="Valkyrie" Value="VAL" />
         <asp:ListItem Text="Nefarian(DE)" Value="NEF" />
         <asp:ListItem Text="NostalGeek(FR)" Value="NG" />
+        <asp:ListItem Text="Warsong(Feenix)" Value="WS2" />
         <asp:ListItem Text="Archangel(TBC)" Value="ArA" />
         <asp:ListItem Text="Wildhammer(TBC)" Value="VWH" />
         <asp:ListItem Text="ExcaliburTBC" Value="EXC" />

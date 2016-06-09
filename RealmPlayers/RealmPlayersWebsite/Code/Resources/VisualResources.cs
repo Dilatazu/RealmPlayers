@@ -80,6 +80,7 @@ namespace RealmPlayersServer.Code.Resources
 	        {WowRealm.Vengeance_Wildhammer , "VWH"},
 	        {WowRealm.ExcaliburTBC , "EXC"},
             {WowRealm.L4G_Hellfire , "HLF"},
+            {WowRealm.Warsong2 , "WS2"},
         };
         public static Dictionary<WowRealm, string> _RealmVisualString = new Dictionary<WowRealm, string>
         {
@@ -103,6 +104,7 @@ namespace RealmPlayersServer.Code.Resources
 	        {WowRealm.Vengeance_Wildhammer , "Wildhammer"},
             {WowRealm.ExcaliburTBC , "ExcaliburTBC"},
             {WowRealm.L4G_Hellfire , "Hellfire"},
+            {WowRealm.Warsong2 , "Warsong"},
         };
         public static Dictionary<int, string> _HordeRankVisualName = new Dictionary<int, string>
         {
