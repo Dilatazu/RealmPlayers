@@ -28,6 +28,7 @@ namespace VF_RealmPlayersDatabase
         ExcaliburTBC = 18,
         L4G_Hellfire = 19,
         Warsong2 = 20,
+        Vengeance_Stonetalon = 21,
     }
     public enum WowVersionEnum
     {
@@ -638,6 +639,8 @@ namespace VF_RealmPlayersDatabase
             {"NG", WowRealm.NostalGeek},
             {"Wildhammer", WowRealm.Vengeance_Wildhammer},
             {"VWH", WowRealm.Vengeance_Wildhammer},
+            {"Stonetalon", WowRealm.Vengeance_Stonetalon},
+            {"VST", WowRealm.Vengeance_Stonetalon},
             {"ExcaliburTBC", WowRealm.ExcaliburTBC},
             {"EXC", WowRealm.ExcaliburTBC},
             {"Hellfire", WowRealm.L4G_Hellfire},
@@ -665,7 +668,7 @@ namespace VF_RealmPlayersDatabase
             {
                 return WowVersionEnum.Vanilla;
             }
-            else if (_Realm == WowRealm.Archangel || _Realm == WowRealm.WarsongTBC || _Realm == WowRealm.Vengeance_Wildhammer || _Realm == WowRealm.ExcaliburTBC || _Realm == WowRealm.L4G_Hellfire)
+            else if (_Realm == WowRealm.Archangel || _Realm == WowRealm.WarsongTBC || _Realm == WowRealm.Vengeance_Wildhammer || _Realm == WowRealm.ExcaliburTBC || _Realm == WowRealm.L4G_Hellfire || _Realm == WowRealm.Vengeance_Stonetalon)
             {
                 return WowVersionEnum.TBC;
             }
