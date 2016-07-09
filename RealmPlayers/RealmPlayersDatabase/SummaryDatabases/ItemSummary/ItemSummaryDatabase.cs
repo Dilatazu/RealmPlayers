@@ -94,6 +94,8 @@ namespace VF_RPDatabase
         public UInt64 m_EntityCounter_L4G_Hellfire = 0L;
         [ProtoMember(20)]
         public UInt64 m_EntityCounter_Warsong2 = 0L;
+        [ProtoMember(21)]
+        public UInt64 m_EntityCounter_Vengeance_Stonetalon = 0L;
 
         private void CalcRealmBits(WowRealm _Realm, out UInt64 _BitMask, out UInt64 _RealmValue)
         {
@@ -154,6 +156,9 @@ namespace VF_RPDatabase
                     break;
                 case WowRealm.Warsong2:
                     _RealmValue = 18UL << 56;
+                    break;
+                case WowRealm.Vengeance_Stonetalon:
+                    _RealmValue = 19UL << 56;
                     break;
             }
         }
@@ -300,6 +305,10 @@ namespace VF_RPDatabase
                     entityID = (18UL << 56) | m_EntityCounter_Warsong2++;
                     m_PlayerIDs.Add(entityLinkStr, entityID);
                     break;
+                case WowRealm.Vengeance_Stonetalon:
+                    entityID = (19UL << 56) | m_EntityCounter_Vengeance_Stonetalon++;
+                    m_PlayerIDs.Add(entityLinkStr, entityID);
+                    break;
             }
             return entityID;
         }
@@ -351,6 +360,8 @@ namespace VF_RPDatabase
                     return WowRealm.L4G_Hellfire;
                 case 18UL:
                     return WowRealm.Warsong2;
+                case 19UL:
+                    return WowRealm.Vengeance_Stonetalon;
                 default:
                     VF_RealmPlayersDatabase.Logger.ConsoleWriteLine("Error GetPlayerRealm failed. Realm(" + realm + ") was not valid!!!");
                     return WowRealm.Unknown;

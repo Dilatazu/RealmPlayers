@@ -51,6 +51,7 @@ namespace VF_RealmPlayersDatabase
                 case WowRealm.Nefarian:
                     return (8U << 24) + _ItemID;
                 case WowRealm.Vengeance_Wildhammer:
+                case WowRealm.Vengeance_Stonetalon:
                     return (0x11U << 24) + _ItemID;
                 case WowRealm.ExcaliburTBC:
                     return (0x12U << 24) + _ItemID;
