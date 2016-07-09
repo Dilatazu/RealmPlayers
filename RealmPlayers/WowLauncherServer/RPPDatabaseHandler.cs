@@ -182,6 +182,7 @@ namespace VF_WoWLauncherServer
             {
                 if (_Force == true || (DateTime.UtcNow - m_LastSummaryDatabaseUpdateTime).TotalMinutes > 113)
                 {
+                    Logger.ConsoleWriteLine("Started Updating Summary Databases", ConsoleColor.Green);
                     GC.Collect();
                     var timer = System.Diagnostics.Stopwatch.StartNew();
                     Database tempDatabase = new Database(m_RPPDBFolder + "Database\\");
@@ -210,6 +211,7 @@ namespace VF_WoWLauncherServer
             {
                 if (_Force == true || (DateTime.UtcNow - m_LastPlayerSummaryDatabaseUpdateTime).TotalHours > 6)
                 {
+                    Logger.ConsoleWriteLine("Started Creating Player Summary Databases", ConsoleColor.Green);
                     var timer = System.Diagnostics.Stopwatch.StartNew();
                     VF_RPDatabase.PlayerSummaryDatabase playerSummaryDB = new VF_RPDatabase.PlayerSummaryDatabase();
                     foreach (var realm in Database.ALL_REALMS)
@@ -217,6 +219,7 @@ namespace VF_WoWLauncherServer
                         Database fullDatabase = new Database(m_RPPDBFolder + "Database\\", new DateTime(2012, 5, 1, 0, 0, 0), new WowRealm[] { realm });
                         fullDatabase.PurgeRealmDBs(true, true, true);
                         playerSummaryDB.UpdateRealm(fullDatabase.GetRealm(realm));
+                        Logger.ConsoleWriteLine("Updated Player Summary Database for realm " + realm, ConsoleColor.Green);
                     }
                     playerSummaryDB.SaveSummaryDatabase(m_RPPDBFolder);
                     Logger.ConsoleWriteLine("Done Creating Player Summary Database, it took " + (timer.ElapsedMilliseconds / 1000) + " seconds", ConsoleColor.Green);
