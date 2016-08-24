@@ -29,6 +29,7 @@ namespace VF_RealmPlayersDatabase
         L4G_Hellfire = 19,
         Warsong2 = 20,
         Vengeance_Stonetalon = 21,
+        Elysium = 22,
     }
     public enum WowVersionEnum
     {
@@ -647,6 +648,8 @@ namespace VF_RealmPlayersDatabase
             {"HLF", WowRealm.L4G_Hellfire},
             {"Warsong 1.12.1 [8x] Blizzlike", WowRealm.Warsong2 },
             {"WS2", WowRealm.Warsong2 },
+            {"ELY", WowRealm.Elysium },
+            {"Elysium", WowRealm.Elysium },
         };
         public static WowRealm ConvertRealm(string _Realm)
         {
@@ -662,6 +665,7 @@ namespace VF_RealmPlayersDatabase
                 || _Realm == WowRealm.NostalriusPVE
                 || _Realm == WowRealm.Kronos
                 || _Realm == WowRealm.KronosII
+                || _Realm == WowRealm.Elysium
                 || _Realm == WowRealm.NostalGeek
                 || _Realm == WowRealm.Nefarian
                 || _Realm == WowRealm.Warsong2)

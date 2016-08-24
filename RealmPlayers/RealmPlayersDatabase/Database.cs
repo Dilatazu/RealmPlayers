@@ -26,7 +26,8 @@ namespace VF_RealmPlayersDatabase
             WowRealm.ExcaliburTBC,
             WowRealm.L4G_Hellfire,
             WowRealm.Warsong2,
-            WowRealm.Vengeance_Stonetalon
+            WowRealm.Vengeance_Stonetalon,
+            WowRealm.Elysium,
         };
 
         Dictionary<WowRealm, RealmDatabase> m_Realms = new Dictionary<WowRealm, RealmDatabase>();
