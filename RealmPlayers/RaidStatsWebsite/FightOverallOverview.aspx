@@ -1,6 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/RaidDamageMasterFrame.Master" AutoEventWireup="true" CodeBehind="FightOverallOverview.aspx.cs" Inherits="VF.RaidDamageWebsite.FightOverallOverview" %>
 
-<%@OutputCache Duration="600" VaryByParam="*" %>
+<%@OutputCache Duration="1000" VaryByParam="*" %>
 
 <%@ Register Src="RealmControl.ascx" TagPrefix="uc1" TagName="RealmControl" %>
 <%@ Register Src="ClassControl.ascx" TagPrefix="uc1" TagName="ClassControl" %>
