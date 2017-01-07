@@ -28,6 +28,7 @@ namespace VF_RealmPlayersDatabase
             WowRealm.Warsong2,
             WowRealm.Vengeance_Stonetalon,
             WowRealm.Elysium,
+            WowRealm.Elysium2,
         };
 
         Dictionary<WowRealm, RealmDatabase> m_Realms = new Dictionary<WowRealm, RealmDatabase>();

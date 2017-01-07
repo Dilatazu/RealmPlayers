@@ -30,6 +30,7 @@ namespace VF_RealmPlayersDatabase
         Warsong2 = 20,
         Vengeance_Stonetalon = 21,
         Elysium = 22,
+        Elysium2 = 23,
     }
     public enum WowVersionEnum
     {
@@ -651,7 +652,10 @@ namespace VF_RealmPlayersDatabase
             {"Warsong 1.12.1 [8x] Blizzlike", WowRealm.Warsong2 },
             {"WS2", WowRealm.Warsong2 },
             {"ELY", WowRealm.Elysium },
-            {"Elysium", WowRealm.Elysium },
+            {"Elysium(Old)", WowRealm.Elysium },
+            {"Elysium PvP", WowRealm.Elysium2 },
+            {"Elysium PVP", WowRealm.Elysium2 },
+            {"EL2", WowRealm.Elysium2 },
         };
         public static WowRealm ConvertRealm(string _Realm)
         {
@@ -670,7 +674,8 @@ namespace VF_RealmPlayersDatabase
                 || _Realm == WowRealm.Elysium
                 || _Realm == WowRealm.NostalGeek
                 || _Realm == WowRealm.Nefarian
-                || _Realm == WowRealm.Warsong2)
+                || _Realm == WowRealm.Warsong2
+                || _Realm == WowRealm.Elysium2)
             {
                 return WowVersionEnum.Vanilla;
             }

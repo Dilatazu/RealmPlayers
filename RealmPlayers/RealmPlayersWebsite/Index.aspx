@@ -46,7 +46,7 @@
                                 <asp:ListItem Text="Kronos" Value="KRO"/>
                                 <asp:ListItem Text="Kronos II" Value="KR2"/>
                                 <asp:ListItem Text="VanillaGaming" Value="VG"/>
-                                <asp:ListItem Text="Elysium" Value="ELY"/>
+                                <asp:ListItem Text="Elysium" Value="EL2"/>
                                 <asp:ListItem Text="Valkyrie" Value="VAL"/>
                                 <asp:ListItem Text="Nostalrius" Value="NRB"/>
                                 <asp:ListItem Text="NostalriusPVE" Value="NBE" />
@@ -62,6 +62,7 @@
                                 <asp:ListItem Text="Emerald Dream" Value="ED"/>
                                 <asp:ListItem Text="Warsong" Value="WSG"/>
                                 <asp:ListItem Text="Al'Akir" Value="AlA"/>
+                                <asp:ListItem Text="Elysium(Old)" Value="ELY"/>
                             </asp:DropDownList>
                             <asp:DropDownList style="width:100px; margin: 10px 2.5px 0px 2.5px" ID="ddlRace" runat="server" onchange="this.style.color = this.options[this.selectedIndex].style.color;">
                                 <asp:ListItem Text="Any Race" style="color:#ffffff" Value="All" Selected="true"></asp:ListItem>
