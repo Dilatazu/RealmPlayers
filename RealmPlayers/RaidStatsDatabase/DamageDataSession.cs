@@ -318,7 +318,7 @@ namespace VF_RaidDamageDatabase
                                 int health;
                                 int maxHealth;
                                 if (currTimeSlice.IsDeadYellEvent()
-                                || (currTimeSlice.GetEventBossHealth("The Prophet Skeram", out health, out maxHealth) && health <= 0 && maxHealth > 500000))
+                                || (currTimeSlice.GetEventBossHealth("The Prophet Skeram", out health, out maxHealth) && health <= 0 && maxHealth > 400000))
                                 {
                                     realDeadEvent = true;
                                 }
