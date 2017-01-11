@@ -196,9 +196,19 @@ namespace VF_RDDatabase
         {
             Hidden._GlobalInitializationData.Init(_GetRealmDB, _CachedGetFightDataCollectionFunc);
             Console.Write("SummaryDatabase.UpdateDatabase: " + _Raids.Count + " raids");
+            DateTime SummaryDBResetDate = new DateTime(2016, 11, 1); //Added 2017-01-10 when highscore lists were reset!
             int i = 0;
             foreach (var raid in _Raids)
             {
+                Console.Write(".");
+                ++i;
+                if (i % 50 == 49)
+                {
+                    Console.Write("Added " + i + " raids");
+                    GC.Collect();
+                }
+                if (raid.RaidEndDate < SummaryDBResetDate) //Added 2017-01-10 when highscore lists were reset!
+                    continue;
                 var groupRC = GetGroupRC(raid.Realm, raid.RaidOwnerName);
                 if (groupRC == null)
                 {
@@ -209,13 +219,6 @@ namespace VF_RDDatabase
                 }
 
                 groupRC.GenerateSummary_AddRaid(raid);
-                Console.Write(".");
-                ++i;
-                if (i % 50 == 49)
-                {
-                    Console.Write("Added " + i + " raids");
-                    GC.Collect();
-                }
             }
             Hidden._GlobalInitializationData.Clear();
         }
