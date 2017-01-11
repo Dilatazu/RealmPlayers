@@ -18,6 +18,8 @@ namespace WowLauncherNetwork
 
         Request_SearchAddons = 102,
         Response_SearchAddons = 103,
+        Request_GetNewsSince = 111,
+        Response_GetNewsSince = 112,
         Request_RegisterNewUserID = 201,
         Response_RegisterNewUserID = 202,
     }
@@ -125,7 +127,32 @@ namespace WowLauncherNetwork
         [ProtoMember(1)]
         public string UserID = "";
     }
-
+    [ProtoContract]
+    public class WLN_RequestPacket_GetNewsSince
+    {
+        [ProtoMember(1)]
+        public DateTime LastNewsDateTime = DateTime.MinValue;
+        [ProtoMember(2)]
+        public List<string> NewsSources = new List<string>();
+    }
+    [ProtoContract]
+    public class WLN_ResponsePacket_GetNewsSince
+    {
+        [ProtoMember(1)]
+        public string m_NewsTitlte;
+        [ProtoMember(2)]
+        public string m_NewsURL;
+        [ProtoMember(3)]
+        public string m_NewsBy;
+        [ProtoMember(4)]
+        public string m_NewsByImageURL;
+        [ProtoMember(5)]
+        public string m_NewsContent;
+        [ProtoMember(6)]
+        public DateTime m_NewsDate = DateTime.MinValue;
+        [ProtoMember(7)]
+        public string m_NewsSource;
+    }
     public static class NetworkSender
     {
         //public static void SendPacket_VF<T_Data>(this NetClient _Client, WLN_PacketType _PacketType, T_Data _Data, bool _Flush = true)

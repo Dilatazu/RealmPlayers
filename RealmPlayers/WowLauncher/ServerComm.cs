@@ -103,6 +103,43 @@ namespace VF_WoWLauncher
             }
             return false;
         }
+        internal static List<WLN_ResponsePacket_GetNewsSince> GetNewsSince(DateTime _LastNewsDateTime, List<string> _NewsSourcesWanted)
+        {
+            List<WLN_ResponsePacket_GetNewsSince> newsPackets = new List<WLN_ResponsePacket_GetNewsSince>();
+            VF.NetworkClient netClient = new VF.NetworkClient(g_Host, g_Port);
+            netClient.WaitForConnect(TimeSpan.FromSeconds(60));
+            try
+            {
+                {
+                    VF.NetworkOutgoingMessage newMessage = netClient.CreateMessage();
+                    WLN_RequestPacket_GetNewsSince request = new WLN_RequestPacket_GetNewsSince();
+                    request.LastNewsDateTime = _LastNewsDateTime;
+                    request.NewsSources = _NewsSourcesWanted;
+
+                    newMessage.WriteByte((byte)WLN_PacketType.Request_GetNewsSince);
+                    newMessage.WriteClass(request);
+                    netClient.SendMessage(newMessage);
+                }
+                if (netClient.RecvPacket_VF(WLN_PacketType.Response_GetNewsSince, out newsPackets) == true)
+                {
+                    return newsPackets;
+                }
+                else
+                {
+                    newsPackets = new List<WLN_ResponsePacket_GetNewsSince>();
+                }
+            }
+            catch(Exception)
+            {
+                newsPackets = new List<WLN_ResponsePacket_GetNewsSince>();
+            }
+            finally
+            {
+                netClient.Disconnect();
+                netClient = null;
+            }
+            return newsPackets;
+        }
         internal static List<AddonUpdateInfo> GetAddonUpdateInfos(List<string> _AddonNames, WowVersionEnum _WowVersion)
         {
             VF.NetworkClient netClient = new VF.NetworkClient(g_Host, g_Port);
