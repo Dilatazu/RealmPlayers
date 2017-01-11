@@ -921,12 +921,17 @@ namespace VF_WoWLauncher
         }
         private void c_btnLaunch_Click(object sender, EventArgs e)
         {
+            if(c_ddlRealm.SelectedItem == null)
+            {
+                Utility.MessageBoxShow("You have to choose a realm first!");
+                return;
+            }
+            if (Settings.Instance.RealmLists.ContainsKey((string)c_ddlRealm.SelectedItem) == false)
+                return;
+
             c_btnLaunch.Enabled = false;
 
             System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-
-            if (Settings.Instance.RealmLists.ContainsKey((string)c_ddlRealm.SelectedItem) == false)
-                return;
 
             var realmInfo = Settings.Instance.RealmLists[(string)c_ddlRealm.SelectedItem];
 
