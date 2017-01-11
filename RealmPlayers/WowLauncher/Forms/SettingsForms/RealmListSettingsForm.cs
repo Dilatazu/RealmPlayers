@@ -84,8 +84,8 @@ namespace VF_WoWLauncher
             }
             else
             {
-                Settings.Instance.RealmLists.Add(c_txtNewRealmName.Text, new RealmInfo { RealmName = c_txtNewRealmName.Text, RealmList = c_txtNewRealmListURL.Text, WowVersion = (WowVersionEnum)Enum.Parse(typeof(WowVersionEnum), (string)c_cbxWowVersion.SelectedItem) });
-                c_lstRealmConfigurations.Items.Add(c_txtNewRealmName.Text);
+                Settings.Instance.RealmLists.Add(c_txtNewConfigName.Text, new RealmInfo { RealmName = c_txtNewRealmName.Text, RealmList = c_txtNewRealmListURL.Text, WowVersion = (WowVersionEnum)Enum.Parse(typeof(WowVersionEnum), (string)c_cbxWowVersion.SelectedItem) });
+                c_lstRealmConfigurations.Items.Add(c_txtNewConfigName.Text);
                 c_lstRealmConfigurations.SelectedIndex = c_lstRealmConfigurations.Items.Count - 1;
                 ResetNewRealmConfigInputs();
             }
