@@ -26,9 +26,9 @@ namespace VF_RaidDamageDatabase
         int m_UniqueRaidIDCounter = 0;
         [ProtoMember(2)]
         public Dictionary<int, RaidCollection_Raid> m_Raids = new Dictionary<int, RaidCollection_Raid>();
-        [ProtoMember(3)]
+        //[ProtoMember(3)] //REMOVED DUNGEON DATA
         int m_UniqueDungeonIDCounter = 0;
-        [ProtoMember(4)]
+        //[ProtoMember(4)] //REMOVED DUNGEON DATA
         public Dictionary<int, RaidCollection_Dungeon> m_Dungeons = new Dictionary<int, RaidCollection_Dungeon>();
 
         public RaidCollection()
@@ -57,6 +57,9 @@ namespace VF_RaidDamageDatabase
 
                 if (isDungeon == true)
                 {
+                    Logger.ConsoleWriteLine("Fightname(" + fight.m_Fight.FightName + ") was Dungeon so it is skipped!", ConsoleColor.Yellow);
+                    continue;//Skip Dungeons...
+
                     Dictionary<string, int> zoneSlices = new Dictionary<string,int>();
                     foreach(var timeSlice in fight.m_Fight.TimeSlices)
                     {
