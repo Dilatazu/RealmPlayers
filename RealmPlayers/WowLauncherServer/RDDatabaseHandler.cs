@@ -23,6 +23,10 @@ namespace VF_WoWLauncherServer
         List<string> m_AddedContributionFiles = new List<string>();
         List<string> m_AddedEmptyFiles = new List<string>();
 
+        Dictionary<string, FightDataCollection> m_GetFightDataCollectionCache = new Dictionary<string, FightDataCollection>();
+        List<RaidCollection_Raid> m_RaidsModifiedSinceLastSummaryUpdate = new List<RaidCollection_Raid>();
+        DateTime m_DateTimeLastRaidStatsDBSave = DateTime.UtcNow;
+
         public RDDatabaseHandler(string _RDDBFolder, RPPDatabaseHandler _RPPDatabaseHandler)
         {
             m_RDDBFolder = _RDDBFolder;
@@ -49,6 +53,29 @@ namespace VF_WoWLauncherServer
                 Logger.LogException(ex);
             }
         }
+        private void SaveRaidStatsDBs()
+        {
+            if (m_RaidCollection != null)
+            {
+                try
+                {
+                    Logger.ConsoleWriteLine("Started saving all the accumulated RaidCollection.dat changes!", ConsoleColor.Green);
+                    VF.Utility.BackupFile(m_RDDBFolder + "RaidCollection.dat", VF.Utility.BackupMode.Backup_Daily);
+                    VF.Utility.SaveSerialize(m_RDDBFolder + "RaidCollection.dat", m_RaidCollection, false);
+
+                    UpdateSummaryDatabase(m_GetFightDataCollectionCache, m_RaidsModifiedSinceLastSummaryUpdate);
+                    m_GetFightDataCollectionCache = new Dictionary<string, FightDataCollection>();
+                    m_RaidsModifiedSinceLastSummaryUpdate = new List<RaidCollection_Raid>();
+                    Logger.ConsoleWriteLine("Done saving all the accumulated RaidCollection.dat changes!", ConsoleColor.Green);
+                    m_DateTimeLastRaidStatsDBSave = System.DateTime.UtcNow;
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogException(ex);
+                    Logger.ConsoleWriteLine("Well, if this happens give up...", ConsoleColor.Red);
+                }
+            }
+        }
         private void MainThread()
         {
             Logger.ConsoleWriteLine("MainThread for RDDatabaseHandler is started!", ConsoleColor.Green);
@@ -64,6 +91,10 @@ namespace VF_WoWLauncherServer
                 }
                 if(m_MainThread != null)
                     System.Threading.Thread.Sleep(30000);
+            }
+            lock (m_LockObject)
+            {
+                SaveRaidStatsDBs();
             }
             Logger.ConsoleWriteLine("MainThread for RDDatabaseHandler is exited!", ConsoleColor.Green);
         }
@@ -227,16 +258,17 @@ namespace VF_WoWLauncherServer
                         Logger.ConsoleWriteLine("--------------------", ConsoleColor.White);
                         VF.Utility.SaveSerialize(m_RDDBFolder + fightCollectionDatName, fights);
 
-                        VF.Utility.BackupFile(m_RDDBFolder + "RaidCollection.dat", VF.Utility.BackupMode.Backup_Daily);
-
-                        VF.Utility.SaveSerialize(m_RDDBFolder + "RaidCollection.dat", m_RaidCollection, false);
                         Logger.ConsoleWriteLine(_fightCollectionFile + " added " + totalFightCount + " fights to RaidCollection", ConsoleColor.Green);
 
-                        Dictionary<string, FightDataCollection> getFightDataCollectionCache = new Dictionary<string, FightDataCollection>();
-                        getFightDataCollectionCache.Add(fightCollectionDatName, fights);
-                        UpdateSummaryDatabase(getFightDataCollectionCache, raidsModified);
+                        m_GetFightDataCollectionCache.Add(fightCollectionDatName, fights);
+                        m_RaidsModifiedSinceLastSummaryUpdate.AddRange(raidsModified);
+                        if (m_GetFightDataCollectionCache.Count > 20 ||  DateTime.UtcNow > m_DateTimeLastRaidStatsDBSave.AddMinutes(30))
+                        {
+                            SaveRaidStatsDBs();
+                        }
 
-
+                        /*
+                        //DISABLED FOR NOW
                         string debugFilePath = m_RDDBFolder + "\\DebugData\\SessionDebug\\" + DateTime.UtcNow.ToString("yyyy_MM_dd") + ".txt";
                         VF.Utility.AssertFilePath(debugFilePath);
                         if (System.IO.File.Exists(debugFilePath) == true)
@@ -246,7 +278,7 @@ namespace VF_WoWLauncherServer
                         else
                         {
                             System.IO.File.WriteAllLines(debugFilePath, sessionDebugData);
-                        }
+                        }*/
                     }
                     else
                     {
@@ -262,6 +294,8 @@ namespace VF_WoWLauncherServer
                 Logger.ConsoleWriteLine("DUE TO ERRORS WE ARE RELOADING RAIDCOLLECTION!!!", ConsoleColor.Red);
                 //RESET m_RaidCollection!!!
                 VF.Utility.LoadSerialize<RaidCollection>(m_RDDBFolder + "RaidCollection.dat", out m_RaidCollection);
+                m_GetFightDataCollectionCache = new Dictionary<string, FightDataCollection>();
+                m_RaidsModifiedSinceLastSummaryUpdate = new List<RaidCollection_Raid>();
                 Logger.ConsoleWriteLine("RELOAD OF RAIDCOLLECTION WAS SUCCESSFULL!!!", ConsoleColor.Green);
             }
             return 0;
