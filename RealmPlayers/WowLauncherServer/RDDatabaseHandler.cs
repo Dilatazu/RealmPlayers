@@ -22,6 +22,7 @@ namespace VF_WoWLauncherServer
         ConcurrentQueue<string> m_NewContributions = new ConcurrentQueue<string>();
         List<string> m_AddedContributionFiles = new List<string>();
         List<string> m_AddedEmptyFiles = new List<string>();
+        List<string> m_ProblemFiles = new List<string>();
 
         Dictionary<string, FightDataCollection> m_GetFightDataCollectionCache = new Dictionary<string, FightDataCollection>();
         List<RaidCollection_Raid> m_RaidsModifiedSinceLastSummaryUpdate = new List<RaidCollection_Raid>();
@@ -53,7 +54,7 @@ namespace VF_WoWLauncherServer
                 Logger.LogException(ex);
             }
         }
-        private void SaveRaidStatsDBs()
+        private bool SaveRaidStatsDBs()
         {
             if (m_RaidCollection != null)
             {
@@ -67,14 +68,36 @@ namespace VF_WoWLauncherServer
                     m_GetFightDataCollectionCache = new Dictionary<string, FightDataCollection>();
                     m_RaidsModifiedSinceLastSummaryUpdate = new List<RaidCollection_Raid>();
                     Logger.ConsoleWriteLine("Done saving all the accumulated RaidCollection.dat changes!", ConsoleColor.Green);
+
+                    foreach (string problemData in m_ProblemFiles)
+                    {
+                        BackupRDContribution(problemData, RDContributionType.Problem);
+                    }
+                    foreach (string emptyData in m_AddedEmptyFiles)
+                    {
+                        BackupRDContribution(emptyData, RDContributionType.Empty);
+                    }
+                    foreach (string contribution in m_AddedContributionFiles)
+                    {
+                        BackupRDContribution(contribution, RDContributionType.Data);
+                    }
+                    m_ProblemFiles.Clear();
+                    m_AddedContributionFiles.Clear();
+                    m_AddedEmptyFiles.Clear();
+                    Logger.ConsoleWriteLine("Done saving all the file backups!", ConsoleColor.Green);
+
                     m_DateTimeLastRaidStatsDBSave = System.DateTime.UtcNow;
+                    return true;
                 }
                 catch (Exception ex)
                 {
                     Logger.LogException(ex);
                     Logger.ConsoleWriteLine("Well, if this happens give up...", ConsoleColor.Red);
+                    while (true)
+                    { System.Threading.Thread.Sleep(5000); }
                 }
             }
+            return false;
         }
         private void MainThread()
         {
@@ -126,29 +149,52 @@ namespace VF_WoWLauncherServer
                         }
                     }
                 }
-                m_AddedContributionFiles.Clear();
-                m_AddedEmptyFiles.Clear();
-                string raidDamageDataFile;
-                while (m_NewContributions.TryDequeue(out raidDamageDataFile))
+                try
                 {
-                    if (AddFightsToDatabase(raidDamageDataFile) >= 1)
+                    string raidDamageDataFile;
+                    while (m_NewContributions.TryDequeue(out raidDamageDataFile))
                     {
-                        m_AddedContributionFiles.Add(raidDamageDataFile);
-                        GC.Collect();
+                        try
+                        {
+                            if (AddFightsToDatabase(raidDamageDataFile) >= 1)
+                            {
+                                m_AddedContributionFiles.Add(raidDamageDataFile);
+                                GC.Collect();
+                            }
+                            else
+                            {
+                                m_AddedEmptyFiles.Add(raidDamageDataFile);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.LogException(ex);
+                            m_ProblemFiles.Add(raidDamageDataFile);
+                            Logger.ConsoleWriteLine("DUE TO ERRORS WE ARE RELOADING RAIDCOLLECTION!!!", ConsoleColor.Red);
+                            //RESET m_RaidCollection!!!
+                            VF.Utility.LoadSerialize<RaidCollection>(m_RDDBFolder + "RaidCollection.dat", out m_RaidCollection);
+                            m_GetFightDataCollectionCache = new Dictionary<string, FightDataCollection>();
+                            m_RaidsModifiedSinceLastSummaryUpdate = new List<RaidCollection_Raid>();
+                            Logger.ConsoleWriteLine("RELOAD OF RAIDCOLLECTION WAS SUCCESSFULL!!!", ConsoleColor.Green);
+                            foreach (string contribution in m_AddedContributionFiles)
+                            {
+                                m_NewContributions.Enqueue(contribution);
+                            }
+                            m_AddedContributionFiles.Clear();
+                            break;
+                        }
                     }
-                    else
+                    if (m_GetFightDataCollectionCache.Count > 20 || DateTime.UtcNow > m_DateTimeLastRaidStatsDBSave.AddMinutes(30))
                     {
-                        m_AddedEmptyFiles.Add(raidDamageDataFile);
+                        if(SaveRaidStatsDBs() == true)
+                        {
+                            //yay...
+                        }
                     }
                 }
-                
-                foreach (string emptyData in m_AddedEmptyFiles)
+                catch (Exception ex)
                 {
-                    BackupRDContribution(emptyData, RDContributionType.Empty);
-                }
-                foreach (string contribution in m_AddedContributionFiles)
-                {
-                    BackupRDContribution(contribution, RDContributionType.Data);
+                    Logger.LogException(ex);
                 }
             }
         }
@@ -166,139 +212,121 @@ namespace VF_WoWLauncherServer
         }
         private int AddFightsToDatabase(string _fightCollectionFile)
         {
-            try
+            List<string> sessionDebugData = new List<string>();
+            int totalFightCount = 0;
+            string filenameWithoutExtension = System.IO.Path.GetFileNameWithoutExtension(_fightCollectionFile);
+            string fightCollectionDatName = "DataFiles\\" + DateTime.UtcNow.ToString("yyyy_MM") + "\\" + filenameWithoutExtension + ".dat";
+            fightCollectionDatName = VF.Utility.ConvertToUniqueFilename(fightCollectionDatName);
+            List<DamageDataSession> dataSessions = new List<DamageDataSession>();
+            dataSessions = DamageDataParser.ParseFile(_fightCollectionFile, ref sessionDebugData);
+            Console.Write("Generating Fights...");
+            var fights = FightDataCollection.GenerateFights(dataSessions);//, BossInformation.BossFights);
+            Console.WriteLine("DONE");
+
+            if (fights.Fights.Count >= 1)
             {
-                List<string> sessionDebugData = new List<string>();
-                int totalFightCount = 0;
-                string filenameWithoutExtension = System.IO.Path.GetFileNameWithoutExtension(_fightCollectionFile);
-                string fightCollectionDatName = "DataFiles\\" + DateTime.UtcNow.ToString("yyyy_MM") + "\\" + filenameWithoutExtension + ".dat";
-                fightCollectionDatName = VF.Utility.ConvertToUniqueFilename(fightCollectionDatName);
-                List<DamageDataSession> dataSessions = new List<DamageDataSession>();
-                dataSessions = DamageDataParser.ParseFile(_fightCollectionFile, ref sessionDebugData);
-                Console.Write("Generating Fights...");
-                var fights = FightDataCollection.GenerateFights(dataSessions);//, BossInformation.BossFights);
-                Console.WriteLine("DONE");
-
-                if (fights.Fights.Count >= 1)
+                Logger.ConsoleWriteLine(_fightCollectionFile + " contained " + fights.Fights.Count + " fights", ConsoleColor.Yellow);
+                List<RaidCollection_Raid> raidsModified = new List<RaidCollection_Raid>();
+                List<RaidCollection_Dungeon> dungeonsModified = new List<RaidCollection_Dungeon>();
+                m_RaidCollection.AddFightCollection(fights, fightCollectionDatName, raidsModified, dungeonsModified);
+                //TESTING
+                if (raidsModified.Count > 0 || dungeonsModified.Count > 0)
                 {
-                    Logger.ConsoleWriteLine(_fightCollectionFile + " contained " + fights.Fights.Count + " fights", ConsoleColor.Yellow);
-                    List<RaidCollection_Raid> raidsModified = new List<RaidCollection_Raid>();
-                    List<RaidCollection_Dungeon> dungeonsModified = new List<RaidCollection_Dungeon>();
-                    m_RaidCollection.AddFightCollection(fights, fightCollectionDatName, raidsModified, dungeonsModified);
-                    //TESTING
-                    if (raidsModified.Count > 0 || dungeonsModified.Count > 0)
+                    Logger.ConsoleWriteLine("--------------------", ConsoleColor.White);
+                    foreach (var raid in raidsModified)
                     {
-                        Logger.ConsoleWriteLine("--------------------", ConsoleColor.White);
-                        foreach (var raid in raidsModified)
+                        var bossFights = raid.GetBossFights(fights, null);
+                        Logger.ConsoleWriteLine("Raid: " + raid.RaidInstance + "(" + raid.RaidID + ") by " + raid.RaidOwnerName, ConsoleColor.White);
+                        foreach (var bossFight in bossFights)
                         {
-                            var bossFights = raid.GetBossFights(fights, null);
-                            Logger.ConsoleWriteLine("Raid: " + raid.RaidInstance + "(" + raid.RaidID + ") by " + raid.RaidOwnerName, ConsoleColor.White);
-                            foreach (var bossFight in bossFights)
+                            ++totalFightCount;
+                            bossFight.GetFightDetails(); //Trigger FightDetail request, so we get error here instead of later on the website.
+                            //Logger.ConsoleWriteLine("Fight: " + bossFight.GetBossName() + " added to RaidCollection", ConsoleColor.Green);
+                        }
+                        if (raid.RaidOwnerName.ToLower() == "unknown" || raid.RaidOwnerName == "")
+                        {
+                            try
                             {
-                                ++totalFightCount;
-                                bossFight.GetFightDetails(); //Trigger FightDetail request, so we get error here instead of later on the website.
-                                //Logger.ConsoleWriteLine("Fight: " + bossFight.GetBossName() + " added to RaidCollection", ConsoleColor.Green);
-                            }
-                            if (raid.RaidOwnerName.ToLower() == "unknown" || raid.RaidOwnerName == "")
-                            {
-                                try
+                                lock (m_RPPDatabaseHandler.GetLockObject())
                                 {
-                                    lock (m_RPPDatabaseHandler.GetLockObject())
+                                    var realmDB = new RealmDB(m_RPPDatabaseHandler.GetRealmDB(raid.Realm));
+
+                                    List<string> attendingPlayers = new List<string>();
+                                    foreach (var bossFight in bossFights)
                                     {
-                                        var realmDB = new RealmDB(m_RPPDatabaseHandler.GetRealmDB(raid.Realm));
-
-                                        List<string> attendingPlayers = new List<string>();
-                                        foreach (var bossFight in bossFights)
+                                        attendingPlayers.AddRange(bossFight.GetAttendingUnits(realmDB.RD_IsPlayerFunc(bossFight)));
+                                    }
+                                    if (attendingPlayers.Distinct().Count() > 2)
+                                    {
+                                        Dictionary<string, int> guildCount = new Dictionary<string, int>();
+                                        foreach (var attendingPlayer in attendingPlayers)
                                         {
-                                            attendingPlayers.AddRange(bossFight.GetAttendingUnits(realmDB.RD_IsPlayerFunc(bossFight)));
-                                        }
-                                        if (attendingPlayers.Distinct().Count() > 2)
-                                        {
-                                            Dictionary<string, int> guildCount = new Dictionary<string, int>();
-                                            foreach (var attendingPlayer in attendingPlayers)
-                                            {
-                                                string guildName = realmDB.GetPlayer(attendingPlayer).Guild.GuildName;
-                                                if (guildCount.ContainsKey(guildName))
-                                                    guildCount[guildName] = guildCount[guildName] + 1;
-                                                else
-                                                    guildCount.Add(guildName, 1);
-                                            }
-                                            var biggestGuildCount = guildCount.OrderByDescending((_Value) => _Value.Value).First();
-                                            if (biggestGuildCount.Value >= (int)(0.7f * (float)attendingPlayers.Count))
-                                                raid.RaidOwnerName = biggestGuildCount.Key;
+                                            string guildName = realmDB.GetPlayer(attendingPlayer).Guild.GuildName;
+                                            if (guildCount.ContainsKey(guildName))
+                                                guildCount[guildName] = guildCount[guildName] + 1;
                                             else
-                                                raid.RaidOwnerName = "PUG";
-
-                                            Logger.ConsoleWriteLine("Raid: Changed RaidOwnerName for " + raid.RaidInstance + "(" + raid.RaidID + ") to " + raid.RaidOwnerName, ConsoleColor.White);
+                                                guildCount.Add(guildName, 1);
                                         }
+                                        var biggestGuildCount = guildCount.OrderByDescending((_Value) => _Value.Value).First();
+                                        if (biggestGuildCount.Value >= (int)(0.7f * (float)attendingPlayers.Count))
+                                            raid.RaidOwnerName = biggestGuildCount.Key;
                                         else
-                                        {
                                             raid.RaidOwnerName = "PUG";
-                                        }
+
+                                        Logger.ConsoleWriteLine("Raid: Changed RaidOwnerName for " + raid.RaidInstance + "(" + raid.RaidID + ") to " + raid.RaidOwnerName, ConsoleColor.White);
+                                    }
+                                    else
+                                    {
+                                        raid.RaidOwnerName = "PUG";
                                     }
                                 }
-                                catch (Exception ex)
-                                {
-                                    raid.RaidOwnerName = "PUG";
-                                    Logger.LogException(ex);
-                                }
                             }
-                        }
-                        foreach (var dungeon in dungeonsModified)
-                        {
-                            var bossFights = dungeon.GetBossFights(fights);
-                            Logger.ConsoleWriteLine("Dungeon: " + dungeon.m_Dungeon + "(" + dungeon.m_UniqueDungeonID + ") by \"" + dungeon.m_GroupMembers.MergeToStringVF("\", \"") + "\"", ConsoleColor.White);
-                            foreach (var bossFight in bossFights)
+                            catch (Exception ex)
                             {
-                                ++totalFightCount;
-                                bossFight.GetFightDetails(); //Trigger FightDetail request, so we get error here instead of later on the website.
-                                //Logger.ConsoleWriteLine("Fight: " + bossFight.GetBossName() + " added to RaidCollection", ConsoleColor.Green);
+                                raid.RaidOwnerName = "PUG";
+                                Logger.LogException(ex);
                             }
                         }
-                        Logger.ConsoleWriteLine("--------------------", ConsoleColor.White);
-                        VF.Utility.SaveSerialize(m_RDDBFolder + fightCollectionDatName, fights);
-
-                        Logger.ConsoleWriteLine(_fightCollectionFile + " added " + totalFightCount + " fights to RaidCollection", ConsoleColor.Green);
-
-                        m_GetFightDataCollectionCache.Add(fightCollectionDatName, fights);
-                        m_RaidsModifiedSinceLastSummaryUpdate.AddRange(raidsModified);
-                        if (m_GetFightDataCollectionCache.Count > 20 ||  DateTime.UtcNow > m_DateTimeLastRaidStatsDBSave.AddMinutes(30))
+                    }
+                    foreach (var dungeon in dungeonsModified)
+                    {
+                        var bossFights = dungeon.GetBossFights(fights);
+                        Logger.ConsoleWriteLine("Dungeon: " + dungeon.m_Dungeon + "(" + dungeon.m_UniqueDungeonID + ") by \"" + dungeon.m_GroupMembers.MergeToStringVF("\", \"") + "\"", ConsoleColor.White);
+                        foreach (var bossFight in bossFights)
                         {
-                            SaveRaidStatsDBs();
+                            ++totalFightCount;
+                            bossFight.GetFightDetails(); //Trigger FightDetail request, so we get error here instead of later on the website.
+                            //Logger.ConsoleWriteLine("Fight: " + bossFight.GetBossName() + " added to RaidCollection", ConsoleColor.Green);
                         }
+                    }
+                    Logger.ConsoleWriteLine("--------------------", ConsoleColor.White);
+                    VF.Utility.SaveSerialize(m_RDDBFolder + fightCollectionDatName, fights);
 
-                        /*
-                        //DISABLED FOR NOW
-                        string debugFilePath = m_RDDBFolder + "\\DebugData\\SessionDebug\\" + DateTime.UtcNow.ToString("yyyy_MM_dd") + ".txt";
-                        VF.Utility.AssertFilePath(debugFilePath);
-                        if (System.IO.File.Exists(debugFilePath) == true)
-                        {
-                            System.IO.File.AppendAllLines(debugFilePath, sessionDebugData);
-                        }
-                        else
-                        {
-                            System.IO.File.WriteAllLines(debugFilePath, sessionDebugData);
-                        }*/
+                    Logger.ConsoleWriteLine(_fightCollectionFile + " added " + totalFightCount + " fights to RaidCollection", ConsoleColor.Green);
+
+                    m_GetFightDataCollectionCache.Add(fightCollectionDatName, fights);
+                    m_RaidsModifiedSinceLastSummaryUpdate.AddRange(raidsModified);
+
+                    /*
+                    //DISABLED FOR NOW
+                    string debugFilePath = m_RDDBFolder + "\\DebugData\\SessionDebug\\" + DateTime.UtcNow.ToString("yyyy_MM_dd") + ".txt";
+                    VF.Utility.AssertFilePath(debugFilePath);
+                    if (System.IO.File.Exists(debugFilePath) == true)
+                    {
+                        System.IO.File.AppendAllLines(debugFilePath, sessionDebugData);
                     }
                     else
                     {
-                        Logger.ConsoleWriteLine(_fightCollectionFile + " already exists in RaidCollection, skipping", ConsoleColor.Green);
-                    }
+                        System.IO.File.WriteAllLines(debugFilePath, sessionDebugData);
+                    }*/
                 }
+                else
+                {
+                    Logger.ConsoleWriteLine(_fightCollectionFile + " already exists in RaidCollection, skipping", ConsoleColor.Green);
+                }
+            }
 
-                return totalFightCount;
-            }
-            catch (Exception ex)
-            {
-                Logger.LogException(ex);
-                Logger.ConsoleWriteLine("DUE TO ERRORS WE ARE RELOADING RAIDCOLLECTION!!!", ConsoleColor.Red);
-                //RESET m_RaidCollection!!!
-                VF.Utility.LoadSerialize<RaidCollection>(m_RDDBFolder + "RaidCollection.dat", out m_RaidCollection);
-                m_GetFightDataCollectionCache = new Dictionary<string, FightDataCollection>();
-                m_RaidsModifiedSinceLastSummaryUpdate = new List<RaidCollection_Raid>();
-                Logger.ConsoleWriteLine("RELOAD OF RAIDCOLLECTION WAS SUCCESSFULL!!!", ConsoleColor.Green);
-            }
-            return 0;
+            return totalFightCount;
         }
 
         private void UpdateSummaryDatabase(Dictionary<string, FightDataCollection> _CachedFightDataCollections = null, List<RaidCollection_Raid> _RaidsModified = null, bool _ReplaceRaidsModified = false)
@@ -380,6 +408,7 @@ namespace VF_WoWLauncherServer
         {
             Empty,
             Data,
+            Problem,
         }
         void BackupRDContribution(string _Filename, RDContributionType _ContributionType)
         {
@@ -404,16 +433,20 @@ namespace VF_WoWLauncherServer
             {
                 if (_ContributionType == RDContributionType.Data)
                     zipFileName = "VF_RaidStatsTBC_Contributions_" + DateTime.Now.ToString("yyyy_MM_dd") + ".zip";
-                else
-                    zipFileName = "VF_RaidStatsTBC_Empty" + DateTime.Now.ToString("yyyy_MM_dd") + ".zip";
+                else if (_ContributionType == RDContributionType.Empty)
+                    zipFileName = "VF_RaidStatsTBC_Empty_" + DateTime.Now.ToString("yyyy_MM_dd") + ".zip";
+                else//if (_ContributionType == RDContributionType.Problem)
+                    zipFileName = "VF_RaidStatsTBC_Problem_" + DateTime.Now.ToString("yyyy_MM_dd") + ".zip";
                 zipFullFilePath = g_AddonContributionsBackupFolder + "VF_RaidStatsTBC\\" + zipFileName;
             }
             else
             {
                 if (_ContributionType == RDContributionType.Data)
                     zipFileName = "VF_RaidDamage_Contributions_" + DateTime.Now.ToString("yyyy_MM_dd") + ".zip";
-                else
+                else if (_ContributionType == RDContributionType.Empty)
                     zipFileName = "VF_RaidDamage_Empty_" + DateTime.Now.ToString("yyyy_MM_dd") + ".zip";
+                else//if (_ContributionType == RDContributionType.Problem)
+                    zipFileName = "VF_RaidDamage_Problem_" + DateTime.Now.ToString("yyyy_MM_dd") + ".zip";
                 zipFullFilePath = g_AddonContributionsBackupFolder + "VF_RaidDamage\\" + zipFileName;
             }
 
