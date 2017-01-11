@@ -309,7 +309,7 @@ namespace RealmPlayersServer
             int count = PageUtility.GetQueryInt(Request, "count", 100);
             if (count > 500) count = 500;
 
-            string searchStr = PageUtility.GetQueryString(Request, "search", "null");
+            string searchStr = PageUtility.GetQueryString(Request, "search", "");
             string searchRealm = PageUtility.GetQueryString(Request, "realm", "All");
             string searchRace = PageUtility.GetQueryString(Request, "race", "All");
             string searchClass = PageUtility.GetQueryString(Request, "class", "All");
