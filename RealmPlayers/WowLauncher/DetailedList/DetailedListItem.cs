@@ -52,7 +52,7 @@ namespace DetailedList
         }
 
         int m_RightSideWidth;
-        int m_MinHeight = 75;
+        int m_MinHeight = 90;
         public DetailedListItem()
         {
             InitializeComponent();
@@ -249,7 +249,8 @@ namespace DetailedList
             _RightSide._SetDetailedListItem(this);
             _RightSide.__MergeInitialize();
             m_RightSideWidth = _RightSide.Width;
-            m_MinHeight = _RightSide.Height;
+            if (_RightSide.Height > m_MinHeight)
+                m_MinHeight = _RightSide.Height;
             for (int i = 0; i < _RightSide.Controls.Count; ++i)
             {
                 Control control = _RightSide.Controls[i];
