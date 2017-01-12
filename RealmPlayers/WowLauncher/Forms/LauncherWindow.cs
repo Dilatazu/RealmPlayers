@@ -475,8 +475,14 @@ namespace VF_WoWLauncher
                                 && _NewPost.m_PosterName != "Ksenovia")
                                 return;
                         }
-                        else
+                        else if (_NewPost.m_PostURL.Contains("twitter") == true)
                         {
+                            minDate = DateTime.Now.AddDays(-7);
+                            absoluteMinDate = DateTime.Now.AddDays(-14);
+                            forumType = ForumReader.ForumType.Twitter;
+                        }
+                        else
+                        { 
                             return;//Unknown forum type
                         }
                         string threadNameLower = _NewPost.m_ThreadName.ToLower();
@@ -519,6 +525,17 @@ namespace VF_WoWLauncher
                                     {
                                         image = Properties.Resources.newkronosthread32x33;
                                     }
+                                    else if (forumType == ForumReader.ForumType.Twitter)
+                                    {
+                                        if (_NewPost.m_PosterName.StartsWith("realmplayers"))
+                                            image = Properties.Resources.realmplayers32;
+                                        else if (_NewPost.m_PosterName.StartsWith("kronos"))
+                                            image = Properties.Resources.kronos32;
+                                        else if (_NewPost.m_PosterName.StartsWith("elysium"))
+                                            image = Properties.Resources.elysium32;
+                                        else
+                                            image = Properties.Resources.twitter32;
+                                    }
                                     else
                                     {
                                         image = Properties.Resources.topic_unread;
@@ -543,6 +560,17 @@ namespace VF_WoWLauncher
                                     {
                                         image = Properties.Resources.oldkronosthread32x33;
                                     }
+                                    else if (forumType == ForumReader.ForumType.Twitter)
+                                    {
+                                        if (_NewPost.m_PosterName.StartsWith("realmplayers"))
+                                            image = Properties.Resources.realmplayers32read;
+                                        else if (_NewPost.m_PosterName.StartsWith("kronos"))
+                                            image = Properties.Resources.kronos32read;
+                                        else if (_NewPost.m_PosterName.StartsWith("elysium"))
+                                            image = Properties.Resources.elysium32_read;
+                                        else
+                                            image = Properties.Resources.twitter32read;
+                                    }
                                     else
                                     {
                                         image = Properties.Resources.topic_read;
@@ -551,7 +579,7 @@ namespace VF_WoWLauncher
 
                                 c_dlAddons.AddItem(int.MinValue + (int)((_NewPost.m_PostDate - absoluteMinDate).TotalMinutes)
                                     , image
-                                    , _NewPost.m_ThreadName, (_NewPost.m_PostContent.Length > 1200 ? "This post is long! Click \"Goto thread\" to read the full post on the forum.\r\n\r\n" + _NewPost.m_PostContent.Substring(0, 1024) + "..." : _NewPost.m_PostContent), _NewPost.m_PostDate.ToString("yyyy-MM-dd HH:mm:ss") + " by " + _NewPost.m_PosterName
+                                    , (_NewPost.m_ThreadName.Length > 56 ? _NewPost.m_ThreadName.Substring(0, 50) + "..." : _NewPost.m_ThreadName), (_NewPost.m_PostContent.Length > 1200 ? "This post is long! Click \"Goto thread\" to read the full post on the forum.\r\n\r\n" + _NewPost.m_PostContent.Substring(0, 1024) + "..." : _NewPost.m_PostContent), _NewPost.m_PostDate.ToString("yyyy-MM-dd HH:mm:ss") + " by " + _NewPost.m_PosterName
                                     , new DetailedList.RightSideForumPost(() =>
                                     {
                                         //System.Diagnostics.Process.Start(_NewPost.m_ThreadURL + "page__view__getlastpost");
@@ -567,19 +595,17 @@ namespace VF_WoWLauncher
                     };
                     if (Settings.Instance.NewsSources_Kronos == true)
                     {
-                        ForumReader.GetLatestPosts(new string[]{ "http://forum.twinstar.cz/external.php?type=RSS2&forumids=960" }
-                            , newPostLambda, ForumReader.ForumType.KronosForum, onlyNewest);
+                        ForumReader.GetLatestPosts(new string[] { "kronoswow" }
+                            , newPostLambda, ForumReader.ForumType.Twitter, onlyNewest);
                     }
-                    if(Settings.Instance.NewsSources_Feenix == true)
+                    if (Settings.Instance.NewsSources_Nostalrius == true)
                     {
-                        ForumReader.GetLatestPosts(new string[]{"http://www.wow-one.com/forum/forum/199-service-status/"
-                        , "http://www.wow-one.com/forum/forum/3-announcements/"
-                        , "http://www.wow-one.com/forum/forum/117-update-notifications/"
-                        , "http://www.wow-one.com/forum/forum/192-planning-releases/"
-                        , "http://www.wow-one.com/forum/forum/32-1121-changelogs/"
-                        , "http://www.wow-one.com/forum/forum/110-243-changelogs/"}
-                            , newPostLambda, ForumReader.ForumType.FeenixForum, onlyNewest);
+                        ForumReader.GetLatestPosts(new string[] { "elysium_dev" }
+                            , newPostLambda, ForumReader.ForumType.Twitter, onlyNewest);
                     }
+
+                    ForumReader.GetLatestPosts(new string[] { "realmplayers" }
+                        , newPostLambda, ForumReader.ForumType.Twitter, onlyNewest);
 
                     ForumReader.GetLatestPosts(new string[]{"http://forum.realmplayers.com/viewforum.php?f=14"
                         , "http://forum.realmplayers.com/viewforum.php?f=15"

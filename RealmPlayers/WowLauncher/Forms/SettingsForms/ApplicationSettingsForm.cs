@@ -26,7 +26,6 @@ namespace VF_WoWLauncher
             c_cbxRunNotAdmin.Checked = Settings.Instance.RunWoWNotAdmin;
             c_cbxAutoHide.Checked = Settings.Instance.AutoHideOldNews;
             c_cbAutoUpdateVF.Checked = Settings.Instance.AutoUpdateVFAddons;
-            c_cbxFeenixNews.Checked = Settings.Instance.NewsSources_Feenix;
             c_cbxNostalriusNews.Checked = Settings.Instance.NewsSources_Nostalrius;
             c_cbxKronosNews.Checked = Settings.Instance.NewsSources_Kronos;
 
@@ -167,7 +166,6 @@ namespace VF_WoWLauncher
             Settings.Instance.AutoUpdateVFAddons = c_cbAutoUpdateVF.Checked;
             //Settings.Instance.UseWoWNoDelay = c_cbxWoWNoDelay.Checked;
             Settings.Instance.AutoRefreshNews = c_cbAutoRefresh.Checked;
-            Settings.Instance.NewsSources_Feenix = c_cbxFeenixNews.Checked;
             Settings.Instance.NewsSources_Nostalrius = c_cbxNostalriusNews.Checked;
             Settings.Instance.NewsSources_Kronos = c_cbxKronosNews.Checked;
 

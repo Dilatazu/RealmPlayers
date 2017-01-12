@@ -41,6 +41,7 @@ namespace VF_WoWLauncher
             KronosForum,
             RSS_RealmPlayersForum,
             RSS_NostalriusForum,
+            Twitter,
         }
         [ProtoContract]
         public class ForumPost
@@ -68,9 +69,77 @@ namespace VF_WoWLauncher
             [ProtoMember(8)]
             public State m_State = State.NewThisSession;
         }
+        public class Tweet
+        {
+            [ProtoMember(1)]
+            public string m_Creator;
+            [ProtoMember(2)]
+            public string m_Text;
+            [ProtoMember(2)]
+            public string m_TweetLink;
+            [ProtoMember(3)]
+            public DateTime m_PostDate;
+        }
+        public static List<Tweet> GetTweets(string _TwitterUser)
+        {
+            List<Tweet> resultTweets = new List<Tweet>();
+            try
+            {
+                string rssAddress = "http://twitrss.me/twitter_user_to_rss/?user=" + _TwitterUser;
+
+                System.Xml.XmlReader reader = System.Xml.XmlReader.Create(rssAddress);
+                System.ServiceModel.Syndication.SyndicationFeed feed = System.ServiceModel.Syndication.SyndicationFeed.Load(reader);
+                reader.Close();
+                foreach (System.ServiceModel.Syndication.SyndicationItem item in feed.Items)
+                {
+                    Tweet newTweet = new Tweet();
+                    newTweet.m_Creator = _TwitterUser;
+                    newTweet.m_Text = item.Title.Text;
+                    newTweet.m_TweetLink = item.Id;
+                    newTweet.m_PostDate = item.PublishDate.UtcDateTime;
+                    resultTweets.Add(newTweet);
+                }
+            }
+            catch (Exception)
+            {}
+            return resultTweets;
+        }
+        
         private static List<ForumPost> GetThreadPosts(string _ThreadURL, string _LastPostURL, DateTime _EarliestPostDate, ForumType _ForumType)
         {
-            if(_ForumType == ForumType.FeenixForum)
+            if (_ForumType == ForumType.Twitter)
+            {
+                List<ForumPost> threadPosts = new List<ForumPost>();
+
+                var tweets = GetTweets(_ThreadURL);
+                foreach(var tweet in tweets)
+                {
+                    string tweetTitle = tweet.m_Text;
+                    int prevFoundIndex = 0;
+                    while (prevFoundIndex != -1 && prevFoundIndex < 10)
+                    {
+                        int newFoundIndex = tweetTitle.IndexOfAny(new char[]{ '.', '!', '?' }, prevFoundIndex);
+                        if (newFoundIndex == -1)
+                        {
+                            break;//unable to breakup the tweetTitle!
+                        }
+                        else//if (newFoundIndex != -1)
+                        {
+                            if (newFoundIndex > 10)
+                            {
+                                if (newFoundIndex > 50 && prevFoundIndex > 0) newFoundIndex = prevFoundIndex;
+                                tweetTitle = tweetTitle.Substring(0, newFoundIndex + 1);
+                                break;//Done with breaking up the tweetTitle!
+                            }
+                        }
+                        prevFoundIndex = newFoundIndex;
+                    }
+                    var newForumPost = new ForumPost { m_ThreadName = tweetTitle, m_ThreadURL = _ThreadURL, m_PostURL = tweet.m_TweetLink, m_PosterName = tweet.m_Creator + " twitter", m_PosterImageURL = "", m_PostContent = tweet.m_Text, m_PostDate = tweet.m_PostDate };
+                    threadPosts.Add(newForumPost);
+                }
+                return threadPosts;
+            }
+            else if (_ForumType == ForumType.FeenixForum)
             {
                 List<ForumPost> threadPosts = new List<ForumPost>();
 
@@ -448,9 +517,14 @@ namespace VF_WoWLauncher
             if ((DateTime.Now - _ForumSection.m_LastPollDatTime).TotalMinutes < 5)
                 return;
 
+            if (_ForumType == ForumType.Twitter)
+            {
+                _ForumSection.UpdateThread(_ForumSection.m_ForumSectionURL, "", DateTime.UtcNow, _RetPosts, _ForumType);
+                return;//There are no posts for individual tweets, replies are not interesting.
+            }
             string website = _GetHTMLFile(_ForumSection.m_ForumSectionURL);
-
-            if(_ForumType == ForumType.FeenixForum)
+            
+            if (_ForumType == ForumType.FeenixForum)
             {
                 string[] websitePart = website.SplitVF("<td class='col_f_content '>");
 

@@ -33,6 +33,7 @@
             this.c_btnWowDirectoryBrowse = new System.Windows.Forms.Button();
             this.c_txtWowDirectory = new System.Windows.Forms.TextBox();
             this.c_gpbUploading = new System.Windows.Forms.GroupBox();
+            this.c_cbxWait5Seconds = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
             this.c_cbContributeRaidStats = new System.Windows.Forms.CheckBox();
             this.c_cbContributeRealmPlayers = new System.Windows.Forms.CheckBox();
@@ -51,8 +52,6 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.c_cbxKronosNews = new System.Windows.Forms.CheckBox();
             this.c_cbxNostalriusNews = new System.Windows.Forms.CheckBox();
-            this.c_cbxFeenixNews = new System.Windows.Forms.CheckBox();
-            this.c_cbxWait5Seconds = new System.Windows.Forms.CheckBox();
             this.c_gpbUploading.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -111,6 +110,15 @@
             this.c_gpbUploading.TabIndex = 7;
             this.c_gpbUploading.TabStop = false;
             this.c_gpbUploading.Text = "Data Uploading";
+            // 
+            // c_cbxWait5Seconds
+            // 
+            this.c_cbxWait5Seconds.Location = new System.Drawing.Point(278, 41);
+            this.c_cbxWait5Seconds.Name = "c_cbxWait5Seconds";
+            this.c_cbxWait5Seconds.Size = new System.Drawing.Size(110, 30);
+            this.c_cbxWait5Seconds.TabIndex = 9;
+            this.c_cbxWait5Seconds.Text = "Wait 5 seconds after data upload";
+            this.c_cbxWait5Seconds.UseVisualStyleBackColor = true;
             // 
             // label1
             // 
@@ -274,7 +282,6 @@
             // 
             this.groupBox1.Controls.Add(this.c_cbxKronosNews);
             this.groupBox1.Controls.Add(this.c_cbxNostalriusNews);
-            this.groupBox1.Controls.Add(this.c_cbxFeenixNews);
             this.groupBox1.Location = new System.Drawing.Point(10, 118);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(394, 45);
@@ -285,43 +292,23 @@
             // c_cbxKronosNews
             // 
             this.c_cbxKronosNews.AutoSize = true;
-            this.c_cbxKronosNews.Location = new System.Drawing.Point(196, 19);
+            this.c_cbxKronosNews.Location = new System.Drawing.Point(178, 19);
             this.c_cbxKronosNews.Name = "c_cbxKronosNews";
-            this.c_cbxKronosNews.Size = new System.Drawing.Size(59, 17);
+            this.c_cbxKronosNews.Size = new System.Drawing.Size(90, 17);
             this.c_cbxKronosNews.TabIndex = 16;
-            this.c_cbxKronosNews.Text = "Kronos";
+            this.c_cbxKronosNews.Text = "Kronos twitter";
             this.c_cbxKronosNews.UseVisualStyleBackColor = true;
             // 
             // c_cbxNostalriusNews
             // 
             this.c_cbxNostalriusNews.AutoSize = true;
-            this.c_cbxNostalriusNews.Location = new System.Drawing.Point(118, 19);
+            this.c_cbxNostalriusNews.Location = new System.Drawing.Point(9, 19);
             this.c_cbxNostalriusNews.Name = "c_cbxNostalriusNews";
-            this.c_cbxNostalriusNews.Size = new System.Drawing.Size(72, 17);
+            this.c_cbxNostalriusNews.Size = new System.Drawing.Size(92, 17);
             this.c_cbxNostalriusNews.TabIndex = 15;
-            this.c_cbxNostalriusNews.Text = "Nostalrius";
+            this.c_cbxNostalriusNews.Text = "Elysium twitter";
             this.c_cbxNostalriusNews.UseVisualStyleBackColor = true;
             this.c_cbxNostalriusNews.CheckedChanged += new System.EventHandler(this.c_cbxNostalriusNews_CheckedChanged);
-            // 
-            // c_cbxFeenixNews
-            // 
-            this.c_cbxFeenixNews.AutoSize = true;
-            this.c_cbxFeenixNews.Location = new System.Drawing.Point(6, 19);
-            this.c_cbxFeenixNews.Name = "c_cbxFeenixNews";
-            this.c_cbxFeenixNews.Size = new System.Drawing.Size(106, 17);
-            this.c_cbxFeenixNews.TabIndex = 14;
-            this.c_cbxFeenixNews.Text = "Feenix(wow-one)";
-            this.c_cbxFeenixNews.UseVisualStyleBackColor = true;
-            this.c_cbxFeenixNews.CheckedChanged += new System.EventHandler(this.c_cbxGetFeenixNews_CheckedChanged);
-            // 
-            // c_cbxWait5Seconds
-            // 
-            this.c_cbxWait5Seconds.Location = new System.Drawing.Point(278, 41);
-            this.c_cbxWait5Seconds.Name = "c_cbxWait5Seconds";
-            this.c_cbxWait5Seconds.Size = new System.Drawing.Size(110, 30);
-            this.c_cbxWait5Seconds.TabIndex = 9;
-            this.c_cbxWait5Seconds.Text = "Wait 5 seconds after data upload";
-            this.c_cbxWait5Seconds.UseVisualStyleBackColor = true;
             // 
             // ApplicationSettingsForm
             // 
@@ -376,13 +363,11 @@
         private System.Windows.Forms.CheckBox c_cbxAutoHide;
         private System.Windows.Forms.CheckBox c_cbAutoUpdateVF;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.CheckBox c_cbxFeenixNews;
         private System.Windows.Forms.CheckBox c_cbxNostalriusNews;
         private System.Windows.Forms.CheckBox c_cbxKronosNews;
         private System.Windows.Forms.CheckBox c_cbContributeRaidStats;
         private System.Windows.Forms.CheckBox c_cbContributeRealmPlayers;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckBox c_cbxWait5Seconds;
-
     }
 }
