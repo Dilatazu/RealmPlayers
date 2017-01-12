@@ -178,15 +178,19 @@ namespace VF_WoWLauncher
                 {"VanillaGaming", new RealmInfo{RealmList = "logon.vanillagaming.org", RealmName = "VanillaGaming", WowVersion = WowVersionEnum.Vanilla}},
                 {"Valkyrie", new RealmInfo{RealmList = "logon.valkyrie-wow.com", RealmName = "Valkyrie", WowVersion = WowVersionEnum.Vanilla}},
                 {"Rebirth", new RealmInfo{RealmList = "wow.therebirth.net", RealmName = "Rebirth", WowVersion = WowVersionEnum.Vanilla}},
-                //{"Nostalrius", new RealmInfo{RealmList = "login.nostalrius.org", RealmName = "Nostalrius Begins PvP", WowVersion = WowVersionEnum.Vanilla}},
-                //{"Nostalrius(PVE)", new RealmInfo{RealmList = "login.nostalrius.org", RealmName = "Nostalrius Begins PvE", WowVersion = WowVersionEnum.Vanilla}},
+                {"Elysium", new RealmInfo{RealmList = "logon.elysium-project.org", RealmName = "Elysium PvP", WowVersion = WowVersionEnum.Vanilla}},
+                {"Nostalrius", new RealmInfo{RealmList = "logon.elysium-project.org", RealmName = "Nostalrius PvP", WowVersion = WowVersionEnum.Vanilla}},
+                {"Nostalrius(PVE)", new RealmInfo{RealmList = "logon.elysium-project.org", RealmName = "Nostalrius PvE", WowVersion = WowVersionEnum.Vanilla}},
                 {"Kronos", new RealmInfo{RealmList = "wow.twinstar.cz", RealmName = "Kronos", WowVersion = WowVersionEnum.Vanilla}},
                 {"Kronos II", new RealmInfo{RealmList = "wow.twinstar.cz", RealmName = "Kronos II", WowVersion = WowVersionEnum.Vanilla}},
                 {"Nefarian(DE)", new RealmInfo{RealmList = "logon.classic-wow.org", RealmName = "Nefarian", WowVersion = WowVersionEnum.Vanilla}},
                 {"NostalGeek(FR)", new RealmInfo{RealmList = "auth.nostalgeek-serveur.com", RealmName = "NostalGeek 1.12", WowVersion = WowVersionEnum.Vanilla}},
-                {"Wildhammer", new RealmInfo{RealmList = "logon.vengeancewow.com", RealmName = "Wildhammer", WowVersion = WowVersionEnum.TBC}},
+                {"Stonetalon", new RealmInfo{RealmList = "logon.vengeancewow.com", RealmName = "Stonetalon", WowVersion = WowVersionEnum.TBC}},
                 {"ExcaliburTBC", new RealmInfo{RealmList = "exwow-serv.exnw.com", RealmName = "ExcaliburTBC", WowVersion = WowVersionEnum.TBC}},
                 {"Hellfire", new RealmInfo{RealmList = "logon.looking4group.eu", RealmName = "Hellfire", WowVersion = WowVersionEnum.TBC}},
+                {"RetroWoW", new RealmInfo{RealmList = "logon.retro-wow.com", RealmName = "RetroWoW 1.12.1", WowVersion = WowVersionEnum.Vanilla}},
+                {"MagicWoW", new RealmInfo{RealmList = "magicwow.co.uk", RealmName = "MagicWoW", WowVersion = WowVersionEnum.Vanilla}},
+                {"SiegeWoW", new RealmInfo{RealmList = "logon.siegewow.com", RealmName = "SiegeWoW", WowVersion = WowVersionEnum.Vanilla}},
             };
         }
         public static void Initialize()

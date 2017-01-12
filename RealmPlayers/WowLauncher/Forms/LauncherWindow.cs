@@ -9,8 +9,47 @@ using System.Windows.Forms;
 
 namespace VF_WoWLauncher
 {
+    internal enum LinkType
+    {
+        Homepage,
+        RealmStatus,
+        Forum,
+        Bugtracker,
+        Changelog,
+        Subreddit,
+        Twitter,
+        Database,
+        TalentCalculator,
+    }
     public partial class LauncherWindow : Form
     {
+        internal string GetLinkTypeString(LinkType linkType)
+        {
+            switch (linkType)
+            {
+                case LinkType.Homepage:
+                    return "Homepage";
+                case LinkType.RealmStatus:
+                    return "Realm Status";
+                case LinkType.Forum:
+                    return "Forum";
+                case LinkType.Bugtracker:
+                    return "Bugtracker";
+                case LinkType.Changelog:
+                    return "Changelog";
+                case LinkType.Subreddit:
+                    return "Subreddit";
+                case LinkType.Twitter:
+                    return "Twitter";
+                case LinkType.Database:
+                    return "Database";
+                case LinkType.TalentCalculator:
+                    return "Talent Calculator";
+                default:
+                    return "";
+            }
+            return "";
+        }
         public LauncherWindow()
         {
             InitializeComponent();
@@ -51,224 +90,150 @@ namespace VF_WoWLauncher
                 this.Menu.MenuItems.Add(fileMenu);
             }
 
+            Dictionary<string, Dictionary<LinkType,string>> vanillaServersMenuTree = new Dictionary<string, Dictionary<LinkType, string>>
+            {
+                { "Elysium Links",
+                    new Dictionary<LinkType, string> {
+                        { LinkType.Homepage, "https://elysium-project.org/"},
+                        { LinkType.RealmStatus, "https://elysium-project.org/status/"},
+                        { LinkType.Forum, "https://forum.elysium-project.org/"},
+                        { LinkType.Subreddit, "https://www.reddit.com/r/elysiumproject"},
+                        { LinkType.Twitter, "https://twitter.com/elysium_dev"}
+                    }
+                },
+                { "Kronos Links",
+                    new Dictionary<LinkType, string> {
+                        { LinkType.Homepage, "http://www.kronos-wow.com/"},
+                        { LinkType.Forum, "http://forum.twinstar.cz/"},
+                        { LinkType.Subreddit, "https://www.reddit.com/r/kronoswow"},
+                        { LinkType.Twitter, "https://twitter.com/KronosWoW"}
+                    }
+                },
+                { "VanillaGaming Links",
+                    new Dictionary<LinkType, string> {
+                        { LinkType.Homepage, "http://vanillagaming.org/"},
+                        { LinkType.Forum, "http://vanillagaming.org/forum/"},
+                        { LinkType.Database, "http://db.vanillagaming.org/"},
+                        { LinkType.TalentCalculator, "http://db.vanillagaming.org/?talent"},
+                    }
+                },
+                { "Rebirth Links",
+                    new Dictionary<LinkType, string> {
+                        { LinkType.Homepage, "http://www.therebirth.net/"},
+                        { LinkType.Forum, "http://www.therebirth.net/forum/"},
+                        { LinkType.Subreddit, "http://www.reddit.com/r/rebirthwow/"},
+                    }
+                },
+                { "RetroWoW Links",
+                    new Dictionary<LinkType, string> {
+                        { LinkType.Homepage, "http://retro-wow.com/"},
+                        { LinkType.Forum, "http://retro-wow.com/forum/"},
+                    }
+                },
+                { "MagicWoW Links",
+                    new Dictionary<LinkType, string> {
+                        { LinkType.Homepage, "http://www.magicwow.co.uk/"},
+                        { LinkType.Forum, "http://www.magicwow.co.uk/forums.php"},
+                        { LinkType.Bugtracker, "http://www.magicwow.co.uk/index.php?page=bugtracker"},
+                    }
+                },
+                { "SiegeWoW Links",
+                    new Dictionary<LinkType, string> {
+                        { LinkType.Homepage, "http://siegewow.com/"},
+                        { LinkType.Subreddit, "https://www.reddit.com/r/SiegeWoW/"},
+                    }
+                },
+                { "NostalGeek(FR) Links",
+                    new Dictionary<LinkType, string> {
+                        { LinkType.Homepage, "http://nostalgeek-serveur.com/"},
+                        { LinkType.Forum, "http://nostalgeek-serveur.com/forums/"},
+                    }
+                },
+                { "Nefarian(DE) Links",
+                    new Dictionary<LinkType, string> {
+                        { LinkType.Homepage, "http://www.classic-wow.org/"},
+                        { LinkType.Forum, "http://community.mmobase.de/forum.php#classic-wow-1-12-1"},
+                    }
+                },
+                { "Nostalrius Links",
+                    new Dictionary<LinkType, string> {
+                        { LinkType.Homepage, "http://en.nostalrius.org/"},
+                        { LinkType.Forum, "http://forum.nostalrius.org/"},
+                        { LinkType.Subreddit, "https://www.reddit.com/r/nostalriusbegins"},
+                        { LinkType.Twitter, "https://twitter.com/NostalBegins"}
+                    }
+                },
+            };
+            Dictionary<string, Dictionary<LinkType, string>> tbcServersMenuTree = new Dictionary<string, Dictionary<LinkType, string>>
+            {
+                { "Feenix Links",
+                    new Dictionary<LinkType, string> {
+                        { LinkType.Homepage, "http://www.wow-one.com"},
+                        { LinkType.Forum, "http://www.wow-one.com/forum"},
+                        { LinkType.Database, "http://database.wow-one.com/"},
+                    }
+                },
+                { "VengeanceWoW Links",
+                    new Dictionary<LinkType, string> {
+                        { LinkType.Homepage, "https://www.vengeancewow.com/"},
+                        { LinkType.Forum, "https://www.vengeancewow.com/forum/"},
+                        { LinkType.Changelog, "https://www.vengeancewow.com/forum/forum43/"},
+                    }
+                },
+                { "Excalibur Links",
+                    new Dictionary<LinkType, string> {
+                        { LinkType.Homepage, "http://www.excalibur-server.com/"},
+                        { LinkType.Forum, "http://www.excalibur-nw.com/forum"},
+                    }
+                },
+                { "Looking4Group Links",
+                    new Dictionary<LinkType, string> {
+                        { LinkType.Homepage, "http://www.looking4group.eu/"},
+                        { LinkType.Bugtracker, "https://bitbucket.org/looking4group_b2tbc/looking4group/issues?status=new&status=open"},
+                        { LinkType.Subreddit, "https://www.reddit.com/r/looking4group"},
+                    }
+                },
+                { "Back2Basics(DE) Links",
+                    new Dictionary<LinkType, string> {
+                        { LinkType.Homepage, "https://www.back2basics-wow.eu/"},
+                        { LinkType.Forum, "https://www.back2basics-wow.eu/community/index.php?page=Index"},
+                        { LinkType.Database, "https://tbcdb.rising-gods.de/"},
+                    }
+                },
+            };
+          
             {
                 var linksMenu = new MenuItem("Links");
                 var vanillaRealmsMenu = new MenuItem("Vanilla Realms");
                 var tbcRealmsMenu = new MenuItem("TBC Realms");
                 linksMenu.MenuItems.Add(vanillaRealmsMenu);
                 linksMenu.MenuItems.Add(tbcRealmsMenu);
+
+                foreach (var menuItem in vanillaServersMenuTree)
                 {
-                    var nostalriusLinks = new MenuItem("Nostalrius Links");
-                    nostalriusLinks.MenuItems.Add(new MenuItem("Goto Homepage", new EventHandler((o, ea) =>
+                    var links = new MenuItem(menuItem.Key);
+                    foreach(var link in menuItem.Value)
                     {
-                        System.Diagnostics.Process.Start("http://en.nostalrius.org/");
-                    })));
-                    nostalriusLinks.MenuItems.Add(new MenuItem("Goto Forum", new EventHandler((o, ea) =>
-                    {
-                        System.Diagnostics.Process.Start("http://forum.nostalrius.org/");
-                    })));
-                    nostalriusLinks.MenuItems.Add(new MenuItem("Goto subreddit", new EventHandler((o, ea) =>
-                    {
-                        System.Diagnostics.Process.Start("https://www.reddit.com/r/nostalriusbegins");
-                    })));
-                    vanillaRealmsMenu.MenuItems.Add(nostalriusLinks);
-                }
-                {
-                    var kronosLinks = new MenuItem("Kronos Links");
-                    kronosLinks.MenuItems.Add(new MenuItem("Goto Homepage", new EventHandler((o, ea) =>
-                    {
-                        System.Diagnostics.Process.Start("http://www.kronos-wow.com/");
-                    })));
-                    kronosLinks.MenuItems.Add(new MenuItem("Goto Forum", new EventHandler((o, ea) =>
-                    {
-                        System.Diagnostics.Process.Start("http://forum.twinstar.cz/");
-                    })));
-                    kronosLinks.MenuItems.Add(new MenuItem("Goto subreddit", new EventHandler((o, ea) =>
-                    {
-                        System.Diagnostics.Process.Start("https://www.reddit.com/r/kronoswow");
-                    })));
-                    vanillaRealmsMenu.MenuItems.Add(kronosLinks);
-                }
-                {
-                    var nostalGeekLinks = new MenuItem("NostalGeek(FR) Links");
-                    nostalGeekLinks.MenuItems.Add(new MenuItem("Goto Homepage", new EventHandler((o, ea) =>
-                    {
-                        System.Diagnostics.Process.Start("http://nostalgeek-serveur.com/");
-                    })));
-                    nostalGeekLinks.MenuItems.Add(new MenuItem("Goto Forum", new EventHandler((o, ea) =>
-                    {
-                        System.Diagnostics.Process.Start("http://nostalgeek-serveur.com/forums/");
-                    })));
-                    vanillaRealmsMenu.MenuItems.Add(nostalGeekLinks);
-                }
-                {
-                    var nefarianLinks = new MenuItem("Nefarian(DE) Links");
-                    nefarianLinks.MenuItems.Add(new MenuItem("Goto Homepage", new EventHandler((o, ea) =>
-                    {
-                        System.Diagnostics.Process.Start("http://www.classic-wow.org/");
-                    })));
-                    nefarianLinks.MenuItems.Add(new MenuItem("Goto Forum", new EventHandler((o, ea) =>
-                    {
-                        System.Diagnostics.Process.Start("http://community.mmobase.de/forum.php#classic-wow-1-12-1");
-                    })));
-                    vanillaRealmsMenu.MenuItems.Add(nefarianLinks);
-                }
-                {
-                    var links = new MenuItem("VanillaGaming Links");
-                    links.MenuItems.Add(new MenuItem("Goto Homepage", new EventHandler((o, ea) =>
-                    {
-                        System.Diagnostics.Process.Start("http://vanillagaming.org/");
-                    })));
-                    links.MenuItems.Add(new MenuItem("Goto Forum", new EventHandler((o, ea) =>
-                    {
-                        System.Diagnostics.Process.Start("http://vanillagaming.org/forum/");
-                    })));
-                    links.MenuItems.Add(new MenuItem("Goto Database", new EventHandler((o, ea) =>
-                    {
-                        System.Diagnostics.Process.Start("http://db.vanillagaming.org/");
-                    })));
-                    links.MenuItems.Add(new MenuItem("Goto Talent Calculator", new EventHandler((o, ea) =>
-                    {
-                        System.Diagnostics.Process.Start("http://db.vanillagaming.org/?talent");
-                    })));
+                        links.MenuItems.Add(new MenuItem("Goto " + GetLinkTypeString(link.Key), new EventHandler((o, ea) =>
+                        {
+                            System.Diagnostics.Process.Start(link.Value);
+                        })));
+                    }
                     vanillaRealmsMenu.MenuItems.Add(links);
                 }
+                foreach (var menuItem in tbcServersMenuTree)
                 {
-                    var links = new MenuItem("Valkyrie Links");
-                    links.MenuItems.Add(new MenuItem("Goto Homepage", new EventHandler((o, ea) =>
+                    var links = new MenuItem(menuItem.Key);
+                    foreach (var link in menuItem.Value)
                     {
-                        System.Diagnostics.Process.Start("http://valkyrie-wow.org/");
-                    })));
-                    links.MenuItems.Add(new MenuItem("Goto Forum", new EventHandler((o, ea) =>
-                    {
-                        System.Diagnostics.Process.Start("http://valkyrie-wow.org/boards/");
-                    })));
-                    links.MenuItems.Add(new MenuItem("Goto Database", new EventHandler((o, ea) =>
-                    {
-                        System.Diagnostics.Process.Start("http://db.valkyrie-wow.org/");
-                    })));
-                    links.MenuItems.Add(new MenuItem("Goto Talent Calculator", new EventHandler((o, ea) =>
-                    {
-                        System.Diagnostics.Process.Start("https://valkyrie-wow.org/talents/");
-                    })));
-                    vanillaRealmsMenu.MenuItems.Add(links);
-                }
-                {
-                    var links = new MenuItem("Rebirth Links");
-                    links.MenuItems.Add(new MenuItem("Goto Homepage", new EventHandler((o, ea) =>
-                    {
-                        System.Diagnostics.Process.Start("http://www.therebirth.net/");
-                    })));
-                    links.MenuItems.Add(new MenuItem("Goto Forum", new EventHandler((o, ea) =>
-                    {
-                        System.Diagnostics.Process.Start("http://www.therebirth.net/forum/");
-                    })));
-                    links.MenuItems.Add(new MenuItem("Goto Rebirthwow Subreddit", new EventHandler((o, ea) =>
-                    {
-                        System.Diagnostics.Process.Start("http://www.reddit.com/r/rebirthwow/");
-                    })));
-                    vanillaRealmsMenu.MenuItems.Add(links);
-                }
-                {
-                    var feenixLinks = new MenuItem("Feenix Links");
-                    feenixLinks.MenuItems.Add(new MenuItem("Goto Homepage", new EventHandler((o, ea) =>
-                    {
-                        System.Diagnostics.Process.Start("http://www.wow-one.com");
-                    })));
-                    feenixLinks.MenuItems.Add(new MenuItem("Goto Forum", new EventHandler((o, ea) =>
-                    {
-                        System.Diagnostics.Process.Start("http://www.wow-one.com/forum");
-                    })));
-                    feenixLinks.MenuItems.Add(new MenuItem("Goto Database", new EventHandler((o, ea) =>
-                    {
-                        System.Diagnostics.Process.Start("http://database.wow-one.com/");
-                    })));
-                    tbcRealmsMenu.MenuItems.Add(feenixLinks);
-                }
-                {
-                    var links = new MenuItem("CoreCraft Links");
-                    links.MenuItems.Add(new MenuItem("Goto Homepage", new EventHandler((o, ea) =>
-                    {
-                        System.Diagnostics.Process.Start("https://www.worldofcorecraft.com/");
-                    })));
-                    links.MenuItems.Add(new MenuItem("Goto Forum", new EventHandler((o, ea) =>
-                    {
-                        System.Diagnostics.Process.Start("https://www.worldofcorecraft.com/forum");
-                    })));
+                        links.MenuItems.Add(new MenuItem("Goto " + GetLinkTypeString(link.Key), new EventHandler((o, ea) =>
+                        {
+                            System.Diagnostics.Process.Start(link.Value);
+                        })));
+                    }
                     tbcRealmsMenu.MenuItems.Add(links);
                 }
-                {
-                    var links = new MenuItem("VengeanceWoW Links");
-                    links.MenuItems.Add(new MenuItem("Goto Homepage", new EventHandler((o, ea) =>
-                    {
-                        System.Diagnostics.Process.Start("https://www.vengeancewow.com/");
-                    })));
-                    links.MenuItems.Add(new MenuItem("Goto Forum", new EventHandler((o, ea) =>
-                    {
-                        System.Diagnostics.Process.Start("https://www.vengeancewow.com/forum/");
-                    })));
-                    links.MenuItems.Add(new MenuItem("Goto Changelog", new EventHandler((o, ea) =>
-                    {
-                        System.Diagnostics.Process.Start("https://www.vengeancewow.com/forum/forum43/");
-                    })));
-                    tbcRealmsMenu.MenuItems.Add(links);
-                }
-                {
-                    var links = new MenuItem("Excalibur Links");
-                    links.MenuItems.Add(new MenuItem("Goto Homepage", new EventHandler((o, ea) =>
-                    {
-                        System.Diagnostics.Process.Start("http://www.excalibur-server.com/");
-                    })));
-                    links.MenuItems.Add(new MenuItem("Goto Forum", new EventHandler((o, ea) =>
-                    {
-                        System.Diagnostics.Process.Start("http://www.excalibur-nw.com/forum/index.php?showforum=85");
-                    })));
-                    tbcRealmsMenu.MenuItems.Add(links);
-                }
-                {
-                    var links = new MenuItem("Looking4Group Links");
-                    links.MenuItems.Add(new MenuItem("Goto Homepage", new EventHandler((o, ea) =>
-                    {
-                        System.Diagnostics.Process.Start("http://www.looking4group.eu/");
-                    })));
-                    links.MenuItems.Add(new MenuItem("Goto Bugtracker", new EventHandler((o, ea) =>
-                    {
-                        System.Diagnostics.Process.Start("https://bitbucket.org/looking4group_b2tbc/looking4group/issues?status=new&status=open");
-                    })));
-                    links.MenuItems.Add(new MenuItem("Goto Subreddit", new EventHandler((o, ea) =>
-                    {
-                        System.Diagnostics.Process.Start("https://www.reddit.com/r/looking4group");
-                    })));
-                    tbcRealmsMenu.MenuItems.Add(links);
-                }
-                {
-                    var links = new MenuItem("PlayTBC Links");
-                    links.MenuItems.Add(new MenuItem("Goto Homepage", new EventHandler((o, ea) =>
-                    {
-                        System.Diagnostics.Process.Start("http://playtbc.com/");
-                    })));
-                    links.MenuItems.Add(new MenuItem("Goto Forum", new EventHandler((o, ea) =>
-                    {
-                        System.Diagnostics.Process.Start("http://playtbc.com/forums/");
-                    })));
-                    tbcRealmsMenu.MenuItems.Add(links);
-                }
-                {
-                    var links = new MenuItem("Back2Basics(DE) Links");
-                    links.MenuItems.Add(new MenuItem("Goto Homepage", new EventHandler((o, ea) =>
-                    {
-                        System.Diagnostics.Process.Start("https://www.back2basics-wow.eu/");
-                    })));
-                    links.MenuItems.Add(new MenuItem("Goto Forum", new EventHandler((o, ea) =>
-                    {
-                        System.Diagnostics.Process.Start("https://www.back2basics-wow.eu/community/index.php?page=Index");
-                    })));
-                    links.MenuItems.Add(new MenuItem("Goto Database", new EventHandler((o, ea) =>
-                    {
-                        System.Diagnostics.Process.Start("https://tbcdb.rising-gods.de/");
-                    })));
-                    tbcRealmsMenu.MenuItems.Add(links);
-                }
+
                 linksMenu.MenuItems.Add("-");
                 {
                     var links = new MenuItem("Other Links");
@@ -318,6 +283,14 @@ namespace VF_WoWLauncher
                 linksMenu.MenuItems.Add(new MenuItem("RealmPlayers Forum", new EventHandler((o, ea) =>
                 {
                     System.Diagnostics.Process.Start("http://forum.realmplayers.com");
+                })));
+                linksMenu.MenuItems.Add(new MenuItem("RealmPlayers Patreon", new EventHandler((o, ea) =>
+                {
+                    System.Diagnostics.Process.Start("https://www.patreon.com/realmplayers");
+                })));
+                linksMenu.MenuItems.Add(new MenuItem("RealmPlayers Discord", new EventHandler((o, ea) =>
+                {
+                    System.Diagnostics.Process.Start("https://discord.gg/NrZAVFE");
                 })));
                 linksMenu.MenuItems.Add(new MenuItem("RealmPlayers Twitter", new EventHandler((o, ea) =>
                 {
