@@ -14,17 +14,20 @@ namespace VF
     }
     public class URLShortener
     {
-        public static string GetFullURL(string _ShortenedURL, URLShortenerService _Service = URLShortenerService.Google)
+        public static string GetFullURL(string _ShortenedURL, URLShortenerService _Service = URLShortenerService.Google, string _APIKey = null)
         {
             if (_Service != URLShortenerService.Google)
                 return "";
+
+            if (_APIKey == null)
+                _APIKey = HiddenStrings.GoogleAPIKey;
 
             if (_ShortenedURL.StartsWith("http://") == false)
                 _ShortenedURL = "http://goo.gl/" + _ShortenedURL;
             try
             {
                 string responseText = "";
-                var webRequest = (System.Net.HttpWebRequest)System.Net.HttpWebRequest.Create("https://www.googleapis.com/urlshortener/v1/url?shortUrl=" + _ShortenedURL);
+                var webRequest = (System.Net.HttpWebRequest)System.Net.HttpWebRequest.Create("https://www.googleapis.com/urlshortener/v1/url?shortUrl=" + _ShortenedURL + "&key=" + _APIKey);
                 using (var webResponse = webRequest.GetResponse())
                 {
                     using (var responseStream = webResponse.GetResponseStream())
@@ -73,11 +76,11 @@ namespace VF
             try
             {
                 string responseText = "";
-                var webRequest = (System.Net.HttpWebRequest)System.Net.WebRequest.Create("https://www.googleapis.com/urlshortener/v1/url");
+                var webRequest = (System.Net.HttpWebRequest)System.Net.WebRequest.Create("https://www.googleapis.com/urlshortener/v1/url?key=" + _APIKey);
                 webRequest.Method = "POST";
                 webRequest.ContentType = "application/json";
 
-                byte[] byteData = UTF8Encoding.UTF8.GetBytes("{\"longUrl\": \"" + _FullURL + "\"}");
+                byte[] byteData = UTF8Encoding.UTF8.GetBytes("{\"longUrl\": \"" + _FullURL + "\", \"key\":\"" + _APIKey + "\"}");
                 webRequest.ContentLength = byteData.Length;
 
                 var postStream = webRequest.GetRequestStream();

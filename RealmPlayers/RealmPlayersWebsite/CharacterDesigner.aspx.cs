@@ -50,7 +50,7 @@ namespace RealmPlayersServer
                 //if (Request.Url.Host == "localhost")
                 //    Response.Redirect("localhost:4633/CharacterDesigner.aspx?char=" + charStr + "&items=" + itemsStr);
                 //else
-                Response.Redirect("CharacterDesigner.aspx?data=" + shortURL.Substring("http://goo.gl/".Length));
+                Response.Redirect("CharacterDesigner.aspx?data=" + shortURL.Substring(shortURL.LastIndexOf("/")));
             }
             if (dataStr == "null" && itemsStr == "null")
                 return;
