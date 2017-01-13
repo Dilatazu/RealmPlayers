@@ -80,7 +80,10 @@ namespace VF_RDDatabase
                 float bossPart1Percentage = 0.0f;
                 float bossPart2Percentage = 0.0f;
 
-                string startY = "Start_Y";
+                string deadY = "Dead_Y=" + _BossFight.GetBossName();
+                string deadC = "Dead_C=" + _BossFight.GetBossName();
+                
+                string startY = "Start_Y=" + _BossFight.GetBossName();
                 if (_BossFight.GetBossName() == "Razorgore the Untamed" && (_BossFight.GetStartDateTime() < new DateTime(2014, 3, 12) || m_AddonVersion == "1.8.2" || m_AddonVersion == "1.8.1" || m_AddonVersion == "1.7"))
                 {
                     startY = "Start_Y=Grethok the Controller";
@@ -116,14 +119,25 @@ namespace VF_RDDatabase
                     }
                     if (m_EndSpecifier != SpecifierType.YellSpecifier && timeSlices[i].IsDeadEvent())
                     {
-                        if (timeSlices[i].IsEvent("Dead_Y") == true)
+                        if (timeSlices[i].IsEvent(deadY) == true)
                         {
                             m_EndSpecifier = SpecifierType.YellSpecifier;
                             break;
                         }
-                        else if (timeSlices[i].IsEvent("Dead_C") == true)
+                        else if (timeSlices[i].IsEvent(deadC) == true)
                         {
                             m_EndSpecifier = SpecifierType.CombatEventSpecifier;
+                            for (int u = i; u < timeSlices.Count; ++u)
+                            {
+                                if (timeSlices[u].Time - timeSlices[i].Time > 10)
+                                    break;
+
+                                if(timeSlices[u].IsEvent(deadY) == true)
+                                {
+                                    m_EndSpecifier = SpecifierType.YellSpecifier;
+                                    break;
+                                }
+                            }
                             break;
                         }
                         else 
@@ -203,6 +217,7 @@ namespace VF_RDDatabase
             _Contructor(bestBossFight, _RaidMembers);
         }
         public static DateTime EARLIESTCOMPATIBLEDATE = new DateTime(2013, 10, 23, 0, 0, 0);
+        public static DateTime NEFARIAN_YELLBUGFIXDATE_AND_RAZORGORE_FIRSTHEALTHSEEN = new DateTime(2017, 1, 15, 0, 0, 0);
         public bool IsQualityHigh(bool _IncludeCompatibleDateCheck = false)
         {
             if (_IncludeCompatibleDateCheck == true && m_StartDateTime < EARLIESTCOMPATIBLEDATE)
@@ -227,6 +242,8 @@ namespace VF_RDDatabase
                 {
                     //return true;
                 }
+                else if (m_BossName == "Razorgore the Untamed" && m_StartDateTime < NEFARIAN_YELLBUGFIXDATE_AND_RAZORGORE_FIRSTHEALTHSEEN)
+                { }
                 else
                 {
                     return false;
@@ -240,7 +257,9 @@ namespace VF_RDDatabase
             }
             if (m_DataPrecisionDetails.EndSpecifier != SpecifierType.YellSpecifier)
             {
-                if (VF_RaidDamageDatabase.BossInformation.BossWithEndYell.Contains(BossName))
+                if (m_BossName == "Nefarian" && m_StartDateTime < NEFARIAN_YELLBUGFIXDATE_AND_RAZORGORE_FIRSTHEALTHSEEN)
+                { /*Yell End not working correctly before this date*/ }
+                else if (VF_RaidDamageDatabase.BossInformation.BossWithEndYell.Contains(BossName))
                     return false;
             }
 
