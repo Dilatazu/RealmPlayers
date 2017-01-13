@@ -343,6 +343,17 @@ namespace VF
                 },
                 _Labels);
         }
+        public static string CreateGraph(List<int> _DataX, List<int> _Data1Y, System.Drawing.Color _Data1YColor, List<int> _Data2Y, System.Drawing.Color _Data2YColor, List<int> _Data3Y, System.Drawing.Color _Data3YColor, List<string> _Labels)
+        {
+            return CreateGraph(_DataX,
+                new List<Tuple<List<int>, System.Drawing.Color>>
+                {
+                    new Tuple<List<int>, System.Drawing.Color>(_Data1Y, _Data1YColor),
+                    new Tuple<List<int>, System.Drawing.Color>(_Data2Y, _Data2YColor),
+                    new Tuple<List<int>, System.Drawing.Color>(_Data3Y, _Data3YColor)
+                },
+                _Labels);
+        }
         public static string CreateGraph(List<int> _DataX, List<Tuple<List<int>, System.Drawing.Color>> _DataYs, List<string> _Labels)
         {
             string dataX = "";

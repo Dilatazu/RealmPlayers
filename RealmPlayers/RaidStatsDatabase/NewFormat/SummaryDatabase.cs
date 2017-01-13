@@ -157,6 +157,34 @@ namespace VF_RDDatabase
             fightInstances.RemoveAll((_Value) => { return _Value.DataDetails.FightPrecision < acceptablePrecisionMin; });
             return fightInstances;
         }
+        public List<BossFight> GetHSElligibleBossFightsInRaid(int _UniqueRaidID, WowRealm _Realm, string _GroupName)
+        {
+            List<BossFight> hsBossFights = new List<BossFight>();
+            var groupRC = GetGroupRC(_Realm, _GroupName);
+            Raid raid;
+            if(groupRC != null && groupRC.Raids.TryGetValue(_UniqueRaidID, out raid) == true)
+            {
+                List<string> bossFightsAdded = new List<string>();
+                foreach (var bossFight in raid.BossFights)
+                {
+                    if (bossFightsAdded.Contains(bossFight.BossName))
+                        continue;//Do not add duplicates!
+
+                    if (bossFight.IsQualityHigh())
+                    {
+                        bossFightsAdded.Add(bossFight.BossName);
+
+                        double precision = bossFight.DataDetails.FightPrecision;
+                        if (precision > 0.90)
+                        {
+                            hsBossFights.Add(bossFight);
+                        }
+                    }
+                }
+            }
+         
+            return hsBossFights;
+        }
         public PlayerSummary GetPlayerSummary(string _Player, WowRealm _Realm)
         {
             if (m_PlayerSummaries.Count == 0)

@@ -297,6 +297,7 @@ namespace VF
                 List<int> dataX = new List<int>();
                 List<int> dataY1 = new List<int>();
                 List<int> dataY2 = new List<int>();
+                List<int> dataY3 = new List<int>();
                 List<string> labels = new List<string>();
 
                 var fightDetails = _Fight.GetFightDetails();
@@ -386,6 +387,7 @@ namespace VF
                     string deathEvents = "";
                     int totalDmg = 0;
                     int totalHeal = 0;
+                    int totalDmgTaken = 0;
                     int topDPSDmg = 0;
                     int topHPSHeal = 0;
                     string topDPSer = "";
@@ -397,6 +399,7 @@ namespace VF
                         {
                             totalDmg += unitData.Value.I.Dmg;
                             totalHeal += unitData.Value.I.EffHeal;
+                            totalDmgTaken += unitData.Value.I.DmgTaken;
                             if (unitData.Value.I.Death > 0)
                             {
                                 deathEvents += PageUtility.CreateColorCodedName(unitData.Key, unitPlayer.Character.Class) + ",";
@@ -415,6 +418,7 @@ namespace VF
                     }
                     int totalDPS = totalDmg / sliceDuration;
                     int totalHPS = totalHeal / sliceDuration;
+                    int totalDTPS = totalDmgTaken / sliceDuration;
 
                     string bossHealthStr = "BossHealth: ?%(?k/?k)";
                     if (bossHealths.Count > 0)
@@ -442,8 +446,9 @@ namespace VF
                         events += "&nbsp;&nbsp;&nbsp;Deaths: " + deathEvents + "";
                     events += "<br /><br />";
 
-                    events += "RaidDPS: " + PageUtility.CreateColorString(totalDPS.ToString(), System.Drawing.Color.Red)
-                        + "&nbsp;&nbsp;&nbsp;RaidHPS: " + PageUtility.CreateColorString(totalHPS.ToString(), System.Drawing.Color.Green) + "&nbsp;&nbsp;&nbsp;";
+                    events += "RaidDPS: " + PageUtility.CreateColorString(totalDPS.ToString(), System.Drawing.Color.Red) + "&nbsp;&nbsp;&nbsp;" 
+                        + "RaidHPS: " + PageUtility.CreateColorString(totalHPS.ToString(), System.Drawing.Color.Green) + "&nbsp;&nbsp;&nbsp;"
+                        + (_Details.DebugInfo == true ? "RaidDTPS: " + PageUtility.CreateColorString(totalDTPS.ToString(), System.Drawing.Color.Yellow) + "&nbsp;&nbsp;&nbsp;" : "");
                     events += "TopDPS: " + topDPSer + "(" + PageUtility.CreateColorString((topDPSDmg / sliceDuration).ToString(), System.Drawing.Color.Red) + ")"
                         + "&nbsp;&nbsp;&nbsp;TopHPS: " + topHPSer + "(" + PageUtility.CreateColorString((topHPSHeal / sliceDuration).ToString(), System.Drawing.Color.Green) + ")";
 
@@ -453,10 +458,14 @@ namespace VF
                     labels.Add(events);
                     dataY1.Add(totalDPS);
                     dataY2.Add(totalHPS);
+                    dataY3.Add(totalDTPS);
                     if (lastEvent == true)
                         break;
                 }
-                graphSection += "<div class='fame' style='min-width: 935px; max-width: 935px'>" + PageUtility.CreateGraph(dataX, dataY1, System.Drawing.Color.Red, dataY2, System.Drawing.Color.Green, labels) + "</div>";
+                if(_Details.DebugInfo == true)
+                    graphSection += "<div class='fame' style='min-width: 935px; max-width: 935px'>" + PageUtility.CreateGraph(dataX, dataY1, System.Drawing.Color.Red, dataY2, System.Drawing.Color.Green, dataY3, System.Drawing.Color.Yellow, labels) + "</div>";
+                else
+                    graphSection += "<div class='fame' style='min-width: 935px; max-width: 935px'>" + PageUtility.CreateGraph(dataX, dataY1, System.Drawing.Color.Red, dataY2, System.Drawing.Color.Green, labels) + "</div>";
             }
 
             List<Tuple<string, VF_RaidDamageDatabase.UnitData>> unitsData = null;
@@ -519,6 +528,9 @@ namespace VF
                 string healSection = "<div class='span4' style='min-width: 460px;'>";
                 foreach (var dataPresentTypeInfo in sm_DataPresentTypeInfoList)
                 {
+                    if (_Details.DebugInfo == false && dataPresentTypeInfo.m_TypeName == "Efficient Heal Recv")
+                        continue;
+
                     var sortedUnits = unitsData.OrderByDescending((_Unit) => { return dataPresentTypeInfo.m_GetValue(_Unit.Item2); });
                     if (sortedUnits.Count() > 0)
                     {
@@ -539,6 +551,12 @@ namespace VF
                                 bossDmgTaken = unit.Item2.I.DmgTaken;
                             }
                             var playerData = _RealmDB.RD_FindPlayer(unit.Item1, _Fight);
+                            if(playerData == null && _Details.DebugInfo == true)
+                            {
+                                playerData = new VF_RealmPlayersDatabase.PlayerData.Player();
+                                playerData.Character.Class = VF_RealmPlayersDatabase.PlayerClass.Unknown;
+                                playerData.Name = unit.Item1;
+                            }
                             double currValue = dataPresentTypeInfo.m_GetValue(unit.Item2);
                             if (playerData != null && currValue > 0 && dataPresentTypeInfo.m_ValidCheck(unit.Item2))
                             {
@@ -612,7 +630,20 @@ namespace VF
             //graphSection += "</script>";
             //graphSection += "<div id='diagramDiv'></div>";
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            if(_Details.DebugInfo == true && _RaidSummary != null)
+            {
+                foreach(var bossFight in _RaidSummary.BossFights)
+                {
+                    if(bossFight.AttemptType == VF_RDDatabase.AttemptType.KillAttempt && bossFight.BossName == _Fight.GetBossName())
+                    {
 
+                        fightOverViewInfo += "<p>HealthPercentageFirstSeen: " + bossFight.DataDetails.HealthPercentageFirstSeen.ToStringDot("0.000")
+                            + "</p><p>StartSpecifier: " + bossFight.DataDetails.StartSpecifier.ToString()
+                            + "</p><p>EndSpecifier: " + bossFight.DataDetails.EndSpecifier.ToString()
+                            + "</p><p>FightPrecision: " + bossFight.DataDetails.FightPrecision.ToStringDot("0.000") + "</p>";
+                    }
+                }
+            }
             return "<header class='page-header'>" + fightOverViewInfo + playersAttendingStr + buffInfo + lootDropped + enemyUnits + playerDeaths + unrealisticPlayerSpikes + "</header>" + graphSection;
         }
 
@@ -657,6 +688,7 @@ namespace VF
             new DataPresentTypeInfo((VF_RaidDamageDatabase.UnitData _UnitData) => { return (double)_UnitData.I.RawHeal; }, "Raw Heal"),
             //new DataPresentTypeInfo((VF_RaidDamageDatabase.UnitData _UnitData) => { return (double)_UnitData.ThreatValue; }, "Threat", 25),
             new DataPresentTypeInfo((VF_RaidDamageDatabase.UnitData _UnitData) => { return (double)_UnitData.I.DmgTaken; }, "Damage Taken", 25),
+            new DataPresentTypeInfo((VF_RaidDamageDatabase.UnitData _UnitData) => { return (double)_UnitData.I.EffHealRecv; }, "Efficient Heal Recv", 25),
             //new DataPresentTypeInfo((VF_RaidDamageDatabase.UnitData _UnitData) => { return (double)_UnitData.Dmg; }, "Damage"),
             //new DataPresentTypeInfo((VF_RaidDamageDatabase.UnitData _UnitData) => { return (double)_UnitData.Dmg; }, "Damage"),
         };

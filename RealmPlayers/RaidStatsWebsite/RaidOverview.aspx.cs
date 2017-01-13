@@ -101,7 +101,8 @@ namespace VF.RaidDamageWebsite
                 }
             }
 #endif
-            if(PageUtility.GetQueryString(Request, "Debug", "null") != "null")
+            bool debugMode = PageUtility.GetQueryString(Request, "Debug", "null") != "null";
+            if (debugMode == true)
             {
                 var raidFiles = ApplicationInstance.Instance.GetRaidFiles(uniqueRaidID);
                 if(raidFiles != null)
@@ -146,6 +147,22 @@ namespace VF.RaidDamageWebsite
                 PageUtility.CreateTableColumnHead(PageUtility.CreateTooltipText("Precision", "How much percentage of the recorded fight is vs the boss intended. Calculated using the formula: Boss+Adds DmgTaken/Recorded Damage"))));
 
 
+            if(debugMode == true)
+            {
+                List<VF_RDDatabase.BossFight> hsElligibleBossFights = new List<VF_RDDatabase.BossFight>();
+                var summaryDatabase = ApplicationInstance.Instance.GetSummaryDatabase();
+                if (summaryDatabase != null)
+                {
+                    hsElligibleBossFights = summaryDatabase.GetHSElligibleBossFightsInRaid(currRaid.UniqueRaidID, currRaid.Realm, currRaid.RaidOwnerName);
+                    string elligibleBossesStr = "";
+                    foreach (var boss in hsElligibleBossFights)
+                    {
+                        elligibleBossesStr += boss.BossName + ", ";
+                    }
+                    Logger.ConsoleWriteLine("RaidOverview::Debug(): " + elligibleBossesStr);
+                }
+            }
+           
             List<string> attendingRaidPlayers = new List<string>();
             string tableBody = "";
             foreach (var fight in orderedFights)
