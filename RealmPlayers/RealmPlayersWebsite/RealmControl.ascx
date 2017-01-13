@@ -7,7 +7,7 @@
         <asp:ListItem Text="Kronos II" Value="KR2" />
         <asp:ListItem Text="VanillaGaming" Value="VG" />
         <asp:ListItem Text="Elysium" Value="EL2" />
-        <asp:ListItem Text="Valkyrie" Value="VAL" />
+        <asp:ListItem Text="Zeth'Kur" Value="ZeK"/>
         <asp:ListItem Text="Nostalrius" Value="NRB" />
         <asp:ListItem Text="NostalriusPVE" Value="NBE" />
         <asp:ListItem Text="Nefarian(DE)" Value="NEF" />
@@ -20,6 +20,7 @@
         <asp:ListItem Text="ExcaliburTBC" Value="EXC" />
         <asp:ListItem Text="Hellfire(TBC)" Value="HLF" />
         <asp:ListItem Text="WarsongTBC" Value="WBC" />
+        <asp:ListItem Text="Valkyrie" Value="VAL" />
         <asp:ListItem Text="Emerald Dream" Value="ED" style="visibility:hidden; height:0px; line-height: 0px; overflow:hidden; display:block;"/>
         <asp:ListItem Text="Warsong" Value="WSG" style="visibility:hidden; height:0px; line-height: 0px; overflow:hidden; display:block;"/>
         <asp:ListItem Text="Al'Akir" Value="AlA" style="visibility:hidden; height:0px; line-height: 0px; overflow:hidden; display:block;"/>

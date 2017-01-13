@@ -100,6 +100,8 @@ namespace VF_RPDatabase
         public UInt64 m_EntityCounter_Elysium = 0L;
         [ProtoMember(23)]
         public UInt64 m_EntityCounter_Elysium2 = 0L;
+        [ProtoMember(24)]
+        public UInt64 m_EntityCounter_Zeth_Kur = 0L;
 
         private void CalcRealmBits(WowRealm _Realm, out UInt64 _BitMask, out UInt64 _RealmValue)
         {
@@ -169,6 +171,9 @@ namespace VF_RPDatabase
                     break;
                 case WowRealm.Elysium2:
                     _RealmValue = 21UL << 56;
+                    break;
+                case WowRealm.Zeth_Kur:
+                    _RealmValue = 22UL << 56;
                     break;
             }
         }
@@ -327,6 +332,10 @@ namespace VF_RPDatabase
                     entityID = (21UL << 56) | m_EntityCounter_Elysium2++;
                     m_PlayerIDs.Add(entityLinkStr, entityID);
                     break;
+                case WowRealm.Zeth_Kur:
+                    entityID = (22UL << 56) | m_EntityCounter_Zeth_Kur++;
+                    m_PlayerIDs.Add(entityLinkStr, entityID);
+                    break;
             }
             return entityID;
         }
@@ -384,6 +393,8 @@ namespace VF_RPDatabase
                     return WowRealm.Elysium;
                 case 21UL:
                     return WowRealm.Elysium2;
+                case 22UL:
+                    return WowRealm.Zeth_Kur;
                 default:
                     VF_RealmPlayersDatabase.Logger.ConsoleWriteLine("Error GetPlayerRealm failed. Realm(" + realm + ") was not valid!!!");
                     return WowRealm.Unknown;

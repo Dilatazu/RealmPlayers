@@ -84,6 +84,7 @@ namespace RealmPlayersServer.Code.Resources
             {WowRealm.Vengeance_Stonetalon , "VST"},
             {WowRealm.Elysium , "ELY"},
             {WowRealm.Elysium2 , "EL2"},
+            {WowRealm.Zeth_Kur , "ZeK"},
         };
         public static Dictionary<WowRealm, string> _RealmVisualString = new Dictionary<WowRealm, string>
         {
@@ -111,6 +112,7 @@ namespace RealmPlayersServer.Code.Resources
             {WowRealm.Vengeance_Stonetalon , "Stonetalon"},
             {WowRealm.Elysium , "Elysium(Old)"},
             {WowRealm.Elysium2 , "Elysium"},
+            {WowRealm.Zeth_Kur , "Zeth'Kur"},
         };
         public static Dictionary<int, string> _HordeRankVisualName = new Dictionary<int, string>
         {

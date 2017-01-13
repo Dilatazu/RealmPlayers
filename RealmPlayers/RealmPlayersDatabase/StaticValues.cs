@@ -31,6 +31,7 @@ namespace VF_RealmPlayersDatabase
         Vengeance_Stonetalon = 21,
         Elysium = 22,
         Elysium2 = 23,
+        Zeth_Kur = 24,
     }
     public enum WowVersionEnum
     {
@@ -656,6 +657,11 @@ namespace VF_RealmPlayersDatabase
             {"Elysium PvP", WowRealm.Elysium2 },
             {"Elysium PVP", WowRealm.Elysium2 },
             {"EL2", WowRealm.Elysium2 },
+            {"Zeth'Kur PvP", WowRealm.Zeth_Kur },
+            {"Zeth'Kur PVP", WowRealm.Zeth_Kur },
+            {"Zeth&apos;Kur PvP", WowRealm.Zeth_Kur },
+            {"Zeth&apos;Kur PVP", WowRealm.Zeth_Kur },
+            {"ZeK", WowRealm.Zeth_Kur },
         };
         public static WowRealm ConvertRealm(string _Realm)
         {
@@ -675,7 +681,8 @@ namespace VF_RealmPlayersDatabase
                 || _Realm == WowRealm.NostalGeek
                 || _Realm == WowRealm.Nefarian
                 || _Realm == WowRealm.Warsong2
-                || _Realm == WowRealm.Elysium2)
+                || _Realm == WowRealm.Elysium2
+                || _Realm == WowRealm.Zeth_Kur)
             {
                 return WowVersionEnum.Vanilla;
             }

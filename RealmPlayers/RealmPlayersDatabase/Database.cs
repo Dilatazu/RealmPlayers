@@ -29,6 +29,7 @@ namespace VF_RealmPlayersDatabase
             WowRealm.Vengeance_Stonetalon,
             WowRealm.Elysium,
             WowRealm.Elysium2,
+            WowRealm.Zeth_Kur,
         };
 
         Dictionary<WowRealm, RealmDatabase> m_Realms = new Dictionary<WowRealm, RealmDatabase>();

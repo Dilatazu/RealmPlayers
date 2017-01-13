@@ -37,6 +37,7 @@ namespace VF_RealmPlayersDatabase
                 case WowRealm.Valkyrie:
                 case WowRealm.Elysium:
                 case WowRealm.Elysium2:
+                case WowRealm.Zeth_Kur:
                     return (2U << 24) + _ItemID;
                 case WowRealm.Rebirth:
                     return (3U << 24) + _ItemID;

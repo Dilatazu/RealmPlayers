@@ -8,6 +8,7 @@
         <asp:ListItem Text="Kronos II" Value="KR2" />
         <asp:ListItem Text="VanillaGaming" Value="VG" />
         <asp:ListItem Text="Elysium" Value="EL2" />
+        <asp:ListItem Text="Zeth'Kur" Value="ZeK"/>
         <asp:ListItem Text="Nostalrius" Value="NRB" />
         <asp:ListItem Text="NostalriusPVE" Value="NBE" />
         <asp:ListItem Text="Nefarian(DE)" Value="NEF" />
