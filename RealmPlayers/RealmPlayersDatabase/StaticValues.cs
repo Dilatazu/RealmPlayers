@@ -622,15 +622,19 @@ namespace VF_RealmPlayersDatabase
             {"Test Realm 3 - Devs only", WowRealm.Test_Server},
             //{"Nostalrius Begins PTR", WowRealm.Test_Server},
             //{"Nostalrius Begins", WowRealm.Nostalrius},
-            {"Nostalrius PVP", WowRealm.Nostalrius},
-            {"Nostalrius PvP", WowRealm.Nostalrius},
+            {"Nostalrius PVP", WowRealm.Nostalrius},//removed 2017-01-14
+            {"Nostalrius PvP", WowRealm.Nostalrius},//removed 2017-01-14
+            {"Anathema", WowRealm.Nostalrius},
             {"Nostalrius Begins PvP", WowRealm.Nostalrius},
-            {"Nostalrius PVE", WowRealm.NostalriusPVE},
-            {"Nostalrius PvE", WowRealm.NostalriusPVE},
+            {"Nostalrius PVE", WowRealm.NostalriusPVE},//removed 2017-01-14
+            {"Nostalrius PvE", WowRealm.NostalriusPVE},//removed 2017-01-14
+            {"Darrowshire", WowRealm.NostalriusPVE},
             {"Nostalrius Begins PvE", WowRealm.NostalriusPVE},
             //{"Nostalrius", WowRealm.Nostalrius},
             {"NBE", WowRealm.NostalriusPVE},
             {"NRB", WowRealm.Nostalrius},
+            {"Ana", WowRealm.Nostalrius},
+            {"Dar", WowRealm.NostalriusPVE},
             {"NB", WowRealm.Nostalrius},
             {"NBP", WowRealm.Nostalrius},
             {"Kronos", WowRealm.Kronos},
@@ -654,13 +658,17 @@ namespace VF_RealmPlayersDatabase
             {"WS2", WowRealm.Warsong2 },
             {"ELY", WowRealm.Elysium },
             {"Elysium(Old)", WowRealm.Elysium },
-            {"Elysium PvP", WowRealm.Elysium2 },
-            {"Elysium PVP", WowRealm.Elysium2 },
+            {"Elysium PvP", WowRealm.Elysium2 },//removed 2017-01-14
+            {"Elysium PVP", WowRealm.Elysium2 },//removed 2017-01-14
+            {"Elysium", WowRealm.Elysium2 },
             {"EL2", WowRealm.Elysium2 },
-            {"Zeth'Kur PvP", WowRealm.Zeth_Kur },
-            {"Zeth'Kur PVP", WowRealm.Zeth_Kur },
-            {"Zeth&apos;Kur PvP", WowRealm.Zeth_Kur },
-            {"Zeth&apos;Kur PVP", WowRealm.Zeth_Kur },
+            {"Ely", WowRealm.Elysium2 },
+            {"Zeth'Kur PvP", WowRealm.Zeth_Kur },//removed 2017-01-14
+            {"Zeth'Kur PVP", WowRealm.Zeth_Kur },//removed 2017-01-14
+            {"Zeth'Kur", WowRealm.Zeth_Kur },
+            {"Zeth&apos;Kur PvP", WowRealm.Zeth_Kur },//removed 2017-01-14
+            {"Zeth&apos;Kur PVP", WowRealm.Zeth_Kur },//removed 2017-01-14
+            {"Zeth&apos;Kur", WowRealm.Zeth_Kur },
             {"ZeK", WowRealm.Zeth_Kur },
         };
         public static WowRealm ConvertRealm(string _Realm)

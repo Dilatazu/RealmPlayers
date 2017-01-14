@@ -7,10 +7,10 @@
         <asp:ListItem Text="Kronos" Value="KRO" />
         <asp:ListItem Text="Kronos II" Value="KR2" />
         <asp:ListItem Text="VanillaGaming" Value="VG" />
-        <asp:ListItem Text="Elysium" Value="EL2" />
+        <asp:ListItem Text="Elysium" Value="Ely"/>
         <asp:ListItem Text="Zeth'Kur" Value="ZeK"/>
-        <asp:ListItem Text="Nostalrius" Value="NRB" />
-        <asp:ListItem Text="NostalriusPVE" Value="NBE" />
+        <asp:ListItem Text="Anathema" Value="Ana"/>
+        <asp:ListItem Text="Darrowshire" Value="Dar" />
         <asp:ListItem Text="Nefarian(DE)" Value="NEF" />
         <asp:ListItem Text="NostalGeek(FR)" Value="NG" />
         <asp:ListItem Text="Elysium(Old)" Value="ELY" />
