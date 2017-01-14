@@ -414,9 +414,9 @@ namespace VF_WoWLauncher
                 m_PollingForNews = true;
                 try
                 {
+                    DateTime absoluteMinDate = DateTime.Now.AddDays(-30);
                     Action<ForumReader.ForumPost> newPostLambda = (ForumReader.ForumPost _NewPost) =>
                     {
-                        DateTime absoluteMinDate = DateTime.Now.AddDays(-30);
                         DateTime minDate = DateTime.Now.AddDays(-14);
                         ForumReader.ForumType forumType = ForumReader.ForumType.FeenixForum;
                         if (_NewPost.m_PostURL.Contains("forum.realmplayers.com") == true)
@@ -478,7 +478,6 @@ namespace VF_WoWLauncher
                         else if (_NewPost.m_PostURL.Contains("twitter") == true)
                         {
                             minDate = DateTime.Now.AddDays(-7);
-                            absoluteMinDate = DateTime.Now.AddDays(-14);
                             forumType = ForumReader.ForumType.Twitter;
                         }
                         else
