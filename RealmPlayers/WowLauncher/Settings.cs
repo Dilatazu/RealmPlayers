@@ -85,6 +85,8 @@ namespace VF_WoWLauncher
         public bool ContributeRaidStats = true;
         [ProtoMember(24)]
         public bool Wait5SecondsAfterUpload = true;
+        [ProtoMember(25)]
+        public List<string> RemovedRealmLists = new List<string>();
 
         public void AddLaunchShortcut(string _Profile, string _Realm)
         {
@@ -178,9 +180,10 @@ namespace VF_WoWLauncher
                 {"VanillaGaming", new RealmInfo{RealmList = "logon.vanillagaming.org", RealmName = "VanillaGaming", WowVersion = WowVersionEnum.Vanilla}},
                 {"Valkyrie", new RealmInfo{RealmList = "logon.valkyrie-wow.com", RealmName = "Valkyrie", WowVersion = WowVersionEnum.Vanilla}},
                 {"Rebirth", new RealmInfo{RealmList = "wow.therebirth.net", RealmName = "Rebirth", WowVersion = WowVersionEnum.Vanilla}},
-                {"Elysium", new RealmInfo{RealmList = "logon.elysium-project.org", RealmName = "Elysium PvP", WowVersion = WowVersionEnum.Vanilla}},
-                {"Nostalrius", new RealmInfo{RealmList = "logon.elysium-project.org", RealmName = "Nostalrius PvP", WowVersion = WowVersionEnum.Vanilla}},
-                {"Nostalrius(PVE)", new RealmInfo{RealmList = "logon.elysium-project.org", RealmName = "Nostalrius PvE", WowVersion = WowVersionEnum.Vanilla}},
+                {"Elysium", new RealmInfo{RealmList = "logon.elysium-project.org", RealmName = "Elysium", WowVersion = WowVersionEnum.Vanilla}},
+                {"Zeth'Kur", new RealmInfo{RealmList = "logon.elysium-project.org", RealmName = "Zeth'Kur", WowVersion = WowVersionEnum.Vanilla}},
+                {"Anathema", new RealmInfo{RealmList = "logon.elysium-project.org", RealmName = "Anathema", WowVersion = WowVersionEnum.Vanilla}},
+                {"Darrowshire", new RealmInfo{RealmList = "logon.elysium-project.org", RealmName = "Darrowshire", WowVersion = WowVersionEnum.Vanilla}},
                 {"Kronos", new RealmInfo{RealmList = "wow.twinstar.cz", RealmName = "Kronos", WowVersion = WowVersionEnum.Vanilla}},
                 {"Kronos II", new RealmInfo{RealmList = "wow.twinstar.cz", RealmName = "Kronos II", WowVersion = WowVersionEnum.Vanilla}},
                 {"Nefarian(DE)", new RealmInfo{RealmList = "logon.classic-wow.org", RealmName = "Nefarian", WowVersion = WowVersionEnum.Vanilla}},

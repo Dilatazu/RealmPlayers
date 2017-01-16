@@ -48,6 +48,7 @@
             this.label5 = new System.Windows.Forms.Label();
             this.c_btnClose = new System.Windows.Forms.Button();
             this.c_btnResetRealmLists = new System.Windows.Forms.Button();
+            this.c_btnRemoveSelected = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -247,11 +248,22 @@
             this.c_btnResetRealmLists.UseVisualStyleBackColor = true;
             this.c_btnResetRealmLists.Click += new System.EventHandler(this.c_btnResetRealmLists_Click);
             // 
+            // c_btnRemoveSelected
+            // 
+            this.c_btnRemoveSelected.Location = new System.Drawing.Point(186, 158);
+            this.c_btnRemoveSelected.Name = "c_btnRemoveSelected";
+            this.c_btnRemoveSelected.Size = new System.Drawing.Size(120, 23);
+            this.c_btnRemoveSelected.TabIndex = 9;
+            this.c_btnRemoveSelected.Text = "Remove selected";
+            this.c_btnRemoveSelected.UseVisualStyleBackColor = true;
+            this.c_btnRemoveSelected.Click += new System.EventHandler(this.c_btnRemoveSelected_Click);
+            // 
             // RealmListSettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(411, 383);
+            this.Controls.Add(this.c_btnRemoveSelected);
             this.Controls.Add(this.c_btnResetRealmLists);
             this.Controls.Add(this.c_btnClose);
             this.Controls.Add(this.groupBox2);
@@ -291,7 +303,6 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox c_txtNewConfigName;
         private System.Windows.Forms.Button c_btnResetRealmLists;
-
-
+        private System.Windows.Forms.Button c_btnRemoveSelected;
     }
 }

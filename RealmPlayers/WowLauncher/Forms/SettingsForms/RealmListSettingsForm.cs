@@ -161,10 +161,31 @@ namespace VF_WoWLauncher
                 + realmsListStr + "\r\n\r\nAre you sure you want to reset?", "Are you sure you want to reset?", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
             {
                 Settings.Instance.RealmLists = defaultRealmLists;
+                Settings.Instance.RemovedRealmLists = new List<string>();
                 InitializeWindow();
             }
         }
 
+        private void c_btnRemoveSelected_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if(c_lstRealmConfigurations.SelectedIndex >= 0)
+                {
+                    Settings.Instance.RealmLists.Remove((string)c_lstRealmConfigurations.SelectedItem);
+                    Settings.Instance.RemovedRealmLists.Add((string)c_lstRealmConfigurations.SelectedItem);
+                    int selectedIndex = c_lstRealmConfigurations.SelectedIndex;
+                    c_lstRealmConfigurations.Items.RemoveAt(c_lstRealmConfigurations.SelectedIndex);
+                    if(selectedIndex >= c_lstRealmConfigurations.Items.Count)
+                        selectedIndex = c_lstRealmConfigurations.Items.Count - 1;
+                    c_lstRealmConfigurations.SelectedIndex = selectedIndex;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.LogException(ex);
+            }
+        }
     }
     public class RealmListSettings
     {
@@ -182,7 +203,8 @@ namespace VF_WoWLauncher
                 }
                 else
                 {
-                    Settings.Instance.RealmLists.Add(realm.Key, realm.Value);
+                    if(Settings.Instance.RemovedRealmLists.Contains(realm.Key) == false)
+                        Settings.Instance.RealmLists.Add(realm.Key, realm.Value);
                 }
             }
 

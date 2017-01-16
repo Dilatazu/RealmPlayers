@@ -359,6 +359,14 @@ namespace VF_WoWLauncher
 
         private void UpdatePossibleRealmConfigurations()
         {
+            string defaultRealm = Settings.Instance.DefaultRealm;
+            int currIndex = c_ddlRealm.SelectedIndex;
+            if (currIndex < 0)
+                currIndex = 0;
+
+            object selectedRealm = c_ddlRealm.SelectedItem;
+
+            c_ddlRealm.Items.Clear();
             if (Settings.HaveTBC == true)
             {
                 foreach (var realmInfo in Settings.Instance.RealmLists)
@@ -393,6 +401,16 @@ namespace VF_WoWLauncher
                         c_ddlRealm.Items.Add(realmInfo.Key);
                 }
             }
+
+            if(selectedRealm != null)
+            {
+                c_ddlRealm.SelectedItem = (string)selectedRealm;
+            }
+            else
+            {
+                c_ddlRealm.SelectedIndex = currIndex;
+            }
+            Settings.Instance.DefaultRealm = defaultRealm;
         }
 
         //void FilterNews()
