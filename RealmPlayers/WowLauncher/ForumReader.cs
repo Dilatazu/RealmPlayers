@@ -100,8 +100,10 @@ namespace VF_WoWLauncher
                     resultTweets.Add(newTweet);
                 }
             }
-            catch (Exception)
-            {}
+            catch (Exception ex)
+            {
+                Logger.LogException(ex);
+            }
             return resultTweets;
         }
         
@@ -118,7 +120,7 @@ namespace VF_WoWLauncher
                     int prevFoundIndex = 0;
                     while (prevFoundIndex != -1 && prevFoundIndex < 10)
                     {
-                        int newFoundIndex = tweetTitle.IndexOfAny(new char[]{ '.', '!', '?' }, prevFoundIndex);
+                        int newFoundIndex = tweetTitle.IndexOfAny(new char[]{ '.', '!', '?' }, prevFoundIndex + 1);
                         if (newFoundIndex == -1)
                         {
                             break;//unable to breakup the tweetTitle!
