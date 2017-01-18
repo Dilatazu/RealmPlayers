@@ -432,10 +432,11 @@ namespace VF_WoWLauncher
                 m_PollingForNews = true;
                 try
                 {
-                    DateTime absoluteMinDate = DateTime.Now.AddDays(-30);
+                    DateTime INDEX_REF_DATE = new DateTime(2016, 1, 1);
                     Action<ForumReader.ForumPost> newPostLambda = (ForumReader.ForumPost _NewPost) =>
                     {
                         DateTime minDate = DateTime.Now.AddDays(-14);
+                        //DateTime absoluteMinDate = DateTime.Now.AddDays(-30);
                         ForumReader.ForumType forumType = ForumReader.ForumType.FeenixForum;
                         if (_NewPost.m_PostURL.Contains("forum.realmplayers.com") == true)
                         {
@@ -594,7 +595,7 @@ namespace VF_WoWLauncher
                                     }
                                 }
 
-                                c_dlAddons.AddItem(int.MinValue + (int)((_NewPost.m_PostDate - absoluteMinDate).TotalMinutes)
+                                c_dlAddons.AddItem(int.MinValue + (int)((_NewPost.m_PostDate - INDEX_REF_DATE).TotalMinutes)
                                     , image
                                     , (_NewPost.m_ThreadName.Length > 56 ? _NewPost.m_ThreadName.Substring(0, 50) + "..." : _NewPost.m_ThreadName), (_NewPost.m_PostContent.Length > 1200 ? "This post is long! Click \"Goto thread\" to read the full post on the forum.\r\n\r\n" + _NewPost.m_PostContent.Substring(0, 1024) + "..." : _NewPost.m_PostContent), _NewPost.m_PostDate.ToString("yyyy-MM-dd HH:mm:ss") + " by " + _NewPost.m_PosterName
                                     , new DetailedList.RightSideForumPost(() =>
