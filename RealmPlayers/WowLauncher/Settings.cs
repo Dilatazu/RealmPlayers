@@ -40,7 +40,7 @@ namespace VF_WoWLauncher
         [ProtoMember(1)]
         public string DefaultConfig = "Active Wow Config";
         [ProtoMember(2)]
-        public string DefaultRealm = "Nostalrius";
+        public string DefaultRealm = "Anathema";
         [ProtoMember(3)]
         public bool ClearWDB = false;
         [ProtoMember(4)]
