@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Web.UI.HtmlControls;
 
 using WowRealm = VF_RealmPlayersDatabase.WowRealm;
 
@@ -71,6 +72,14 @@ namespace VF.RaidDamageWebsite
                     var newQuery = Request.Url.Query.Replace("realm=" + Request.QueryString.Get("realm"), "realm=" + GetRealmParam());
                     Response.Redirect(Request.Url.AbsolutePath + newQuery);
                 }
+            }
+        }
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (StaticValues.GetWowVersion(m_Realm, true) == VF_RealmPlayersDatabase.WowVersionEnum.TBC)
+            {
+                //HtmlControl masterPageBody = (HtmlControl)this.Parent.Page.Master.FindControl("masterPageBody");
+                //masterPageBody.Style.Add("background-color", "#2c382b");
             }
         }
         public static WowRealm GetRealmFromCookie(HttpRequest _Request)

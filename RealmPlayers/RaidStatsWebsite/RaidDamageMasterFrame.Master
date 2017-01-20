@@ -35,7 +35,7 @@
     <asp:ContentPlaceHolder ID="HeaderContent" runat="server">
     </asp:ContentPlaceHolder>
 </head>
-<body>
+<body runat="server" id="masterPageBody">
     <form id="Form1" runat="server">
     <div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
