@@ -34,6 +34,8 @@ namespace VF.RaidDamageWebsite
         {}
         ApplicationInstance()
         {
+            RealmPlayersServer.Constants.AssertInitialize();
+
             Authentication.Initialize();
             if (System.IO.Directory.Exists(g_RDDBDir) == false)
             {

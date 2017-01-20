@@ -32,7 +32,7 @@ namespace RealmPlayersServer
     {
         public static void Initialize()
         {
-            ContributorDB.Initialize();
+            ContributorDB.Initialize(RealmPlayersServer.Constants.DevMode);
             try
             {
                 if (ContributorDB.GetMongoDB().IsConnected() == false)
