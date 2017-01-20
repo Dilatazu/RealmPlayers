@@ -265,6 +265,75 @@ namespace VF
                             + " debuff during " + accum.Value + " seconds of the fight!<br />";
                     }
                 }
+                else if(debugBuffName == "MAJORITY")
+                {
+                    var unitIDToNames = _Fight.GetFightCacheData().m_FightDataCollection.m_UnitIDToNames;
+                    Dictionary<int, VF_RealmPlayersDatabase.PlayerData.Player> unitIDToPlayer = new Dictionary<int, VF_RealmPlayersDatabase.PlayerData.Player>();
+                    foreach (var unitIDToName in unitIDToNames)
+                    {
+                        var playerData = _RealmDB.RD_FindPlayer(unitIDToName.Value, _Fight);
+                        if(playerData != null)
+                        {
+                            unitIDToPlayer.Add(unitIDToName.Key, playerData);
+                        }
+                    }
+                    Dictionary<int, int> accumulatedTime = new Dictionary<int, int>();
+                    int totalTime = 0;
+                    List<int> playersAdded = new List<int>();
+                    int prevTimeSliceTime = _Fight.GetFightData().TimeSlices.First().Time;
+                    foreach (var timeSlice in _Fight.GetFightData().TimeSlices)
+                    {
+                        int deltaTime = timeSlice.Time - prevTimeSliceTime;
+                        totalTime += deltaTime;
+                        prevTimeSliceTime = timeSlice.Time;
+                        if (timeSlice.UnitBuffs != null)
+                        {
+                            foreach (var unitBuff in timeSlice.UnitBuffs)
+                            {
+                                if (unitBuff.Value == null)
+                                    continue;
+                                VF_RealmPlayersDatabase.PlayerData.Player player = null;
+                                if (unitIDToPlayer.TryGetValue(unitBuff.Key, out player) == true)
+                                {
+                                    playersAdded.AddUnique(unitBuff.Key);
+
+                                    foreach (var buff in unitBuff.Value)
+                                    {
+                                        if (accumulatedTime.ContainsKey(buff.BuffID) == false)
+                                        {
+                                            accumulatedTime.Add(buff.BuffID, 0);
+                                        }
+                                        accumulatedTime[buff.BuffID] += deltaTime;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    buffInfo = "<h3>Buffs used:</h3>";
+                    var orderedAccTime = accumulatedTime.OrderByDescending((_Value) => _Value.Value);
+                    Dictionary<int, double> buffDurations = new Dictionary<int, double>();
+
+                    foreach (var accum in orderedAccTime)
+                    {
+                        double percentUsage = ((double)(accum.Value * 100 / playersAdded.Count) / (double)totalTime);
+                        if (percentUsage < 2.0)
+                            continue;
+                        //buffDurations[accum.Key] = ((double)(accum.Value * 100 / playersAdded.Count) / (double)_Fight.GetFightDuration());
+                        buffInfo += "<div style='width:43px;height:43px;position:relative;display:inline'>"
+                            + BuffParser.GetBuffIconImage(_Fight.GetFightCacheData().m_FightDataCollection.m_BuffIDToNames[accum.Key])
+                            + "<p class='niceshadowtext' style='position:absolute;top:10px;right:5px;margin:auto;text-align:right;float:right;'>";
+
+                        if(percentUsage > 9.99)
+                        {
+                            buffInfo += percentUsage.ToStringDot("0") + "%</p></div>";
+                        }
+                        else
+                        {
+                            buffInfo += percentUsage.ToStringDot("0.0") + "%</p></div>";
+                        }
+                    }
+                }
                 else
                 {
                     var buffIDToNames = _Fight.GetFightCacheData().m_FightDataCollection.m_BuffIDToNames;

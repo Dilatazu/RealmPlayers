@@ -36,7 +36,7 @@ namespace VF
             {'z', "Drink_"},
         };
 
-        public static string GetBuffIconImage(string _Buff)
+        public static string GetBuffIconImageURL(string _Buff)
         {
             string realBuffName = "";
             bool fresh = true;
@@ -64,7 +64,11 @@ namespace VF
                         fresh = false;
                 }
             }
-            return "<img src='http://realmplayers.com/images/wowicons/43x43/" + realBuffName + ".png'></img>";
+            return "http://realmplayers.com/images/wowicons/43x43/" + realBuffName + ".png";
+        }
+        public static string GetBuffIconImage(string _Buff)
+        {
+            return "<img src='" + GetBuffIconImageURL(_Buff) + "'></img>";
         }
 
     }
