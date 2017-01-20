@@ -25,13 +25,16 @@ namespace RealmPlayersServer
             string userStr = Request.QueryString.Get("user");
             string passStr = Request.QueryString.Get("pass");
 
+            int maxCount = PageUtility.GetQueryInt(Request, "count", 0);
+
             if (userStr == null || passStr == null)
                 Response.Redirect("Index.aspx");
 
+            System.Text.StringBuilder infoHTMLStrBuilder = new System.Text.StringBuilder(10000);
             if (userStr == "Admin" && passStr == VF.HiddenStrings.CreateUserID_AdminPassword)
             {
                 //Admin
-                m_InfoHTML = "<h2>Logged in as Admin</h2>";
+                infoHTMLStrBuilder.Append("<h2>Logged in as Admin</h2>");
                 m_ThisContributor = new ContributorDB.ContributorDBElement();
                 m_ThisContributor.Key = "Admin";
                 m_ThisContributor.UserID = VF.HiddenStrings.DilatazuUserID;
@@ -43,7 +46,7 @@ namespace RealmPlayersServer
                     Response.Redirect("Index.aspx");
 
                 //Admin Contributor
-                m_InfoHTML = "<h2>Logged in as " + m_ThisContributor.Name + "</h2>";
+                infoHTMLStrBuilder.Append("<h2>Logged in as " + m_ThisContributor.Name + "</h2>");
             }
             else
                 Response.Redirect("Index.aspx");
@@ -63,30 +66,36 @@ namespace RealmPlayersServer
                 var addedByGroupsSorted = addedByGroups.OrderBy(_Value => _Value.Value.Count);
                 foreach (var addedByGroup in addedByGroupsSorted)
                 {
-                    m_InfoHTML += "<h3>Created UserIDs by " + addedByGroup.Key + "</h3><table><tr>";
-                    m_InfoHTML += "<th>UserID</th><th>ContributorID</th><th>IP</th><th>Key</th></tr>";
+                    int count = 0;
+                    infoHTMLStrBuilder.Append("<h3>Created UserIDs by " + addedByGroup.Key + "</h3><table><tr>");
+                    infoHTMLStrBuilder.Append("<th>UserID</th><th>ContributorID</th><th>IP</th><th>Key</th></tr>");
                     foreach (var addedBy in addedByGroup.Value)
                     {
-                        m_InfoHTML += "<tr>";
-                        m_InfoHTML += "<td>" + addedBy.UserID + "</td>";
-                        m_InfoHTML += "<td>" + addedBy.ContributorID + "</td>";
-                        m_InfoHTML += "<td>" + addedBy.IP + "</td>";
-                        m_InfoHTML += "<td>" + addedBy.Key + "</td>";
-                        m_InfoHTML += "</tr>";
+                        infoHTMLStrBuilder.Append("<tr>");
+                        infoHTMLStrBuilder.Append("<td>" + addedBy.UserID + "</td>");
+                        infoHTMLStrBuilder.Append("<td>" + addedBy.ContributorID + "</td>");
+                        infoHTMLStrBuilder.Append("<td>" + addedBy.IP + "</td>");
+                        infoHTMLStrBuilder.Append("<td>" + addedBy.Key + "</td>");
+                        infoHTMLStrBuilder.Append("</tr>");
+                        if (maxCount > 0 && ++count >= maxCount)
+                            break;
                     }
-                    m_InfoHTML += "</table>";
+                    infoHTMLStrBuilder.Append("</table>");
                 }
             }
             else
             {
-                m_InfoHTML += "<h3>Created UserIDs</h3>";
+                infoHTMLStrBuilder.Append("<h3>Created UserIDs</h3>");
                 var addedBys = ContributorDB.GetMongoDB().MongoDBCollection.Find(Query.EQ("AddedBy", userStr));
                 var addedBysSorted = addedBys.OrderByDescending(_Value => _Value.ContributorID);
                 foreach(var addedBy in addedBysSorted)
                 {
-                    m_InfoHTML += addedBy.UserID + "<br/>";
+                    infoHTMLStrBuilder.Append(addedBy.UserID + "<br/>");
+                    if (maxCount > 0 && --maxCount == 0)
+                        break;
                 }
             }
+            m_InfoHTML = infoHTMLStrBuilder.ToString();
         }
 
         protected void btnCreateUserID_Click(object sender, EventArgs e)
@@ -96,7 +105,10 @@ namespace RealmPlayersServer
             {
                 if(ContributorDB.AddVIPContributor(userID, m_ThisContributor.UserID) == true)
                 {
-                    Response.Redirect(Request.RawUrl);
+                    if(PageUtility.GetQueryString(Request, "redirect", "null") == "null")
+                        Response.Redirect(Request.RawUrl);
+                    else
+                        txtStatus.Text = "Added: " + userID;
                 }
                 else
                 {
