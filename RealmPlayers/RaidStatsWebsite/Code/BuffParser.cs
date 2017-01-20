@@ -64,7 +64,7 @@ namespace VF
                         fresh = false;
                 }
             }
-            return "<img src='http://realmplayers.com/Assets/wowicons/43x43/" + realBuffName + ".png'></img>";
+            return "<img src='http://realmplayers.com/images/wowicons/43x43/" + realBuffName + ".png'></img>";
         }
 
     }
