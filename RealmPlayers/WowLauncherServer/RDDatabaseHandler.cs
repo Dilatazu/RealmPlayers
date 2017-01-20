@@ -62,7 +62,23 @@ namespace VF_WoWLauncherServer
                 {
                     Logger.ConsoleWriteLine("Started saving all the accumulated RaidCollection.dat changes!", ConsoleColor.Green);
                     VF.Utility.BackupFile(m_RDDBFolder + "RaidCollection.dat", VF.Utility.BackupMode.Backup_Daily);
-                    VF.Utility.SaveSerialize(m_RDDBFolder + "RaidCollection.dat", m_RaidCollection, false);
+                    int tryCount = 1;
+                    while(true)
+                    {
+                        try
+                        {
+                            VF.Utility.SaveSerialize(m_RDDBFolder + "RaidCollection.dat", m_RaidCollection, false);
+                            break;
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine("Failed to save RaidCollection!!! Trying again!(Try Nr " + tryCount + "/10", ConsoleColor.Red);
+                            if (tryCount > 10)
+                                throw ex;
+                            System.Threading.Thread.Sleep(10000 * tryCount);
+                        }
+                        ++tryCount;
+                    }
 
                     UpdateSummaryDatabase(m_GetFightDataCollectionCache, m_RaidsModifiedSinceLastSummaryUpdate);
                     m_GetFightDataCollectionCache = new Dictionary<string, FightDataCollection>();
@@ -94,7 +110,10 @@ namespace VF_WoWLauncherServer
                     Logger.LogException(ex);
                     Logger.ConsoleWriteLine("Well, if this happens give up...", ConsoleColor.Red);
                     while (true)
-                    { System.Threading.Thread.Sleep(5000); }
+                    {
+                        System.Threading.Thread.Sleep(5000);
+                        Console.WriteLine("ASSESS DAMAGE!!!", ConsoleColor.Red);
+                    }
                 }
             }
             return false;
@@ -119,7 +138,11 @@ namespace VF_WoWLauncherServer
             {
                 SaveRaidStatsDBs();
             }
-            Logger.ConsoleWriteLine("MainThread for RDDatabaseHandler is exited!", ConsoleColor.Green);
+            while(true)
+            {
+                Logger.ConsoleWriteLine("MainThread for RDDatabaseHandler is exited!", ConsoleColor.Green);
+                System.Threading.Thread.Sleep(30000);
+            }
         }
         public void Pause()
         {
