@@ -19,7 +19,78 @@ namespace VF.RaidDamageWebsite
             {"Ahn'Qiraj Temple", "TAQ"},
             {"Temple of Ahn'Qiraj", "TAQ"},
             {"Naxxramas", "Naxx"},
+
+            {"Karazhan", "KZ"},
+            {"Zul'Aman", "ZA"},
+            {"Magtheridon's Lair", "ML"},
+            {"Gruul's Lair", "GL"},
+            {"Serpentshrine Cavern", "SSC"},
+            {"Tempest Keep", "TK"},
+            {"Black Temple", "BT"},
+            {"Hyjal Summit", "MH"},
+            {"Sunwell Plateau", "SWP"},
         };
+        public void SetAllMode()
+        {
+            foreach(ListItem item in cblInstance.Items)
+            {
+                item.Attributes.CssStyle.Remove("visibility");
+                item.Attributes.CssStyle.Remove("height");
+                item.Attributes.CssStyle.Remove("line-height");
+                item.Attributes.CssStyle.Remove("overflow");
+                item.Attributes.CssStyle.Remove("display");
+            }
+        }
+        public void SetVanillaMode()
+        {
+            foreach (ListItem item in cblInstance.Items)
+            {
+                if (item.Value == "All")
+                    continue;
+
+                if (item.Value == "Ony" || item.Value == "MC" || item.Value == "BWL" || item.Value == "ZG" || item.Value == "RAQ" || item.Value == "TAQ" || item.Value == "Naxx")
+                {
+                    item.Attributes.CssStyle.Remove("visibility");
+                    item.Attributes.CssStyle.Remove("height");
+                    item.Attributes.CssStyle.Remove("line-height");
+                    item.Attributes.CssStyle.Remove("overflow");
+                    item.Attributes.CssStyle.Remove("display");
+                }
+                else
+                {
+                    item.Attributes.CssStyle.Add("visibility", "hidden");
+                    item.Attributes.CssStyle.Add("height", "0px");
+                    item.Attributes.CssStyle.Add("line-height", "0px");
+                    item.Attributes.CssStyle.Add("overflow", "hidden");
+                    item.Attributes.CssStyle.Add("display", "block");
+                }
+            }
+        }
+        public void SetTBCMode()
+        {
+            foreach (ListItem item in cblInstance.Items)
+            {
+                if (item.Value == "All")
+                    continue;
+
+                if (item.Value == "Ony" || item.Value == "MC" || item.Value == "BWL" || item.Value == "ZG" || item.Value == "RAQ" || item.Value == "TAQ" || item.Value == "Naxx")
+                {
+                    item.Attributes.CssStyle.Add("visibility", "hidden");
+                    item.Attributes.CssStyle.Add("height", "0px");
+                    item.Attributes.CssStyle.Add("line-height", "0px");
+                    item.Attributes.CssStyle.Add("overflow", "hidden");
+                    item.Attributes.CssStyle.Add("display", "block");
+                }
+                else
+                {
+                    item.Attributes.CssStyle.Remove("visibility");
+                    item.Attributes.CssStyle.Remove("height");
+                    item.Attributes.CssStyle.Remove("line-height");
+                    item.Attributes.CssStyle.Remove("overflow");
+                    item.Attributes.CssStyle.Remove("display");
+                }
+            }
+        }
         public bool IsFiltered(string _Instance)
         {
             if (m_InstanceFilter == null)

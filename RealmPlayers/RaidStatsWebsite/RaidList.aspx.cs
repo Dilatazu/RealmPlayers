@@ -26,7 +26,18 @@ namespace VF.RaidDamageWebsite
             if (count > 500) count = 500;
 
             var realm = RealmControl.Realm;
-
+            if(realm == VF_RealmPlayersDatabase.WowRealm.Unknown || realm == VF_RealmPlayersDatabase.WowRealm.All)
+            {
+                InstanceControl.SetAllMode();
+            }
+            else if(StaticValues.GetWowVersion(realm, true) == VF_RealmPlayersDatabase.WowVersionEnum.TBC)
+            {
+                InstanceControl.SetTBCMode();
+            }
+            else
+            {
+                InstanceControl.SetVanillaMode();
+            }
             string guildStr = PageUtility.GetQueryString(Request, "Guild", null);
             if (guildStr != null)
             {

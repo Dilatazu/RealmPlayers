@@ -677,7 +677,7 @@ namespace VF_RealmPlayersDatabase
                 return _RealmConvert[_Realm];
             return WowRealm.Unknown;
         }
-        public static WowVersionEnum GetWowVersion(WowRealm _Realm)
+        public static WowVersionEnum GetWowVersion(WowRealm _Realm, bool _IgnoreUnknownError = false)
         {
             if (_Realm == WowRealm.Emerald_Dream || _Realm == WowRealm.Warsong || _Realm == WowRealm.Al_Akir
                 || _Realm == WowRealm.Rebirth || _Realm == WowRealm.Valkyrie || _Realm == WowRealm.VanillaGaming || _Realm == WowRealm.Test_Server || _Realm == WowRealm.Unknown
@@ -697,6 +697,11 @@ namespace VF_RealmPlayersDatabase
             else if (_Realm == WowRealm.Archangel || _Realm == WowRealm.WarsongTBC || _Realm == WowRealm.Vengeance_Wildhammer || _Realm == WowRealm.ExcaliburTBC || _Realm == WowRealm.L4G_Hellfire || _Realm == WowRealm.Vengeance_Stonetalon)
             {
                 return WowVersionEnum.TBC;
+            }
+
+            if(_IgnoreUnknownError == true)
+            {
+                return WowVersionEnum.Unknown;
             }
 
             Logger.ConsoleWriteLine("Error, WoW version was not specified for Realm: \"" + _Realm + "\"", ConsoleColor.Red);
