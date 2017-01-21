@@ -729,7 +729,8 @@ namespace VF_RealmPlayersDatabase
         }
         public static DateTime CalculateLastRankUpdadeDateUTC(WowRealm _Realm, DateTime? _NowUTC = null)
         {
-            if (_Realm == WowRealm.Nostalrius || _Realm == WowRealm.NostalriusPVE)
+            if (_Realm == WowRealm.Nostalrius || _Realm == WowRealm.NostalriusPVE
+            || _Realm == WowRealm.Elysium2 || _Realm == WowRealm.Zeth_Kur)
             {
                 return CalculateLastRankUpdadeDateUTC_WednesdayMidday(_NowUTC);
             }
