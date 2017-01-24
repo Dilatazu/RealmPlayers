@@ -51,6 +51,7 @@ namespace VF_RealmPlayersDatabase
             Backup_Always_TimeInFilename,
             Backup_Daily,
         }
+        public static string s_AppStartDate = DateTime.Now.ToString("yyyyMMddhh");
         public static void BackupFile(string _Filename, BackupMode _BackupMode)
         {
             if (System.IO.File.Exists(_Filename) == true)
@@ -58,7 +59,7 @@ namespace VF_RealmPlayersDatabase
                 string fileFolder = System.IO.Path.GetDirectoryName(_Filename);
                 if (fileFolder != "")
                     fileFolder += "\\";
-                string backupbackupID = DateTime.Now.ToString("yyyy_MM_dd");
+                string backupbackupID = "A" + s_AppStartDate + "B" + DateTime.Now.ToString("yyyy_MM_dd");
                 string backupFileName = "";
                 if (_BackupMode == BackupMode.Backup_Always_TimeInFilename)
                 {
