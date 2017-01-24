@@ -139,40 +139,53 @@ namespace VF_WoWLauncherServer
         public static string g_AddonContributionsBackupFolder = VF_RealmPlayersDatabase.Utility.DefaultServerLocation + "VF_DataServer\\AddonContributionsBackup\\";
         void BackupRPPContribution(string _Filename)
         {
-            if (System.IO.File.Exists(_Filename) == false)
+            try
             {
-                Logger.ConsoleWriteLine("Could not backup file: " + _Filename + ", it does not exist!", ConsoleColor.Red);
-                return;
-            }
-            string zipFileName = "";
-            string zipFullFilePath = "";
+                if (System.IO.File.Exists(_Filename) == false)
+                {
+                    Logger.ConsoleWriteLine("Could not backup file: " + _Filename + ", it does not exist!", ConsoleColor.Red);
+                    return;
+                }
+                string zipFileName = "";
+                string zipFullFilePath = "";
 
-            if (_Filename.Contains("VF_RealmPlayersTBC") == true)
+                if (_Filename.Contains("VF_RealmPlayersTBC") == true)
+                {
+                    zipFileName = "VF_RealmPlayersTBC_Contributions_" + DateTime.Now.ToString("yyyy_MM_dd") + ".zip";
+                    zipFullFilePath = g_AddonContributionsBackupFolder + "VF_RealmPlayersTBC\\" + zipFileName;
+                }
+                else
+                {
+                    zipFileName = "VF_RealmPlayers_Contributions_" + DateTime.Now.ToString("yyyy_MM_dd") + ".zip";
+                    zipFullFilePath = g_AddonContributionsBackupFolder + "VF_RealmPlayers\\" + zipFileName;
+                }
+
+                Utility.AssertFilePath(zipFullFilePath);
+                ZipFile zipFile;
+                if (System.IO.File.Exists(zipFullFilePath) == true)
+                    zipFile = new ZipFile(zipFullFilePath);
+                else
+                    zipFile = ZipFile.Create(zipFullFilePath);
+
+                zipFile.BeginUpdate();
+
+                zipFile.Add(_Filename, _Filename.Split('\\', '/').Last());
+
+                zipFile.CommitUpdate();
+                zipFile.Close();
+                System.IO.File.Delete(_Filename);
+                Logger.ConsoleWriteLine("Successfull backup of file: " + _Filename + " into " + zipFileName);
+            }
+            catch (Exception ex)
             {
-                zipFileName = "VF_RealmPlayersTBC_Contributions_" + DateTime.Now.ToString("yyyy_MM_dd") + ".zip";
-                zipFullFilePath = g_AddonContributionsBackupFolder + "VF_RealmPlayersTBC\\" + zipFileName;
+                Logger.LogException(ex);
+                Logger.ConsoleWriteLine("Well(RP-ZIP), if this happens give up...", ConsoleColor.Red);
+                while (true)
+                {
+                    System.Threading.Thread.Sleep(5000);
+                    Console.Write("ASSESS DAMAGE(RP-ZIP)! ", ConsoleColor.Red);
+                }
             }
-            else
-            {
-                zipFileName = "VF_RealmPlayers_Contributions_" + DateTime.Now.ToString("yyyy_MM_dd") + ".zip";
-                zipFullFilePath = g_AddonContributionsBackupFolder + "VF_RealmPlayers\\" + zipFileName;
-            }
-
-            Utility.AssertFilePath(zipFullFilePath);
-            ZipFile zipFile;
-            if (System.IO.File.Exists(zipFullFilePath) == true)
-                zipFile = new ZipFile(zipFullFilePath);
-            else
-                zipFile = ZipFile.Create(zipFullFilePath);
-
-            zipFile.BeginUpdate();
-
-            zipFile.Add(_Filename, _Filename.Split('\\', '/').Last());
-
-            zipFile.CommitUpdate();
-            zipFile.Close();
-            System.IO.File.Delete(_Filename);
-            Logger.ConsoleWriteLine("Successfull backup of file: " + _Filename + " into " + zipFileName);
         }
 
         private DateTime m_LastSummaryDatabaseUpdateTime = DateTime.UtcNow.AddMinutes(-15);

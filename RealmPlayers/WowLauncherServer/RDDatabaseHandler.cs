@@ -112,7 +112,7 @@ namespace VF_WoWLauncherServer
                     while (true)
                     {
                         System.Threading.Thread.Sleep(5000);
-                        Console.WriteLine("ASSESS DAMAGE!!!", ConsoleColor.Red);
+                        Console.Write("ASSESS DAMAGE(RS)! ", ConsoleColor.Red);
                     }
                 }
             }
@@ -435,59 +435,72 @@ namespace VF_WoWLauncherServer
         }
         void BackupRDContribution(string _Filename, RDContributionType _ContributionType)
         {
-            //while(true)
-            //{
-            //    Console.WriteLine("Disabled Backup and deletion for now");
-            //    for (int i = 0; i < 20; ++i)
-            //    {
-            //        System.Threading.Thread.Sleep(500);
-            //        Console.Write(".");
-            //    }
-            //}
-            if (System.IO.File.Exists(_Filename) == false)
+            try
             {
-                Logger.ConsoleWriteLine("Could not backup file: " + _Filename + ", it does not exist!", ConsoleColor.Red);
-                return;
-            }
-            string zipFileName = "";
-            string zipFullFilePath = "";
+                //while(true)
+                //{
+                //    Console.WriteLine("Disabled Backup and deletion for now");
+                //    for (int i = 0; i < 20; ++i)
+                //    {
+                //        System.Threading.Thread.Sleep(500);
+                //        Console.Write(".");
+                //    }
+                //}
+                if (System.IO.File.Exists(_Filename) == false)
+                {
+                    Logger.ConsoleWriteLine("Could not backup file: " + _Filename + ", it does not exist!", ConsoleColor.Red);
+                    return;
+                }
+                string zipFileName = "";
+                string zipFullFilePath = "";
 
-            if (_Filename.Contains("VF_RaidStatsTBC") == true)
+                if (_Filename.Contains("VF_RaidStatsTBC") == true)
+                {
+                    if (_ContributionType == RDContributionType.Data)
+                        zipFileName = "VF_RaidStatsTBC_Contributions_" + DateTime.Now.ToString("yyyy_MM_dd") + ".zip";
+                    else if (_ContributionType == RDContributionType.Empty)
+                        zipFileName = "VF_RaidStatsTBC_Empty_" + DateTime.Now.ToString("yyyy_MM_dd") + ".zip";
+                    else//if (_ContributionType == RDContributionType.Problem)
+                        zipFileName = "VF_RaidStatsTBC_Problem_" + DateTime.Now.ToString("yyyy_MM_dd") + ".zip";
+                    zipFullFilePath = g_AddonContributionsBackupFolder + "VF_RaidStatsTBC\\" + zipFileName;
+                }
+                else
+                {
+                    if (_ContributionType == RDContributionType.Data)
+                        zipFileName = "VF_RaidDamage_Contributions_" + DateTime.Now.ToString("yyyy_MM_dd") + ".zip";
+                    else if (_ContributionType == RDContributionType.Empty)
+                        zipFileName = "VF_RaidDamage_Empty_" + DateTime.Now.ToString("yyyy_MM_dd") + ".zip";
+                    else//if (_ContributionType == RDContributionType.Problem)
+                        zipFileName = "VF_RaidDamage_Problem_" + DateTime.Now.ToString("yyyy_MM_dd") + ".zip";
+                    zipFullFilePath = g_AddonContributionsBackupFolder + "VF_RaidDamage\\" + zipFileName;
+                }
+
+                VF_WoWLauncher.Utility.AssertFilePath(zipFullFilePath);
+                ZipFile zipFile;
+                if (System.IO.File.Exists(zipFullFilePath) == true)
+                    zipFile = new ZipFile(zipFullFilePath);
+                else
+                    zipFile = ZipFile.Create(zipFullFilePath);
+
+                zipFile.BeginUpdate();
+
+                zipFile.Add(_Filename, _Filename.Split('\\', '/').Last());
+
+                zipFile.CommitUpdate();
+                zipFile.Close();
+                System.IO.File.Delete(_Filename);
+                Logger.ConsoleWriteLine("Successfull backup of file: " + _Filename + " into " + zipFileName);
+            }
+            catch (Exception ex)
             {
-                if (_ContributionType == RDContributionType.Data)
-                    zipFileName = "VF_RaidStatsTBC_Contributions_" + DateTime.Now.ToString("yyyy_MM_dd") + ".zip";
-                else if (_ContributionType == RDContributionType.Empty)
-                    zipFileName = "VF_RaidStatsTBC_Empty_" + DateTime.Now.ToString("yyyy_MM_dd") + ".zip";
-                else//if (_ContributionType == RDContributionType.Problem)
-                    zipFileName = "VF_RaidStatsTBC_Problem_" + DateTime.Now.ToString("yyyy_MM_dd") + ".zip";
-                zipFullFilePath = g_AddonContributionsBackupFolder + "VF_RaidStatsTBC\\" + zipFileName;
+                Logger.LogException(ex);
+                Logger.ConsoleWriteLine("Well(RP-ZIP), if this happens give up...", ConsoleColor.Red);
+                while (true)
+                {
+                    System.Threading.Thread.Sleep(5000);
+                    Console.Write("ASSESS DAMAGE(RS-ZIP)! ", ConsoleColor.Red);
+                }
             }
-            else
-            {
-                if (_ContributionType == RDContributionType.Data)
-                    zipFileName = "VF_RaidDamage_Contributions_" + DateTime.Now.ToString("yyyy_MM_dd") + ".zip";
-                else if (_ContributionType == RDContributionType.Empty)
-                    zipFileName = "VF_RaidDamage_Empty_" + DateTime.Now.ToString("yyyy_MM_dd") + ".zip";
-                else//if (_ContributionType == RDContributionType.Problem)
-                    zipFileName = "VF_RaidDamage_Problem_" + DateTime.Now.ToString("yyyy_MM_dd") + ".zip";
-                zipFullFilePath = g_AddonContributionsBackupFolder + "VF_RaidDamage\\" + zipFileName;
-            }
-
-            VF_WoWLauncher.Utility.AssertFilePath(zipFullFilePath);
-            ZipFile zipFile;
-            if (System.IO.File.Exists(zipFullFilePath) == true)
-                zipFile = new ZipFile(zipFullFilePath);
-            else
-                zipFile = ZipFile.Create(zipFullFilePath);
-
-            zipFile.BeginUpdate();
-
-            zipFile.Add(_Filename, _Filename.Split('\\', '/').Last());
-
-            zipFile.CommitUpdate();
-            zipFile.Close();
-            System.IO.File.Delete(_Filename);
-            Logger.ConsoleWriteLine("Successfull backup of file: " + _Filename + " into " + zipFileName);
         }
     }
 }
