@@ -19,7 +19,8 @@ namespace VF_WoWLauncherServer
         UploaderCommunication.RPPCommunicator m_Communicator = null;
         ConcurrentQueue<RPPContribution> m_NewContributions = new ConcurrentQueue<RPPContribution>();
         List<RPPContribution> m_AddedContributions = new List<RPPContribution>();
-
+        List<RPPContribution> m_ProblemContributions = new List<RPPContribution>();
+        
         object m_LockObject = new object();
         System.Threading.Thread m_MainThread = null;
         public RPPDatabaseHandler(string _RPPDBFolder)
@@ -97,7 +98,11 @@ namespace VF_WoWLauncherServer
                 if(m_MainThread != null)
                     System.Threading.Thread.Sleep(30000);
             }
-            Logger.ConsoleWriteLine("MainThread for RPPDatabaseHandler is exited!", ConsoleColor.Green);
+            while (true)
+            {
+                Logger.ConsoleWriteLine("MainThread for RPPDatabaseHandler is exited!", ConsoleColor.Green);
+                System.Threading.Thread.Sleep(30000);
+            }
         }
         void ProcessData()
         {
@@ -106,16 +111,29 @@ namespace VF_WoWLauncherServer
             lock (m_LockObject)
             {
                 m_AddedContributions.Clear();
+                m_ProblemContributions.Clear();
                 RPPContribution data;
                 while (m_NewContributions.TryDequeue(out data))
                 {
-                    m_Database.AddContribution(data);
-                    m_AddedContributions.Add(data);
+                    if(m_Database.AddContribution(data) == true)
+                    {
+                        m_AddedContributions.Add(data);
+                    }
+                    else
+                    {
+                        m_ProblemContributions.Add(data);
+                    }
                 }
                 while (m_Communicator.GetNextRPPContribution(out data))
                 {
-                    m_Database.AddContribution(data);
-                    m_AddedContributions.Add(data);
+                    if (m_Database.AddContribution(data) == true)
+                    {
+                        m_AddedContributions.Add(data);
+                    }
+                    else
+                    {
+                        m_ProblemContributions.Add(data);
+                    }
                 }
                 if (m_AddedContributions.Count > 0)
                 {
@@ -123,7 +141,11 @@ namespace VF_WoWLauncherServer
                 }
                 foreach (RPPContribution contribution in m_AddedContributions)
                 {
-                    BackupRPPContribution(contribution.GetFilename());
+                    BackupRPPContribution(contribution.GetFilename(), _Problematic: false);
+                }
+                foreach (RPPContribution contribution in m_ProblemContributions)
+                {
+                    BackupRPPContribution(contribution.GetFilename(), _Problematic: true);
                 }
                 m_Database.Cleanup();
             }
@@ -137,7 +159,7 @@ namespace VF_WoWLauncherServer
             m_Database.SaveRealmDatabases(m_RPPDBFolder + "Database\\");
         }
         public static string g_AddonContributionsBackupFolder = VF_RealmPlayersDatabase.Utility.DefaultServerLocation + "VF_DataServer\\AddonContributionsBackup\\";
-        void BackupRPPContribution(string _Filename)
+        void BackupRPPContribution(string _Filename, bool _Problematic = false)
         {
             try
             {
@@ -151,12 +173,26 @@ namespace VF_WoWLauncherServer
 
                 if (_Filename.Contains("VF_RealmPlayersTBC") == true)
                 {
-                    zipFileName = "VF_RealmPlayersTBC_Contributions_" + DateTime.Now.ToString("yyyy_MM_dd") + ".zip";
+                    if(_Problematic == true)
+                    {
+                        zipFileName = "VF_RealmPlayersTBC_ProblemContributions_" + DateTime.Now.ToString("yyyy_MM_dd") + ".zip";
+                    }
+                    else
+                    {
+                        zipFileName = "VF_RealmPlayersTBC_Contributions_" + DateTime.Now.ToString("yyyy_MM_dd") + ".zip";
+                    }
                     zipFullFilePath = g_AddonContributionsBackupFolder + "VF_RealmPlayersTBC\\" + zipFileName;
                 }
                 else
                 {
-                    zipFileName = "VF_RealmPlayers_Contributions_" + DateTime.Now.ToString("yyyy_MM_dd") + ".zip";
+                    if (_Problematic == true)
+                    {
+                        zipFileName = "VF_RealmPlayers_ProblemContributions_" + DateTime.Now.ToString("yyyy_MM_dd") + ".zip";
+                    }
+                    else
+                    {
+                        zipFileName = "VF_RealmPlayers_Contributions_" + DateTime.Now.ToString("yyyy_MM_dd") + ".zip";
+                    }
                     zipFullFilePath = g_AddonContributionsBackupFolder + "VF_RealmPlayers\\" + zipFileName;
                 }
 

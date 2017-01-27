@@ -207,7 +207,8 @@ namespace VF_WoWLauncherServer
                             break;
                         }
                     }
-                    if (m_GetFightDataCollectionCache.Count > 20 || DateTime.UtcNow > m_DateTimeLastRaidStatsDBSave.AddMinutes(30))
+                    if (m_GetFightDataCollectionCache.Count > 20 ||
+                        (m_GetFightDataCollectionCache.Count > 1 && DateTime.UtcNow > m_DateTimeLastRaidStatsDBSave.AddMinutes(30)))
                     {
                         if(SaveRaidStatsDBs() == true)
                         {
