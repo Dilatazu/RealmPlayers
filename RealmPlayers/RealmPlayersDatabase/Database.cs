@@ -217,6 +217,11 @@ namespace VF_RealmPlayersDatabase
                         {
                             string realmStr = PlayerData.DataParser.ParseRealm(playerNode);
                             WowRealm realm = StaticValues.ConvertRealm(realmStr);
+                            if (StaticValues.DeadRealms.Contains(realm) == true)
+                            {
+                                Logger.ConsoleWriteLine("RealmStr: \"" + realmStr + "\" was recognized as a dead realm");
+                                continue;
+                            }
                             if((StaticValues.GetWowVersion(realm) != wowVersion))
                             {
                                 ++wowVersionWrongGuessCount;

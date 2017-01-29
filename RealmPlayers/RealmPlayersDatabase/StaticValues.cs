@@ -473,6 +473,16 @@ namespace VF_RealmPlayersDatabase
     }
     public class StaticValues
     {
+        public static List<WowRealm> DeadRealms = new List<WowRealm>
+        {
+            WowRealm.Emerald_Dream,
+            WowRealm.Warsong,
+            WowRealm.Al_Akir,
+            WowRealm.Warsong2,
+            WowRealm.Valkyrie,
+            WowRealm.Elysium,
+            WowRealm.Valkyrie,
+        };
         public static Dictionary<string, WowBoss> _WowBossConvert = new Dictionary<string, WowBoss>
         {
             //Molten Core

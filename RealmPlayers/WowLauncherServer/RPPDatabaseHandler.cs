@@ -20,18 +20,29 @@ namespace VF_WoWLauncherServer
         ConcurrentQueue<RPPContribution> m_NewContributions = new ConcurrentQueue<RPPContribution>();
         List<RPPContribution> m_AddedContributions = new List<RPPContribution>();
         List<RPPContribution> m_ProblemContributions = new List<RPPContribution>();
-        
+
+        WowRealm[] m_RealmsInUse;
+
         object m_LockObject = new object();
         System.Threading.Thread m_MainThread = null;
         public RPPDatabaseHandler(string _RPPDBFolder)
         {
+            List<WowRealm> realmsInUse = new List<WowRealm>();
+            foreach(var realm in Database.ALL_REALMS)
+            {
+                if(StaticValues.DeadRealms.Contains(realm) == false)
+                {
+                    realmsInUse.Add(realm);
+                }
+            }
+            m_RealmsInUse = realmsInUse.ToArray();
             m_RPPDBFolder = _RPPDBFolder;
             if (ItemDropDatabase.DatabaseExists(m_RPPDBFolder + "Database\\") == false)
             {
                 ItemDropDatabase itemDropDatabase = new ItemDropDatabase(m_RPPDBFolder + "Database\\");
             }
             m_Communicator = new UploaderCommunication.RPPCommunicator(18374);
-            m_Database = new Database(m_RPPDBFolder + "Database\\");
+            m_Database = new Database(m_RPPDBFolder + "Database\\", null, m_RealmsInUse);
             m_MainThread = new System.Threading.Thread(MainThread);
             m_MainThread.Start();
         }
@@ -234,7 +245,7 @@ namespace VF_WoWLauncherServer
                     Logger.ConsoleWriteLine("Started Updating Summary Databases", ConsoleColor.Green);
                     GC.Collect();
                     var timer = System.Diagnostics.Stopwatch.StartNew();
-                    Database tempDatabase = new Database(m_RPPDBFolder + "Database\\");
+                    Database tempDatabase = new Database(m_RPPDBFolder + "Database\\", null, m_RealmsInUse);
                     tempDatabase.PurgeRealmDBs(true, true);
 
                     _UpdateGuildSummaryDatabase(tempDatabase);
