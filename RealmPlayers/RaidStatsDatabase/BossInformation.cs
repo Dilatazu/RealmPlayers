@@ -289,6 +289,7 @@ namespace VF_RaidDamageDatabase
             "High Astromancer Solarian",
             "Illidan Stormrage",
             "The Lurker Below",
+            "M'uru",
         };
         #region BossFights
         public static Dictionary<string, string> BossFights = new Dictionary<string, string>
@@ -699,6 +700,14 @@ namespace VF_RaidDamageDatabase
 	        {"Kaz'rogal", "Hyjal Summit"},
 	        {"Azgalor", "Hyjal Summit"},
 	        {"Archimonde", "Hyjal Summit"},
+            
+	        //Sunwell Plateau
+	        {"Kalecgoss", "Sunwell Plateau"},
+            {"Brutallus", "Sunwell Plateau"},
+            {"Felmyst", "Sunwell Plateau"},
+            {"Eredar Twins", "Sunwell Plateau"},
+            {"M'uru", "Sunwell Plateau"},
+            {"Kil'jaeden", "Sunwell Plateau"},
         };
         #endregion BossFights
         #region BossParts
@@ -732,6 +741,10 @@ namespace VF_RaidDamageDatabase
 	
 	        {"Reliquary of Souls", new string[]{"Essence of Anger", "Essence of Desire", "Essence of Suffering"}},
 	        {"Illidari Council", new string[]{"Gathios the Shatterer", "High Nethermancer Zerevor", "Lady Malande", "Veras Darkshadow"}},
+            
+            //Sunwell Plateau
+            {"Eredar Twins", new string[]{ "Lady Sacrolash", "Grand Warlock Alythess"}},
+            {"M'uru", new string[]{ "Entropius", "M'uru"}},
         };
         #endregion BossParts
         #region BossAdds
@@ -849,6 +862,10 @@ namespace VF_RaidDamageDatabase
             //Mount Hyjal
             {"Anetheron", new string[]{"Towering Infernal"}},
             {"Azgalor", new string[]{"Lesser Doomguard"}},
+
+            //Sunwell Plateau
+            {"Eredar Twins", new string[]{"Lady Sacrolash", "Grand Warlock Alythess"}},
+            {"M'uru", new string[]{ "Shadowsword Berserker", "Shadowsword Fury Mage", "Void Sentinel", "Void Spawn", "Entropius"}},
         };
         #endregion BossAdds
         public static List<string> GetAllEntitiesForFight(string _FightName)

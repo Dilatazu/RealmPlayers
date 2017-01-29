@@ -331,9 +331,8 @@ namespace VF_WoWLauncherServer
                     m_GetFightDataCollectionCache.Add(fightCollectionDatName, fights);
                     m_RaidsModifiedSinceLastSummaryUpdate.AddRange(raidsModified);
 
-                    /*
-                    //DISABLED FOR NOW
-                    string debugFilePath = m_RDDBFolder + "\\DebugData\\SessionDebug\\" + DateTime.UtcNow.ToString("yyyy_MM_dd") + ".txt";
+                    
+                    string debugFilePath = m_RDDBFolder + "\\DebugData\\SessionDebug\\" + DateTime.UtcNow.ToString("yyyy_MM\\dd") + ".txt";
                     VF.Utility.AssertFilePath(debugFilePath);
                     if (System.IO.File.Exists(debugFilePath) == true)
                     {
@@ -342,7 +341,7 @@ namespace VF_WoWLauncherServer
                     else
                     {
                         System.IO.File.WriteAllLines(debugFilePath, sessionDebugData);
-                    }*/
+                    }
                 }
                 else
                 {
