@@ -241,7 +241,7 @@ namespace VF_RaidDamageDatabase
             "Broodlord Lashlayer",
             "Nefarian",
 
-            "The Prophet Skeram",
+            //"The Prophet Skeram",
             "Battleguard Sartura",
 
             "Gothik the Harvester",
