@@ -1,6 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/RaidDamageMasterFrame.Master" AutoEventWireup="true" CodeBehind="FightOverview.aspx.cs" Inherits="VF.RaidDamageWebsite.FightOverview" %>
 
-<%@OutputCache Duration="1000" VaryByParam="*" %>
+<%@OutputCache Duration="2000" VaryByParam="*" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeaderContent" runat="server">
     <script src="assets/js/jquery-1.10.2.min.js"></script>
