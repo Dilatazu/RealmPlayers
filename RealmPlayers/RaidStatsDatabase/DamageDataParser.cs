@@ -407,7 +407,8 @@ namespace VF_RaidDamageDatabase
                 return "Hyjal Summit";
             else if (_RaidName == "Coilfang: Serpentshrine Cavern")
                 return "Serpentshrine Cavern";
-
+            else if (_RaidName == "The Sunwell")
+                return "Sunwell Plateau";
             return _RaidName;
         }
     }
