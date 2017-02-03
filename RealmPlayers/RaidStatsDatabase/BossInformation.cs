@@ -700,7 +700,15 @@ namespace VF_RaidDamageDatabase
 	        {"Kaz'rogal", "Hyjal Summit"},
 	        {"Azgalor", "Hyjal Summit"},
 	        {"Archimonde", "Hyjal Summit"},
-            
+
+            //Zul'Amin
+            { "Akil'zon", "Zul'Amin" },
+            { "Nalorakk", "Zul'Amin" },
+            { "Jan'alai", "Zul'Amin" },
+            { "Halazzi", "Zul'Amin" },
+            { "Hex Lord Malacrass", "Zul'Amin" },
+            { "Zul'jin", "Zul'Amin" },
+
 	        //Sunwell Plateau
 	        {"Kalecgoss", "Sunwell Plateau"},
             {"Brutallus", "Sunwell Plateau"},
