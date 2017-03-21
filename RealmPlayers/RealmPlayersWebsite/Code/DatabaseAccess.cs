@@ -89,12 +89,20 @@ namespace RealmPlayersServer
 #if NO_SQL_LOADING
             
 #else
-            using (var comm = new VF.SQLComm())
+            try
             {
-                if (comm.LoadPlayer(_Player, _Realm, VF.SQLPlayerID.Invalid(), out playerHistory) > 0)
+                using (var comm = new VF.SQLComm())
                 {
-                    return playerHistory;
+                    if (comm.LoadPlayer(_Player, _Realm, VF.SQLPlayerID.Invalid(), out playerHistory) > 0)
+                    {
+                        return playerHistory;
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Logger.LogException(ex);
+                return null;
             }
 #endif
             var realm = _FindRealmDB(_Page, _Realm);

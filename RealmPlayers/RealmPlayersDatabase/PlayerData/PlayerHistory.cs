@@ -542,9 +542,9 @@ namespace VF_RealmPlayersDatabase.PlayerData
             }
             return removedHistoryData;
         }
-        public int RollbackPlayer(Player _Player, Contributor _Contributor)
+        public int RollbackPlayer(Player _Player, int _ContributorID)
         {
-            var contributorID = _Contributor.GetContributorID();
+            var contributorID = _ContributorID;
             int removedHistoryData = 0;
             try
             {
@@ -570,9 +570,9 @@ namespace VF_RealmPlayersDatabase.PlayerData
             }
             return removedHistoryData;
         }
-        public int RollbackPlayer(Player _Player, Contributor _Contributor, DateTime _DateTime)
+        public int RollbackPlayer(Player _Player, int _ContributorID, DateTime _DateTime)
         {
-            var contributorID = _Contributor.GetContributorID();
+            var contributorID = _ContributorID;
             int removedHistoryData = 0;
             try
             {

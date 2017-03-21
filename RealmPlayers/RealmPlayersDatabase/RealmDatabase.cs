@@ -216,7 +216,7 @@ namespace VF_RealmPlayersDatabase
         {
             foreach (var playerData in Players)
             {
-                PlayersHistory[playerData.Key].RollbackPlayer(playerData.Value, _Contributor);
+                PlayersHistory[playerData.Key].RollbackPlayer(playerData.Value, _Contributor.GetContributorID());
             }
         }
         public void PurgeGearContribution(string _Character, UploadID _UploadID)
