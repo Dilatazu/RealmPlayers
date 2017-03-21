@@ -59,6 +59,15 @@ namespace VF_RealmPlayersDatabase
                 if(System.IO.File.Exists(_RootPath + "\\ItemDropDatabase.dat") == true)
                 {
                     Utility.LoadSerialize(_RootPath + "\\ItemDropDatabase.dat", out m_Database);
+                    m_Database.AddToList(19951, new ItemDropDataItem(WowBoss.Edge_Of_Madness, 0.0f));//Warrior
+                    m_Database.AddToList(19952, new ItemDropDataItem(WowBoss.Edge_Of_Madness, 0.0f));//Paladin
+                    m_Database.AddToList(19953, new ItemDropDataItem(WowBoss.Edge_Of_Madness, 0.0f));//Hunter
+                    m_Database.AddToList(19954, new ItemDropDataItem(WowBoss.Edge_Of_Madness, 0.0f));//Rogue
+                    m_Database.AddToList(19955, new ItemDropDataItem(WowBoss.Edge_Of_Madness, 0.0f));//Druid
+                    m_Database.AddToList(19956, new ItemDropDataItem(WowBoss.Edge_Of_Madness, 0.0f));//Shaman
+                    m_Database.AddToList(19957, new ItemDropDataItem(WowBoss.Edge_Of_Madness, 0.0f));//Warlock
+                    m_Database.AddToList(19958, new ItemDropDataItem(WowBoss.Edge_Of_Madness, 0.0f));//Priest
+                    m_Database.AddToList(19959, new ItemDropDataItem(WowBoss.Edge_Of_Madness, 0.0f));//Mage
                 }
                 else
                 {
