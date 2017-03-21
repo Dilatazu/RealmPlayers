@@ -85,6 +85,8 @@ namespace RealmPlayersServer.Code.Resources
             {WowRealm.Elysium , "ELY"},
             {WowRealm.Elysium2 , "Ely"},
             {WowRealm.Zeth_Kur , "ZeK"},
+            {WowRealm.Nemesis , "NES"},
+            {WowRealm.HellGround , "HG"},
         };
         public static Dictionary<WowRealm, string> _RealmVisualString = new Dictionary<WowRealm, string>
         {
@@ -113,6 +115,8 @@ namespace RealmPlayersServer.Code.Resources
             {WowRealm.Elysium , "Elysium(Old)"},
             {WowRealm.Elysium2 , "Elysium"},
             {WowRealm.Zeth_Kur , "Zeth'Kur"},
+            {WowRealm.Nemesis , "Nemesis"},
+            {WowRealm.HellGround , "HellGround"},
         };
         public static Dictionary<int, string> _HordeRankVisualName = new Dictionary<int, string>
         {

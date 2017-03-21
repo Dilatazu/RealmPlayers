@@ -102,6 +102,10 @@ namespace VF_RPDatabase
         public UInt64 m_EntityCounter_Elysium2 = 0L;
         [ProtoMember(24)]
         public UInt64 m_EntityCounter_Zeth_Kur = 0L;
+        [ProtoMember(25)]
+        public UInt64 m_EntityCounter_Nemesis = 0L;
+        [ProtoMember(26)]
+        public UInt64 m_EntityCounter_HellGround = 0L;
 
         private void CalcRealmBits(WowRealm _Realm, out UInt64 _BitMask, out UInt64 _RealmValue)
         {
@@ -174,6 +178,12 @@ namespace VF_RPDatabase
                     break;
                 case WowRealm.Zeth_Kur:
                     _RealmValue = 22UL << 56;
+                    break;
+                case WowRealm.Nemesis:
+                    _RealmValue = 23UL << 56;
+                    break;
+                case WowRealm.HellGround:
+                    _RealmValue = 24UL << 56;
                     break;
             }
         }
@@ -336,6 +346,14 @@ namespace VF_RPDatabase
                     entityID = (22UL << 56) | m_EntityCounter_Zeth_Kur++;
                     m_PlayerIDs.Add(entityLinkStr, entityID);
                     break;
+                case WowRealm.Nemesis:
+                    entityID = (23UL << 56) | m_EntityCounter_Nemesis++;
+                    m_PlayerIDs.Add(entityLinkStr, entityID);
+                    break;
+                case WowRealm.HellGround:
+                    entityID = (24UL << 56) | m_EntityCounter_HellGround++;
+                    m_PlayerIDs.Add(entityLinkStr, entityID);
+                    break;
             }
             return entityID;
         }
@@ -395,6 +413,10 @@ namespace VF_RPDatabase
                     return WowRealm.Elysium2;
                 case 22UL:
                     return WowRealm.Zeth_Kur;
+                case 23UL:
+                    return WowRealm.Nemesis;
+                case 24UL:
+                    return WowRealm.HellGround;
                 default:
                     VF_RealmPlayersDatabase.Logger.ConsoleWriteLine("Error GetPlayerRealm failed. Realm(" + realm + ") was not valid!!!");
                     return WowRealm.Unknown;

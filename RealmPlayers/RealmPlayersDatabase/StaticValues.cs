@@ -32,6 +32,8 @@ namespace VF_RealmPlayersDatabase
         Elysium = 22,
         Elysium2 = 23,
         Zeth_Kur = 24,
+        Nemesis = 25,
+        HellGround = 26,
     }
     public enum WowVersionEnum
     {
@@ -680,6 +682,11 @@ namespace VF_RealmPlayersDatabase
             {"Zeth&apos;Kur PVP", WowRealm.Zeth_Kur },//removed 2017-01-14
             {"Zeth&apos;Kur", WowRealm.Zeth_Kur },
             {"ZeK", WowRealm.Zeth_Kur },
+            {"Nemesis 1.12.1", WowRealm.Nemesis },
+            {"NES", WowRealm.Nemesis },
+            {"HellGround", WowRealm.HellGround },
+            {"Hellground", WowRealm.HellGround },
+            {"HG", WowRealm.HellGround },
         };
         public static WowRealm ConvertRealm(string _Realm)
         {
@@ -700,11 +707,12 @@ namespace VF_RealmPlayersDatabase
                 || _Realm == WowRealm.Nefarian
                 || _Realm == WowRealm.Warsong2
                 || _Realm == WowRealm.Elysium2
-                || _Realm == WowRealm.Zeth_Kur)
+                || _Realm == WowRealm.Zeth_Kur
+                || _Realm == WowRealm.Nemesis)
             {
                 return WowVersionEnum.Vanilla;
             }
-            else if (_Realm == WowRealm.Archangel || _Realm == WowRealm.WarsongTBC || _Realm == WowRealm.Vengeance_Wildhammer || _Realm == WowRealm.ExcaliburTBC || _Realm == WowRealm.L4G_Hellfire || _Realm == WowRealm.Vengeance_Stonetalon)
+            else if (_Realm == WowRealm.Archangel || _Realm == WowRealm.WarsongTBC || _Realm == WowRealm.Vengeance_Wildhammer || _Realm == WowRealm.ExcaliburTBC || _Realm == WowRealm.L4G_Hellfire || _Realm == WowRealm.Vengeance_Stonetalon || _Realm == WowRealm.HellGround)
             {
                 return WowVersionEnum.TBC;
             }

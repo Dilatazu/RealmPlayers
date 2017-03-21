@@ -30,6 +30,8 @@ namespace VF_RealmPlayersDatabase
             WowRealm.Elysium,
             WowRealm.Elysium2,
             WowRealm.Zeth_Kur,
+            WowRealm.Nemesis,
+            WowRealm.HellGround,
         };
 
         Dictionary<WowRealm, RealmDatabase> m_Realms = new Dictionary<WowRealm, RealmDatabase>();

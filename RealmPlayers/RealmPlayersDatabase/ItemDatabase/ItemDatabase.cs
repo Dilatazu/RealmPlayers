@@ -28,6 +28,7 @@ namespace VF_RealmPlayersDatabase
                     return (1U << 24) + _ItemID;
                 case WowRealm.Warsong:
                 case WowRealm.Warsong2:
+                case WowRealm.Nemesis:
                     return (1U << 24) + _ItemID;
                 case WowRealm.All:
                     return uint.MaxValue;
@@ -59,6 +60,7 @@ namespace VF_RealmPlayersDatabase
                 case WowRealm.ExcaliburTBC:
                     return (0x12U << 24) + _ItemID;
                 case WowRealm.L4G_Hellfire:
+                case WowRealm.HellGround: //Should have own ID
                     return (0x13U << 24) + _ItemID;
                 default:
                     break;

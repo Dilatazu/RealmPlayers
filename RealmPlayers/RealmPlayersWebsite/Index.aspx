@@ -52,16 +52,18 @@
                                 <asp:ListItem Text="Darrowshire" Value="Dar" />
                                 <asp:ListItem Text="Nefarian(DE)" Value="NEF"/>
                                 <asp:ListItem Text="NostalGeek(FR)" Value="NG"/>
-                                <asp:ListItem Text="Warsong(Feenix)" Value="WS2"/>
+                                <asp:ListItem Text="Nemesis" Value="NES"/>
                                 <asp:ListItem Text="Archangel(TBC)" Value="ArA"/>
                                 <asp:ListItem Text="Wildhammer(TBC)" Value="VWH" />
                                 <asp:ListItem Text="Stonetalon(TBC)" Value="VST" />
                                 <asp:ListItem Text="ExcaliburTBC" Value="EXC" />
                                 <asp:ListItem Text="Hellfire(TBC)" Value="HLF" />
+                                <asp:ListItem Text="HellGround(TBC)" Value="HG" />
                                 <asp:ListItem Text="WarsongTBC" Value="WBC"/>
                                 <asp:ListItem Text="Valkyrie" Value="VAL"/>
                                 <asp:ListItem Text="Emerald Dream" Value="ED"/>
-                                <asp:ListItem Text="Warsong" Value="WSG"/>
+                                <asp:ListItem Text="Warsong" Value="WS2"/>
+                                <asp:ListItem Text="Warsong(Old)" Value="WSG"/>
                                 <asp:ListItem Text="Al'Akir" Value="AlA"/>
                                 <asp:ListItem Text="Elysium(Old)" Value="ELY"/>
                             </asp:DropDownList>

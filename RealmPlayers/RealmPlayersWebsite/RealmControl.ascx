@@ -18,8 +18,10 @@
         <asp:ListItem Text="Wildhammer(TBC)" Value="VWH" />
         <asp:ListItem Text="Stonetalon(TBC)" Value="VST" />
         <asp:ListItem Text="ExcaliburTBC" Value="EXC" />
+        <asp:ListItem Text="HellGround(TBC)" Value="HG" />
         <asp:ListItem Text="Hellfire(TBC)" Value="HLF" />
         <asp:ListItem Text="WarsongTBC" Value="WBC" />
+        <asp:ListItem Text="Nemesis" Value="NES" />
         <asp:ListItem Text="Valkyrie" Value="VAL" />
         <asp:ListItem Text="Emerald Dream" Value="ED" style="visibility:hidden; height:0px; line-height: 0px; overflow:hidden; display:block;"/>
         <asp:ListItem Text="Warsong" Value="WSG" style="visibility:hidden; height:0px; line-height: 0px; overflow:hidden; display:block;"/>
