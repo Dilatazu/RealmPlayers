@@ -110,6 +110,11 @@ namespace VF
         {
             return m_Collection.FindOne(MongoDB.Driver.Builders.Query<T_CollectionType>.EQ<T_CompareType>(_Lambda, _CompareValue));
         }
+        public bool FindAndRemove<T_CompareType>(System.Linq.Expressions.Expression<Func<T_CollectionType, T_CompareType>> _Lambda, T_CompareType _CompareValue)
+        {
+            return m_Collection.Remove(MongoDB.Driver.Builders.Query<T_CollectionType>.EQ<T_CompareType>(_Lambda, _CompareValue)).Ok;
+        }
+        
         public T_CollectionType Find(IMongoQuery _Query)
         {
             return m_Collection.FindOne(_Query);

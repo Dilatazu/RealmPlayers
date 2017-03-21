@@ -352,5 +352,20 @@ namespace VF_WoWLauncherServer
                 Logger.LogException(ex);
             }
         }
+
+        private void button14_Click(object sender, EventArgs e)
+        {
+            string userToDelete = c_txtBetaUserID.Text;
+            if (MessageBox.Show("Delete UserID: \"" + userToDelete + "\"?", "Are you sure?", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
+            {
+                c_txtBetaUserID.Text = "";
+                ContributorDB.DeleteContributorFromDB(userToDelete);
+            }
+        }
+
+        private void button15_Click(object sender, EventArgs e)
+        {
+            
+        }
     }
 }

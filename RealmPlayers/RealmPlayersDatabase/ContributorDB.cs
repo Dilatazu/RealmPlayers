@@ -249,6 +249,23 @@ namespace VF_RealmPlayersDatabase
             }
             return null;
         }
+        public static bool DeleteContributorFromDB(string _UserID)
+        {
+            if (sm_ContributorDB == null)
+                return false;
+            try
+            {
+                lock (sm_ThreadObject)
+                {
+                    return sm_ContributorDB.FindAndRemove((_Value) => _Value.Key, _UserID);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.LogException(ex);
+            }
+            return false;
+        }
         public static Contributor GetContributor(UploadID _Uploader)
         {
             if (sm_ContributorDB == null)
