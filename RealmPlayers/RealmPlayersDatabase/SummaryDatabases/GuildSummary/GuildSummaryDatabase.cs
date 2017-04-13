@@ -73,7 +73,7 @@ namespace VF_RPDatabase
                             }
                             foreach (string guildName in guildsAffected)
                             {
-                                if (guildName == "nil" || guildName == "None" || guildName == "Unknown")
+                                if (guildName == "nil" || guildName == "None")
                                     continue;
                                 if (GetGuildSummary(realmDB.Value.Realm, guildName) == null)
                                 {

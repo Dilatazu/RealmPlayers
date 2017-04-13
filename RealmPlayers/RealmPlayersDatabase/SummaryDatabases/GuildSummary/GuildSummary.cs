@@ -178,7 +178,7 @@ namespace VF_RPDatabase
     public class GuildSummary
     {
         [ProtoMember(1)]
-        private string m_GuildName = "Unknown";
+        private string m_GuildName = "nil";
         [ProtoMember(2)]
         private WowRealm m_Realm = WowRealm.Unknown;
         [ProtoMember(3)]
