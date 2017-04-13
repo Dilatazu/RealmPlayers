@@ -17,7 +17,7 @@ namespace RealmPlayersServer
 
         public static List<Tuple<DateTime, string, string>> GetDonations()
         {
-            string donatorsText = DynamicFileData.GetTextFile(Constants.RPPDbDir + "RPPWebsitePages\\Donators.txt");
+            string donatorsText = DynamicFileData.GetTextFile(Constants.RPPDbDir + "RPPWebsitePages\\Contributors.txt");
             var donatorsArray = donatorsText.SplitVF("\r\n");
 
             List<Tuple<DateTime, string, string>> donations = new List<Tuple<DateTime, string, string>>();
