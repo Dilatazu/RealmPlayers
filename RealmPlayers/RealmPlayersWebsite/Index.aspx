@@ -53,6 +53,7 @@
                                 <asp:ListItem Text="Nefarian(DE)" Value="NEF"/>
                                 <asp:ListItem Text="NostalGeek(FR)" Value="NG"/>
                                 <asp:ListItem Text="Nemesis" Value="NES"/>
+        <asp:ListItem Text="Nostralia" Value="NST" />
                                 <asp:ListItem Text="Archangel(TBC)" Value="ArA"/>
                                 <asp:ListItem Text="Wildhammer(TBC)" Value="VWH" />
                                 <asp:ListItem Text="Stonetalon(TBC)" Value="VST" />

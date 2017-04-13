@@ -14,6 +14,7 @@
         <asp:ListItem Text="Nefarian(DE)" Value="NEF" />
         <asp:ListItem Text="NostalGeek(FR)" Value="NG" />
         <asp:ListItem Text="Nemesis" Value="NES" />
+        <asp:ListItem Text="Nostralia" Value="NST" />
         <asp:ListItem Text="Elysium(Old)" Value="ELY" />
         <asp:ListItem Text="Warsong(Feenix)" Value="WS2" />
         <asp:ListItem Text="Archangel(TBC)" Value="ArA" />

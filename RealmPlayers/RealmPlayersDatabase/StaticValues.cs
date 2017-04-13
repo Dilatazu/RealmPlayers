@@ -34,6 +34,7 @@ namespace VF_RealmPlayersDatabase
         Zeth_Kur = 24,
         Nemesis = 25,
         HellGround = 26,
+        Nostralia = 27,
     }
     public enum WowVersionEnum
     {
@@ -687,6 +688,8 @@ namespace VF_RealmPlayersDatabase
             {"HellGround", WowRealm.HellGround },
             {"Hellground", WowRealm.HellGround },
             {"HG", WowRealm.HellGround },
+            {"Nostralia", WowRealm.Nostralia },
+            {"NST", WowRealm.Nostralia },
         };
         public static WowRealm ConvertRealm(string _Realm)
         {
@@ -708,7 +711,9 @@ namespace VF_RealmPlayersDatabase
                 || _Realm == WowRealm.Warsong2
                 || _Realm == WowRealm.Elysium2
                 || _Realm == WowRealm.Zeth_Kur
-                || _Realm == WowRealm.Nemesis)
+                || _Realm == WowRealm.Nemesis
+                || _Realm == WowRealm.Nostralia
+                )
             {
                 return WowVersionEnum.Vanilla;
             }

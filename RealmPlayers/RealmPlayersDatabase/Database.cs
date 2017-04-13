@@ -32,6 +32,7 @@ namespace VF_RealmPlayersDatabase
             WowRealm.Zeth_Kur,
             WowRealm.Nemesis,
             WowRealm.HellGround,
+            WowRealm.Nostralia,
         };
 
         Dictionary<WowRealm, RealmDatabase> m_Realms = new Dictionary<WowRealm, RealmDatabase>();

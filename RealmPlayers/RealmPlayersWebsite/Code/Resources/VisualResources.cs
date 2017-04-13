@@ -87,6 +87,7 @@ namespace RealmPlayersServer.Code.Resources
             {WowRealm.Zeth_Kur , "ZeK"},
             {WowRealm.Nemesis , "NES"},
             {WowRealm.HellGround , "HG"},
+            {WowRealm.Nostralia , "NST"},
         };
         public static Dictionary<WowRealm, string> _RealmVisualString = new Dictionary<WowRealm, string>
         {
@@ -117,6 +118,7 @@ namespace RealmPlayersServer.Code.Resources
             {WowRealm.Zeth_Kur , "Zeth'Kur"},
             {WowRealm.Nemesis , "Nemesis"},
             {WowRealm.HellGround , "HellGround"},
+            {WowRealm.Nostralia , "Nostralia"},
         };
         public static Dictionary<int, string> _HordeRankVisualName = new Dictionary<int, string>
         {

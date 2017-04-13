@@ -106,6 +106,8 @@ namespace VF_RPDatabase
         public UInt64 m_EntityCounter_Nemesis = 0L;
         [ProtoMember(26)]
         public UInt64 m_EntityCounter_HellGround = 0L;
+        [ProtoMember(27)]
+        public UInt64 m_EntityCounter_Nostralia = 0L;
 
         private void CalcRealmBits(WowRealm _Realm, out UInt64 _BitMask, out UInt64 _RealmValue)
         {
@@ -184,6 +186,9 @@ namespace VF_RPDatabase
                     break;
                 case WowRealm.HellGround:
                     _RealmValue = 24UL << 56;
+                    break;
+                case WowRealm.Nostralia:
+                    _RealmValue = 25UL << 56;
                     break;
             }
         }
@@ -354,6 +359,10 @@ namespace VF_RPDatabase
                     entityID = (24UL << 56) | m_EntityCounter_HellGround++;
                     m_PlayerIDs.Add(entityLinkStr, entityID);
                     break;
+                case WowRealm.Nostralia:
+                    entityID = (25UL << 56) | m_EntityCounter_Nostralia++;
+                    m_PlayerIDs.Add(entityLinkStr, entityID);
+                    break;
             }
             return entityID;
         }
@@ -417,6 +426,8 @@ namespace VF_RPDatabase
                     return WowRealm.Nemesis;
                 case 24UL:
                     return WowRealm.HellGround;
+                case 25UL:
+                    return WowRealm.Nostralia;
                 default:
                     VF_RealmPlayersDatabase.Logger.ConsoleWriteLine("Error GetPlayerRealm failed. Realm(" + realm + ") was not valid!!!");
                     return WowRealm.Unknown;
