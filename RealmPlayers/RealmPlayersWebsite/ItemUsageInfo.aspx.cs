@@ -44,8 +44,11 @@ namespace RealmPlayersServer
                 + PageUtility.BreadCrumb_AddFinish("ItemUsage"));
 
             var itemSummaryDB = Hidden.ApplicationInstance.Instance.GetItemSummaryDatabase();
-
-            using (VF.SQLComm comm = new VF.SQLComm())
+#if NO_SQL
+#else
+            /*Disable this for now. it is too slow...*/
+            //using (VF.SQLComm comm = new VF.SQLComm())
+#endif
             {
                 List<Tuple<DateTime, string>> players = null;
                 players = itemSummaryDB.GetItemUsage(realm, itemID, suffixID);//, out players) == true)
@@ -127,7 +130,7 @@ namespace RealmPlayersServer
                                 }
                                 if (playerItemData == null)
                                 {
-                                    playerItemData = new VF_RealmPlayersDatabase.PlayerData.ItemInfo{ Slot = VF_RealmPlayersDatabase.ItemSlot.Unknown, ItemID = itemID, SuffixID = 0, EnchantID = 0, UniqueID = 0, GemIDs = null};
+                                    playerItemData = new VF_RealmPlayersDatabase.PlayerData.ItemInfo { Slot = VF_RealmPlayersDatabase.ItemSlot.Unknown, ItemID = itemID, SuffixID = 0, EnchantID = 0, UniqueID = 0, GemIDs = null };
                                 }
                                 extraColumns[ItemAndAquiredDateAfterColumn] = new string[]{
                                     "<div class='inventory' style='background: none; width: 58px; height: 58px;'><div>"

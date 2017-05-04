@@ -190,6 +190,7 @@ namespace VF_RealmPlayersDatabase
                 string extraData = XMLUtility.GetChildValue(_PlayerNode, "ExtraData", "");
                 if (extraData != "")
                 {
+#if UPDATE_SQL_DB
                     VF.SQLPlayerID playerID;
                     using (VF.SQLComm comm = new VF.SQLComm())
                     {
@@ -200,6 +201,14 @@ namespace VF_RealmPlayersDatabase
                     }
                     var currPlayerExtraData = GetPlayerExtraData(playerName);
                     currPlayerExtraData.AddData(uploadID, extraData, playerID, _GetSQLUploadIDFunc);
+#else
+                    if (_GetSQLUploadIDFunc != null)
+                    {
+                        while (true) { Console.WriteLine("ERROR, SQL USAGE CONFUSION"); System.Threading.Thread.Sleep(5000); }
+                    }
+                    var currPlayerExtraData = GetPlayerExtraData(playerName);
+                    currPlayerExtraData.AddData(uploadID, extraData, null, null);
+#endif
                 }
 	        }
             catch(NpgsqlException ex)

@@ -209,7 +209,9 @@ namespace VF_RealmPlayersDatabase
                 {
                     Logger.LogException(ex);
                 }
+#if UPDATE_SQL_DB
                 List<VF.SQLUploadID> uploadIDs = new List<VF.SQLUploadID>();
+#endif
                 var dataNode = XMLUtility.GetChild(xmlDoc.DocumentElement, "VF_RealmPlayersData");
                 int wowVersionWrongGuessCount = 0;
                 foreach (System.Xml.XmlNode playerNode in dataNode.ChildNodes)
@@ -236,6 +238,7 @@ namespace VF_RealmPlayersDatabase
                             }
                             else
                             {
+#if UPDATE_SQL_DB
                                 Func<int, VF.SQLUploadID> getUploadID = (int _Index) =>
                                 {
                                     while(uploadIDs.Count <= _Index)
@@ -250,6 +253,10 @@ namespace VF_RealmPlayersDatabase
                                 };
                                 RealmDatabase realmDB = m_Realms[realm];
                                 realmDB.UpdatePlayer(playerNode, _Contribution.GetContributor(), getUploadID);
+#else
+                                RealmDatabase realmDB = m_Realms[realm];
+                                realmDB.UpdatePlayer(playerNode, _Contribution.GetContributor(), null);
+#endif
                             }
                         }
                     }

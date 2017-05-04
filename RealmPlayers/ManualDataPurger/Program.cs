@@ -312,8 +312,8 @@ namespace ManualDataPurger
             //int contributorID = contributor.GetAsContributor().GetContributorID();
             PurgeDatabase("Nostalrius", "Database\\Nostalrius\\PlayersHistoryData_Now.dat"
                 , new List<Tuple<int, DateTime?>> {
-                    new Tuple<int, DateTime?>(/****REMOVED****/, new DateTime(2017, 3, 16, 0, 0, 0))
-                    , new Tuple<int, DateTime?>(/****REMOVED****/, null)
+                    new Tuple<int, DateTime?>(0/****REMOVED****/, new DateTime(2017, 3, 16, 0, 0, 0))
+                    , new Tuple<int, DateTime?>(0/****REMOVED****/, null)
                 });
             //PurgeDatabase("Warsong", "Database\\Warsong\\PlayersHistoryData_Now.dat", "***REMOVED***");
             //PurgeDatabase("AlAkir", "Database\\Al_Akir\\PlayersHistoryData_Now.dat", "***REMOVED***");

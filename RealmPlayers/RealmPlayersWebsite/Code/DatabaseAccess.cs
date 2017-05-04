@@ -1,4 +1,6 @@
-﻿using System;
+﻿#define NO_SQL_LOADING
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -86,8 +88,9 @@ namespace RealmPlayersServer
         public static PlayerData.PlayerHistory FindRealmPlayerHistory(System.Web.UI.Page _Page, WowRealm _Realm, string _Player)
         {
             PlayerData.PlayerHistory playerHistory;
+
 #if NO_SQL_LOADING
-            
+
 #else
             try
             {
