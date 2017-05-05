@@ -349,6 +349,13 @@ namespace VF
             }
             ///////////////////////
 
+            ///////////////////////
+            //if(true) //Debug Dispells
+            //{
+
+            //}
+            ///////////////////////
+
             var realm = _Fight.GetRaid().Realm;
             ///////////////////////
             string lootDropped = "";
@@ -593,11 +600,14 @@ namespace VF
                     m_AfterBarWidth = 30
                 };
 
+                bool decurseInfoPresent = false;
                 string dmgThreatSection = "<div class='span4' style='min-width: 460px;'>";
                 string healSection = "<div class='span4' style='min-width: 460px;'>";
                 foreach (var dataPresentTypeInfo in sm_DataPresentTypeInfoList)
                 {
                     if (_Details.DebugInfo == false && dataPresentTypeInfo.m_TypeName == "Efficient Heal Recv")
+                        continue;
+                    if (decurseInfoPresent == true && dataPresentTypeInfo.m_TypeName == "Overheal")
                         continue;
 
                     var sortedUnits = unitsData.OrderByDescending((_Unit) => { return dataPresentTypeInfo.m_GetValue(_Unit.Item2); });
@@ -640,7 +650,16 @@ namespace VF
                                     classColor = RealmPlayersServer.Code.Resources.VisualResources._ClassColors[playerData.Character.Class];
                                     //newBossSection += "VF_CreateDmgBar(" + displayPercentage.ToString(System.Globalization.CultureInfo.InvariantCulture) + ", '" + classColor + "', '<player," + unit.Item1 + ">" + unit.Item1 + "(" + (currValue / interestingFight.m_Fight.FightDuration).ToString("0.0", System.Globalization.CultureInfo.InvariantCulture) + "/s)','#000000', '" + (int)currValue + "(" + string.Format("{0:0.0%}", percentage) + ")');";
 
-                                    string rightSideText = "" + (int)currValue + "(" + (currValue / _Fight.GetFightDuration()).ToStringDot("0") + "/s)";
+                                    double valuePerSecond = (currValue / _Fight.GetFightDuration());
+                                    string rightSideText = "";
+                                    if (valuePerSecond < 1.0)
+                                    {
+                                        rightSideText += (int)currValue + "(" + (valuePerSecond * 60.0).ToStringDot("0") + "/m)";
+                                    }
+                                    else
+                                    {
+                                        rightSideText += (int)currValue + "(" + valuePerSecond.ToStringDot("0") + "/s)";
+                                    }
                                     statsBars.Add(new PageUtility.StatsBarData
                                     {
                                         m_BeforeBarText = "#" + players,// + "(" + string.Format("{0:0.0%}", percentage) + ")",
@@ -653,7 +672,7 @@ namespace VF
                                     });
                                 }
                             }
-                            else if (unit.Item1.Contains("(Pet for"))
+                            else if (unit.Item1.Contains("(Pet for") && currValue > 0 && dataPresentTypeInfo.m_ValidCheck(unit.Item2))
                             {
                                 double percentage = (double)currValue / totalValue;
 
@@ -665,7 +684,16 @@ namespace VF
                                     string classColor = "#00FF00";
                                     //newBossSection += "VF_CreateDmgBar(" + displayPercentage.ToString(System.Globalization.CultureInfo.InvariantCulture) + ", '" + classColor + "', '<player," + unit.Item1 + ">" + unit.Item1 + "(" + (currValue / interestingFight.m_Fight.FightDuration).ToString("0.0", System.Globalization.CultureInfo.InvariantCulture) + "/s)','#000000', '" + (int)currValue + "(" + string.Format("{0:0.0%}", percentage) + ")');";
 
-                                    string rightSideText = "" + (int)currValue + "(" + (currValue / _Fight.GetFightDuration()).ToStringDot("0") + "/s)";
+                                    double valuePerSecond = (currValue / _Fight.GetFightDuration());
+                                    string rightSideText = "";
+                                    if (valuePerSecond < 1.0)
+                                    {
+                                        rightSideText += (int)currValue + "(" + (valuePerSecond * 60.0).ToStringDot("0") + "/m)";
+                                    }
+                                    else
+                                    {
+                                        rightSideText += (int)currValue + "(" + valuePerSecond.ToStringDot("0") + "/s)";
+                                    }
                                     statsBars.Add(new PageUtility.StatsBarData
                                     {
                                         m_BeforeBarText = "#" + players,// + "(" + string.Format("{0:0.0%}", percentage) + ")",
@@ -680,9 +708,21 @@ namespace VF
                             }
                         }
                         //graphSection += newBossSection;
-                        statsBarStyle.m_TitleText = dataPresentTypeInfo.m_TypeName + "(" + (totalValue / 1000).ToStringDot("0.0") + "k)";
+                        if(totalValue > 10000)
+                        {
+                            statsBarStyle.m_TitleText = dataPresentTypeInfo.m_TypeName + "(" + (totalValue / 1000).ToStringDot("0.0") + "k)";
+                        }
+                        else
+                        {
+                            statsBarStyle.m_TitleText = dataPresentTypeInfo.m_TypeName + "(" + (int)totalValue + ")";
+                        }
                         if (dataPresentTypeInfo.m_TypeName == "Damage" || dataPresentTypeInfo.m_TypeName == "Threat" || dataPresentTypeInfo.m_TypeName == "Damage Taken")
                             dmgThreatSection += PageUtility.CreateStatsBars_HTML(statsBarStyle, statsBars, dataPresentTypeInfo.m_Count);
+                        else if(dataPresentTypeInfo.m_TypeName == "Decurse/Dispells" && statsBars.Count > 0)
+                        {
+                            decurseInfoPresent = true;
+                            healSection += PageUtility.CreateStatsBars_HTML(statsBarStyle, statsBars, dataPresentTypeInfo.m_Count);
+                        }
                         else
                             healSection += PageUtility.CreateStatsBars_HTML(statsBarStyle, statsBars, dataPresentTypeInfo.m_Count);
                     }
@@ -753,6 +793,7 @@ namespace VF
             //new DataPresentTypeInfo((VF_RaidDamageDatabase.UnitData _UnitData) => { return (double)_UnitData.DPS; }, "DPS", 10, (VF_RaidDamageDatabase.UnitData _UnitData) => { return _UnitData.Dmg > 0; }),
             new DataPresentTypeInfo((VF_RaidDamageDatabase.UnitData _UnitData) => { return (double)_UnitData.I.EffHeal; }, "Efficient Heal"),
             //new DataPresentTypeInfo((VF_RaidDamageDatabase.UnitData _UnitData) => { return (double)_UnitData.HPS; }, "HPS", 10, (VF_RaidDamageDatabase.UnitData _UnitData) => { return _UnitData.EffHeal > 0; }),
+            new DataPresentTypeInfo((VF_RaidDamageDatabase.UnitData _UnitData) => { return (double)_UnitData.I.Decurse; }, "Decurse/Dispells"),
             new DataPresentTypeInfo((VF_RaidDamageDatabase.UnitData _UnitData) => { return (double)_UnitData.I.OverHeal; }, "Overheal"),
             new DataPresentTypeInfo((VF_RaidDamageDatabase.UnitData _UnitData) => { return (double)_UnitData.I.RawHeal; }, "Raw Heal"),
             //new DataPresentTypeInfo((VF_RaidDamageDatabase.UnitData _UnitData) => { return (double)_UnitData.ThreatValue; }, "Threat", 25),
