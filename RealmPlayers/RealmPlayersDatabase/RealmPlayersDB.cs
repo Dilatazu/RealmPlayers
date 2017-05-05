@@ -17,7 +17,7 @@ public class RealmPlayersDB
                 {
                     if (_DebugMode == true)
                     {
-                        sm_GlobalInstance = new VF.MongoDatabase("192.168.1.198", "RealmPlayersDB");
+                        sm_GlobalInstance = new VF.MongoDatabase("192.168.1.115", "RealmPlayersDB");
                     }
                     else
                     {

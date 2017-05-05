@@ -67,8 +67,12 @@ namespace VF
                                 m_Connected = true;
                         }
                         catch (Exception)
-                        { }
-                        m_TryingToReconnect = false;
+                        {
+                        }
+                        lock (m_Client)
+                        {
+                            m_TryingToReconnect = false;
+                        }
                     })).Start();
                 }
             }

@@ -35,7 +35,7 @@ namespace RealmPlayersServer
             ContributorDB.Initialize(RealmPlayersServer.Constants.DevMode);
             try
             {
-                if (ContributorDB.GetMongoDB().IsConnected() == false)
+                if (ContributorDB.GetMongoDB() == null || ContributorDB.GetMongoDB().IsConnected() == false)
                 {
                     System.Threading.Thread.Sleep(500);
                     ContributorDB.GetMongoDB().IsConnected();
