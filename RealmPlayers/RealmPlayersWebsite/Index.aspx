@@ -54,12 +54,13 @@
                                 <asp:ListItem Text="NostalGeek(FR)" Value="NG"/>
                                 <asp:ListItem Text="Nemesis" Value="NES"/>
                                 <asp:ListItem Text="Nostralia" Value="NST" />
-                                <asp:ListItem Text="Archangel(TBC)" Value="ArA"/>
-                                <asp:ListItem Text="Wildhammer(TBC)" Value="VWH" />
-                                <asp:ListItem Text="Stonetalon(TBC)" Value="VST" />
+                                <asp:ListItem Text="Archangel" Value="ArA"/>
+                                <asp:ListItem Text="Wildhammer" Value="VWH" />
+                                <asp:ListItem Text="Stonetalon" Value="VST" />
                                 <asp:ListItem Text="ExcaliburTBC" Value="EXC" />
-                                <asp:ListItem Text="Hellfire(TBC)" Value="HLF" />
-                                <asp:ListItem Text="HellGround(TBC)" Value="HG" />
+                                <asp:ListItem Text="WarGate" Value="HG" />
+                                <asp:ListItem Text="Hellfire I" Value="HLF" />
+                                <asp:ListItem Text="Hellfire II" Value="HF2" />
                                 <asp:ListItem Text="WarsongTBC" Value="WBC"/>
                                 <asp:ListItem Text="Valkyrie" Value="VAL"/>
                                 <asp:ListItem Text="Emerald Dream" Value="ED"/>

@@ -108,89 +108,47 @@ namespace VF_RPDatabase
         public UInt64 m_EntityCounter_HellGround = 0L;
         [ProtoMember(27)]
         public UInt64 m_EntityCounter_Nostralia = 0L;
+        [ProtoMember(28)]
+        public UInt64 m_EntityCounter_Hellfire2 = 0L;
 
+        private UInt64 GetRealmBitNR(WowRealm _Realm)
+        {
+            switch (_Realm)
+            {
+                case WowRealm.Emerald_Dream: return 1UL;
+                case WowRealm.Warsong: return 2UL;
+                case WowRealm.Al_Akir: return 3UL;
+                case WowRealm.Valkyrie: return 4UL;
+                case WowRealm.VanillaGaming: return 5UL;
+                case WowRealm.Rebirth: return 6UL;
+                case WowRealm.Archangel: return 7UL;
+                case WowRealm.Nostalrius: return 8UL;
+                case WowRealm.Kronos: return 9UL;
+                case WowRealm.NostalGeek: return 10UL;
+                case WowRealm.Nefarian: return 11UL;
+                case WowRealm.NostalriusPVE: return 12UL;
+                case WowRealm.WarsongTBC: return 13UL;
+                case WowRealm.KronosII: return 14UL;
+                case WowRealm.Vengeance_Wildhammer: return 15UL;
+                case WowRealm.ExcaliburTBC: return 16UL;
+                case WowRealm.L4G_Hellfire: return 17UL;
+                case WowRealm.Warsong2: return 18UL;
+                case WowRealm.Vengeance_Stonetalon: return 19UL;
+                case WowRealm.Elysium: return 20UL;
+                case WowRealm.Elysium2: return 21UL;
+                case WowRealm.Zeth_Kur: return 22UL;
+                case WowRealm.Nemesis: return 23UL;
+                case WowRealm.HellGround: return 24UL;
+                case WowRealm.Nostralia: return 25UL;
+                case WowRealm.Hellfire2: return 26UL;
+            }
+            return 0UL;
+        }
         private void CalcRealmBits(WowRealm _Realm, out UInt64 _BitMask, out UInt64 _RealmValue)
         {
             _BitMask = 0xFFUL << 56;
-            _RealmValue = _BitMask;
-            switch (_Realm)
-	        {
-                case WowRealm.Emerald_Dream:
-                    _RealmValue = 1UL << 56;
-                    break;
-                case WowRealm.Warsong:
-                    _RealmValue = 2UL << 56;
-                    break;
-                case WowRealm.Al_Akir:
-                    _RealmValue = 3UL << 56;
-                    break;
-                case WowRealm.Valkyrie:
-                    _RealmValue = 4UL << 56;
-                    break;
-                case WowRealm.VanillaGaming:
-                    _RealmValue = 5UL << 56;
-                    break;
-                case WowRealm.Rebirth:
-                    _RealmValue = 6UL << 56;
-                    break;
-                case WowRealm.Archangel:
-                    _RealmValue = 7UL << 56;
-                    break;
-                case WowRealm.Nostalrius:
-                    _RealmValue = 8UL << 56;
-                    break;
-                case WowRealm.Kronos:
-                    _RealmValue = 9UL << 56;
-                    break;
-                case WowRealm.NostalGeek:
-                    _RealmValue = 10UL << 56;
-                    break;
-                case WowRealm.Nefarian:
-                    _RealmValue = 11UL << 56;
-                    break;
-                case WowRealm.NostalriusPVE:
-                    _RealmValue = 12UL << 56;
-                    break;
-                case WowRealm.WarsongTBC:
-                    _RealmValue = 13UL << 56;
-                    break;
-                case WowRealm.KronosII:
-                    _RealmValue = 14UL << 56;
-                    break;
-                case WowRealm.Vengeance_Wildhammer:
-                    _RealmValue = 15UL << 56;
-                    break;
-                case WowRealm.ExcaliburTBC:
-                    _RealmValue = 16UL << 56;
-                    break;
-                case WowRealm.L4G_Hellfire:
-                    _RealmValue = 17UL << 56;
-                    break;
-                case WowRealm.Warsong2:
-                    _RealmValue = 18UL << 56;
-                    break;
-                case WowRealm.Vengeance_Stonetalon:
-                    _RealmValue = 19UL << 56;
-                    break;
-                case WowRealm.Elysium:
-                    _RealmValue = 20UL << 56;
-                    break;
-                case WowRealm.Elysium2:
-                    _RealmValue = 21UL << 56;
-                    break;
-                case WowRealm.Zeth_Kur:
-                    _RealmValue = 22UL << 56;
-                    break;
-                case WowRealm.Nemesis:
-                    _RealmValue = 23UL << 56;
-                    break;
-                case WowRealm.HellGround:
-                    _RealmValue = 24UL << 56;
-                    break;
-                case WowRealm.Nostralia:
-                    _RealmValue = 25UL << 56;
-                    break;
-            }
+            _RealmValue = GetRealmBitNR(_Realm) << 56;
+            if (_RealmValue == 0) _RealmValue = _BitMask;
         }
         public int GetItemUsageCount(WowRealm _Realm, ItemInfo _Item)
         {
@@ -260,110 +218,40 @@ namespace VF_RPDatabase
             string entityLinkStr = VF_RealmPlayersDatabase.Utility.GetRealmPreString(_Realm) + _PlayerName;
             if(m_PlayerIDs.TryGetValue(entityLinkStr, out entityID) == true)
                 return entityID;
-            
+
+            entityID = GetRealmBitNR(_Realm) << 56;
             switch (_Realm)
             {
-                case WowRealm.Emerald_Dream:
-                    entityID = (1UL << 56) | m_EntityCounter_Emerald_Dream++;
-                    m_PlayerIDs.Add(entityLinkStr, entityID);
-                    break;
-                case WowRealm.Warsong:
-                    entityID = (2UL << 56) | m_EntityCounter_Warsong++;
-                    m_PlayerIDs.Add(entityLinkStr, entityID);
-                    break;
-                case WowRealm.Al_Akir:
-                    entityID = (3UL << 56) | m_EntityCounter_Al_Akir++;
-                    m_PlayerIDs.Add(entityLinkStr, entityID);
-                    break;
-                case WowRealm.Valkyrie:
-                    entityID = (4UL << 56) | m_EntityCounter_Valkyrie++;
-                    m_PlayerIDs.Add(entityLinkStr, entityID);
-                    break;
-                case WowRealm.VanillaGaming:
-                    entityID = (5UL << 56) | m_EntityCounter_VanillaGaming++;
-                    m_PlayerIDs.Add(entityLinkStr, entityID);
-                    break;
-                case WowRealm.Rebirth:
-                    entityID = (6UL << 56) | m_EntityCounter_Rebirth++;
-                    m_PlayerIDs.Add(entityLinkStr, entityID);
-                    break;
-                case WowRealm.Archangel:
-                    entityID = (7UL << 56) | m_EntityCounter_Archangel++;
-                    m_PlayerIDs.Add(entityLinkStr, entityID);
-                    break;
-                case WowRealm.Nostalrius:
-                    entityID = (8UL << 56) | m_EntityCounter_Nostalrius++;
-                    m_PlayerIDs.Add(entityLinkStr, entityID);
-                    break;
-                case WowRealm.Kronos:
-                    entityID = (9UL << 56) | m_EntityCounter_Kronos++;
-                    m_PlayerIDs.Add(entityLinkStr, entityID);
-                    break;
-                case WowRealm.NostalGeek:
-                    entityID = (10UL << 56) | m_EntityCounter_NostalGeek++;
-                    m_PlayerIDs.Add(entityLinkStr, entityID);
-                    break;
-                case WowRealm.Nefarian:
-                    entityID = (11UL << 56) | m_EntityCounter_Nefarian++;
-                    m_PlayerIDs.Add(entityLinkStr, entityID);
-                    break;
-                case WowRealm.NostalriusPVE:
-                    entityID = (12UL << 56) | m_EntityCounter_NostalriusPVE++;
-                    m_PlayerIDs.Add(entityLinkStr, entityID);
-                    break;
-                case WowRealm.WarsongTBC:
-                    entityID = (13UL << 56) | m_EntityCounter_WarsongTBC++;
-                    m_PlayerIDs.Add(entityLinkStr, entityID);
-                    break;
-                case WowRealm.KronosII:
-                    entityID = (14UL << 56) | m_EntityCounter_KronosII++;
-                    m_PlayerIDs.Add(entityLinkStr, entityID);
-                    break;
-                case WowRealm.Vengeance_Wildhammer:
-                    entityID = (15UL << 56) | m_EntityCounter_Vengeance_Wildhammer++;
-                    m_PlayerIDs.Add(entityLinkStr, entityID);
-                    break;
-                case WowRealm.ExcaliburTBC:
-                    entityID = (16UL << 56) | m_EntityCounter_ExcaliburTBC++;
-                    m_PlayerIDs.Add(entityLinkStr, entityID);
-                    break;
-                case WowRealm.L4G_Hellfire:
-                    entityID = (17UL << 56) | m_EntityCounter_L4G_Hellfire++;
-                    m_PlayerIDs.Add(entityLinkStr, entityID);
-                    break;
-                case WowRealm.Warsong2:
-                    entityID = (18UL << 56) | m_EntityCounter_Warsong2++;
-                    m_PlayerIDs.Add(entityLinkStr, entityID);
-                    break;
-                case WowRealm.Vengeance_Stonetalon:
-                    entityID = (19UL << 56) | m_EntityCounter_Vengeance_Stonetalon++;
-                    m_PlayerIDs.Add(entityLinkStr, entityID);
-                    break;
-                case WowRealm.Elysium:
-                    entityID = (20UL << 56) | m_EntityCounter_Elysium++;
-                    m_PlayerIDs.Add(entityLinkStr, entityID);
-                    break;
-                case WowRealm.Elysium2:
-                    entityID = (21UL << 56) | m_EntityCounter_Elysium2++;
-                    m_PlayerIDs.Add(entityLinkStr, entityID);
-                    break;
-                case WowRealm.Zeth_Kur:
-                    entityID = (22UL << 56) | m_EntityCounter_Zeth_Kur++;
-                    m_PlayerIDs.Add(entityLinkStr, entityID);
-                    break;
-                case WowRealm.Nemesis:
-                    entityID = (23UL << 56) | m_EntityCounter_Nemesis++;
-                    m_PlayerIDs.Add(entityLinkStr, entityID);
-                    break;
-                case WowRealm.HellGround:
-                    entityID = (24UL << 56) | m_EntityCounter_HellGround++;
-                    m_PlayerIDs.Add(entityLinkStr, entityID);
-                    break;
-                case WowRealm.Nostralia:
-                    entityID = (25UL << 56) | m_EntityCounter_Nostralia++;
-                    m_PlayerIDs.Add(entityLinkStr, entityID);
-                    break;
+                case WowRealm.Emerald_Dream:    entityID |= m_EntityCounter_Emerald_Dream++; break;
+                case WowRealm.Warsong:          entityID |= m_EntityCounter_Warsong++; break;
+                case WowRealm.Al_Akir:          entityID |= m_EntityCounter_Al_Akir++; break;
+                case WowRealm.Valkyrie:         entityID |= m_EntityCounter_Valkyrie++;  break;
+                case WowRealm.VanillaGaming:    entityID |= m_EntityCounter_VanillaGaming++; break;
+                case WowRealm.Rebirth:          entityID |= m_EntityCounter_Rebirth++; break;
+                case WowRealm.Archangel:        entityID |= m_EntityCounter_Archangel++; break;
+                case WowRealm.Nostalrius:       entityID |= m_EntityCounter_Nostalrius++; break;
+                case WowRealm.Kronos:           entityID |= m_EntityCounter_Kronos++;  break;
+                case WowRealm.NostalGeek:       entityID |= m_EntityCounter_NostalGeek++;  break;
+                case WowRealm.Nefarian:         entityID |= m_EntityCounter_Nefarian++;break;
+                case WowRealm.NostalriusPVE:    entityID |= m_EntityCounter_NostalriusPVE++; break;
+                case WowRealm.WarsongTBC:       entityID |= m_EntityCounter_WarsongTBC++; break;
+                case WowRealm.KronosII:         entityID |= m_EntityCounter_KronosII++; break;
+                case WowRealm.Vengeance_Wildhammer:     entityID |= m_EntityCounter_Vengeance_Wildhammer++; break;
+                case WowRealm.ExcaliburTBC:     entityID |= m_EntityCounter_ExcaliburTBC++; break;
+                case WowRealm.L4G_Hellfire:     entityID |= m_EntityCounter_L4G_Hellfire++; break;
+                case WowRealm.Warsong2:         entityID |= m_EntityCounter_Warsong2++;  break;
+                case WowRealm.Vengeance_Stonetalon:     entityID |= m_EntityCounter_Vengeance_Stonetalon++;  break;
+                case WowRealm.Elysium:          entityID |= m_EntityCounter_Elysium++;break;
+                case WowRealm.Elysium2:         entityID |= m_EntityCounter_Elysium2++;   break;
+                case WowRealm.Zeth_Kur:         entityID |= m_EntityCounter_Zeth_Kur++; break;
+                case WowRealm.Nemesis:          entityID |= m_EntityCounter_Nemesis++; break;
+                case WowRealm.HellGround:       entityID |= m_EntityCounter_HellGround++; break;
+                case WowRealm.Nostralia:        entityID |= m_EntityCounter_Nostralia++; break;
+                case WowRealm.Hellfire2:        entityID |= m_EntityCounter_Hellfire2++; break;
+                default:
+                    return UInt64.MaxValue;
             }
+            m_PlayerIDs.Add(entityLinkStr, entityID);
             return entityID;
         }
         public void GetEntityInfo(UInt64 _EntityID, out string _PlayerName, out WowRealm _Realm)
@@ -428,6 +316,8 @@ namespace VF_RPDatabase
                     return WowRealm.HellGround;
                 case 25UL:
                     return WowRealm.Nostralia;
+                case 26UL:
+                    return WowRealm.Hellfire2;
                 default:
                     VF_RealmPlayersDatabase.Logger.ConsoleWriteLine("Error GetPlayerRealm failed. Realm(" + realm + ") was not valid!!!");
                     return WowRealm.Unknown;

@@ -88,6 +88,7 @@ namespace RealmPlayersServer.Code.Resources
             {WowRealm.Nemesis , "NES"},
             {WowRealm.HellGround , "HG"},
             {WowRealm.Nostralia , "NST"},
+            {WowRealm.Hellfire2, "HF2" }
         };
         public static Dictionary<WowRealm, string> _RealmVisualString = new Dictionary<WowRealm, string>
         {
@@ -110,15 +111,16 @@ namespace RealmPlayersServer.Code.Resources
 	        {WowRealm.Test_Server , "Test Server"},
 	        {WowRealm.Vengeance_Wildhammer , "Wildhammer"},
             {WowRealm.ExcaliburTBC , "ExcaliburTBC"},
-            {WowRealm.L4G_Hellfire , "Hellfire"},
+            {WowRealm.L4G_Hellfire , "Hellfire I"},
             {WowRealm.Warsong2 , "Warsong"},
             {WowRealm.Vengeance_Stonetalon , "Stonetalon"},
             {WowRealm.Elysium , "Elysium(Old)"},
             {WowRealm.Elysium2 , "Elysium"},
             {WowRealm.Zeth_Kur , "Zeth'Kur"},
             {WowRealm.Nemesis , "Nemesis"},
-            {WowRealm.HellGround , "HellGround"},
+            {WowRealm.HellGround , "WarGate"},
             {WowRealm.Nostralia , "Nostralia"},
+            {WowRealm.Hellfire2, "Hellfire II" },
         };
         public static Dictionary<int, string> _HordeRankVisualName = new Dictionary<int, string>
         {

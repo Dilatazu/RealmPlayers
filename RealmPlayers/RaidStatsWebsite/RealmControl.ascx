@@ -17,12 +17,13 @@
         <asp:ListItem Text="Nostralia" Value="NST" />
         <asp:ListItem Text="Elysium(Old)" Value="ELY" />
         <asp:ListItem Text="Warsong(Feenix)" Value="WS2" />
-        <asp:ListItem Text="Archangel(TBC)" Value="ArA" />
-        <asp:ListItem Text="Wildhammer(TBC)" Value="VWH" />
-        <asp:ListItem Text="Stonetalon(TBC)" Value="VST" />
+        <asp:ListItem Text="Archangel" Value="ArA" />
+        <asp:ListItem Text="Wildhammer" Value="VWH" />
+        <asp:ListItem Text="Stonetalon" Value="VST" />
         <asp:ListItem Text="ExcaliburTBC" Value="EXC" />
-        <asp:ListItem Text="Hellfire(TBC)" Value="HLF" />
-        <asp:ListItem Text="HellGround(TBC)" Value="HG" />
+        <asp:ListItem Text="WarGate" Value="HG" />
+        <asp:ListItem Text="Hellfire I" Value="HLF" />
+        <asp:ListItem Text="Hellfire II" Value="HF2" />
         <asp:ListItem Text="Valkyrie" Value="VAL" style="visibility:hidden; height:0px; line-height: 0px; overflow:hidden; display:block;"/>
         <asp:ListItem Text="Emerald Dream" Value="ED" style="visibility:hidden; height:0px; line-height: 0px; overflow:hidden; display:block;"/>
         <asp:ListItem Text="Warsong" Value="WSG" style="visibility:hidden; height:0px; line-height: 0px; overflow:hidden; display:block;"/>

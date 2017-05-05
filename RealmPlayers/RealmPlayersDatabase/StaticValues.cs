@@ -35,6 +35,7 @@ namespace VF_RealmPlayersDatabase
         Nemesis = 25,
         HellGround = 26,
         Nostralia = 27,
+        Hellfire2 = 28,
     }
     public enum WowVersionEnum
     {
@@ -687,9 +688,18 @@ namespace VF_RealmPlayersDatabase
             {"NES", WowRealm.Nemesis },
             {"HellGround", WowRealm.HellGround },
             {"Hellground", WowRealm.HellGround },
+            {"WarGate", WowRealm.HellGround },
+            {"Wargate", WowRealm.HellGround },
             {"HG", WowRealm.HellGround },
             {"Nostralia", WowRealm.Nostralia },
             {"NST", WowRealm.Nostralia },
+            {"Hellfire I (Instant)", WowRealm.L4G_Hellfire},
+            {"Hellfire I", WowRealm.L4G_Hellfire},
+            {"Hellfire II (Progressive)", WowRealm.Hellfire2},
+            {"Hellfire ii (progressive)", WowRealm.Hellfire2},
+            {"Hellfire II (progressive)", WowRealm.Hellfire2},
+            {"Hellfire II", WowRealm.Hellfire2},
+            {"HF2", WowRealm.Hellfire2},
         };
         public static WowRealm ConvertRealm(string _Realm)
         {
@@ -717,7 +727,7 @@ namespace VF_RealmPlayersDatabase
             {
                 return WowVersionEnum.Vanilla;
             }
-            else if (_Realm == WowRealm.Archangel || _Realm == WowRealm.WarsongTBC || _Realm == WowRealm.Vengeance_Wildhammer || _Realm == WowRealm.ExcaliburTBC || _Realm == WowRealm.L4G_Hellfire || _Realm == WowRealm.Vengeance_Stonetalon || _Realm == WowRealm.HellGround)
+            else if (_Realm == WowRealm.Archangel || _Realm == WowRealm.WarsongTBC || _Realm == WowRealm.Vengeance_Wildhammer || _Realm == WowRealm.ExcaliburTBC || _Realm == WowRealm.L4G_Hellfire || _Realm == WowRealm.Vengeance_Stonetalon || _Realm == WowRealm.HellGround || _Realm == WowRealm.Hellfire2)
             {
                 return WowVersionEnum.TBC;
             }

@@ -33,6 +33,7 @@ namespace VF_RealmPlayersDatabase
             WowRealm.Nemesis,
             WowRealm.HellGround,
             WowRealm.Nostralia,
+            WowRealm.Hellfire2,
         };
 
         Dictionary<WowRealm, RealmDatabase> m_Realms = new Dictionary<WowRealm, RealmDatabase>();

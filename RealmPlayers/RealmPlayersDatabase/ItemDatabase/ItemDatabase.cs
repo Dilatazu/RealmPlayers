@@ -61,6 +61,7 @@ namespace VF_RealmPlayersDatabase
                 case WowRealm.ExcaliburTBC:
                     return (0x12U << 24) + _ItemID;
                 case WowRealm.L4G_Hellfire:
+                case WowRealm.Hellfire2:
                 case WowRealm.HellGround: //Should have own ID
                     return (0x13U << 24) + _ItemID;
                 default:
