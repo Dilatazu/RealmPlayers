@@ -58,10 +58,12 @@ namespace VF_WoWLauncherServer
         {
             if (m_RaidCollection != null)
             {
+                int stepsCompleted = 0;
                 try
                 {
                     Logger.ConsoleWriteLine("Started saving all the accumulated RaidCollection.dat changes!", ConsoleColor.Green);
                     VF.Utility.BackupFile(m_RDDBFolder + "RaidCollection.dat", VF.Utility.BackupMode.Backup_Daily);
+                    stepsCompleted = 1;
                     int tryCount = 1;
                     while(true)
                     {
@@ -79,8 +81,27 @@ namespace VF_WoWLauncherServer
                         }
                         ++tryCount;
                     }
+                    stepsCompleted = 2;
 
-                    UpdateSummaryDatabase(m_GetFightDataCollectionCache, m_RaidsModifiedSinceLastSummaryUpdate);
+                    tryCount = 1;
+                    while (true)
+                    {
+                        try
+                        {
+                            UpdateSummaryDatabase(m_GetFightDataCollectionCache, m_RaidsModifiedSinceLastSummaryUpdate);
+                            break;
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine("Failed to UpdateSummaryDatabase!!! Trying again!(Try Nr " + tryCount + "/10", ConsoleColor.Red);
+                            if (tryCount > 10)
+                                throw ex;
+                            System.Threading.Thread.Sleep(10000 * tryCount);
+                        }
+                        ++tryCount;
+                    }
+
+                    stepsCompleted = 3;
                     m_GetFightDataCollectionCache = new Dictionary<string, FightDataCollection>();
                     m_RaidsModifiedSinceLastSummaryUpdate = new List<RaidCollection_Raid>();
                     Logger.ConsoleWriteLine("Done saving all the accumulated RaidCollection.dat changes!", ConsoleColor.Green);
@@ -89,14 +110,17 @@ namespace VF_WoWLauncherServer
                     {
                         BackupRDContribution(problemData, RDContributionType.Problem);
                     }
+                    stepsCompleted = 4;
                     foreach (string emptyData in m_AddedEmptyFiles)
                     {
                         BackupRDContribution(emptyData, RDContributionType.Empty);
                     }
+                    stepsCompleted = 5;
                     foreach (string contribution in m_AddedContributionFiles)
                     {
                         BackupRDContribution(contribution, RDContributionType.Data);
                     }
+                    stepsCompleted = 6;
                     m_ProblemFiles.Clear();
                     m_AddedContributionFiles.Clear();
                     m_AddedEmptyFiles.Clear();
@@ -109,10 +133,16 @@ namespace VF_WoWLauncherServer
                 {
                     Logger.LogException(ex);
                     Logger.ConsoleWriteLine("Well, if this happens give up...", ConsoleColor.Red);
+                    int i = 0;
                     while (true)
                     {
-                        System.Threading.Thread.Sleep(5000);
-                        Console.Write("ASSESS DAMAGE(RS)! ", ConsoleColor.Red);
+                        System.Threading.Thread.Sleep(10000);
+                        Console.Write("ASSESS DAMAGE(RS-" + stepsCompleted + ")! ", ConsoleColor.Red);
+                        if(i++ > 10)
+                        {
+                            Console.Write(ex.ToString(), ConsoleColor.Red);
+                            i = 0;
+                        }
                     }
                 }
             }

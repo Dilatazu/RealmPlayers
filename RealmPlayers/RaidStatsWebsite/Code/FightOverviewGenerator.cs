@@ -718,10 +718,13 @@ namespace VF
                         }
                         if (dataPresentTypeInfo.m_TypeName == "Damage" || dataPresentTypeInfo.m_TypeName == "Threat" || dataPresentTypeInfo.m_TypeName == "Damage Taken")
                             dmgThreatSection += PageUtility.CreateStatsBars_HTML(statsBarStyle, statsBars, dataPresentTypeInfo.m_Count);
-                        else if(dataPresentTypeInfo.m_TypeName == "Decurse/Dispells" && statsBars.Count > 0)
+                        else if(dataPresentTypeInfo.m_TypeName == "Decurse/Dispells")
                         {
-                            decurseInfoPresent = true;
-                            healSection += PageUtility.CreateStatsBars_HTML(statsBarStyle, statsBars, dataPresentTypeInfo.m_Count);
+                            if(statsBars.Count > 0)
+                            {
+                                decurseInfoPresent = true;
+                                healSection += PageUtility.CreateStatsBars_HTML(statsBarStyle, statsBars, dataPresentTypeInfo.m_Count);
+                            }
                         }
                         else
                             healSection += PageUtility.CreateStatsBars_HTML(statsBarStyle, statsBars, dataPresentTypeInfo.m_Count);
