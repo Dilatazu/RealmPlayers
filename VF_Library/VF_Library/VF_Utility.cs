@@ -44,6 +44,8 @@ namespace VF
             Backup_Daily,
         }
         public static string s_AppStartDate = DateTime.Now.ToString("yyyyMMddhh");
+        public static string s_BackupFromPath = "R:\\";
+        public static string s_BackupToPath = "S:\\VF_R_Backups\\";
         public static void BackupFile(string _Filename, BackupMode _BackupMode)
         {
             if (System.IO.File.Exists(_Filename) == true)
@@ -52,16 +54,18 @@ namespace VF
                 if (fileFolder != "")
                     fileFolder += "\\";
                 string backupbackupID = "A" + s_AppStartDate + "B" + DateTime.Now.ToString("yyyy_MM_dd");
+                string backupToFolder = s_BackupToPath + backupbackupID + "\\";
+                fileFolder = fileFolder.Replace(s_BackupFromPath, backupToFolder);
                 string backupFileName = "";
                 if (_BackupMode == BackupMode.Backup_Always_TimeInFilename)
                 {
                     var fileName = System.IO.Path.GetFileNameWithoutExtension(_Filename) + DateTime.Now.ToString(" HH_mm_ss_fff") + Path.GetExtension(_Filename);
-                    backupFileName = fileFolder + "Backup\\" + backupbackupID + "\\" + fileName;
+                    backupFileName = fileFolder + /*"Backup\\" + backupbackupID + "\\" + */fileName;
                     backupFileName = ConvertToUniqueFilename(backupFileName, '_');
                 }
                 else if (_BackupMode == BackupMode.Backup_Daily)
                 {
-                    backupFileName = fileFolder + "Backup\\" + backupbackupID + "\\" + System.IO.Path.GetFileNameWithoutExtension(_Filename) + Path.GetExtension(_Filename);
+                    backupFileName = fileFolder + /*"Backup\\" + backupbackupID + "\\" + */System.IO.Path.GetFileNameWithoutExtension(_Filename) + Path.GetExtension(_Filename);
                 }
                 else
                     throw new Exception("Unexpected!");
