@@ -111,6 +111,9 @@ namespace VF_RPDatabase
         [ProtoMember(28)]
         public UInt64 m_EntityCounter_Hellfire2 = 0L;
 
+        [ProtoMember(29)]
+        public Dictionary<WowRealm, UInt64> m_EntityCounters_Realm = new Dictionary<WowRealm, UInt64>();
+
         private UInt64 GetRealmBitNR(WowRealm _Realm)
         {
             switch (_Realm)
@@ -249,7 +252,11 @@ namespace VF_RPDatabase
                 case WowRealm.Nostralia:        entityID |= m_EntityCounter_Nostralia++; break;
                 case WowRealm.Hellfire2:        entityID |= m_EntityCounter_Hellfire2++; break;
                 default:
-                    return UInt64.MaxValue;
+                    m_EntityCounters_Realm.AddIfKeyNotExist(_Realm, (UInt64)0);
+                    UInt64 currEntityCounterValue = m_EntityCounters_Realm[_Realm];
+                    entityID |= currEntityCounterValue;
+                    m_EntityCounters_Realm[_Realm] = currEntityCounterValue + 1;
+                    break;
             }
             m_PlayerIDs.Add(entityLinkStr, entityID);
             return entityID;
@@ -264,60 +271,33 @@ namespace VF_RPDatabase
             UInt64 realm = _EntityID >> 56;
             switch (realm)
             {
-                case 0UL:
-                    return WowRealm.Unknown;
-                case 1UL:
-                    return WowRealm.Emerald_Dream;
-                case 2UL:
-                    return WowRealm.Warsong;
-                case 3UL:
-                    return WowRealm.Al_Akir;
-                case 4UL:
-                    return WowRealm.Valkyrie;
-                case 5UL:
-                    return WowRealm.VanillaGaming;
-                case 6UL:
-                    return WowRealm.Rebirth;
-                case 7UL:
-                    return WowRealm.Archangel;
-                case 8UL:
-                    return WowRealm.Nostalrius;
-                case 9UL:
-                    return WowRealm.Kronos;
-                case 10UL:
-                    return WowRealm.NostalGeek;
-                case 11UL:
-                    return WowRealm.Nefarian;
-                case 12UL:
-                    return WowRealm.NostalriusPVE;
-                case 13UL:
-                    return WowRealm.WarsongTBC;
-                case 14UL:
-                    return WowRealm.KronosII;
-                case 15UL:
-                    return WowRealm.Vengeance_Wildhammer;
-                case 16UL:
-                    return WowRealm.ExcaliburTBC;
-                case 17UL:
-                    return WowRealm.L4G_Hellfire;
-                case 18UL:
-                    return WowRealm.Warsong2;
-                case 19UL:
-                    return WowRealm.Vengeance_Stonetalon;
-                case 20UL:
-                    return WowRealm.Elysium;
-                case 21UL:
-                    return WowRealm.Elysium2;
-                case 22UL:
-                    return WowRealm.Zeth_Kur;
-                case 23UL:
-                    return WowRealm.Nemesis;
-                case 24UL:
-                    return WowRealm.HellGround;
-                case 25UL:
-                    return WowRealm.Nostralia;
-                case 26UL:
-                    return WowRealm.Hellfire2;
+                case 0UL: return WowRealm.Unknown;
+                case 1UL: return WowRealm.Emerald_Dream;
+                case 2UL: return WowRealm.Warsong;
+                case 3UL: return WowRealm.Al_Akir;
+                case 4UL: return WowRealm.Valkyrie;
+                case 5UL: return WowRealm.VanillaGaming;
+                case 6UL: return WowRealm.Rebirth;
+                case 7UL: return WowRealm.Archangel;
+                case 8UL: return WowRealm.Nostalrius;
+                case 9UL: return WowRealm.Kronos;
+                case 10UL: return WowRealm.NostalGeek;
+                case 11UL: return WowRealm.Nefarian;
+                case 12UL: return WowRealm.NostalriusPVE;
+                case 13UL: return WowRealm.WarsongTBC;
+                case 14UL: return WowRealm.KronosII;
+                case 15UL: return WowRealm.Vengeance_Wildhammer;
+                case 16UL: return WowRealm.ExcaliburTBC;
+                case 17UL: return WowRealm.L4G_Hellfire;
+                case 18UL: return WowRealm.Warsong2;
+                case 19UL: return WowRealm.Vengeance_Stonetalon;
+                case 20UL: return WowRealm.Elysium;
+                case 21UL: return WowRealm.Elysium2;
+                case 22UL: return WowRealm.Zeth_Kur;
+                case 23UL: return WowRealm.Nemesis;
+                case 24UL: return WowRealm.HellGround;
+                case 25UL: return WowRealm.Nostralia;
+                case 26UL: return WowRealm.Hellfire2;
                 default:
                     VF_RealmPlayersDatabase.Logger.ConsoleWriteLine("Error GetPlayerRealm failed. Realm(" + realm + ") was not valid!!!");
                     return WowRealm.Unknown;
@@ -522,6 +502,34 @@ namespace VF_RPDatabase
             {
                 if (VF.Utility.LoadSerialize(databaseFile, out database) == false)
                     database = null;
+
+                //Update the new dictionary realm with all the old entitycounters!
+                database.m_EntityCounters_Realm.AddIfKeyNotExist(WowRealm.Emerald_Dream, database.m_EntityCounter_Emerald_Dream);
+                database.m_EntityCounters_Realm.AddIfKeyNotExist(WowRealm.Warsong, database.m_EntityCounter_Warsong);
+                database.m_EntityCounters_Realm.AddIfKeyNotExist(WowRealm.Al_Akir, database.m_EntityCounter_Al_Akir);
+                database.m_EntityCounters_Realm.AddIfKeyNotExist(WowRealm.Valkyrie, database.m_EntityCounter_Valkyrie);
+                database.m_EntityCounters_Realm.AddIfKeyNotExist(WowRealm.VanillaGaming, database.m_EntityCounter_VanillaGaming);
+                database.m_EntityCounters_Realm.AddIfKeyNotExist(WowRealm.Rebirth, database.m_EntityCounter_Rebirth);
+                database.m_EntityCounters_Realm.AddIfKeyNotExist(WowRealm.Archangel, database.m_EntityCounter_Archangel);
+                database.m_EntityCounters_Realm.AddIfKeyNotExist(WowRealm.Nostalrius, database.m_EntityCounter_Nostalrius);
+                database.m_EntityCounters_Realm.AddIfKeyNotExist(WowRealm.Kronos, database.m_EntityCounter_Kronos);
+                database.m_EntityCounters_Realm.AddIfKeyNotExist(WowRealm.NostalGeek, database.m_EntityCounter_NostalGeek);
+                database.m_EntityCounters_Realm.AddIfKeyNotExist(WowRealm.Nefarian, database.m_EntityCounter_Nefarian);
+                database.m_EntityCounters_Realm.AddIfKeyNotExist(WowRealm.NostalriusPVE, database.m_EntityCounter_NostalriusPVE);
+                database.m_EntityCounters_Realm.AddIfKeyNotExist(WowRealm.WarsongTBC, database.m_EntityCounter_WarsongTBC);
+                database.m_EntityCounters_Realm.AddIfKeyNotExist(WowRealm.KronosII, database.m_EntityCounter_KronosII);
+                database.m_EntityCounters_Realm.AddIfKeyNotExist(WowRealm.Vengeance_Wildhammer, database.m_EntityCounter_Vengeance_Wildhammer);
+                database.m_EntityCounters_Realm.AddIfKeyNotExist(WowRealm.ExcaliburTBC, database.m_EntityCounter_ExcaliburTBC);
+                database.m_EntityCounters_Realm.AddIfKeyNotExist(WowRealm.L4G_Hellfire, database.m_EntityCounter_L4G_Hellfire);
+                database.m_EntityCounters_Realm.AddIfKeyNotExist(WowRealm.Warsong2, database.m_EntityCounter_Warsong2);
+                database.m_EntityCounters_Realm.AddIfKeyNotExist(WowRealm.Vengeance_Stonetalon, database.m_EntityCounter_Vengeance_Stonetalon);
+                database.m_EntityCounters_Realm.AddIfKeyNotExist(WowRealm.Elysium, database.m_EntityCounter_Elysium);
+                database.m_EntityCounters_Realm.AddIfKeyNotExist(WowRealm.Elysium2, database.m_EntityCounter_Elysium2);
+                database.m_EntityCounters_Realm.AddIfKeyNotExist(WowRealm.Zeth_Kur, database.m_EntityCounter_Zeth_Kur);
+                database.m_EntityCounters_Realm.AddIfKeyNotExist(WowRealm.Nemesis, database.m_EntityCounter_Nemesis);
+                database.m_EntityCounters_Realm.AddIfKeyNotExist(WowRealm.HellGround, database.m_EntityCounter_HellGround);
+                database.m_EntityCounters_Realm.AddIfKeyNotExist(WowRealm.Nostralia, database.m_EntityCounter_Nostralia);
+                database.m_EntityCounters_Realm.AddIfKeyNotExist(WowRealm.Hellfire2, database.m_EntityCounter_Hellfire2);
             }
             //if (database != null)
             //{
