@@ -25,6 +25,10 @@
         <asp:ListItem Text="Hellfire II" Value="HF2" />
         <asp:ListItem Text="WarsongTBC" Value="WBC" />
         <asp:ListItem Text="Valkyrie" Value="VAL" />
+        <asp:ListItem Text="Outland" Value="OUT"/>
+        <asp:ListItem Text="Medivh" Value="MDV"/>
+        <asp:ListItem Text="Felmyst" Value="FLM"/>
+        <asp:ListItem Text="Firemaw" Value="FMW"/>
         <asp:ListItem Text="Emerald Dream" Value="ED" style="visibility:hidden; height:0px; line-height: 0px; overflow:hidden; display:block;"/>
         <asp:ListItem Text="Warsong" Value="WSG" style="visibility:hidden; height:0px; line-height: 0px; overflow:hidden; display:block;"/>
         <asp:ListItem Text="Al'Akir" Value="AlA" style="visibility:hidden; height:0px; line-height: 0px; overflow:hidden; display:block;"/>

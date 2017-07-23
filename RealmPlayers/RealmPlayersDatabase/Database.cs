@@ -34,6 +34,10 @@ namespace VF_RealmPlayersDatabase
             WowRealm.HellGround,
             WowRealm.Nostralia,
             WowRealm.Hellfire2,
+            WowRealm.Outland,
+            WowRealm.Medivh,
+            WowRealm.Firemaw,
+            WowRealm.Felmyst,
         };
 
         Dictionary<WowRealm, RealmDatabase> m_Realms = new Dictionary<WowRealm, RealmDatabase>();

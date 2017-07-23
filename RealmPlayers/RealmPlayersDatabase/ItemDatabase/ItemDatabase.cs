@@ -47,6 +47,7 @@ namespace VF_RealmPlayersDatabase
                 case WowRealm.Nostalrius:
                 case WowRealm.NostalriusPVE:
                 case WowRealm.Nostralia:
+                case WowRealm.Firemaw: //Should have own ID
                     return (5U << 24) + _ItemID;
                 case WowRealm.Kronos:
                 case WowRealm.KronosII:
@@ -63,6 +64,9 @@ namespace VF_RealmPlayersDatabase
                 case WowRealm.L4G_Hellfire:
                 case WowRealm.Hellfire2:
                 case WowRealm.HellGround: //Should have own ID
+                case WowRealm.Felmyst: //Should have own ID
+                case WowRealm.Outland: //Should have own ID
+                case WowRealm.Medivh: //Should have own ID
                     return (0x13U << 24) + _ItemID;
                 default:
                     break;

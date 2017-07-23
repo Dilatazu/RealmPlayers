@@ -144,6 +144,10 @@ namespace VF_RPDatabase
                 case WowRealm.HellGround: return 24UL;
                 case WowRealm.Nostralia: return 25UL;
                 case WowRealm.Hellfire2: return 26UL;
+                case WowRealm.Outland: return 27UL;
+                case WowRealm.Medivh: return 28UL;
+                case WowRealm.Firemaw: return 29UL;
+                case WowRealm.Felmyst: return 30UL;
             }
             return 0UL;
         }
@@ -223,41 +227,41 @@ namespace VF_RPDatabase
                 return entityID;
 
             entityID = GetRealmBitNR(_Realm) << 56;
-            switch (_Realm)
-            {
-                case WowRealm.Emerald_Dream:    entityID |= m_EntityCounter_Emerald_Dream++; break;
-                case WowRealm.Warsong:          entityID |= m_EntityCounter_Warsong++; break;
-                case WowRealm.Al_Akir:          entityID |= m_EntityCounter_Al_Akir++; break;
-                case WowRealm.Valkyrie:         entityID |= m_EntityCounter_Valkyrie++;  break;
-                case WowRealm.VanillaGaming:    entityID |= m_EntityCounter_VanillaGaming++; break;
-                case WowRealm.Rebirth:          entityID |= m_EntityCounter_Rebirth++; break;
-                case WowRealm.Archangel:        entityID |= m_EntityCounter_Archangel++; break;
-                case WowRealm.Nostalrius:       entityID |= m_EntityCounter_Nostalrius++; break;
-                case WowRealm.Kronos:           entityID |= m_EntityCounter_Kronos++;  break;
-                case WowRealm.NostalGeek:       entityID |= m_EntityCounter_NostalGeek++;  break;
-                case WowRealm.Nefarian:         entityID |= m_EntityCounter_Nefarian++;break;
-                case WowRealm.NostalriusPVE:    entityID |= m_EntityCounter_NostalriusPVE++; break;
-                case WowRealm.WarsongTBC:       entityID |= m_EntityCounter_WarsongTBC++; break;
-                case WowRealm.KronosII:         entityID |= m_EntityCounter_KronosII++; break;
-                case WowRealm.Vengeance_Wildhammer:     entityID |= m_EntityCounter_Vengeance_Wildhammer++; break;
-                case WowRealm.ExcaliburTBC:     entityID |= m_EntityCounter_ExcaliburTBC++; break;
-                case WowRealm.L4G_Hellfire:     entityID |= m_EntityCounter_L4G_Hellfire++; break;
-                case WowRealm.Warsong2:         entityID |= m_EntityCounter_Warsong2++;  break;
-                case WowRealm.Vengeance_Stonetalon:     entityID |= m_EntityCounter_Vengeance_Stonetalon++;  break;
-                case WowRealm.Elysium:          entityID |= m_EntityCounter_Elysium++;break;
-                case WowRealm.Elysium2:         entityID |= m_EntityCounter_Elysium2++;   break;
-                case WowRealm.Zeth_Kur:         entityID |= m_EntityCounter_Zeth_Kur++; break;
-                case WowRealm.Nemesis:          entityID |= m_EntityCounter_Nemesis++; break;
-                case WowRealm.HellGround:       entityID |= m_EntityCounter_HellGround++; break;
-                case WowRealm.Nostralia:        entityID |= m_EntityCounter_Nostralia++; break;
-                case WowRealm.Hellfire2:        entityID |= m_EntityCounter_Hellfire2++; break;
-                default:
+            //switch (_Realm)
+            //{
+            //    //case WowRealm.Emerald_Dream:    entityID |= m_EntityCounter_Emerald_Dream++; break;
+            //    //case WowRealm.Warsong:          entityID |= m_EntityCounter_Warsong++; break;
+            //    //case WowRealm.Al_Akir:          entityID |= m_EntityCounter_Al_Akir++; break;
+            //    //case WowRealm.Valkyrie:         entityID |= m_EntityCounter_Valkyrie++;  break;
+            //    //case WowRealm.VanillaGaming:    entityID |= m_EntityCounter_VanillaGaming++; break;
+            //    //case WowRealm.Rebirth:          entityID |= m_EntityCounter_Rebirth++; break;
+            //    //case WowRealm.Archangel:        entityID |= m_EntityCounter_Archangel++; break;
+            //    //case WowRealm.Nostalrius:       entityID |= m_EntityCounter_Nostalrius++; break;
+            //    //case WowRealm.Kronos:           entityID |= m_EntityCounter_Kronos++;  break;
+            //    //case WowRealm.NostalGeek:       entityID |= m_EntityCounter_NostalGeek++;  break;
+            //    //case WowRealm.Nefarian:         entityID |= m_EntityCounter_Nefarian++;break;
+            //    //case WowRealm.NostalriusPVE:    entityID |= m_EntityCounter_NostalriusPVE++; break;
+            //    //case WowRealm.WarsongTBC:       entityID |= m_EntityCounter_WarsongTBC++; break;
+            //    //case WowRealm.KronosII:         entityID |= m_EntityCounter_KronosII++; break;
+            //    //case WowRealm.Vengeance_Wildhammer:     entityID |= m_EntityCounter_Vengeance_Wildhammer++; break;
+            //    //case WowRealm.ExcaliburTBC:     entityID |= m_EntityCounter_ExcaliburTBC++; break;
+            //    //case WowRealm.L4G_Hellfire:     entityID |= m_EntityCounter_L4G_Hellfire++; break;
+            //    //case WowRealm.Warsong2:         entityID |= m_EntityCounter_Warsong2++;  break;
+            //    //case WowRealm.Vengeance_Stonetalon:     entityID |= m_EntityCounter_Vengeance_Stonetalon++;  break;
+            //    //case WowRealm.Elysium:          entityID |= m_EntityCounter_Elysium++;break;
+            //    //case WowRealm.Elysium2:         entityID |= m_EntityCounter_Elysium2++;   break;
+            //    //case WowRealm.Zeth_Kur:         entityID |= m_EntityCounter_Zeth_Kur++; break;
+            //    //case WowRealm.Nemesis:          entityID |= m_EntityCounter_Nemesis++; break;
+            //    //case WowRealm.HellGround:       entityID |= m_EntityCounter_HellGround++; break;
+            //    //case WowRealm.Nostralia:        entityID |= m_EntityCounter_Nostralia++; break;
+            //    //case WowRealm.Hellfire2:        entityID |= m_EntityCounter_Hellfire2++; break;
+            //    default:
                     m_EntityCounters_Realm.AddIfKeyNotExist(_Realm, (UInt64)0);
                     UInt64 currEntityCounterValue = m_EntityCounters_Realm[_Realm];
                     entityID |= currEntityCounterValue;
                     m_EntityCounters_Realm[_Realm] = currEntityCounterValue + 1;
-                    break;
-            }
+            //        break;
+            //}
             m_PlayerIDs.Add(entityLinkStr, entityID);
             return entityID;
         }
@@ -298,6 +302,10 @@ namespace VF_RPDatabase
                 case 24UL: return WowRealm.HellGround;
                 case 25UL: return WowRealm.Nostralia;
                 case 26UL: return WowRealm.Hellfire2;
+                case 27UL: return WowRealm.Outland;
+                case 28UL: return WowRealm.Medivh;
+                case 29UL: return WowRealm.Firemaw;
+                case 30UL: return WowRealm.Felmyst;
                 default:
                     VF_RealmPlayersDatabase.Logger.ConsoleWriteLine("Error GetPlayerRealm failed. Realm(" + realm + ") was not valid!!!");
                     return WowRealm.Unknown;

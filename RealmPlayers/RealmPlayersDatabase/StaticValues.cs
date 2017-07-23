@@ -36,6 +36,10 @@ namespace VF_RealmPlayersDatabase
         HellGround = 26,
         Nostralia = 27,
         Hellfire2 = 28,
+        Outland = 29, //TBC
+        Medivh = 30, //TBC
+        Firemaw = 31,
+        Felmyst = 32, //TBC
     }
     public enum WowVersionEnum
     {
@@ -700,6 +704,15 @@ namespace VF_RealmPlayersDatabase
             {"Hellfire II (progressive)", WowRealm.Hellfire2},
             {"Hellfire II", WowRealm.Hellfire2},
             {"HF2", WowRealm.Hellfire2},
+            {"Outland", WowRealm.Outland},
+            {"OUT", WowRealm.Outland},
+            {"Medivh", WowRealm.Medivh},
+            {"MDV", WowRealm.Medivh},
+            {"Firemaw", WowRealm.Firemaw},
+            {"firemaw", WowRealm.Firemaw},
+            {"FMW", WowRealm.Firemaw},
+            {"Felmyst", WowRealm.Felmyst},
+            {"FLM", WowRealm.Felmyst},
         };
         public static WowRealm ConvertRealm(string _Realm)
         {
@@ -723,11 +736,14 @@ namespace VF_RealmPlayersDatabase
                 || _Realm == WowRealm.Zeth_Kur
                 || _Realm == WowRealm.Nemesis
                 || _Realm == WowRealm.Nostralia
+                || _Realm == WowRealm.Firemaw
                 )
             {
                 return WowVersionEnum.Vanilla;
             }
-            else if (_Realm == WowRealm.Archangel || _Realm == WowRealm.WarsongTBC || _Realm == WowRealm.Vengeance_Wildhammer || _Realm == WowRealm.ExcaliburTBC || _Realm == WowRealm.L4G_Hellfire || _Realm == WowRealm.Vengeance_Stonetalon || _Realm == WowRealm.HellGround || _Realm == WowRealm.Hellfire2)
+            else if (_Realm == WowRealm.Archangel || _Realm == WowRealm.WarsongTBC || _Realm == WowRealm.Vengeance_Wildhammer || _Realm == WowRealm.ExcaliburTBC || _Realm == WowRealm.L4G_Hellfire || _Realm == WowRealm.Vengeance_Stonetalon || _Realm == WowRealm.HellGround || _Realm == WowRealm.Hellfire2
+                || _Realm == WowRealm.Outland || _Realm == WowRealm.Medivh || _Realm == WowRealm.Felmyst
+                )
             {
                 return WowVersionEnum.TBC;
             }
