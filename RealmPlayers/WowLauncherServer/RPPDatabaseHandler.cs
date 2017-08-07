@@ -269,13 +269,19 @@ namespace VF_WoWLauncherServer
         {
             lock (m_LockObject)
             {
-                if (_Force == true || (DateTime.UtcNow - m_LastPlayerSummaryDatabaseUpdateTime).TotalHours > 6)
+                if (_Force == true || ((DateTime.UtcNow - m_LastPlayerSummaryDatabaseUpdateTime).TotalHours > 8 
+                    && DateTime.UtcNow.Hour > 10 && DateTime.UtcNow.Hour < 14
+                    && DateTime.UtcNow.DayOfWeek != DayOfWeek.Sunday
+                    && DateTime.UtcNow.DayOfWeek != DayOfWeek.Monday
+                    && DateTime.UtcNow.DayOfWeek != DayOfWeek.Wednesday
+                    && DateTime.UtcNow.DayOfWeek != DayOfWeek.Thursday))
                 {
                     Logger.ConsoleWriteLine("Started Creating Player Summary Databases", ConsoleColor.Green);
                     var timer = System.Diagnostics.Stopwatch.StartNew();
                     VF_RPDatabase.PlayerSummaryDatabase playerSummaryDB = new VF_RPDatabase.PlayerSummaryDatabase();
                     foreach (var realm in Database.ALL_REALMS)
                     {
+                        GC.Collect();
                         Database fullDatabase = new Database(m_RPPDBFolder + "Database\\", new DateTime(2012, 5, 1, 0, 0, 0), new WowRealm[] { realm });
                         fullDatabase.PurgeRealmDBs(true, true, true);
                         playerSummaryDB.UpdateRealm(fullDatabase.GetRealm(realm));

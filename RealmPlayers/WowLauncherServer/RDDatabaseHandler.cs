@@ -204,6 +204,7 @@ namespace VF_WoWLauncherServer
                 }
                 try
                 {
+                    DateTime startingParsingTime = DateTime.UtcNow;
                     string raidDamageDataFile;
                     while (m_NewContributions.TryDequeue(out raidDamageDataFile))
                     {
@@ -217,6 +218,10 @@ namespace VF_WoWLauncherServer
                             else
                             {
                                 m_AddedEmptyFiles.Add(raidDamageDataFile);
+                            }
+                            if((DateTime.UtcNow - startingParsingTime) > TimeSpan.FromMinutes(30))
+                            {
+                                break;
                             }
                         }
                         catch (Exception ex)
