@@ -68,6 +68,44 @@ namespace VF_RealmPlayersDatabase
                     m_Database.AddToList(19957, new ItemDropDataItem(WowBoss.Edge_Of_Madness, 0.0f));//Warlock
                     m_Database.AddToList(19958, new ItemDropDataItem(WowBoss.Edge_Of_Madness, 0.0f));//Priest
                     m_Database.AddToList(19959, new ItemDropDataItem(WowBoss.Edge_Of_Madness, 0.0f));//Mage
+
+                    List<ItemDropDataItem> items;
+                    //m_Database.RemoveFromList(18665, new ItemDropDataItem(WowBoss.Kazzak, 0.0f));//Remove The Eye of Shadow from Kazzak
+                    if (m_Database.TryGetValue(18665, out items) == true)
+                    {
+                        for (int i = 0; i < items.Count; ++i)
+                        {
+                            if (items[i].m_Boss == WowBoss.Kazzak)
+                            {
+                                items.RemoveAt(i);
+                                --i;
+                            }
+                        }
+                    }
+                    //m_Database.RemoveFromList(18608, new ItemDropDataItem(WowBoss.Kazzak, 0.0f));//Remove Benediction from Kazzak
+                    if (m_Database.TryGetValue(18608, out items) == true)
+                    {
+                        for(int i = 0; i < items.Count; ++i)
+                        {
+                            if (items[i].m_Boss == WowBoss.Kazzak)
+                            {
+                                items.RemoveAt(i);
+                                --i;
+                            }
+                        }
+                    }
+                    //m_Database.RemoveFromList(18609, new ItemDropDataItem(WowBoss.Kazzak, 0.0f));//Remove Anathema from Kazzak
+                    if (m_Database.TryGetValue(18609, out items) == true)
+                    {
+                        for (int i = 0; i < items.Count; ++i)
+                        {
+                            if (items[i].m_Boss == WowBoss.Kazzak)
+                            {
+                                items.RemoveAt(i);
+                                --i;
+                            }
+                        }
+                    }
                 }
                 else
                 {
