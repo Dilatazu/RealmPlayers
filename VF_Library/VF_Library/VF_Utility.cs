@@ -158,7 +158,7 @@ namespace VF
             _LoadedData = ProtoBuf.Serializer.Deserialize<T_Data>(_InputStream);
             return true;
         }
-        public static bool LoadSerialize<T_Data>(string _Filename, out T_Data _LoadedData, int _TimeoutMS = 10000)
+        public static bool LoadSerialize<T_Data>(string _Filename, out T_Data _LoadedData, int _TimeoutMS = 10000, bool _ThrowOnProblems = false)
         {
             if (System.IO.File.Exists(_Filename) == false)
             {
@@ -176,9 +176,16 @@ namespace VF
                     }
                     return true;
                 }
-                catch (Exception)
-                { }
+                catch (Exception ex)
+                {
+                    if (_ThrowOnProblems == true)
+                        throw ex;
+                }
             } while (_TimeoutMS > timer.ElapsedMilliseconds);
+            if(_ThrowOnProblems == true)
+            {
+                throw new Exception("Error, Deserialization for file \"" + _Filename + "\" timed out!!!");
+            }
             _LoadedData = default(T_Data);
             return false;
         }
