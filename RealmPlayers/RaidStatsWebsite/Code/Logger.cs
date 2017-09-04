@@ -94,6 +94,7 @@ namespace VF.RaidDamageWebsite
                 var logCopy = GetCopyOfLog(999999);
                 string logFilename = ApplicationInstance.g_RDDBDir + "VF_WebsiteLogs\\Log_" + sm_LogStartTime.ToString("yyyy_MM_dd_HH_mm_ss") + ".html";
                 Utility.AssertFilePath(logFilename);
+                sm_Log.Insert(0, "<body bgcolor='#111'>");
                 System.IO.File.WriteAllLines(logFilename, sm_Log);
                 Logger.ConsoleWriteLine("SaveToDisk(): Saved Logfile to disk!", ConsoleColor.Yellow);
             }
