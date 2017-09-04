@@ -16,6 +16,7 @@ namespace RealmPlayersServer
         private static bool m_Initialized = false;
         public static void AssertInitialize()
         {
+            VF_RealmPlayersDatabase.Utility.s_BackupToPath = "S:\\VF_R_WEB_Backups\\";
             if (m_Initialized == false)
             {
                 if (DebugMode == true)

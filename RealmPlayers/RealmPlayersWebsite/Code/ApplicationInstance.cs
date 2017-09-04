@@ -239,6 +239,7 @@ namespace RealmPlayersServer
                 //if(m_UsersOnSite == null)
                 //    m_UsersOnSite = new Dictionary<string, List<Tuple<DateTime, string>>>();
                 //Monitor.Exit(m_RealmPlayersMutex);
+                Constants.AssertInitialize();
                 (new System.Threading.Tasks.Task(() =>
                 {
                     try
@@ -251,7 +252,6 @@ namespace RealmPlayersServer
                         Logger.LogException(ex);
                     }
                 })).Start();
-                Constants.AssertInitialize();
                 ContributorDB.Initialize(Constants.DevMode);
                 while (ContributorDB.GetMongoDB() == null)
                 {
