@@ -144,9 +144,29 @@ namespace VF
                 BackupFile(_Filename);
             }
             AssertFilePath(_Filename);
-            using (var file = File.Create(_Filename))
+            try
             {
-                ProtobufSerializer.Serializer.Serialize(file, _Data);
+                if (File.Exists(_Filename) == true)
+                {
+                    using (var file = File.Create(_Filename + ".tmp"))
+                    {
+                        ProtobufSerializer.Serializer.Serialize(file, _Data);
+                    }
+                    System.IO.File.Replace(_Filename + ".tmp", _Filename, null);
+                }
+                else
+                {
+                    using (var file = File.Create(_Filename))
+                    {
+                        ProtobufSerializer.Serializer.Serialize(file, _Data);
+                    }
+                }
+                //File.Delete(_Filename);
+                //System.IO.File.Move(_Filename + ".tmp", _Filename);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
         public static void PBSerialize<T_Data>(T_Data _Data, Stream _OutputStream)
@@ -175,6 +195,10 @@ namespace VF
                         _LoadedData = ProtoBuf.Serializer.Deserialize<T_Data>(file);
                     }
                     return true;
+                }
+                catch(TimeoutException ex)
+                {
+                    System.Threading.Thread.Sleep(0);
                 }
                 catch (Exception ex)
                 {
