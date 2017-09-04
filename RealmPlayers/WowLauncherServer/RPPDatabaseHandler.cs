@@ -68,7 +68,7 @@ namespace VF_WoWLauncherServer
         }
         public void Shutdown()
         {
-            Logger.ConsoleWriteLine("Shutdown for RPPDatabaseHandler is triggered!", ConsoleColor.White);
+            Logger.ConsoleWriteLine("Armory: Shutdown for RPPDatabaseHandler is triggered!", ConsoleColor.White);
             m_MainThread = null;
             if (m_Communicator != null)
             {
@@ -95,7 +95,7 @@ namespace VF_WoWLauncherServer
         }
         private void MainThread()
         {
-            Logger.ConsoleWriteLine("MainThread for RPPDatabaseHandler is started!", ConsoleColor.Green);
+            Logger.ConsoleWriteLine("Armory: MainThread for RPPDatabaseHandler is started!", ConsoleColor.Green);
             while (m_Communicator != null && m_MainThread != null)
             {
                 try
@@ -111,7 +111,7 @@ namespace VF_WoWLauncherServer
             }
             while (true)
             {
-                Logger.ConsoleWriteLine("MainThread for RPPDatabaseHandler is exited!", ConsoleColor.Green);
+                Logger.ConsoleWriteLine("Armory: MainThread for RPPDatabaseHandler is exited!", ConsoleColor.Green);
                 System.Threading.Thread.Sleep(30000);
             }
         }
@@ -176,7 +176,7 @@ namespace VF_WoWLauncherServer
             {
                 if (System.IO.File.Exists(_Filename) == false)
                 {
-                    Logger.ConsoleWriteLine("Could not backup file: " + _Filename + ", it does not exist!", ConsoleColor.Red);
+                    Logger.ConsoleWriteLine("Armory: Could not backup file: " + _Filename + ", it does not exist!", ConsoleColor.Red);
                     return;
                 }
                 string zipFileName = "";
@@ -221,12 +221,12 @@ namespace VF_WoWLauncherServer
                 zipFile.CommitUpdate();
                 zipFile.Close();
                 System.IO.File.Delete(_Filename);
-                Logger.ConsoleWriteLine("Successfull backup of file: " + _Filename + " into " + zipFileName);
+                Logger.ConsoleWriteLine("Armory: Successfull backup of file: " + _Filename + " into " + zipFileName);
             }
             catch (Exception ex)
             {
                 Logger.LogException(ex);
-                Logger.ConsoleWriteLine("Well(RP-ZIP), if this happens give up...", ConsoleColor.Red);
+                Logger.ConsoleWriteLine("Armory: Well(RP-ZIP), if this happens give up...", ConsoleColor.Red);
                 while (true)
                 {
                     System.Threading.Thread.Sleep(5000);
@@ -242,7 +242,7 @@ namespace VF_WoWLauncherServer
             {
                 if (_Force == true || (DateTime.UtcNow - m_LastSummaryDatabaseUpdateTime).TotalMinutes > 113)
                 {
-                    Logger.ConsoleWriteLine("Started Updating Summary Databases", ConsoleColor.Green);
+                    Logger.ConsoleWriteLine("Armory: Started Updating Summary Databases", ConsoleColor.Green);
                     GC.Collect();
                     var timer = System.Diagnostics.Stopwatch.StartNew();
                     Database tempDatabase = new Database(m_RPPDBFolder + "Database\\", null, m_RealmsInUse);
@@ -250,7 +250,7 @@ namespace VF_WoWLauncherServer
 
                     _UpdateGuildSummaryDatabase(tempDatabase);
                     _UpdateItemSummaryDatabase(tempDatabase);
-                    Logger.ConsoleWriteLine("Done Updating Summary Databases, it took " + (timer.ElapsedMilliseconds / 1000) + " seconds", ConsoleColor.Green);
+                    Logger.ConsoleWriteLine("Armory: Done Updating Summary Databases, it took " + (timer.ElapsedMilliseconds / 1000) + " seconds", ConsoleColor.Green);
                 }
             }
             GC.Collect();
@@ -276,7 +276,7 @@ namespace VF_WoWLauncherServer
                     && DateTime.UtcNow.DayOfWeek != DayOfWeek.Wednesday
                     && DateTime.UtcNow.DayOfWeek != DayOfWeek.Thursday))
                 {
-                    Logger.ConsoleWriteLine("Started Creating Player Summary Databases", ConsoleColor.Green);
+                    Logger.ConsoleWriteLine("Armory: Started Creating Player Summary Databases", ConsoleColor.Green);
                     var timer = System.Diagnostics.Stopwatch.StartNew();
                     VF_RPDatabase.PlayerSummaryDatabase playerSummaryDB = new VF_RPDatabase.PlayerSummaryDatabase();
                     foreach (var realm in Database.ALL_REALMS)
@@ -285,10 +285,10 @@ namespace VF_WoWLauncherServer
                         Database fullDatabase = new Database(m_RPPDBFolder + "Database\\", new DateTime(2012, 5, 1, 0, 0, 0), new WowRealm[] { realm });
                         fullDatabase.PurgeRealmDBs(true, true, true);
                         playerSummaryDB.UpdateRealm(fullDatabase.GetRealm(realm));
-                        Logger.ConsoleWriteLine("Updated Player Summary Database for realm " + realm, ConsoleColor.Green);
+                        Logger.ConsoleWriteLine("Armory: Updated Player Summary Database for realm " + realm, ConsoleColor.Green);
                     }
                     playerSummaryDB.SaveSummaryDatabase(m_RPPDBFolder);
-                    Logger.ConsoleWriteLine("Done Creating Player Summary Database, it took " + (timer.ElapsedMilliseconds / 1000) + " seconds", ConsoleColor.Green);
+                    Logger.ConsoleWriteLine("Armory: Done Creating Player Summary Database, it took " + (timer.ElapsedMilliseconds / 1000) + " seconds", ConsoleColor.Green);
                     m_LastPlayerSummaryDatabaseUpdateTime = DateTime.UtcNow;
                 }
             }
@@ -313,9 +313,9 @@ namespace VF_WoWLauncherServer
                     fullDatabase.PurgeRealmDBs(true, true, true);
 
                     _UpdateGuildSummaryDatabase(fullDatabase, true);
-                    Logger.ConsoleWriteLine("Guild Summary Database Generation " + (realmIndex++) + " / " + Database.ALL_REALMS.Length + ", Done with " + realm.ToString() + " it took " + (realmTimer.ElapsedMilliseconds / 1000) + " seconds", ConsoleColor.Cyan);
+                    Logger.ConsoleWriteLine("Armory: Guild Summary Database Generation " + (realmIndex++) + " / " + Database.ALL_REALMS.Length + ", Done with " + realm.ToString() + " it took " + (realmTimer.ElapsedMilliseconds / 1000) + " seconds", ConsoleColor.Cyan);
                 }
-                Logger.ConsoleWriteLine("Done Creating Guild Summary Database, it took " + (timer.ElapsedMilliseconds / 1000) + " seconds", ConsoleColor.Green);
+                Logger.ConsoleWriteLine("Armory: Done Creating Guild Summary Database, it took " + (timer.ElapsedMilliseconds / 1000) + " seconds", ConsoleColor.Green);
             }
             GC.Collect();
         }
@@ -337,9 +337,9 @@ namespace VF_WoWLauncherServer
                     Database fullDatabase = new Database(m_RPPDBFolder + "Database\\", new DateTime(2012, 5, 1, 0, 0, 0), new WowRealm[]{ realm });
                     fullDatabase.PurgeRealmDBs(true, true, true);
                     _UpdateItemSummaryDatabase(fullDatabase, true);
-                    Logger.ConsoleWriteLine("Item Summary Database Generation " + (realmIndex++) + " / " + Database.ALL_REALMS.Length + ", Done with " + realm.ToString() + " it took " + (realmTimer.ElapsedMilliseconds / 1000) + " seconds", ConsoleColor.Cyan);
+                    Logger.ConsoleWriteLine("Armory: Item Summary Database Generation " + (realmIndex++) + " / " + Database.ALL_REALMS.Length + ", Done with " + realm.ToString() + " it took " + (realmTimer.ElapsedMilliseconds / 1000) + " seconds", ConsoleColor.Cyan);
                 }
-                Logger.ConsoleWriteLine("Done Creating Item Summary Database, it took " + (timer.ElapsedMilliseconds / 1000) + " seconds", ConsoleColor.Green);
+                Logger.ConsoleWriteLine("Armory: Done Creating Item Summary Database, it took " + (timer.ElapsedMilliseconds / 1000) + " seconds", ConsoleColor.Green);
             }
             GC.Collect();
         }
@@ -358,7 +358,7 @@ namespace VF_WoWLauncherServer
                 Console.Write(".");
                 _UpdateItemSummaryDatabase(fullDatabase);
 
-                Logger.ConsoleWriteLine("Done Resetting Archangel Database, it took " + (timer.ElapsedMilliseconds / 1000) + " seconds", ConsoleColor.Green);
+                Logger.ConsoleWriteLine("Armory: Done Resetting Archangel Database, it took " + (timer.ElapsedMilliseconds / 1000) + " seconds", ConsoleColor.Green);
             }
             GC.Collect();
         }

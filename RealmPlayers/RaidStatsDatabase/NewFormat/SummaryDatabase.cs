@@ -223,7 +223,7 @@ namespace VF_RDDatabase
         public void UpdateDatabase(List<Old_RaidCollection_Raid> _Raids, Func<string, Old_FightDataCollection> _CachedGetFightDataCollectionFunc, Func<WowRealm, VF_RaidDamageDatabase.RealmDB> _GetRealmDB)
         {
             Hidden._GlobalInitializationData.Init(_GetRealmDB, _CachedGetFightDataCollectionFunc);
-            Console.Write("SummaryDatabase.UpdateDatabase: " + _Raids.Count + " raids");
+            VF_RealmPlayersDatabase.Logger.ConsoleWriteLine("RaidStats: SummaryDatabase.UpdateDatabase: " + _Raids.Count + " raids");
             DateTime SummaryDBResetDate = new DateTime(2016, 11, 1); //Added 2017-01-10 when highscore lists were reset!
             int i = 0;
             foreach (var raid in _Raids)

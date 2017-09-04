@@ -43,7 +43,7 @@ namespace VF_WoWLauncherServer
         }
         public void Shutdown()
         {
-            Logger.ConsoleWriteLine("Shutdown for RDDatabaseHandler is triggered!", ConsoleColor.White);
+            Logger.ConsoleWriteLine("RaidStats: Shutdown for RDDatabaseHandler is triggered!", ConsoleColor.White);
             m_MainThread = null;
             try
             {
@@ -61,7 +61,7 @@ namespace VF_WoWLauncherServer
                 int stepsCompleted = 0;
                 try
                 {
-                    Logger.ConsoleWriteLine("Started saving all the accumulated RaidCollection.dat changes!", ConsoleColor.Green);
+                    Logger.ConsoleWriteLine("RaidStats: Started saving all the accumulated RaidCollection.dat changes!", ConsoleColor.Green);
                     VF.Utility.BackupFile(m_RDDBFolder + "RaidCollection.dat", VF.Utility.BackupMode.Backup_Daily);
                     stepsCompleted = 1;
                     int tryCount = 1;
@@ -104,7 +104,7 @@ namespace VF_WoWLauncherServer
                     stepsCompleted = 3;
                     m_GetFightDataCollectionCache = new Dictionary<string, FightDataCollection>();
                     m_RaidsModifiedSinceLastSummaryUpdate = new List<RaidCollection_Raid>();
-                    Logger.ConsoleWriteLine("Done saving all the accumulated RaidCollection.dat changes!", ConsoleColor.Green);
+                    Logger.ConsoleWriteLine("RaidStats: Done saving all the accumulated RaidCollection.dat changes!", ConsoleColor.Green);
 
                     foreach (string problemData in m_ProblemFiles)
                     {
@@ -124,7 +124,7 @@ namespace VF_WoWLauncherServer
                     m_ProblemFiles.Clear();
                     m_AddedContributionFiles.Clear();
                     m_AddedEmptyFiles.Clear();
-                    Logger.ConsoleWriteLine("Done saving all the file backups!", ConsoleColor.Green);
+                    Logger.ConsoleWriteLine("RaidStats: Done saving all the file backups!", ConsoleColor.Green);
 
                     m_DateTimeLastRaidStatsDBSave = System.DateTime.UtcNow;
                     return true;
@@ -132,7 +132,7 @@ namespace VF_WoWLauncherServer
                 catch (Exception ex)
                 {
                     Logger.LogException(ex);
-                    Logger.ConsoleWriteLine("Well, if this happens give up...", ConsoleColor.Red);
+                    Logger.ConsoleWriteLine("RaidStats: Well, if this happens give up...", ConsoleColor.Red);
                     int i = 0;
                     while (true)
                     {
@@ -150,7 +150,7 @@ namespace VF_WoWLauncherServer
         }
         private void MainThread()
         {
-            Logger.ConsoleWriteLine("MainThread for RDDatabaseHandler is started!", ConsoleColor.Green);
+            Logger.ConsoleWriteLine("RaidStats: MainThread for RDDatabaseHandler is started!", ConsoleColor.Green);
             while (m_MainThread != null)
             {
                 try
@@ -170,7 +170,7 @@ namespace VF_WoWLauncherServer
             }
             while(true)
             {
-                Logger.ConsoleWriteLine("MainThread for RDDatabaseHandler is exited!", ConsoleColor.Green);
+                Logger.ConsoleWriteLine("RaidStats: MainThread for RDDatabaseHandler is exited!", ConsoleColor.Green);
                 System.Threading.Thread.Sleep(30000);
             }
         }
@@ -193,12 +193,12 @@ namespace VF_WoWLauncherServer
                     {
                         if (((file.EndsWith(".lua") == true && file.Contains("VF_RaidDamage") == false)) || file.EndsWith(".txt") == true)
                         {
-                            Logger.ConsoleWriteLine("Added new manual contribution file: \"" + file + "\"", ConsoleColor.Cyan);
+                            Logger.ConsoleWriteLine("RaidStats: Added new manual contribution file: \"" + file + "\"", ConsoleColor.Cyan);
                             m_NewContributions.Enqueue(file);
                         }
                         else
                         {
-                            Logger.ConsoleWriteLine("Not adding file: \"" + file + "\" please move it out of the ManuallyAdded folder!", ConsoleColor.Red);
+                            Logger.ConsoleWriteLine("RaidStats: Not adding file: \"" + file + "\" please move it out of the ManuallyAdded folder!", ConsoleColor.Red);
                         }
                     }
                 }
@@ -228,12 +228,12 @@ namespace VF_WoWLauncherServer
                         {
                             Logger.LogException(ex);
                             m_ProblemFiles.Add(raidDamageDataFile);
-                            Logger.ConsoleWriteLine("DUE TO ERRORS WE ARE RELOADING RAIDCOLLECTION!!!", ConsoleColor.Red);
+                            Logger.ConsoleWriteLine("RaidStats: DUE TO ERRORS WE ARE RELOADING RAIDCOLLECTION!!!", ConsoleColor.Red);
                             //RESET m_RaidCollection!!!
                             VF.Utility.LoadSerialize<RaidCollection>(m_RDDBFolder + "RaidCollection.dat", out m_RaidCollection);
                             m_GetFightDataCollectionCache = new Dictionary<string, FightDataCollection>();
                             m_RaidsModifiedSinceLastSummaryUpdate = new List<RaidCollection_Raid>();
-                            Logger.ConsoleWriteLine("RELOAD OF RAIDCOLLECTION WAS SUCCESSFULL!!!", ConsoleColor.Green);
+                            Logger.ConsoleWriteLine("RaidStats: RELOAD OF RAIDCOLLECTION WAS SUCCESSFULL!!!", ConsoleColor.Green);
                             foreach (string contribution in m_AddedContributionFiles)
                             {
                                 m_NewContributions.Enqueue(contribution);
@@ -295,12 +295,12 @@ namespace VF_WoWLauncherServer
                     foreach (var raid in raidsModified)
                     {
                         var bossFights = raid.GetBossFights(fights, null);
-                        Logger.ConsoleWriteLine("Raid: " + raid.RaidInstance + "(" + raid.RaidID + ") by " + raid.RaidOwnerName, ConsoleColor.White);
+                        Logger.ConsoleWriteLine("RaidStats: Raid: " + raid.RaidInstance + "(" + raid.RaidID + ") by " + raid.RaidOwnerName, ConsoleColor.White);
                         foreach (var bossFight in bossFights)
                         {
                             ++totalFightCount;
                             bossFight.GetFightDetails(); //Trigger FightDetail request, so we get error here instead of later on the website.
-                            //Logger.ConsoleWriteLine("Fight: " + bossFight.GetBossName() + " added to RaidCollection", ConsoleColor.Green);
+                            //Logger.ConsoleWriteLine("RaidStats: Fight: " + bossFight.GetBossName() + " added to RaidCollection", ConsoleColor.Green);
                         }
                         if (raid.RaidOwnerName.ToLower() == "unknown" || raid.RaidOwnerName == "")
                         {
@@ -420,10 +420,10 @@ namespace VF_WoWLauncherServer
                 var summaryDB = VF_RDDatabase.SummaryDatabase.UpdateSummaryDatabase(m_RDDBFolder, m_RaidCollection, raidsModified
                     , cachedGetFightDataCollectionFunc
                     , (_WowRealm) => { return new RealmDB(m_RPPDatabaseHandler.GetRealmDB(_WowRealm)); });
-                Logger.ConsoleWriteLine("Done Updating Summary Database, it took " + (timer.ElapsedMilliseconds / 1000) + " seconds", ConsoleColor.Green);
+                Logger.ConsoleWriteLine("RaidStats: Done Updating Summary Database, it took " + (timer.ElapsedMilliseconds / 1000) + " seconds", ConsoleColor.Green);
                 timer = System.Diagnostics.Stopwatch.StartNew();
                 VF_RDDatabase.GroupSummaryDatabase.UpdateSummaryDatabase(m_RDDBFolder, summaryDB);
-                Logger.ConsoleWriteLine("Done Updating Group Summary Database, it took " + (timer.ElapsedMilliseconds / 1000) + " seconds", ConsoleColor.Green);
+                Logger.ConsoleWriteLine("RaidStats: Done Updating Group Summary Database, it took " + (timer.ElapsedMilliseconds / 1000) + " seconds", ConsoleColor.Green);
             }
             else
             {
@@ -431,7 +431,7 @@ namespace VF_WoWLauncherServer
                 VF_RDDatabase.SummaryDatabase.FixBuggedSummaryDatabase(m_RDDBFolder, m_RaidCollection, raidsModified
                     , cachedGetFightDataCollectionFunc
                     , (_WowRealm) => { return new RealmDB(m_RPPDatabaseHandler.GetRealmDB(_WowRealm)); });
-                Logger.ConsoleWriteLine("Done Fixing " + _RaidsModified.Count + "bugged raids in Summary Database, it took " + (timer.ElapsedMilliseconds / 1000) + " seconds", ConsoleColor.Green);
+                Logger.ConsoleWriteLine("RaidStats: Done Fixing " + _RaidsModified.Count + "bugged raids in Summary Database, it took " + (timer.ElapsedMilliseconds / 1000) + " seconds", ConsoleColor.Green);
             }
         }
         public void CreateSummaryDatabase()
@@ -483,7 +483,7 @@ namespace VF_WoWLauncherServer
                 //}
                 if (System.IO.File.Exists(_Filename) == false)
                 {
-                    Logger.ConsoleWriteLine("Could not backup file: " + _Filename + ", it does not exist!", ConsoleColor.Red);
+                    Logger.ConsoleWriteLine("RaidStats: Could not backup file: " + _Filename + ", it does not exist!", ConsoleColor.Red);
                     return;
                 }
                 string zipFileName = "";
@@ -524,12 +524,12 @@ namespace VF_WoWLauncherServer
                 zipFile.CommitUpdate();
                 zipFile.Close();
                 System.IO.File.Delete(_Filename);
-                Logger.ConsoleWriteLine("Successfull backup of file: " + _Filename + " into " + zipFileName);
+                Logger.ConsoleWriteLine("RaidStats: Successfull backup of file: " + _Filename + " into " + zipFileName);
             }
             catch (Exception ex)
             {
                 Logger.LogException(ex);
-                Logger.ConsoleWriteLine("Well(RP-ZIP), if this happens give up...", ConsoleColor.Red);
+                Logger.ConsoleWriteLine("RaidStats: Well(RP-ZIP), if this happens give up...", ConsoleColor.Red);
                 while (true)
                 {
                     System.Threading.Thread.Sleep(5000);
