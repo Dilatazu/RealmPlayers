@@ -28,6 +28,7 @@ namespace VF_WoWLauncherServer
         private void ListenerThread()
         {
 			VF.NetworkIncommingMessage msg;
+            string prevAddonUpdateRequestID = "";
             while (m_ListenerThread != null)
             {
                 try
@@ -50,7 +51,11 @@ namespace VF_WoWLauncherServer
                                     {
                                         WLN_RequestPacket_AddonUpdateInfoNew addonUpdateInfoRequest = msg.ReadClass<WLN_RequestPacket_AddonUpdateInfoNew>();
                                         List<WLN_ResponsePacket_AddonUpdateInfo> result = new List<WLN_ResponsePacket_AddonUpdateInfo>();
-                                        Logger.ConsoleWriteLine("Received Request_AddonUpdateInfoNew from IP=" + msg.SenderIP.ToString() + ", UserID=" + addonUpdateInfoRequest.UserID + ", LauncherVersion=" + addonUpdateInfoRequest.LauncherVersion);
+                                        if(addonUpdateInfoRequest.UserID != prevAddonUpdateRequestID)
+                                        {
+                                            Logger.ConsoleWriteLine("Received Request_AddonUpdateInfoNew from IP=" + msg.SenderIP.ToString() + ", UserID=" + addonUpdateInfoRequest.UserID + ", LauncherVersion=" + addonUpdateInfoRequest.LauncherVersion);
+                                            prevAddonUpdateRequestID = addonUpdateInfoRequest.UserID;
+                                        }
 
                                         Random rand = new Random((int)DateTime.UtcNow.Ticks);
                                         foreach (var addon in addonUpdateInfoRequest.Addons)

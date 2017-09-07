@@ -38,7 +38,7 @@ namespace VF_WoWLauncherServer
                 ConsoleWriteLine("\r\n-------------------------------\r\n" + _Ex.ToString() + "\"\r\n-------------------------------", ConsoleColor.Red);
             }
         }
-        public static void ConsoleWriteLine(string _Message, ConsoleColor _Color = ConsoleColor.White)
+        public static void ConsoleWriteLine(string _Message, ConsoleColor _Color = ConsoleColor.White, bool _LogToFile = true)
         {
             if (sm_ExternalLog_ConsoleWriteLine != null)
             {
@@ -54,37 +54,40 @@ namespace VF_WoWLauncherServer
                 Console.ForegroundColor = _Color;
                 string fullMessage = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") + " : " + _Message;
                 Console.WriteLine(fullMessage.Substring("yyyy/MM/dd ".Length));
-                try
+                if(_LogToFile == true)
                 {
-                    var logFile = System.IO.File.Open("Log.txt", System.IO.FileMode.Append, System.IO.FileAccess.Write);
-                    if (logFile.Length > 1 * 1024 * 1024)
+                    try
                     {
-                        //Om loggfilen är större än 1MB, skapa en ny och gör gamla till backup
-                        logFile.Close();
-                        System.IO.File.Copy("Log.txt", "Log_" + DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss") + ".txt");
-                        string queuedLog = "";
-                        while (sm_QueuedExtraLogs.TryDequeue(out queuedLog) == true)
+                        var logFile = System.IO.File.Open("Log.txt", System.IO.FileMode.Append, System.IO.FileAccess.Write);
+                        if (logFile.Length > 1 * 1024 * 1024)
                         {
-                            fullMessage = queuedLog + "\r\n" + fullMessage;
+                            //Om loggfilen är större än 1MB, skapa en ny och gör gamla till backup
+                            logFile.Close();
+                            System.IO.File.Copy("Log.txt", "Log_" + DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss") + ".txt");
+                            string queuedLog = "";
+                            while (sm_QueuedExtraLogs.TryDequeue(out queuedLog) == true)
+                            {
+                                fullMessage = queuedLog + "\r\n" + fullMessage;
+                            }
+                            System.IO.File.WriteAllText("Log.txt", fullMessage + "\r\n");
                         }
-                        System.IO.File.WriteAllText("Log.txt", fullMessage + "\r\n");
+                        else
+                        {
+                            System.IO.StreamWriter fw = new System.IO.StreamWriter(logFile);
+                            string queuedLog = "";
+                            while (sm_QueuedExtraLogs.TryDequeue(out queuedLog) == true)
+                            {
+                                fw.WriteLine(queuedLog);
+                            }
+                            fw.WriteLine(fullMessage);
+                            fw.Flush();
+                            logFile.Close();
+                        }
                     }
-                    else
+                    catch (Exception)
                     {
-                        System.IO.StreamWriter fw = new System.IO.StreamWriter(logFile);
-                        string queuedLog = "";
-                        while (sm_QueuedExtraLogs.TryDequeue(out queuedLog) == true)
-                        {
-                            fw.WriteLine(queuedLog);
-                        }
-                        fw.WriteLine(fullMessage);
-                        fw.Flush();
-                        logFile.Close();
+                        sm_QueuedExtraLogs.Enqueue(fullMessage);
                     }
-                }
-                catch (Exception)
-                {
-                    sm_QueuedExtraLogs.Enqueue(fullMessage);
                 }
                 Console.ResetColor();
             }

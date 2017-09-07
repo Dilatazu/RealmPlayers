@@ -98,16 +98,32 @@ namespace VF_WoWLauncherServer
             Logger.ConsoleWriteLine("Armory: MainThread for RPPDatabaseHandler is started!", ConsoleColor.Green);
             while (m_Communicator != null && m_MainThread != null)
             {
+                bool processedData = false;
                 try
                 {
-                    ProcessData();
+                    processedData = ProcessData();
                 }
                 catch (Exception ex)
                 {
                     Logger.LogException(ex);
                 }
                 if(m_MainThread != null)
+                {
+                    if(processedData == true)
+                    {
+                        Logger.ConsoleWriteLine("Armory: Nothing to do, sleeping 30 seconds...", ConsoleColor.DarkYellow, false);
+                    }
+                    else
+                    {
+                        Console.BackgroundColor = ConsoleColor.DarkGray;
+                        ConsoleColor prevColor = Console.ForegroundColor;
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write(".");
+                        Console.ForegroundColor = prevColor;
+                        Console.BackgroundColor = ConsoleColor.Black;
+                    }
                     System.Threading.Thread.Sleep(30000);
+                }
             }
             while (true)
             {
@@ -115,10 +131,11 @@ namespace VF_WoWLauncherServer
                 System.Threading.Thread.Sleep(30000);
             }
         }
-        void ProcessData()
+        bool ProcessData()
         {
+            bool processedData = false;
             if (m_Communicator == null)
-                return;
+                return processedData;
             lock (m_LockObject)
             {
                 m_AddedContributions.Clear();
@@ -126,7 +143,8 @@ namespace VF_WoWLauncherServer
                 RPPContribution data;
                 while (m_NewContributions.TryDequeue(out data))
                 {
-                    if(m_Database.AddContribution(data) == true)
+                    processedData = true;
+                    if (m_Database.AddContribution(data) == true)
                     {
                         m_AddedContributions.Add(data);
                     }
@@ -137,6 +155,7 @@ namespace VF_WoWLauncherServer
                 }
                 while (m_Communicator.GetNextRPPContribution(out data))
                 {
+                    processedData = true;
                     if (m_Database.AddContribution(data) == true)
                     {
                         m_AddedContributions.Add(data);
@@ -161,9 +180,10 @@ namespace VF_WoWLauncherServer
                 m_Database.Cleanup();
             }
             if (m_Communicator == null || m_MainThread == null)
-                return;
+                return processedData;
             UpdateSummaryDatabases();
             UpdatePlayerSummaryDatabase();
+            return processedData;
         }
         public void TriggerSaveDatabases()
         {
@@ -240,7 +260,8 @@ namespace VF_WoWLauncherServer
         {
             lock (m_LockObject)
             {
-                if (_Force == true || (DateTime.UtcNow - m_LastSummaryDatabaseUpdateTime).TotalMinutes > 113)
+                if (_Force == true || ((DateTime.UtcNow - m_LastSummaryDatabaseUpdateTime).TotalHours > 4
+                    && DateTime.UtcNow.Hour > 2 && DateTime.UtcNow.Hour < 16))
                 {
                     Logger.ConsoleWriteLine("Armory: Started Updating Summary Databases", ConsoleColor.Green);
                     GC.Collect();
@@ -249,6 +270,7 @@ namespace VF_WoWLauncherServer
                     tempDatabase.PurgeRealmDBs(true, true);
 
                     _UpdateGuildSummaryDatabase(tempDatabase);
+                    Logger.ConsoleWriteLine("Armory: Done Updating Guild Summary Database", ConsoleColor.Green);
                     _UpdateItemSummaryDatabase(tempDatabase);
                     Logger.ConsoleWriteLine("Armory: Done Updating Summary Databases, it took " + (timer.ElapsedMilliseconds / 1000) + " seconds", ConsoleColor.Green);
                 }

@@ -125,6 +125,11 @@ namespace VF_RPDatabase
             {
                 if (Utility.LoadSerialize(databaseFile, out database) == false)
                     database = null;
+                if (database == null)
+                {
+                    VF_RealmPlayersDatabase.Logger.ConsoleWriteLine("Armory: Failed to load GuildSummaryDatabase. Skipping update!");
+                    return;
+                }
             }
             if (database != null)
             {
@@ -150,6 +155,7 @@ namespace VF_RPDatabase
                 }
             }
             Utility.SaveSerialize(databaseFile, database);
+            VF_RealmPlayersDatabase.Logger.ConsoleWriteLine("Armory: Successfully updated GuildSummaryDatabase!");
         }
     }
 }

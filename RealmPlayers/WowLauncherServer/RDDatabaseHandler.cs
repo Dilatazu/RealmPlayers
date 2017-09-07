@@ -153,16 +153,32 @@ namespace VF_WoWLauncherServer
             Logger.ConsoleWriteLine("RaidStats: MainThread for RDDatabaseHandler is started!", ConsoleColor.Green);
             while (m_MainThread != null)
             {
+                bool processedData = false;
                 try
                 {
-                    ProcessData();
+                    processedData = ProcessData();
                 }
                 catch (Exception ex)
                 {
                     Logger.LogException(ex);
                 }
                 if(m_MainThread != null)
+                {
+                    if (processedData == true)
+                    {
+                        Logger.ConsoleWriteLine("RaidStats: Nothing to do, sleeping 30 seconds...", ConsoleColor.DarkGreen, false);
+                    }
+                    else
+                    {
+                        Console.BackgroundColor = ConsoleColor.DarkGray;
+                        ConsoleColor prevColor = Console.ForegroundColor;
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.Write(".");
+                        Console.BackgroundColor = ConsoleColor.Black;
+                        Console.ForegroundColor = prevColor;
+                    }
                     System.Threading.Thread.Sleep(30000);
+                }
             }
             lock (m_LockObject)
             {
@@ -182,8 +198,9 @@ namespace VF_WoWLauncherServer
         {
             System.Threading.Monitor.Exit(m_LockObject);
         }
-        void ProcessData()
+        bool ProcessData()
         {
+            bool processedData = false;
             lock (m_LockObject)
             {
                 if (System.IO.Directory.Exists(m_RDDBFolder + "\\ManuallyAdded\\") == true)
@@ -208,6 +225,7 @@ namespace VF_WoWLauncherServer
                     string raidDamageDataFile;
                     while (m_NewContributions.TryDequeue(out raidDamageDataFile))
                     {
+                        processedData = true;
                         try
                         {
                             if (AddFightsToDatabase(raidDamageDataFile) >= 1)
@@ -247,6 +265,7 @@ namespace VF_WoWLauncherServer
                     {
                         if(SaveRaidStatsDBs() == true)
                         {
+                            processedData = true;
                             //yay...
                         }
                     }
@@ -256,6 +275,7 @@ namespace VF_WoWLauncherServer
                     Logger.LogException(ex);
                 }
             }
+            return processedData;
         }
 
         private FightDataCollection _LoadRaidFightCollectionFile(string _FightFile)
@@ -390,6 +410,7 @@ namespace VF_WoWLauncherServer
         private void UpdateSummaryDatabase(Dictionary<string, FightDataCollection> _CachedFightDataCollections = null, List<RaidCollection_Raid> _RaidsModified = null, bool _ReplaceRaidsModified = false)
         {
             var timer = System.Diagnostics.Stopwatch.StartNew();
+            Logger.ConsoleWriteLine("RaidStats: Started Updating Summary Database", ConsoleColor.Green);
             //Caching
             Dictionary<string, FightDataCollection> getFightDataCollectionCache = _CachedFightDataCollections;
             if (getFightDataCollectionCache == null)

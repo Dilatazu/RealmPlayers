@@ -434,8 +434,8 @@ namespace VF_RPDatabase
                     }
                 }
             }
-            VF_RealmPlayersDatabase.Logger.ConsoleWriteLine("Failed to add Mounts with names: " + String.Join("\", \"", failedMountItemNames.ToArray()) + "\"");
-            VF_RealmPlayersDatabase.Logger.ConsoleWriteLine("Failed to add Companions with names: " + String.Join("\", \"", failedCompanionItemNames.ToArray()) + "\"");
+            VF_RealmPlayersDatabase.Logger.ConsoleWriteLine("Failed to add " + failedMountItemNames.Count + " mounts due to unknown names");// with names: " + String.Join("\", \"", failedMountItemNames.ToArray()) + "\"");
+            VF_RealmPlayersDatabase.Logger.ConsoleWriteLine("Failed to add " + failedMountItemNames.Count + " companions due to unknown names");// with names: " + String.Join("\", \"", failedCompanionItemNames.ToArray()) + "\"");
         }
 
         public static ItemSummaryDatabase LoadSummaryDatabase(string _RootDirectory)

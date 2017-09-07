@@ -307,7 +307,7 @@ namespace VF_RDDatabase
             string databaseFile = _RootDirectory + "\\SummaryDatabase\\FullSummaryDatabase.dat";
             if (System.IO.File.Exists(databaseFile) == true)
             {
-                if (VF.Utility.LoadSerialize(databaseFile, out database) == false)
+                if (VF.Utility.LoadSerialize(databaseFile, out database, 100000, true) == false)
                     database = null;
             }
             if (database == null)
