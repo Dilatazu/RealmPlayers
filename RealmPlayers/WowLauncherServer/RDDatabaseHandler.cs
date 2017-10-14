@@ -463,15 +463,14 @@ namespace VF_WoWLauncherServer
             }
             GC.Collect();
         }
-        public void FixBuggedSummaryDatabase()
+        public void FixBuggedSummaryDatabase(int[] _BuggedRaidIDs)
         {
             lock (m_LockObject)
             {
-                int[] buggedRaidIDs = { 31617 };
                 List<RaidCollection_Raid> buggedRaids = new List<RaidCollection_Raid>();
                 foreach (var raid in m_RaidCollection.m_Raids)
                 {
-                    if(buggedRaidIDs.Contains(raid.Value.UniqueRaidID))
+                    if(_BuggedRaidIDs.Contains(raid.Value.UniqueRaidID))
                     {
                         buggedRaids.Add(raid.Value);
                     }

@@ -54,6 +54,7 @@
             this.button12 = new System.Windows.Forms.Button();
             this.button13 = new System.Windows.Forms.Button();
             this.button14 = new System.Windows.Forms.Button();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.c_cmsBetaUsers.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -136,9 +137,9 @@
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(268, 184);
+            this.button5.Location = new System.Drawing.Point(124, 356);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(123, 36);
+            this.button5.Size = new System.Drawing.Size(226, 25);
             this.button5.TabIndex = 8;
             this.button5.Text = "Fix bugged RaidStats SummaryDatabase";
             this.button5.UseVisualStyleBackColor = true;
@@ -248,7 +249,7 @@
             // 
             // button10
             // 
-            this.button10.Location = new System.Drawing.Point(13, 359);
+            this.button10.Location = new System.Drawing.Point(24, 267);
             this.button10.Name = "button10";
             this.button10.Size = new System.Drawing.Size(120, 23);
             this.button10.TabIndex = 18;
@@ -268,7 +269,7 @@
             // 
             // button12
             // 
-            this.button12.Location = new System.Drawing.Point(171, 301);
+            this.button12.Location = new System.Drawing.Point(172, 271);
             this.button12.Name = "button12";
             this.button12.Size = new System.Drawing.Size(165, 23);
             this.button12.TabIndex = 20;
@@ -278,7 +279,7 @@
             // 
             // button13
             // 
-            this.button13.Location = new System.Drawing.Point(24, 270);
+            this.button13.Location = new System.Drawing.Point(181, 242);
             this.button13.Name = "button13";
             this.button13.Size = new System.Drawing.Size(109, 23);
             this.button13.TabIndex = 21;
@@ -296,11 +297,20 @@
             this.button14.UseVisualStyleBackColor = true;
             this.button14.Click += new System.EventHandler(this.button14_Click);
             // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(12, 359);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(106, 20);
+            this.textBox1.TabIndex = 23;
+            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(704, 434);
+            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.button14);
             this.Controls.Add(this.button13);
             this.Controls.Add(this.button12);
@@ -361,6 +371,7 @@
         private System.Windows.Forms.Button button12;
         private System.Windows.Forms.Button button13;
         private System.Windows.Forms.Button button14;
+        private System.Windows.Forms.TextBox textBox1;
     }
 }
 

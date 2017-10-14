@@ -170,7 +170,20 @@ namespace VF_WoWLauncherServer
         {
             try
             {
-                Program.g_RDDatabaseHandler.FixBuggedSummaryDatabase();
+                if(textBox1.Text != "")
+                {
+                    var idsStr = textBox1.Text.Split(',');
+                    int[] ids = new int[idsStr.Length];
+                    string debugStr = "";
+                    for(int i = 0; i < idsStr.Length; ++i)
+                    {
+                        ids[i] = int.Parse(idsStr[i]);
+                        debugStr += ids[i] + ", ";
+                    }
+                    Logger.ConsoleWriteLine("MainWindow: Fixing raids: " + debugStr);
+                    Program.g_RDDatabaseHandler.FixBuggedSummaryDatabase(ids);
+                    Logger.ConsoleWriteLine("MainWindow: Fixed raids!");
+                }
             }
             catch (Exception ex)
             {
@@ -180,6 +193,8 @@ namespace VF_WoWLauncherServer
 
         private void button6_Click(object sender, EventArgs e)
         {
+            MessageBox.Show("DEPRECATED FUNCTIONALITY");
+            return;  //Deprecated
             try
             {
                 Program.g_RPPDatabaseHandler.ResetArchangel();
@@ -269,6 +284,8 @@ namespace VF_WoWLauncherServer
 
         private void button10_Click(object sender, EventArgs e)
         {
+            MessageBox.Show("DEPRECATED FUNCTIONALITY");
+            return;  //Deprecated
             /*
              * //SULTANEN NOSTALRIUS PURGE
             {
@@ -331,6 +348,8 @@ namespace VF_WoWLauncherServer
 
         private void button12_Click(object sender, EventArgs e)
         {
+            MessageBox.Show("DEPRECATED FUNCTIONALITY");
+            return;  //Deprecated
             try
             {
                 Program.g_RPPDatabaseHandler.MigrateItemSummaryDatabaseToSQL();
@@ -343,6 +362,8 @@ namespace VF_WoWLauncherServer
 
         private void button13_Click(object sender, EventArgs e)
         {
+            MessageBox.Show("DEPRECATED FUNCTIONALITY");
+            return;  //Deprecated
             try
             {
                 Npgsql.NpgsqlConnection.ClearAllPools();
@@ -366,6 +387,11 @@ namespace VF_WoWLauncherServer
         private void button15_Click(object sender, EventArgs e)
         {
             
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
