@@ -92,7 +92,7 @@ namespace VF_RDDatabase
             string databaseFile = _RootDirectory + "\\SummaryDatabase\\GroupSummaryDatabase.dat";
             if (System.IO.File.Exists(databaseFile) == true)
             {
-                if (VF.Utility.LoadSerialize(databaseFile, out database) == false)
+                if (VF.Utility.LoadSerialize(databaseFile, out database, 10000, true) == false)
                     database = null;
             }
             return database;

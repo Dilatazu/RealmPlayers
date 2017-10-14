@@ -287,7 +287,14 @@ namespace VF.RaidDamageWebsite
             return DynamicReloader.GetData<VF_RaidDamageDatabase.RaidCollection>(() =>
             {
                 VF_RaidDamageDatabase.RaidCollection raidCollection = null;
-                VF.Utility.LoadSerialize<VF_RaidDamageDatabase.RaidCollection>(g_RDDBDir + "RaidCollection.dat", out raidCollection);
+                try
+                {
+                    VF.Utility.LoadSerialize<VF_RaidDamageDatabase.RaidCollection>(g_RDDBDir + "RaidCollection.dat", out raidCollection);
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogException(ex);
+                }
                 return raidCollection;
             }, (_RaidCollection, _LastLoadTime) => { return (DateTime.UtcNow - _LastLoadTime).TotalMinutes > 5; });
         }
@@ -376,7 +383,14 @@ namespace VF.RaidDamageWebsite
             return DynamicReloader.GetData<VF_RPDatabase.ItemSummaryDatabase>(() =>
             {
                 VF_RPDatabase.ItemSummaryDatabase summaryDB = null;
-                summaryDB = VF_RPDatabase.ItemSummaryDatabase.LoadSummaryDatabase(g_RPPDBDir);
+                try
+                {
+                    summaryDB = VF_RPDatabase.ItemSummaryDatabase.LoadSummaryDatabase(g_RPPDBDir);
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogException(ex);
+                }
                 return summaryDB;
             }, (_RaidCollection, _LastLoadTime) => { return (DateTime.UtcNow - _LastLoadTime).TotalMinutes > 60; });
         }
@@ -385,7 +399,14 @@ namespace VF.RaidDamageWebsite
             return DynamicReloader.GetData<VF_RPDatabase.GuildSummaryDatabase>(() =>
             {
                 VF_RPDatabase.GuildSummaryDatabase summaryDB = null;
-                summaryDB = VF_RPDatabase.GuildSummaryDatabase.LoadSummaryDatabase(g_RPPDBDir);
+                try
+                {
+                    summaryDB = VF_RPDatabase.GuildSummaryDatabase.LoadSummaryDatabase(g_RPPDBDir);
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogException(ex);
+                }
                 return summaryDB;
             }, (_RaidCollection, _LastLoadTime) => { return (DateTime.UtcNow - _LastLoadTime).TotalMinutes > 30; });
         }

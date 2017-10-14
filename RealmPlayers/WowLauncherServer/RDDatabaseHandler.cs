@@ -33,7 +33,7 @@ namespace VF_WoWLauncherServer
             m_RDDBFolder = _RDDBFolder;
             m_RPPDatabaseHandler = _RPPDatabaseHandler;
 
-            VF.Utility.LoadSerialize<RaidCollection>(m_RDDBFolder + "RaidCollection.dat", out m_RaidCollection);
+            VF.Utility.LoadSerialize<RaidCollection>(m_RDDBFolder + "RaidCollection.dat", out m_RaidCollection, 10000, true);
             m_MainThread = new System.Threading.Thread(MainThread);
             m_MainThread.Start();
         }
@@ -248,7 +248,7 @@ namespace VF_WoWLauncherServer
                             m_ProblemFiles.Add(raidDamageDataFile);
                             Logger.ConsoleWriteLine("RaidStats: DUE TO ERRORS WE ARE RELOADING RAIDCOLLECTION!!!", ConsoleColor.Red);
                             //RESET m_RaidCollection!!!
-                            VF.Utility.LoadSerialize<RaidCollection>(m_RDDBFolder + "RaidCollection.dat", out m_RaidCollection);
+                            VF.Utility.LoadSerialize<RaidCollection>(m_RDDBFolder + "RaidCollection.dat", out m_RaidCollection, 10000, true);
                             m_GetFightDataCollectionCache = new Dictionary<string, FightDataCollection>();
                             m_RaidsModifiedSinceLastSummaryUpdate = new List<RaidCollection_Raid>();
                             Logger.ConsoleWriteLine("RaidStats: RELOAD OF RAIDCOLLECTION WAS SUCCESSFULL!!!", ConsoleColor.Green);

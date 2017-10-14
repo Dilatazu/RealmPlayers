@@ -444,7 +444,7 @@ namespace VF_RPDatabase
             string databaseFile = _RootDirectory + "\\SummaryDatabase\\ItemSummaryDatabase.dat";
             if (System.IO.File.Exists(databaseFile) == true)
             {
-                if (VF.Utility.LoadSerialize(databaseFile, out database) == false)
+                if (VF.Utility.LoadSerialize(databaseFile, out database, 10000, true) == false)
                     database = null;
             }
             //if (database != null)
@@ -508,7 +508,7 @@ namespace VF_RPDatabase
             string databaseFile = _RootDirectory + "\\SummaryDatabase\\ItemSummaryDatabase.dat";
             if (System.IO.File.Exists(databaseFile) == true)
             {
-                if (VF.Utility.LoadSerialize(databaseFile, out database) == false)
+                if (VF.Utility.LoadSerialize(databaseFile, out database, 10000, true) == false)
                     database = null;
 
                 //Update the new dictionary realm with all the old entitycounters!

@@ -105,7 +105,7 @@ namespace VF_RPDatabase
             string databaseFile = _RootDirectory + "\\SummaryDatabase\\GuildSummaryDatabase.dat";
             if (System.IO.File.Exists(databaseFile) == true)
             {
-                if (Utility.LoadSerialize(databaseFile, out database) == false)
+                if (Utility.LoadSerialize(databaseFile, out database, 10000, true) == false)
                     database = null;
             }
             if (database != null)
@@ -123,7 +123,7 @@ namespace VF_RPDatabase
             string databaseFile = _RootDirectory + "\\SummaryDatabase\\GuildSummaryDatabase.dat";
             if (System.IO.File.Exists(databaseFile) == true)
             {
-                if (Utility.LoadSerialize(databaseFile, out database) == false)
+                if (Utility.LoadSerialize(databaseFile, out database, 10000, true) == false)
                     database = null;
                 if (database == null)
                 {

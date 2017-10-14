@@ -604,7 +604,14 @@ namespace RealmPlayersServer
                 return DynamicReloader.GetData<VF_RPDatabase.GuildSummaryDatabase>(() =>
                 {
                     VF_RPDatabase.GuildSummaryDatabase summaryDB = null;
-                    summaryDB = VF_RPDatabase.GuildSummaryDatabase.LoadSummaryDatabase(Constants.RPPDbDir);
+                    try
+                    {
+                        summaryDB = VF_RPDatabase.GuildSummaryDatabase.LoadSummaryDatabase(Constants.RPPDbDir);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.LogException(ex);
+                    }
                     return summaryDB;
                 }, (_RaidCollection, _LastLoadTime) => { return (DateTime.UtcNow - _LastLoadTime).TotalMinutes > 40; });
             }
@@ -613,7 +620,14 @@ namespace RealmPlayersServer
                 return DynamicReloader.GetData<VF_RPDatabase.ItemSummaryDatabase>(() =>
                 {
                     VF_RPDatabase.ItemSummaryDatabase summaryDB = null;
-                    summaryDB = VF_RPDatabase.ItemSummaryDatabase.LoadSummaryDatabase(Constants.RPPDbDir);
+                    try
+                    {
+                        summaryDB = VF_RPDatabase.ItemSummaryDatabase.LoadSummaryDatabase(Constants.RPPDbDir);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.LogException(ex);
+                    }
                     return summaryDB;
                 }, (_RaidCollection, _LastLoadTime) => { return (DateTime.UtcNow - _LastLoadTime).TotalMinutes > 120; });
             }
@@ -622,7 +636,14 @@ namespace RealmPlayersServer
                 return DynamicReloader.GetData<VF_RPDatabase.PlayerSummaryDatabase>(() =>
                 {
                     VF_RPDatabase.PlayerSummaryDatabase summaryDB = null;
-                    summaryDB = VF_RPDatabase.PlayerSummaryDatabase.LoadSummaryDatabase(Constants.RPPDbDir);
+                    try
+                    {
+                        summaryDB = VF_RPDatabase.PlayerSummaryDatabase.LoadSummaryDatabase(Constants.RPPDbDir);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.LogException(ex);
+                    }
                     return summaryDB;
                 }, (_RaidCollection, _LastLoadTime) => { return (DateTime.UtcNow - _LastLoadTime).TotalMinutes > 60; });
             }
@@ -631,7 +652,14 @@ namespace RealmPlayersServer
                 return DynamicReloader.GetData<VF_RDDatabase.GroupSummaryDatabase>(() =>
                 {
                     VF_RDDatabase.GroupSummaryDatabase summaryDB = null;
-                    summaryDB = VF_RDDatabase.GroupSummaryDatabase.LoadSummaryDatabase(Constants.RDDbDir);
+                    try
+                    {
+                        summaryDB = VF_RDDatabase.GroupSummaryDatabase.LoadSummaryDatabase(Constants.RDDbDir);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.LogException(ex);
+                    }
                     return summaryDB;
                 }, (_RaidCollection, _LastLoadTime) => { return (DateTime.UtcNow - _LastLoadTime).TotalMinutes > 60; });
             }
