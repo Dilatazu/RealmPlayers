@@ -40,11 +40,48 @@ namespace VF_RDDatabase
                 return m_PlayerSummaries; 
             }
         }
-
-        public void GeneratePlayerSummaries()
+        
+        public bool AddSummaryDatabase(string _SummaryDatabaseFile)
         {
-            if (m_PlayerSummaries.Count == 0)
+            bool changesDone = false;
+            SummaryDatabase database = null;
+            if (System.IO.File.Exists(_SummaryDatabaseFile) == true)
             {
+                if (VF.Utility.LoadSerialize(_SummaryDatabaseFile, out database, 10000, true) == false)
+                    database = null;
+            }
+            if (database != null)
+            {
+                foreach(var groupRC in database.m_GroupRCs)
+                {
+                    GroupRaidCollection groupRCvalue;
+                    if(m_GroupRCs.TryGetValue(groupRC.Key, out groupRCvalue) == true)
+                    {
+                        foreach(var raid in groupRC.Value.Raids)
+                        {
+                            if(groupRCvalue.Raids.AddIfKeyNotExist(raid.Key, raid.Value))
+                            {
+                                raid.Value.InitCache(groupRCvalue);
+                                changesDone = true;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        changesDone = true;
+                        m_GroupRCs.Add(groupRC.Key, groupRC.Value);
+                        groupRC.Value.InitCache();
+                    }
+                }
+            }
+            return changesDone;
+        }
+
+        public void GeneratePlayerSummaries(bool _ForceGenerate = false)
+        {
+            if (m_PlayerSummaries.Count == 0 || _ForceGenerate == true)
+            {
+                m_PlayerSummaries.Clear();
                 lock (m_PlayerSummaries)
                 {
                     if (m_PlayerSummaries.Count != 0)
@@ -283,13 +320,12 @@ namespace VF_RDDatabase
             newDatabase.UpdateDatabase(_RaidCollection, _CachedGetFightDataCollectionFunc, _GetRealmDB);
             return newDatabase;
         }
-        public static SummaryDatabase LoadSummaryDatabase(string _RootDirectory)
+        public static SummaryDatabase LoadSummaryDatabase_New(string _SummaryDatabaseFile)
         {
             SummaryDatabase database = null;
-            string databaseFile = _RootDirectory + "\\SummaryDatabase\\FullSummaryDatabase.dat";
-            if (System.IO.File.Exists(databaseFile) == true)
+            if (System.IO.File.Exists(_SummaryDatabaseFile) == true)
             {
-                if (VF.Utility.LoadSerialize(databaseFile, out database, 10000, true) == false)
+                if (VF.Utility.LoadSerialize(_SummaryDatabaseFile, out database, 10000, true) == false)
                     database = null;
             }
             if (database != null)
@@ -301,13 +337,12 @@ namespace VF_RDDatabase
             }
             return database;
         }
-        public static SummaryDatabase UpdateSummaryDatabase(string _RootDirectory, Old_RaidCollection _FullRaidCollection, List<Old_RaidCollection_Raid> _RecentChangedRaids, Func<string, Old_FightDataCollection> _CachedGetFightDataCollectionFunc, Func<WowRealm, VF_RaidDamageDatabase.RealmDB> _GetRealmDB)
+        public static SummaryDatabase UpdateSummaryDatabase_New(string _SummaryDatabaseFile, Old_RaidCollection _FullRaidCollection, List<Old_RaidCollection_Raid> _RecentChangedRaids, Func<string, Old_FightDataCollection> _CachedGetFightDataCollectionFunc, Func<WowRealm, VF_RaidDamageDatabase.RealmDB> _GetRealmDB)
         {
             SummaryDatabase database = null;
-            string databaseFile = _RootDirectory + "\\SummaryDatabase\\FullSummaryDatabase.dat";
-            if (System.IO.File.Exists(databaseFile) == true)
+            if (System.IO.File.Exists(_SummaryDatabaseFile) == true)
             {
-                if (VF.Utility.LoadSerialize(databaseFile, out database, 100000, true) == false)
+                if (VF.Utility.LoadSerialize(_SummaryDatabaseFile, out database, 100000, true) == false)
                     database = null;
             }
             if (database == null)
@@ -318,16 +353,15 @@ namespace VF_RDDatabase
             {
                 database.UpdateDatabase(_RecentChangedRaids, _CachedGetFightDataCollectionFunc, _GetRealmDB);
             }
-            VF.Utility.SaveSerialize(databaseFile, database);
+            VF.Utility.SaveSerialize(_SummaryDatabaseFile, database);
             return database;
         }
-        public static void FixBuggedSummaryDatabase(string _RootDirectory, Old_RaidCollection _FullRaidCollection, List<Old_RaidCollection_Raid> _BuggedRaids, Func<string, Old_FightDataCollection> _CachedGetFightDataCollectionFunc, Func<WowRealm, VF_RaidDamageDatabase.RealmDB> _GetRealmDB)
+        public static void FixBuggedSummaryDatabase_New(string _SummaryDatabaseFile, Old_RaidCollection _FullRaidCollection, List<Old_RaidCollection_Raid> _BuggedRaids, Func<string, Old_FightDataCollection> _CachedGetFightDataCollectionFunc, Func<WowRealm, VF_RaidDamageDatabase.RealmDB> _GetRealmDB)
         {
             SummaryDatabase database = null;
-            string databaseFile = _RootDirectory + "\\SummaryDatabase\\FullSummaryDatabase.dat";
-            if (System.IO.File.Exists(databaseFile) == true)
+            if (System.IO.File.Exists(_SummaryDatabaseFile) == true)
             {
-                if (VF.Utility.LoadSerialize(databaseFile, out database) == false)
+                if (VF.Utility.LoadSerialize(_SummaryDatabaseFile, out database, 10000, true) == false)
                     database = null;
             }
             if (database == null)
@@ -338,7 +372,7 @@ namespace VF_RDDatabase
             {
                 database.UpdateDatabaseReplace(_BuggedRaids, _CachedGetFightDataCollectionFunc, _GetRealmDB);
             }
-            VF.Utility.SaveSerialize(databaseFile, database);
+            VF.Utility.SaveSerialize(_SummaryDatabaseFile, database);
         }
 
         public Raid GetRaid(int _UniqueRaidID)

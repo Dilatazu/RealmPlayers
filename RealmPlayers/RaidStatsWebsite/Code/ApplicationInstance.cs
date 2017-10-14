@@ -206,15 +206,29 @@ namespace VF.RaidDamageWebsite
         {
             return m_RPPDatabase.GetRealmDB(_Realm).FindPlayer(_Player);
         }
+        VF_RDDatabase.SummaryDatabase m_FullSummaryDatabase = null;
         public VF_RDDatabase.SummaryDatabase GetSummaryDatabase()
         {
+            if(m_FullSummaryDatabase == null)
+            {
+                m_FullSummaryDatabase = VF_RDDatabase.SummaryDatabase.LoadSummaryDatabase_New(g_RDDBDir + "\\SummaryDatabase\\OldSummaryDatabase.dat");
+            }
             return DynamicReloader.GetData<VF_RDDatabase.SummaryDatabase>(() =>
             {
-                VF_RDDatabase.SummaryDatabase summaryDB = null;
-                summaryDB = VF_RDDatabase.SummaryDatabase.LoadSummaryDatabase(g_RDDBDir);
-                summaryDB.GeneratePlayerSummaries();
+                if (m_FullSummaryDatabase != null)
+                {
+                    if(m_FullSummaryDatabase.AddSummaryDatabase(g_RDDBDir + "\\SummaryDatabase\\FullSummaryDatabase.dat") == true)
+                    {
+                        m_FullSummaryDatabase.GeneratePlayerSummaries(true);
+                    }
+                }
+                else
+                {
+                    m_FullSummaryDatabase = VF_RDDatabase.SummaryDatabase.LoadSummaryDatabase_New(g_RDDBDir + "\\SummaryDatabase\\FullSummaryDatabase.dat");
+                    m_FullSummaryDatabase.GeneratePlayerSummaries();
+                }
                 GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced);
-                return summaryDB;
+                return m_FullSummaryDatabase;
             }, (_SummaryDatabase, _LastLoadTime) => { return (DateTime.UtcNow - _LastLoadTime).TotalMinutes > 30; });
         }
         public FightDataCollection GetRaidFightCollection(string _FightFile)
