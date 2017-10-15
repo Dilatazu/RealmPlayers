@@ -62,10 +62,28 @@ namespace VF.RaidDamageWebsite
             }
         }
 
-        private static Dictionary<Guid, DataHolder> m_Data = new Dictionary<Guid, DataHolder>();
+        private static Dictionary<Guid, DataHolder> m_Data;
         private static object m_LockObject = new object();
+        private static bool m_DataInitialized = false;
+
+        private static void _AssertInitialized()
+        {
+            if (m_DataInitialized == false)
+            {
+                lock (m_LockObject)
+                {
+                    if (m_DataInitialized == false)
+                    {
+                        m_Data = new Dictionary<Guid, DataHolder>();
+                        System.Threading.Thread.MemoryBarrier();
+                        m_DataInitialized = true;
+                    }
+                }
+            }
+        }
         public static T GetData<T>(Func<T> _LoadFunction, Func<T, DateTime, bool> _IsOutdated, TimeSpan? _CheckOutdatedEvery = null, bool _WaitUntilLoaded = true)
         {
+            _AssertInitialized();
             if (_CheckOutdatedEvery.HasValue == false)
                 _CheckOutdatedEvery = new TimeSpan(0, 0, 5, 0);//5 min
 
@@ -75,6 +93,7 @@ namespace VF.RaidDamageWebsite
             {
                 if (m_Data.TryGetValue(guid, out dataHolder) == false)
                 {
+                    System.Threading.Thread.MemoryBarrier();
                     dataHolder = new DataHolder();
                     m_Data.Add(guid, dataHolder);
                 }
@@ -91,6 +110,7 @@ namespace VF.RaidDamageWebsite
                 Monitor.Enter(dataHolder.m_LockObject);
             }
             /////////////////////////dataHolder.m_LockObject is LOCKED/////////////////////////
+            System.Threading.Thread.MemoryBarrier();
             object returnData = dataHolder.m_Data;
             if (returnData == null)
             {
@@ -134,6 +154,7 @@ namespace VF.RaidDamageWebsite
         }
         public static DateTime GetLastLoadTime<T>()
         {
+            _AssertInitialized();
             Guid guid = typeof(T).GUID;
             DataHolder dataHolder = null;
             lock(m_LockObject)

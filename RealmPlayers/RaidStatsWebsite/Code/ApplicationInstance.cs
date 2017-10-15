@@ -25,15 +25,17 @@ namespace VF.RaidDamageWebsite
         public static string g_RPPDBDir = VF_RealmPlayersDatabase.Utility.DefaultServerLocation + "VF_RealmPlayersData\\RPPDatabase\\";
         public static string g_RDDBDir = VF_RealmPlayersDatabase.Utility.DefaultServerLocation + "VF_RealmPlayersData\\RDDatabase\\";
 
-        static readonly ApplicationInstance m_Instance = new ApplicationInstance();
-
+        static ApplicationInstance m_Instance;
+        static readonly object m_InstanceLock = new object();
+        static bool m_InstanceInitialized = false;
         RPPDatabase m_RPPDatabase = null;
         Dictionary<string, Tuple<DateTime, FightDataCollection>> m_Fights = new Dictionary<string, Tuple<DateTime, FightDataCollection>>();
-        public object m_Mutex = new object();
+        public readonly object m_Mutex = new object();
         static ApplicationInstance()
         {}
         ApplicationInstance()
         {
+            Logger.ConsoleWriteLine("Initializing ApplicationInstance!");
             RealmPlayersServer.Constants.AssertInitialize();
 
             Authentication.Initialize();
@@ -54,6 +56,18 @@ namespace VF.RaidDamageWebsite
         {
             get
             {
+                if (m_InstanceInitialized == false)
+                {
+                    lock (m_InstanceLock)
+                    {
+                        if (m_InstanceInitialized == false)
+                        {
+                            m_Instance = new ApplicationInstance();
+                            System.Threading.Thread.MemoryBarrier();
+                            m_InstanceInitialized = true;
+                        }
+                    }
+                }
                 return m_Instance;
             }
         }
