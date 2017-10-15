@@ -59,12 +59,13 @@ namespace VF_RDDatabase
                     {
                         foreach(var raid in groupRC.Value.Raids)
                         {
-                            if(groupRCvalue.Raids.AddIfKeyNotExist(raid.Key, raid.Value))
+                            if(groupRCvalue.Raids.AddIfKeyNotExist(raid.Key, raid.Value) == true)
                             {
                                 raid.Value.InitCache(groupRCvalue);
                                 changesDone = true;
                             }
                         }
+                        groupRC.Value.Raids.Clear(); //Needed to avoid internal automatic Dispose() on raids we took;
                     }
                     else
                     {
@@ -81,48 +82,45 @@ namespace VF_RDDatabase
         {
             if (m_PlayerSummaries.Count == 0 || _ForceGenerate == true)
             {
-                m_PlayerSummaries.Clear();
-                lock (m_PlayerSummaries)
+                VF_RealmPlayersDatabase.Logger.ConsoleWriteLine("Started generating PlayerSummary");
+                Dictionary<string, PlayerSummary> playerSummaries = new Dictionary<string, VF_RDDatabase.PlayerSummary>();
+                foreach (var groupRC in GroupRCs)
                 {
-                    if (m_PlayerSummaries.Count != 0)
-                        return;
-
-                    foreach (var groupRC in GroupRCs)
+                    foreach (var raid in groupRC.Value.Raids)
                     {
-                        foreach (var raid in groupRC.Value.Raids)
+                        List<string> bossFightsAdded = new List<string>();
+                        foreach (var bossFight in raid.Value.BossFights)
                         {
-                            List<string> bossFightsAdded = new List<string>();
-                            foreach (var bossFight in raid.Value.BossFights)
+                            if (bossFight.AttemptType != AttemptType.KillAttempt)
+                                continue;
+
+                            if (bossFightsAdded.Contains(bossFight.BossName))
+                                continue;//Do not add duplicates!
+
+                            bossFightsAdded.Add(bossFight.BossName);
+
+                            foreach (var playerData in bossFight.PlayerFightData)
                             {
-                                if (bossFight.AttemptType != AttemptType.KillAttempt)
-                                    continue;
-
-                                if (bossFightsAdded.Contains(bossFight.BossName))
-                                    continue;//Do not add duplicates!
-
-                                bossFightsAdded.Add(bossFight.BossName);
-
-                                foreach (var playerData in bossFight.PlayerFightData)
-                                {
-                                    if (playerData.Item2.Deaths > 0 || playerData.Item2.Damage > 0 || playerData.Item2.RawHeal > 0)
-                                    {//If check can be removed if SummaryDatabase is fresh generated after 2014-04-12. This check exists in BossFight.cs generation aswell
-                                        string playerKeyName = Utility.GetRealmPreString(groupRC.Value.m_Realm) + playerData.Item1;
-                                        if (m_PlayerSummaries.ContainsKey(playerKeyName) == false)
-                                        {
-                                            m_PlayerSummaries.Add(playerKeyName, new PlayerSummary(playerData.Item1, groupRC.Value.Realm));
-                                        }
-                                        var currPlayerSummary = m_PlayerSummaries[playerKeyName];
-                                        currPlayerSummary.AddBossFightData(bossFight, playerData.Item2);
+                                if (playerData.Item2.Deaths > 0 || playerData.Item2.Damage > 0 || playerData.Item2.RawHeal > 0)
+                                {//If check can be removed if SummaryDatabase is fresh generated after 2014-04-12. This check exists in BossFight.cs generation aswell
+                                    string playerKeyName = Utility.GetRealmPreString(groupRC.Value.m_Realm) + playerData.Item1;
+                                    if (playerSummaries.ContainsKey(playerKeyName) == false)
+                                    {
+                                        playerSummaries.Add(playerKeyName, new PlayerSummary(playerData.Item1, groupRC.Value.Realm));
                                     }
+                                    var currPlayerSummary = playerSummaries[playerKeyName];
+                                    currPlayerSummary.AddBossFightData(bossFight, playerData.Item2);
                                 }
                             }
                         }
                     }
-                    foreach (var playerSummary in m_PlayerSummaries)
-                    {
-                        playerSummary.Value.SortBossFights();
-                    }
                 }
+                foreach (var playerSummary in playerSummaries)
+                {
+                    playerSummary.Value.SortBossFights();
+                }
+                m_PlayerSummaries = playerSummaries;
+                VF_RealmPlayersDatabase.Logger.ConsoleWriteLine("Done generating PlayerSummary");
             }
         }
         public static readonly DateTime EARLIEST_HSELLIGIBLE_DATE = new DateTime(2013, 10, 23, 0, 0, 0);
@@ -227,7 +225,6 @@ namespace VF_RDDatabase
             if (m_PlayerSummaries.Count == 0)
             {
                 DateTime timer = DateTime.Now;
-                VF_RealmPlayersDatabase.Logger.ConsoleWriteLine("Started generating PlayerSummary");
                 GC.Collect();
                 GeneratePlayerSummaries();
                 GC.Collect();
@@ -261,7 +258,7 @@ namespace VF_RDDatabase
         {
             Hidden._GlobalInitializationData.Init(_GetRealmDB, _CachedGetFightDataCollectionFunc);
             VF_RealmPlayersDatabase.Logger.ConsoleWriteLine("RaidStats: SummaryDatabase.UpdateDatabase: " + _Raids.Count + " raids");
-            DateTime SummaryDBResetDate = new DateTime(2016, 11, 1); //Added 2017-01-10 when highscore lists were reset!
+            DateTime SummaryDBResetDate = new DateTime(2017, 10, 10); //Added 2017-10-15 when highscore lists were split up into multiple files!
             int i = 0;
             foreach (var raid in _Raids)
             {
@@ -272,7 +269,7 @@ namespace VF_RDDatabase
                     Console.Write("Added " + i + " raids");
                     GC.Collect();
                 }
-                if (raid.RaidEndDate < SummaryDBResetDate) //Added 2017-01-10 when highscore lists were reset!
+                if (raid.RaidEndDate < SummaryDBResetDate) //Added 2017-10-15 when highscore lists were split up into multiple files!
                     continue;
                 var groupRC = GetGroupRC(raid.Realm, raid.RaidOwnerName);
                 if (groupRC == null)

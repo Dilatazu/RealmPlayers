@@ -438,7 +438,7 @@ namespace VF_WoWLauncherServer
             if (_ReplaceRaidsModified == false)
             {
                 //Default
-                var summaryDB = VF_RDDatabase.SummaryDatabase.UpdateSummaryDatabase_New(m_RDDBFolder + "\\SummaryDatabase\\FullSummaryDatabase.dat", m_RaidCollection, raidsModified
+                var summaryDB = VF_RDDatabase.SummaryDatabase.UpdateSummaryDatabase_New(m_RDDBFolder + "\\SummaryDatabase\\NewSummaryDatabase.dat", m_RaidCollection, raidsModified
                     , cachedGetFightDataCollectionFunc
                     , (_WowRealm) => { return new RealmDB(m_RPPDatabaseHandler.GetRealmDB(_WowRealm)); });
                 Logger.ConsoleWriteLine("RaidStats: Done Updating Summary Database, it took " + (timer.ElapsedMilliseconds / 1000) + " seconds", ConsoleColor.Green);
@@ -449,7 +449,7 @@ namespace VF_WoWLauncherServer
             else
             {
                 //FixBuggedSummaryDatabase
-                VF_RDDatabase.SummaryDatabase.FixBuggedSummaryDatabase_New(m_RDDBFolder + "\\SummaryDatabase\\FullSummaryDatabase.dat", m_RaidCollection, raidsModified
+                VF_RDDatabase.SummaryDatabase.FixBuggedSummaryDatabase_New(m_RDDBFolder + "\\SummaryDatabase\\BaseSummaryDatabase.dat", m_RaidCollection, raidsModified
                     , cachedGetFightDataCollectionFunc
                     , (_WowRealm) => { return new RealmDB(m_RPPDatabaseHandler.GetRealmDB(_WowRealm)); });
                 Logger.ConsoleWriteLine("RaidStats: Done Fixing " + _RaidsModified.Count + "bugged raids in Summary Database, it took " + (timer.ElapsedMilliseconds / 1000) + " seconds", ConsoleColor.Green);

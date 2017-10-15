@@ -223,24 +223,41 @@ namespace VF.RaidDamageWebsite
         VF_RDDatabase.SummaryDatabase m_FullSummaryDatabase = null;
         public VF_RDDatabase.SummaryDatabase GetSummaryDatabase()
         {
-            if(m_FullSummaryDatabase == null)
-            {
-                m_FullSummaryDatabase = VF_RDDatabase.SummaryDatabase.LoadSummaryDatabase_New(g_RDDBDir + "\\SummaryDatabase\\OldSummaryDatabase.dat");
-            }
+            Logger.ConsoleWriteLine("Inside GetSummaryDatabase()");
             return DynamicReloader.GetData<VF_RDDatabase.SummaryDatabase>(() =>
             {
-                if (m_FullSummaryDatabase != null)
+                Logger.ConsoleWriteLine("Inside GetSummaryDatabase->GetData()");
+                try
                 {
-                    if(m_FullSummaryDatabase.AddSummaryDatabase(g_RDDBDir + "\\SummaryDatabase\\FullSummaryDatabase.dat") == true)
+                    if (m_FullSummaryDatabase == null)
                     {
-                        m_FullSummaryDatabase.GeneratePlayerSummaries(true);
+                        m_FullSummaryDatabase = VF_RDDatabase.SummaryDatabase.LoadSummaryDatabase_New(g_RDDBDir + "\\SummaryDatabase\\BaseSummaryDatabase.dat");
+                        if (m_FullSummaryDatabase != null)
+                        {
+                            m_FullSummaryDatabase.AddSummaryDatabase(g_RDDBDir + "\\SummaryDatabase\\VeryOldSummaryDatabase.dat");
+                            m_FullSummaryDatabase.AddSummaryDatabase(g_RDDBDir + "\\SummaryDatabase\\OldSummaryDatabase.dat");
+                            m_FullSummaryDatabase.GeneratePlayerSummaries(true);
+                            //TODO: Add code to load all summarydatabases from a specific history directory
+                        }
+                    }
+                    if (m_FullSummaryDatabase != null)
+                    {
+                        if (m_FullSummaryDatabase.AddSummaryDatabase(g_RDDBDir + "\\SummaryDatabase\\NewSummaryDatabase.dat") == true)
+                        {
+                            m_FullSummaryDatabase.GeneratePlayerSummaries(true);
+                        }
+                    }
+                    else
+                    {
+                        m_FullSummaryDatabase = VF_RDDatabase.SummaryDatabase.LoadSummaryDatabase_New(g_RDDBDir + "\\SummaryDatabase\\NewSummaryDatabase.dat");
+                        m_FullSummaryDatabase.GeneratePlayerSummaries();
                     }
                 }
-                else
+                catch (Exception ex)
                 {
-                    m_FullSummaryDatabase = VF_RDDatabase.SummaryDatabase.LoadSummaryDatabase_New(g_RDDBDir + "\\SummaryDatabase\\FullSummaryDatabase.dat");
-                    m_FullSummaryDatabase.GeneratePlayerSummaries();
+                    Logger.LogException(ex);
                 }
+                Logger.ConsoleWriteLine("Done GetSummaryDatabase->GetData()");
                 GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced);
                 return m_FullSummaryDatabase;
             }, (_SummaryDatabase, _LastLoadTime) => { return (DateTime.UtcNow - _LastLoadTime).TotalMinutes > 30; });
