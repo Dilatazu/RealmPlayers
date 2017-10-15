@@ -92,6 +92,9 @@ namespace VF.RaidDamageWebsite
                 if (realm != VF_RealmPlayersDatabase.WowRealm.All && realm != groupRC.Value.Realm)
                     continue;
 
+                if (groupRC.Value.Realm == VF_RealmPlayersDatabase.WowRealm.Unknown || groupRC.Value.Realm == VF_RealmPlayersDatabase.WowRealm.Test_Server)
+                    continue;
+
                 if (guildLimit != null && guildLimit != groupRC.Value.GroupName)
                     continue;
 
