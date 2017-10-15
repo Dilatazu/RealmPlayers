@@ -260,15 +260,10 @@ namespace VF_RDDatabase
             VF_RealmPlayersDatabase.Logger.ConsoleWriteLine("RaidStats: SummaryDatabase.UpdateDatabase: " + _Raids.Count + " raids");
             DateTime SummaryDBResetDate = new DateTime(2017, 10, 10); //Added 2017-10-15 when highscore lists were split up into multiple files!
             int i = 0;
+            int u = 0;
             foreach (var raid in _Raids)
             {
-                Console.Write(".");
-                ++i;
-                if (i % 50 == 49)
-                {
-                    Console.Write("Added " + i + " raids");
-                    GC.Collect();
-                }
+                ++u;
                 if (raid.RaidEndDate < SummaryDBResetDate) //Added 2017-10-15 when highscore lists were split up into multiple files!
                     continue;
                 var groupRC = GetGroupRC(raid.Realm, raid.RaidOwnerName);
@@ -281,6 +276,13 @@ namespace VF_RDDatabase
                 }
 
                 groupRC.GenerateSummary_AddRaid(raid);
+                Console.Write(".");
+                ++i;
+                if (i % 50 == 49)
+                {
+                    Console.Write("Added " + i + " raids(" + u + ")");
+                    GC.Collect();
+                }
             }
             Hidden._GlobalInitializationData.Clear();
         }

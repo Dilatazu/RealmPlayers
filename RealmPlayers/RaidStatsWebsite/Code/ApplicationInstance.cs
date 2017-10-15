@@ -223,7 +223,6 @@ namespace VF.RaidDamageWebsite
         VF_RDDatabase.SummaryDatabase m_FullSummaryDatabase = null;
         public VF_RDDatabase.SummaryDatabase GetSummaryDatabase()
         {
-            Logger.ConsoleWriteLine("Inside GetSummaryDatabase()");
             return DynamicReloader.GetData<VF_RDDatabase.SummaryDatabase>(() =>
             {
                 Logger.ConsoleWriteLine("Inside GetSummaryDatabase->GetData()");
@@ -284,7 +283,7 @@ namespace VF.RaidDamageWebsite
                     int secondThreshold = 120 * 60;
                     long currMemory = GC.GetTotalMemory(false);
                     if (currMemory > 8L * 1024L * 1024L * 1024L)
-                        secondThreshold = 0;
+                        secondThreshold = 60;
                     if (currMemory > 7L * 1024L * 1024L * 1024L)
                         secondThreshold = 5 * 60;
                     else if (currMemory > 6L * 1024L * 1024L * 1024L)
@@ -324,7 +323,7 @@ namespace VF.RaidDamageWebsite
                     }
                 }
             }
-            GC.Collect(GC.MaxGeneration, GCCollectionMode.Optimized);
+            //GC.Collect(GC.MaxGeneration, GCCollectionMode.Optimized);
             return fightDataCollection;
         }
         public VF_RaidDamageDatabase.RaidCollection GetRaidCollection()
