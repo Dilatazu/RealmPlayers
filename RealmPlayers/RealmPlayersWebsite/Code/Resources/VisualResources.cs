@@ -93,6 +93,7 @@ namespace RealmPlayersServer.Code.Resources
             {WowRealm.Medivh, "MDV" },
             {WowRealm.Firemaw, "FMW" },
             {WowRealm.Felmyst, "FLM" },
+            {WowRealm.Ares, "AR" },
         };
         public static Dictionary<WowRealm, string> _RealmVisualString = new Dictionary<WowRealm, string>
         {
@@ -129,6 +130,7 @@ namespace RealmPlayersServer.Code.Resources
             {WowRealm.Medivh, "Medivh" },
             {WowRealm.Firemaw, "Firemaw" },
             {WowRealm.Felmyst, "Felmyst" },
+            {WowRealm.Ares, "Ares" },
         };
         public static Dictionary<int, string> _HordeRankVisualName = new Dictionary<int, string>
         {

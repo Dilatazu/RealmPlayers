@@ -67,6 +67,7 @@ namespace VF_RealmPlayersDatabase
                 case WowRealm.Felmyst: //Should have own ID
                 case WowRealm.Outland: //Should have own ID
                 case WowRealm.Medivh: //Should have own ID
+                case WowRealm.Ares: //Should have own ID
                     return (0x13U << 24) + _ItemID;
                 default:
                     break;

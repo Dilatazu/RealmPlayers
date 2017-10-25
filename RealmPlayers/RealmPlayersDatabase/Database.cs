@@ -38,6 +38,7 @@ namespace VF_RealmPlayersDatabase
             WowRealm.Medivh,
             WowRealm.Firemaw,
             WowRealm.Felmyst,
+            WowRealm.Ares,
         };
 
         Dictionary<WowRealm, RealmDatabase> m_Realms = new Dictionary<WowRealm, RealmDatabase>();

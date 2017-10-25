@@ -148,6 +148,7 @@ namespace VF_RPDatabase
                 case WowRealm.Medivh: return 28UL;
                 case WowRealm.Firemaw: return 29UL;
                 case WowRealm.Felmyst: return 30UL;
+                case WowRealm.Ares: return 31UL;
             }
             return 0UL;
         }
@@ -306,6 +307,7 @@ namespace VF_RPDatabase
                 case 28UL: return WowRealm.Medivh;
                 case 29UL: return WowRealm.Firemaw;
                 case 30UL: return WowRealm.Felmyst;
+                case 31UL: return WowRealm.Ares;
                 default:
                     VF_RealmPlayersDatabase.Logger.ConsoleWriteLine("Error GetPlayerRealm failed. Realm(" + realm + ") was not valid!!!");
                     return WowRealm.Unknown;

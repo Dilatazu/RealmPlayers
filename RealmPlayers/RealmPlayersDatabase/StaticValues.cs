@@ -40,6 +40,7 @@ namespace VF_RealmPlayersDatabase
         Medivh = 30, //TBC
         Firemaw = 31,
         Felmyst = 32, //TBC
+        Ares = 33, //TBC
     }
     public enum WowVersionEnum
     {
@@ -713,6 +714,8 @@ namespace VF_RealmPlayersDatabase
             {"FMW", WowRealm.Firemaw},
             {"Felmyst", WowRealm.Felmyst},
             {"FLM", WowRealm.Felmyst},
+            {"Ares", WowRealm.Ares},
+            {"AR", WowRealm.Ares},
         };
         public static WowRealm ConvertRealm(string _Realm)
         {
@@ -743,6 +746,7 @@ namespace VF_RealmPlayersDatabase
             }
             else if (_Realm == WowRealm.Archangel || _Realm == WowRealm.WarsongTBC || _Realm == WowRealm.Vengeance_Wildhammer || _Realm == WowRealm.ExcaliburTBC || _Realm == WowRealm.L4G_Hellfire || _Realm == WowRealm.Vengeance_Stonetalon || _Realm == WowRealm.HellGround || _Realm == WowRealm.Hellfire2
                 || _Realm == WowRealm.Outland || _Realm == WowRealm.Medivh || _Realm == WowRealm.Felmyst
+                 || _Realm == WowRealm.Ares
                 )
             {
                 return WowVersionEnum.TBC;
