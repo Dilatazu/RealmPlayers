@@ -369,6 +369,12 @@ namespace VF_RaidDamageDatabase
 
                         newSession.StartDateTime = newSession.StartDateTime.AddHours(hourDiff).AddMinutes(minuteDiff).AddSeconds(secondDiff);
 
+                        if(newSession.StartDateTime > DateTime.UtcNow && newSession.Realm == "Nostralia")
+                        {
+                            hourDiff -= 24;
+                            newSession.StartDateTime = newSession.StartDateTime.AddHours(-24);
+                        }
+
                         for (int qq = 0; qq < newSession.BossLoot.Count; ++qq)
                         {
                             var bossLootValue = newSession.BossLoot[qq];
