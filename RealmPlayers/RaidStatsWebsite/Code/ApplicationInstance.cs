@@ -280,16 +280,14 @@ namespace VF.RaidDamageWebsite
                     VF.Utility.LoadSerialize(g_RDDBDir + _FightFile, out fightDataCollection);
                     m_Fights.Add(_FightFile, Tuple.Create(DateTime.UtcNow, fightDataCollection));
                     
-                    int secondThreshold = 120 * 60;
+                    int secondThreshold = 15 * 60;
                     long currMemory = GC.GetTotalMemory(false);
-                    if (currMemory > 8L * 1024L * 1024L * 1024L)
+                    if (currMemory > 13L * 1024L * 1024L * 1024L)
                         secondThreshold = 60;
-                    if (currMemory > 7L * 1024L * 1024L * 1024L)
+                    if (currMemory > 10L * 1024L * 1024L * 1024L)
                         secondThreshold = 5 * 60;
-                    else if (currMemory > 6L * 1024L * 1024L * 1024L)
-                        secondThreshold = 20 * 60;
-                    else if (currMemory > 5L * 1024L * 1024L * 1024L)
-                        secondThreshold = 60 * 60;
+                    else if (currMemory > 7L * 1024L * 1024L * 1024L)
+                        secondThreshold = 10 * 60;
                     try
                     {
                         Logger.ConsoleWriteLine(HttpContext.Current.Request.UserHostAddress + " - Loaded data file: \"" + _FightFile + "\", Current memory usage: " + ((double)currMemory / 1024.0 / 1024.0).ToString("0.000") + "MB", ConsoleColor.White);
@@ -310,12 +308,12 @@ namespace VF.RaidDamageWebsite
                     if (unloadFiles.Count > 0)
                     {
                         Logger.ConsoleWriteLine("Unloaded " + unloadFiles.Count + " files", ConsoleColor.Yellow);
-                        if (currMemory > 9L * 1024L * 1024L * 1024L || unloadFiles.Count > 50)
+                        if (currMemory > 15L * 1024L * 1024L * 1024L || unloadFiles.Count > 50)
                         {
                             Logger.ConsoleWriteLine(HttpContext.Current.Request.UserHostAddress + " Forced a big garbage collect!", ConsoleColor.Red);
                             GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced);
                         }
-                        if (currMemory > 4L * 1024L * 1024L * 1024L || unloadFiles.Count > 50)
+                        if (currMemory > 13L * 1024L * 1024L * 1024L || unloadFiles.Count > 50)
                         {
                             Logger.ConsoleWriteLine(HttpContext.Current.Request.UserHostAddress + " Forced a garbage collect!", ConsoleColor.White);
                             GC.Collect();
