@@ -6,7 +6,7 @@
         <asp:ListItem Text="Kronos" Value="KRO" />
         <asp:ListItem Text="Kronos II" Value="KR2" />
         <asp:ListItem Text="VanillaGaming" Value="VG" />
-        <asp:ListItem Text="Elysium" Value="Ely"/>
+        <asp:ListItem Text="Lightbringer" Value="LB"/>
         <asp:ListItem Text="Zeth'Kur" Value="ZeK"/>
         <asp:ListItem Text="Anathema" Value="Ana"/>
         <asp:ListItem Text="Darrowshire" Value="Dar" />

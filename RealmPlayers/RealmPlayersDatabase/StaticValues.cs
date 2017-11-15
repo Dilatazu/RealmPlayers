@@ -680,8 +680,10 @@ namespace VF_RealmPlayersDatabase
             {"Elysium PvP", WowRealm.Elysium2 },//removed 2017-01-14
             {"Elysium PVP", WowRealm.Elysium2 },//removed 2017-01-14
             {"Elysium", WowRealm.Elysium2 },
+            {"Lightbringer", WowRealm.Elysium2 },
             {"EL2", WowRealm.Elysium2 },
             {"Ely", WowRealm.Elysium2 },
+            {"LB", WowRealm.Elysium2 },
             {"Zeth'Kur PvP", WowRealm.Zeth_Kur },//removed 2017-01-14
             {"Zeth'Kur PVP", WowRealm.Zeth_Kur },//removed 2017-01-14
             {"Zeth'Kur", WowRealm.Zeth_Kur },
