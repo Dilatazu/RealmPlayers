@@ -14,6 +14,22 @@ using PlayerHistory = VF_RealmPlayersDatabase.PlayerData.PlayerHistory;
 using WowRealm = VF_RealmPlayersDatabase.WowRealm;
 using Guild = VF_RealmPlayersDatabase.GeneratedData.Guild;
 
+namespace VF
+{
+    public enum RPColor
+    {
+        Green = 0x00FF00,
+        Yellow = 0xFFFF00,
+        Red = 0xFF0000,
+        White = 0xFFFFFF,
+        Gray = 0xCCCCCC,
+        DarkGray = 0x777777,
+        HordeText = 0xF70002,
+        HordeBG = 0x463232,
+        AllianceText = 0x007DF7,
+        AllianceBG = 0x272F37,
+    }
+}
 namespace RealmPlayersServer
 {
     public static class PageUtilityExtension
@@ -100,6 +116,10 @@ namespace RealmPlayersServer
         {
             return PageUtility.CreateLink(HOSTURL_RaidStats + "RaidList.aspx?Guild=" + _Guild, _Guild);
         }
+        public static string CreateLink_GuildRaidList_FactionColored(string _Guild, VF.RPColor _Color)
+        {
+            return PageUtility.CreateLink(HOSTURL_RaidStats + "RaidList.aspx?Guild=" + _Guild, PageUtility.CreateColorString(_Guild, _Color));
+        }
         public static string CreateLink_Armory_Guild(string _Guild, WowRealm _Realm)
         {
             return CreateLink_Armory_Guild(_Guild, _Realm, _Guild);
@@ -135,6 +155,18 @@ namespace RealmPlayersServer
         public static string CreateLink_RaidStats_Player(string _Player, WowRealm _Realm, string _Content)
         {
             return PageUtility.CreateLink(HOSTURL_RaidStats + "PlayerOverview.aspx?realm=" + StaticValues.ConvertRealmParam(_Realm) + "&player=" + _Player, _Content);
+        }
+        public static string CreateColorString(string _String, System.Drawing.Color _Color)
+        {
+            return "<font color='#" + (_Color.ToArgb() & 0xFFFFFF).ToString("X6") + "'>" + _String + "</font>";
+        }
+        public static string CreateColorString(string _String, VF_RealmPlayersDatabase.PlayerClass _Class)
+        {
+            return "<font color='" + GetClassColor(_Class) + "'>" + _String + "</font>";
+        }
+        public static string CreateColorString(string _String, VF.RPColor _Color)
+        {
+            return "<font color='#" + ((int)_Color).ToString("X6") + "'>" + _String + "</font>";
         }
         public static string GetQueryString(System.Web.HttpRequest _RequestObject, string _QueryName, string _DefaultValue = "null")
         {

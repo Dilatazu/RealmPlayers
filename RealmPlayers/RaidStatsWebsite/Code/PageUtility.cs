@@ -9,20 +9,6 @@ using PlayerFaction = VF_RealmPlayersDatabase.PlayerFaction;
 
 namespace VF
 {
-    public enum RPColor
-    {
-        Green = 0x00FF00,
-        Yellow = 0xFFFF00,
-        Red = 0xFF0000,
-        White = 0xFFFFFF,
-        Gray = 0xCCCCCC,
-        DarkGray = 0x777777,
-        HordeText = 0xF70002,
-        HordeBG = 0x463232,
-        AllianceText = 0x007DF7,
-        AllianceBG = 0x272F37,
-    }
-
     public class PageUtility : RealmPlayersServer.PageUtility
     {
         public static string BreadCrumb_AddRaidList()
@@ -90,18 +76,6 @@ namespace VF
                 return "<font color='#FF8800'>" + _Factor.ToStringDot("0.00") + "</font>";
             else
                 return "<font color='#FF0000'>" + _Factor.ToStringDot("0.00") + "</font>";
-        }
-        public static string CreateColorString(string _String, System.Drawing.Color _Color)
-        {
-            return "<font color='#" + (_Color.ToArgb() & 0xFFFFFF).ToString("X6") + "'>" + _String + "</font>";
-        }
-        public static string CreateColorString(string _String, VF_RealmPlayersDatabase.PlayerClass _Class)
-        {
-            return "<font color='" + GetClassColor(_Class) + "'>" + _String + "</font>";
-        }
-        public static string CreateColorString(string _String, RPColor _Color)
-        {
-            return "<font color='#" + ((int)_Color).ToString("X6") + "'>" + _String + "</font>";
         }
         public static RPColor GetFactionTextColor(PlayerFaction _Faction)
         {

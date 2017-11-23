@@ -99,8 +99,9 @@ namespace VF.RaidDamageWebsite
             {
                 var raidsInGroup = attendedRaids.Where((_Value) => _Value.CacheGroup.GroupName == group); //Sorted, last raid attended is the first in list!
                 var factionColor = PageUtility.GetFactionTextColor(raidsInGroup.First().CacheGroup.GetFaction(ApplicationInstance.Instance.GetRealmDB));
-                pageBuilder.Append(PageUtility.CreateColorString(group, factionColor)
-                    + "(" + raidsInGroup.Count() + " raids between " + raidsInGroup.Last().RaidStartDate.ToDateStr() + " and " + raidsInGroup.First().RaidEndDate.ToDateStr() + ")<br/>");
+                
+                pageBuilder.Append(PageUtility.CreateLink_GuildRaidList_FactionColored(group, factionColor) + "(" + raidsInGroup.Count() + " raids between " + raidsInGroup.Last().RaidStartDate.ToDateStr() + " and " + raidsInGroup.First().RaidEndDate.ToDateStr() + ")<br/>");
+
                 //foreach (var raid in raidsInGroup)
                 //{
                 //    pageBuilder.Append(PageUtility.CreateLink_RaidOverview(raid, raid.RaidStartDate.ToString("yyyy-MM-dd")) + ", ");
@@ -109,7 +110,6 @@ namespace VF.RaidDamageWebsite
             }
 
             pageBuilder.Append("<h4><a href='BossList.aspx?realm=" + RealmPlayersServer.StaticValues.ConvertRealmParam(realmPlayer.Realm) + "&player=" + realmPlayer.Name + "'>Best boss performances</a></h4>");
-
             //pageBuilder.Append("<p><h3>vs Everything</h3>");
             //var averageAll = AverageOverview.GenerateAverageDataSet("All", null, null, realm, guildLimit);
             //float averageDPS, averageHPS;
@@ -120,28 +120,47 @@ namespace VF.RaidDamageWebsite
             //pageBuilder.Append("</p>");
             //pageBuilder.Append("<br />");
 
+            pageBuilder.Append("<br>");
             var realmProgress = GetRealmProgress(realm);
             string instanceSummary = "";
-            if (rankingDetailsInstance == "Naxxramas" || (instanceSummary == "" && (int)realmProgress >= (int)VF_RealmPlayersDatabase.WowInstance.Naxxramas))
+            if (rankingDetailsInstance == "Naxxramas" || (rankingDetailsInstance != "" && instanceSummary == "" && (int)realmProgress >= (int)VF_RealmPlayersDatabase.WowInstance.Naxxramas))
             {
                 instanceSummary = GenerateSummaryForInstance(currPlayerSummary, realmPlayer, "Naxxramas - All Quarters", realm, guildLimit);
             }
-            if (rankingDetailsInstance == "AQ40" || (instanceSummary == "" && (int)realmProgress >= (int)VF_RealmPlayersDatabase.WowInstance.Temple_Of_Ahn_Qiraj))
+            else
+            {
+                pageBuilder.Append("<h4><a href='" + PageUtility.CreateUrlWithNewQueryValue(this.Request, "RankDetailInstance", "Naxxramas") + "'>Ranking for Naxxramas</a></h4>");
+            }
+            if (rankingDetailsInstance == "AQ40" || (rankingDetailsInstance != "" && instanceSummary == "" && (int)realmProgress >= (int)VF_RealmPlayersDatabase.WowInstance.Temple_Of_Ahn_Qiraj))
             {
                 instanceSummary = GenerateSummaryForInstance(currPlayerSummary, realmPlayer, "Ahn'Qiraj Temple", realm, guildLimit);
             }
-            if (rankingDetailsInstance == "BWL" || (instanceSummary == "" && (int)realmProgress >= (int)VF_RealmPlayersDatabase.WowInstance.Blackwing_Lair))
+            else
+            {
+                pageBuilder.Append("<h4><a href='" + PageUtility.CreateUrlWithNewQueryValue(this.Request, "RankDetailInstance", "AQ40") + "'>Ranking for AQ40</a></h4>");
+            }
+            if (rankingDetailsInstance == "BWL" || (rankingDetailsInstance != "" && instanceSummary == "" && (int)realmProgress >= (int)VF_RealmPlayersDatabase.WowInstance.Blackwing_Lair))
             {
                 instanceSummary = GenerateSummaryForInstance(currPlayerSummary, realmPlayer, "Blackwing Lair", realm, guildLimit);
             }
-            if(rankingDetailsInstance == "MC" || instanceSummary == "")
+            else
+            {
+                pageBuilder.Append("<h4><a href='" + PageUtility.CreateUrlWithNewQueryValue(this.Request, "RankDetailInstance", "BWL") + "'>Ranking for BWL</a></h4>");
+            }
+            if(rankingDetailsInstance == "MC" || (rankingDetailsInstance != "" && instanceSummary == ""))
             {
                 instanceSummary = GenerateSummaryForInstance(currPlayerSummary, realmPlayer, "Molten Core", realm, guildLimit);
+            }
+            else
+            {
+                pageBuilder.Append("<h4><a href='" + PageUtility.CreateUrlWithNewQueryValue(this.Request, "RankDetailInstance", "MC") + "'>Ranking for MC</a></h4>");
             }
             if (rankingDetailsInstance == "ZG" || instanceSummary == "")
             {
                 instanceSummary = GenerateSummaryForInstance(currPlayerSummary, realmPlayer, "Zul'Gurub", realm, guildLimit);
             }
+
+
             pageBuilder.Append(instanceSummary);
             
             /////////////////////////////////////////////
@@ -198,12 +217,28 @@ namespace VF.RaidDamageWebsite
         }
         private static VF_RealmPlayersDatabase.WowInstance GetRealmProgress(VF_RealmPlayersDatabase.WowRealm _Realm)
         {
-            if (_Realm == VF_RealmPlayersDatabase.WowRealm.NostalGeek || _Realm == VF_RealmPlayersDatabase.WowRealm.Warsong)
+            if (_Realm == VF_RealmPlayersDatabase.WowRealm.NostalGeek 
+                || _Realm == VF_RealmPlayersDatabase.WowRealm.Warsong 
+                || _Realm == VF_RealmPlayersDatabase.WowRealm.Nostalrius 
+                || _Realm == VF_RealmPlayersDatabase.WowRealm.Kronos
+                )
+            {
                 return VF_RealmPlayersDatabase.WowInstance.Naxxramas;
-            else if (_Realm == VF_RealmPlayersDatabase.WowRealm.Nefarian || _Realm == VF_RealmPlayersDatabase.WowRealm.Al_Akir || _Realm == VF_RealmPlayersDatabase.WowRealm.Emerald_Dream)
+            }
+            else if (_Realm == VF_RealmPlayersDatabase.WowRealm.Nefarian 
+                || _Realm == VF_RealmPlayersDatabase.WowRealm.Al_Akir 
+                || _Realm == VF_RealmPlayersDatabase.WowRealm.Emerald_Dream
+                )
+            {
                 return VF_RealmPlayersDatabase.WowInstance.Temple_Of_Ahn_Qiraj;
-            else if (_Realm == VF_RealmPlayersDatabase.WowRealm.Rebirth || _Realm == VF_RealmPlayersDatabase.WowRealm.Nostalrius)
+            }
+            else if (_Realm == VF_RealmPlayersDatabase.WowRealm.Rebirth 
+                || _Realm == VF_RealmPlayersDatabase.WowRealm.Elysium2 
+                || _Realm == VF_RealmPlayersDatabase.WowRealm.NostalriusPVE
+                )
+            {
                 return VF_RealmPlayersDatabase.WowInstance.Blackwing_Lair;
+            }
             
             return VF_RealmPlayersDatabase.WowInstance.Molten_Core;
         }

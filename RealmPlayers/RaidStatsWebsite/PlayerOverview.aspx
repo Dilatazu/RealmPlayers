@@ -1,6 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/RaidDamageMasterFrame.Master" AutoEventWireup="true" CodeBehind="PlayerOverview.aspx.cs" Inherits="VF.RaidDamageWebsite.PlayerOverview" %>
 
-<%@OutputCache Duration="1000" VaryByParam="*" %>
+<%--30 min caching--%>
+<%@OutputCache Duration="1800" VaryByParam="*" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeaderContent" runat="server">
 </asp:Content>
