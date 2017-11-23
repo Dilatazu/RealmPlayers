@@ -346,9 +346,16 @@ namespace VF_WoWLauncherServer
                                             else
                                                 guildCount.Add(guildName, 1);
                                         }
-                                        var biggestGuildCount = guildCount.OrderByDescending((_Value) => _Value.Value).First();
-                                        if (biggestGuildCount.Value >= (int)(0.7f * (float)attendingPlayers.Count))
-                                            raid.RaidOwnerName = biggestGuildCount.Key;
+                                        var guildsOrdered = guildCount.OrderByDescending((_Value) => _Value.Value);
+                                        var biggestGuildCount = guildsOrdered.First();
+                                        if (biggestGuildCount.Value >= (int)(0.4f * (float)attendingPlayers.Count))
+                                        {
+                                            if(biggestGuildCount.Value < (int)(0.55f * (float)attendingPlayers.Count)
+                                                && guildCount.Count > 1 && guildsOrdered.ElementAt(1).Value >= (int)(0.3f * (float)attendingPlayers.Count))
+                                                raid.RaidOwnerName = "PUG";
+                                            else
+                                                raid.RaidOwnerName = biggestGuildCount.Key;
+                                        }
                                         else
                                             raid.RaidOwnerName = "PUG";
 

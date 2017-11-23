@@ -874,6 +874,7 @@ namespace VF_RaidDamageDatabase
             //Sunwell Plateau
             {"Eredar Twins", new string[]{"Lady Sacrolash", "Grand Warlock Alythess"}},
             {"M'uru", new string[]{ "Shadowsword Berserker", "Shadowsword Fury Mage", "Void Sentinel", "Void Spawn", "Entropius"}},
+            {"Felmyst", new string[] { "Unyielding Dead" }},
         };
         #endregion BossAdds
         public static List<string> GetAllEntitiesForFight(string _FightName)
