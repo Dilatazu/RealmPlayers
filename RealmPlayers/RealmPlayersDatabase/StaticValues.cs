@@ -490,7 +490,15 @@ namespace VF_RealmPlayersDatabase
             WowRealm.Warsong2,
             WowRealm.Valkyrie,
             WowRealm.Elysium,
-            WowRealm.Valkyrie,
+            WowRealm.WarsongTBC,
+            WowRealm.Zeth_Kur,
+        };
+        public static List<string> Disabled_UploadRealmNames = new List<string>
+        {
+            "Elysium(Old)",
+            "Elysium PvP",//removed 2017-01-14
+            "Elysium PVP",//removed 2017-01-14
+            "Elysium",//removed 2017-10-20
         };
         public static Dictionary<string, WowBoss> _WowBossConvert = new Dictionary<string, WowBoss>
         {
@@ -679,7 +687,7 @@ namespace VF_RealmPlayersDatabase
             {"Elysium(Old)", WowRealm.Elysium },
             {"Elysium PvP", WowRealm.Elysium2 },//removed 2017-01-14
             {"Elysium PVP", WowRealm.Elysium2 },//removed 2017-01-14
-            {"Elysium", WowRealm.Elysium2 },
+            {"Elysium", WowRealm.Elysium2 },//removed 2017-10-20
             {"Lightbringer", WowRealm.Elysium2 },
             {"EL2", WowRealm.Elysium2 },
             {"Ely", WowRealm.Elysium2 },

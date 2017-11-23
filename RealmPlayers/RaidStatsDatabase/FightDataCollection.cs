@@ -266,9 +266,28 @@ namespace VF_RaidDamageDatabase
         private FightDataCollection(List<DamageDataSession> _DataSessions)//, Dictionary<string, string> _InterestingFights)
         {
             List<string> unitIDNames = new List<string>();
-            var timer = System.Diagnostics.Stopwatch.StartNew();
+            //var timer = System.Diagnostics.Stopwatch.StartNew();
             foreach (var dataSession in _DataSessions)
             {
+                if(VF_RealmPlayersDatabase.StaticValues.Disabled_UploadRealmNames.Contains(dataSession.Realm) == true
+                || VF_RealmPlayersDatabase.StaticValues.DeadRealms.Contains(VF_RealmPlayersDatabase.StaticValues.ConvertRealm(dataSession.Realm)) == true)
+                {
+                    if (dataSession.TimeSlices.Count > 20)
+                    {
+                        //Only log message if there actually is any data here...
+                        Logger.ConsoleWriteLine("Realm \"" + dataSession.Realm + "\" is disabled, so not adding fights for session!");
+                    }
+                    continue;
+                }
+                else if(dataSession.StartDateTime < DateTime.UtcNow.AddMonths(1))
+                {
+                    if(dataSession.TimeSlices.Count > 20)
+                    {
+                        //Only log message if there actually is any data here...
+                        Logger.ConsoleWriteLine("Raid datasession was older than 1 month! Skipping!");
+                    }
+                    continue;
+                }
                 Dictionary<int, int> buffIDTranslationTable = new Dictionary<int,int>();
                 foreach(var buffID in dataSession.BuffIDToNames)
                 {

@@ -228,7 +228,8 @@ namespace VF_RealmPlayersDatabase
                         {
                             string realmStr = PlayerData.DataParser.ParseRealm(playerNode);
                             WowRealm realm = StaticValues.ConvertRealm(realmStr);
-                            if (StaticValues.DeadRealms.Contains(realm) == true)
+                            if (StaticValues.DeadRealms.Contains(realm) == true 
+                            || StaticValues.Disabled_UploadRealmNames.Contains(realmStr) == true)
                             {
                                 Logger.ConsoleWriteLine("RealmStr: \"" + realmStr + "\" was recognized as a dead realm");
                                 continue;
