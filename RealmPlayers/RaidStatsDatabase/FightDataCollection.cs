@@ -279,7 +279,7 @@ namespace VF_RaidDamageDatabase
                     }
                     continue;
                 }
-                else if(dataSession.StartDateTime < DateTime.UtcNow.AddMonths(1))
+                else if(dataSession.StartDateTime < DateTime.UtcNow.AddMonths(-1))
                 {
                     if(dataSession.TimeSlices.Count > 20)
                     {
