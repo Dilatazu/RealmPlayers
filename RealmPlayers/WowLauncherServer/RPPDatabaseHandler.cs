@@ -30,7 +30,9 @@ namespace VF_WoWLauncherServer
             List<WowRealm> realmsInUse = new List<WowRealm>();
             foreach(var realm in Database.ALL_REALMS)
             {
-                if(StaticValues.DeadRealms.Contains(realm) == false)
+                if (Database.SKIP_REALM_TAGS.Contains(realm))
+                    continue;
+                if (StaticValues.DeadRealms.Contains(realm) == false)
                 {
                     realmsInUse.Add(realm);
                 }
@@ -303,6 +305,8 @@ namespace VF_WoWLauncherServer
                     VF_RPDatabase.PlayerSummaryDatabase playerSummaryDB = new VF_RPDatabase.PlayerSummaryDatabase();
                     foreach (var realm in Database.ALL_REALMS)
                     {
+                        if (Database.SKIP_REALM_TAGS.Contains(realm))
+                            continue;
                         GC.Collect();
                         Database fullDatabase = new Database(m_RPPDBFolder + "Database\\", new DateTime(2012, 5, 1, 0, 0, 0), new WowRealm[] { realm });
                         fullDatabase.PurgeRealmDBs(true, true, true);
@@ -330,6 +334,8 @@ namespace VF_WoWLauncherServer
                 int realmIndex = 1;
                 foreach(var realm in Database.ALL_REALMS)
                 {
+                    if (Database.SKIP_REALM_TAGS.Contains(realm))
+                        continue;
                     var realmTimer = System.Diagnostics.Stopwatch.StartNew();
                     Database fullDatabase = new Database(m_RPPDBFolder + "Database\\", new DateTime(2012, 5, 1, 0, 0, 0), new WowRealm[] { realm });
                     fullDatabase.PurgeRealmDBs(true, true, true);
@@ -355,6 +361,8 @@ namespace VF_WoWLauncherServer
                 int realmIndex = 1;
                 foreach(var realm in Database.ALL_REALMS)
                 {
+                    if (Database.SKIP_REALM_TAGS.Contains(realm))
+                        continue;
                     var realmTimer = System.Diagnostics.Stopwatch.StartNew();
                     Database fullDatabase = new Database(m_RPPDBFolder + "Database\\", new DateTime(2012, 5, 1, 0, 0, 0), new WowRealm[]{ realm });
                     fullDatabase.PurgeRealmDBs(true, true, true);

@@ -70,6 +70,11 @@ namespace VF_RealmPlayersDatabase
                 case WowRealm.Ares: //Should have own ID
                     return (0x13U << 24) + _ItemID;
                 default:
+                    if(StaticValues.GetWowVersion(_Realm) == WowVersionEnum.Vanilla) //Should have own ID
+                        return (5U << 24) + _ItemID;
+                    else if(StaticValues.GetWowVersion(_Realm) == WowVersionEnum.TBC) //Should have own ID
+                        return (0x13U << 24) + _ItemID;
+
                     break;
             }
             throw new Exception("(GetDictionaryItemID) Could not get dictionary ItemID for Realm: " + _Realm.ToString());

@@ -7,39 +7,12 @@ namespace VF_RealmPlayersDatabase
 {
     public class Database
     {
-        public static WowRealm[] ALL_REALMS = new WowRealm[] { 
-            WowRealm.Kronos, 
-            WowRealm.KronosII, 
-            WowRealm.NostalGeek, 
-            WowRealm.Nostalrius, 
-            WowRealm.NostalriusPVE, 
-            WowRealm.Emerald_Dream, 
-            WowRealm.Warsong, 
-            WowRealm.Al_Akir, 
-            WowRealm.Valkyrie, 
-            WowRealm.VanillaGaming, 
-            WowRealm.Nefarian, 
-            WowRealm.Rebirth,
-            WowRealm.Archangel,
-            WowRealm.WarsongTBC,
-            WowRealm.Vengeance_Wildhammer,
-            WowRealm.ExcaliburTBC,
-            WowRealm.L4G_Hellfire,
-            WowRealm.Warsong2,
-            WowRealm.Vengeance_Stonetalon,
-            WowRealm.Elysium,
-            WowRealm.Elysium2,
-            WowRealm.Zeth_Kur,
-            WowRealm.Nemesis,
-            WowRealm.HellGround,
-            WowRealm.Nostralia,
-            WowRealm.Hellfire2,
-            WowRealm.Outland,
-            WowRealm.Medivh,
-            WowRealm.Firemaw,
-            WowRealm.Felmyst,
-            WowRealm.Ares,
+        public static WowRealm[] SKIP_REALM_TAGS = new WowRealm[] {
+            WowRealm.Unknown,
+            WowRealm.All,
+            WowRealm.Test_Server,
         };
+        public static WowRealm[] ALL_REALMS = (WowRealm[])Enum.GetValues(typeof(WowRealm));
 
         Dictionary<WowRealm, RealmDatabase> m_Realms = new Dictionary<WowRealm, RealmDatabase>();
 
@@ -50,6 +23,8 @@ namespace VF_RealmPlayersDatabase
                 loadRealms = ALL_REALMS;
             foreach (WowRealm loadRealm in loadRealms)
             {
+                if (SKIP_REALM_TAGS.Contains(loadRealm))
+                    continue;
                 try
                 {
                     LoadRealmDatabase(_RootPath, loadRealm, _HistoryEarliestTime);

@@ -41,26 +41,6 @@ namespace VF_WoWLauncherServer
 
             VF_WoWLauncher.ConsoleUtility.CreateConsole();
 
-            /*Some Testing*/
-#if false
-            WowRealm[] ALL_REALMS = new WowRealm[] {
-                WowRealm.Kronos,
-                WowRealm.NostalGeek,
-                WowRealm.Al_Akir,
-                WowRealm.Valkyrie,
-                WowRealm.VanillaGaming,
-                WowRealm.Nefarian,
-                WowRealm.Rebirth,
-                WowRealm.Archangel,
-                WowRealm.Nostalrius,
-                WowRealm.NostalriusPVE,
-                WowRealm.Emerald_Dream,
-                WowRealm.Warsong,
-                WowRealm.WarsongTBC };
-
-            SQLDatabaseMigration.Migrate(SQLDatabaseMigration.MigrationChoice.TestOnly, ALL_REALMS);
-#endif
-            /*Some Testing*/
 
             //if (debugMode == false)
             {
