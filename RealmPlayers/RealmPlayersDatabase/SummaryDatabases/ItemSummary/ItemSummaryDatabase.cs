@@ -149,6 +149,13 @@ namespace VF_RPDatabase
                 case WowRealm.Firemaw: return 29UL;
                 case WowRealm.Felmyst: return 30UL;
                 case WowRealm.Ares: return 31UL;
+                default:
+                    //Starting with WowRealm 34**** so IDs: 32, 33 is not used!
+                    if(_Realm != WowRealm.Unknown && _Realm != WowRealm.Test_Server && _Realm != WowRealm.All)
+                    {
+                        return ((UInt64)_Realm & 0xFFUL);
+                    }
+                    break;
             }
             return 0UL;
         }
@@ -309,6 +316,14 @@ namespace VF_RPDatabase
                 case 30UL: return WowRealm.Felmyst;
                 case 31UL: return WowRealm.Ares;
                 default:
+                    if(realm > 0UL && realm < 0xFFUL)
+                    {
+                        WowRealm val = (WowRealm)realm;
+                        if (Enum.IsDefined(typeof(WowRealm), val) == true)
+                        {
+                            return val;
+                        }
+                    }
                     VF_RealmPlayersDatabase.Logger.ConsoleWriteLine("Error GetPlayerRealm failed. Realm(" + realm + ") was not valid!!!");
                     return WowRealm.Unknown;
             }
