@@ -1,2 +1,2 @@
 User-agent: *
-Crawl-delay: 120
+Crawl-delay: 600
