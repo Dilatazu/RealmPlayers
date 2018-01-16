@@ -42,6 +42,7 @@
                         <div class="span12">
                             <asp:DropDownList style="width:140px; margin: 10px 2.5px 0px 2.5px" ID="ddlRealm" runat="server">
                                 <asp:ListItem Text="Any Realm" Value="Any" Selected="true"></asp:ListItem>
+                                <asp:ListItem Text="Nighthaven" Value="NH"/>
                                 <asp:ListItem Text="Ares" Value="AR"/>
                                 <asp:ListItem Text="Outland" Value="OUT"/>
                                 <asp:ListItem Text="Medivh" Value="MDV"/>

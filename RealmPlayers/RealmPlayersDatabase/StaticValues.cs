@@ -41,6 +41,7 @@ namespace VF_RealmPlayersDatabase
         Firemaw = 31,
         Felmyst = 32, //TBC
         Ares = 33, //TBC
+        Nighthaven = 34,
     }
     public enum WowVersionEnum
     {
@@ -726,6 +727,8 @@ namespace VF_RealmPlayersDatabase
             {"FLM", WowRealm.Felmyst},
             {"Ares", WowRealm.Ares},
             {"AR", WowRealm.Ares},
+            {"Nighthaven", WowRealm.Nighthaven},
+            {"NH", WowRealm.Nighthaven},
         };
         public static WowRealm ConvertRealm(string _Realm)
         {
@@ -750,6 +753,7 @@ namespace VF_RealmPlayersDatabase
                 || _Realm == WowRealm.Nemesis
                 || _Realm == WowRealm.Nostralia
                 || _Realm == WowRealm.Firemaw
+                || _Realm == WowRealm.Nighthaven
                 )
             {
                 return WowVersionEnum.Vanilla;

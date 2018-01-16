@@ -29,6 +29,7 @@
         <asp:ListItem Text="Felmyst" Value="FLM"/>
         <asp:ListItem Text="Firemaw" Value="FMW"/>
         <asp:ListItem Text="Ares" Value="AR"/>
+        <asp:ListItem Text="Nighthaven" Value="NH"/>
         <asp:ListItem Text="Valkyrie" Value="VAL" style="visibility:hidden; height:0px; line-height: 0px; overflow:hidden; display:block;"/>
         <asp:ListItem Text="Emerald Dream" Value="ED" style="visibility:hidden; height:0px; line-height: 0px; overflow:hidden; display:block;"/>
         <asp:ListItem Text="Warsong" Value="WSG" style="visibility:hidden; height:0px; line-height: 0px; overflow:hidden; display:block;"/>
