@@ -488,7 +488,7 @@ namespace VF_WoWLauncherServer
         }
         public void CreateSummaryDatabase()
         {
-            if (m_DatabaseHandlerMode == DatabaseHandlerMode.Disabled) throw "This is not possible when DatabaseHandler is disabled!";
+            if (m_DatabaseHandlerMode == DatabaseHandlerMode.Disabled) throw new Exception("This is not possible when DatabaseHandler is disabled!");
             lock (m_LockObject)
             {
                 UpdateSummaryDatabase();
@@ -497,7 +497,7 @@ namespace VF_WoWLauncherServer
         }
         public void FixBuggedSummaryDatabase(int[] _BuggedRaidIDs)
         {
-            if (m_DatabaseHandlerMode == DatabaseHandlerMode.Disabled) throw "This is not possible when DatabaseHandler is disabled!";
+            if (m_DatabaseHandlerMode == DatabaseHandlerMode.Disabled) throw new Exception("This is not possible when DatabaseHandler is disabled!");
             lock (m_LockObject)
             {
                 List<RaidCollection_Raid> buggedRaids = new List<RaidCollection_Raid>();
