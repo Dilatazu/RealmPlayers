@@ -57,7 +57,7 @@ namespace VF_WoWLauncherServer
 
             //VF_RealmPlayersDatabase.Deprecated.ContributorHandler.Initialize(g_RPPDBFolder + "Database\\");
             g_RPPDatabaseHandler = new RPPDatabaseHandler(g_RPPDBFolder);
-            g_RDDatabaseHandler = new RDDatabaseHandler(g_RDDBFolder, g_RPPDatabaseHandler);
+            g_RDDatabaseHandler = new RDDatabaseHandler(g_RDDBFolder, g_RPPDatabaseHandler, DatabaseHandlerMode.Disabled);
             AddonDatabaseService.HandleUnhandledFiles("VF_RealmPlayers");
             AddonDatabaseService.HandleUnhandledFiles("VF_RaidDamage");
             AddonDatabaseService.HandleUnhandledFiles("VF_RealmPlayersTBC");

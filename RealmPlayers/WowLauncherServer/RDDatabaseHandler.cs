@@ -9,8 +9,14 @@ using VF_RaidDamageDatabase;
 
 namespace VF_WoWLauncherServer
 {
+    enum DatabaseHandlerMode
+    {
+        Normal,
+        Disabled,
+    }
     class RDDatabaseHandler
     {
+        private DatabaseHandlerMode m_DatabaseHandlerMode = DatabaseHandlerMode.Normal;
         private string m_RDDBFolder;
 
         object m_LockObject = new object();
@@ -28,12 +34,20 @@ namespace VF_WoWLauncherServer
         List<RaidCollection_Raid> m_RaidsModifiedSinceLastSummaryUpdate = new List<RaidCollection_Raid>();
         DateTime m_DateTimeLastRaidStatsDBSave = DateTime.UtcNow;
 
-        public RDDatabaseHandler(string _RDDBFolder, RPPDatabaseHandler _RPPDatabaseHandler)
+        public RDDatabaseHandler(string _RDDBFolder, RPPDatabaseHandler _RPPDatabaseHandler, DatabaseHandlerMode _Mode = DatabaseHandlerMode.Normal)
         {
             m_RDDBFolder = _RDDBFolder;
             m_RPPDatabaseHandler = _RPPDatabaseHandler;
+            m_DatabaseHandlerMode = _Mode;
 
-            VF.Utility.LoadSerialize<RaidCollection>(m_RDDBFolder + "RaidCollection.dat", out m_RaidCollection, 10000, true);
+            if(m_DatabaseHandlerMode == DatabaseHandlerMode.Normal)
+            {
+                VF.Utility.LoadSerialize<RaidCollection>(m_RDDBFolder + "RaidCollection.dat", out m_RaidCollection, 10000, true);
+            }
+            else
+            {
+                m_RaidCollection = null;
+            }
             m_MainThread = new System.Threading.Thread(MainThread);
             m_MainThread.Start();
         }
@@ -182,7 +196,10 @@ namespace VF_WoWLauncherServer
             }
             lock (m_LockObject)
             {
-                SaveRaidStatsDBs();
+                if (m_DatabaseHandlerMode != DatabaseHandlerMode.Disabled)
+                {
+                    SaveRaidStatsDBs();
+                }
             }
             while(true)
             {
@@ -226,47 +243,54 @@ namespace VF_WoWLauncherServer
                     while (m_NewContributions.TryDequeue(out raidDamageDataFile))
                     {
                         processedData = true;
-                        try
+                        if (m_DatabaseHandlerMode == DatabaseHandlerMode.Disabled)
                         {
-                            if (AddFightsToDatabase(raidDamageDataFile) >= 1)
+                            BackupRDContribution(raidDamageDataFile, RDContributionType.Empty);
+                        }
+                        else
+                        {
+                            try
                             {
-                                m_AddedContributionFiles.Add(raidDamageDataFile);
-                                GC.Collect();
+                                if (AddFightsToDatabase(raidDamageDataFile) >= 1)
+                                {
+                                    m_AddedContributionFiles.Add(raidDamageDataFile);
+                                    GC.Collect();
+                                }
+                                else
+                                {
+                                    m_AddedEmptyFiles.Add(raidDamageDataFile);
+                                }
+                                if ((DateTime.UtcNow - startingParsingTime) > TimeSpan.FromMinutes(30))
+                                {
+                                    break;
+                                }
                             }
-                            else
+                            catch (Exception ex)
                             {
-                                m_AddedEmptyFiles.Add(raidDamageDataFile);
-                            }
-                            if((DateTime.UtcNow - startingParsingTime) > TimeSpan.FromMinutes(30))
-                            {
+                                Logger.LogException(ex);
+                                m_ProblemFiles.Add(raidDamageDataFile);
+                                Logger.ConsoleWriteLine("RaidStats: DUE TO ERRORS WE ARE RELOADING RAIDCOLLECTION!!!", ConsoleColor.Red);
+                                //RESET m_RaidCollection!!!
+                                VF.Utility.LoadSerialize<RaidCollection>(m_RDDBFolder + "RaidCollection.dat", out m_RaidCollection, 10000, true);
+                                m_GetFightDataCollectionCache = new Dictionary<string, FightDataCollection>();
+                                m_RaidsModifiedSinceLastSummaryUpdate = new List<RaidCollection_Raid>();
+                                Logger.ConsoleWriteLine("RaidStats: RELOAD OF RAIDCOLLECTION WAS SUCCESSFULL!!!", ConsoleColor.Green);
+                                foreach (string contribution in m_AddedContributionFiles)
+                                {
+                                    m_NewContributions.Enqueue(contribution);
+                                }
+                                m_AddedContributionFiles.Clear();
                                 break;
                             }
                         }
-                        catch (Exception ex)
+                        if (m_GetFightDataCollectionCache.Count > 20 ||
+                            (m_GetFightDataCollectionCache.Count > 1 && DateTime.UtcNow > m_DateTimeLastRaidStatsDBSave.AddMinutes(30)))
                         {
-                            Logger.LogException(ex);
-                            m_ProblemFiles.Add(raidDamageDataFile);
-                            Logger.ConsoleWriteLine("RaidStats: DUE TO ERRORS WE ARE RELOADING RAIDCOLLECTION!!!", ConsoleColor.Red);
-                            //RESET m_RaidCollection!!!
-                            VF.Utility.LoadSerialize<RaidCollection>(m_RDDBFolder + "RaidCollection.dat", out m_RaidCollection, 10000, true);
-                            m_GetFightDataCollectionCache = new Dictionary<string, FightDataCollection>();
-                            m_RaidsModifiedSinceLastSummaryUpdate = new List<RaidCollection_Raid>();
-                            Logger.ConsoleWriteLine("RaidStats: RELOAD OF RAIDCOLLECTION WAS SUCCESSFULL!!!", ConsoleColor.Green);
-                            foreach (string contribution in m_AddedContributionFiles)
+                            if (SaveRaidStatsDBs() == true)
                             {
-                                m_NewContributions.Enqueue(contribution);
+                                processedData = true;
+                                //yay...
                             }
-                            m_AddedContributionFiles.Clear();
-                            break;
-                        }
-                    }
-                    if (m_GetFightDataCollectionCache.Count > 20 ||
-                        (m_GetFightDataCollectionCache.Count > 1 && DateTime.UtcNow > m_DateTimeLastRaidStatsDBSave.AddMinutes(30)))
-                    {
-                        if(SaveRaidStatsDBs() == true)
-                        {
-                            processedData = true;
-                            //yay...
                         }
                     }
                 }
@@ -464,6 +488,7 @@ namespace VF_WoWLauncherServer
         }
         public void CreateSummaryDatabase()
         {
+            if (m_DatabaseHandlerMode == DatabaseHandlerMode.Disabled) throw "This is not possible when DatabaseHandler is disabled!";
             lock (m_LockObject)
             {
                 UpdateSummaryDatabase();
@@ -472,6 +497,7 @@ namespace VF_WoWLauncherServer
         }
         public void FixBuggedSummaryDatabase(int[] _BuggedRaidIDs)
         {
+            if (m_DatabaseHandlerMode == DatabaseHandlerMode.Disabled) throw "This is not possible when DatabaseHandler is disabled!";
             lock (m_LockObject)
             {
                 List<RaidCollection_Raid> buggedRaids = new List<RaidCollection_Raid>();
@@ -489,13 +515,13 @@ namespace VF_WoWLauncherServer
         }
 
         public static string g_AddonContributionsBackupFolder = VF_RealmPlayersDatabase.Utility.DefaultServerLocation + "VF_DataServer\\AddonContributionsBackup\\";
-        enum RDContributionType
+        internal enum RDContributionType
         {
             Empty,
             Data,
             Problem,
         }
-        void BackupRDContribution(string _Filename, RDContributionType _ContributionType)
+        internal static void BackupRDContribution(string _Filename, RDContributionType _ContributionType)
         {
             try
             {
