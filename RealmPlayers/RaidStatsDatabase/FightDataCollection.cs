@@ -281,12 +281,19 @@ namespace VF_RaidDamageDatabase
                 }
                 else if(dataSession.StartDateTime < DateTime.UtcNow.AddMonths(-1))
                 {
-                    if(dataSession.TimeSlices.Count > 20)
+                    if (dataSession.Realm == "Nighthaven" && DateTime.UtcNow < new DateTime(2018,1,17))
                     {
-                        //Only log message if there actually is any data here...
-                        Logger.ConsoleWriteLine("Raid datasession was older than 1 month! Skipping!");
+
                     }
-                    continue;
+                    else
+                    {
+                        if (dataSession.TimeSlices.Count > 20)
+                        {
+                            //Only log message if there actually is any data here...
+                            Logger.ConsoleWriteLine("Raid datasession was older than 1 month! Skipping!");
+                        }
+                        continue;
+                    }
                 }
                 Dictionary<int, int> buffIDTranslationTable = new Dictionary<int,int>();
                 foreach(var buffID in dataSession.BuffIDToNames)

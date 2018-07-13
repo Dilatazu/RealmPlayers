@@ -173,7 +173,16 @@ namespace VF_RealmPlayersDatabase
                 lastSeen = DateTime.UtcNow; //Om det är OK så sätter vi LastSeen till UtcNow istället.
             }
             if ((DateTime.UtcNow - lastSeen).TotalDays > 5) //Tillåt inte data som är äldre än 5 dagar
-                return;
+            {
+                if (Realm == WowRealm.Nighthaven && DateTime.UtcNow < new DateTime(2018, 1, 17))
+                {
+                    //Special case, allow this! We are adding some old data!
+                }
+                else
+                {
+                    return;
+                }
+            }
             //if (lastSeen < DATE_HONOR_CORRUPTION)// Honor corruption occured the 16th January, uncomment this line after 5 days have passed!
             //{
             //    Logger.ConsoleWriteLine("Someone submitted data that was during the Honor Corruption. Good thing i implemented this code!!!", ConsoleColor.Red);
