@@ -96,6 +96,7 @@ namespace RealmPlayersServer.Code.Resources
             {WowRealm.Ares, "AR" },
             {WowRealm.Nighthaven, "NH" },
             {WowRealm.Northdale, "ND" },
+            {WowRealm.KronosIII, "KR3" },
         };
         public static Dictionary<WowRealm, string> _RealmVisualString = new Dictionary<WowRealm, string>
         {
@@ -135,6 +136,7 @@ namespace RealmPlayersServer.Code.Resources
             {WowRealm.Ares, "Ares" },
             {WowRealm.Nighthaven, "Nighthaven" },
             {WowRealm.Northdale, "Northdale" },
+            {WowRealm.KronosIII, "Kronos III" },
         };
         public static Dictionary<int, string> _HordeRankVisualName = new Dictionary<int, string>
         {

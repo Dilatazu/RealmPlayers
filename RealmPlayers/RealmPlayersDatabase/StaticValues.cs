@@ -43,6 +43,7 @@ namespace VF_RealmPlayersDatabase
         Ares = 33, //TBC
         Nighthaven = 34,
         Northdale = 35,
+        KronosIII = 36,
     }
     public enum WowVersionEnum
     {
@@ -732,6 +733,8 @@ namespace VF_RealmPlayersDatabase
             {"NH", WowRealm.Nighthaven},
             {"Northdale", WowRealm.Northdale},
             {"ND", WowRealm.Northdale},
+            {"Kronos III", WowRealm.KronosIII},
+            {"KR3", WowRealm.KronosIII},
         };
         public static WowRealm ConvertRealm(string _Realm)
         {
@@ -758,6 +761,7 @@ namespace VF_RealmPlayersDatabase
                 || _Realm == WowRealm.Firemaw
                 || _Realm == WowRealm.Nighthaven
                 || _Realm == WowRealm.Northdale
+                || _Realm == WowRealm.KronosIII
                 )
             {
                 return WowVersionEnum.Vanilla;
