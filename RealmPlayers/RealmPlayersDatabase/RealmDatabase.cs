@@ -174,9 +174,11 @@ namespace VF_RealmPlayersDatabase
             }
             if ((DateTime.UtcNow - lastSeen).TotalDays > 5) //Tillåt inte data som är äldre än 5 dagar
             {
-                if (Realm == WowRealm.Nighthaven && DateTime.UtcNow < new DateTime(2018, 1, 17))
+                if (Realm == WowRealm.Northdale && lastSeen < new DateTime(2018, 6, 23, 12, 0, 0)) //Do not allow inspects before server even opened...
+                    return;
+                if (DateTime.UtcNow < new DateTime(2018, 9, 1) && lastSeen > new DateTime(2018,4,1))
                 {
-                    //Special case, allow this! We are adding some old data!
+                    //Special case, allow this! We are temporary allowing adding some old data!
                 }
                 else
                 {
