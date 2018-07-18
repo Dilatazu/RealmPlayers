@@ -203,6 +203,11 @@ namespace VF_RealmPlayersDatabase
                         {
                             string realmStr = PlayerData.DataParser.ParseRealm(playerNode);
                             WowRealm realm = StaticValues.ConvertRealm(realmStr);
+                            if(realm == WowRealm.Unknown)
+                            {
+                                realmStr = realmStr.Substring(0, 1) + realmStr.Substring(2);
+                                realm = StaticValues.ConvertRealm(realmStr);
+                            }
                             if (StaticValues.DeadRealms.Contains(realm) == true 
                             || StaticValues.Disabled_UploadRealmNames.Contains(realmStr) == true)
                             {
