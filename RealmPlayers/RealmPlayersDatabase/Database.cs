@@ -199,7 +199,47 @@ namespace VF_RealmPlayersDatabase
                 {
                     try
                     {
-                        if (XMLUtility.GetChild(playerNode, "PlayerData") != null)
+                        if(PlayerData.DataParser.ParsePlayerName(playerNode) == "OnlineData")
+                        {
+                            int playersOnline = 0;
+                            foreach (System.Xml.XmlNode onlineDataNode in playerNode.ChildNodes)
+                            {
+                                int loggedStrangeDataException = 0;
+
+                                string onlineData = onlineDataNode.Attributes["value"].Value;
+                                var dataParts = onlineData.Split(new char[] { ';' }, 5);
+                                string realmStr = dataParts[1];
+                                WowRealm realm = StaticValues.ConvertRealm(realmStr);
+                                if (realm == WowRealm.Unknown)
+                                {
+                                    realmStr = realmStr.Substring(0, 1) + realmStr.Substring(2);
+                                    realm = StaticValues.ConvertRealm(realmStr);
+                                }
+
+                                string dateTimeStart = dataParts[2];
+                                string dateTimeEnd = dataParts[3];
+                                string[] playersDatas = dataParts[4].Split(',');
+                                foreach(var playerData in playersDatas)
+                                {
+                                    var data = playerData.Split(':');
+                                    if(data.Length == 6)
+                                    {
+                                        ++playersOnline;
+                                    }
+                                    else if(loggedStrangeDataException < 5)
+                                    {
+                                        Logger.ConsoleWriteLine("Strange data in OnlineData segment! \"" + data + "\"");
+                                        ++loggedStrangeDataException;
+                                    }
+                                }
+                                DateTime onlineDateTime;
+                                if (System.DateTime.TryParse(dateTimeStart, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AssumeUniversal | System.Globalization.DateTimeStyles.AdjustToUniversal, out onlineDateTime) == true)
+                                {
+                                    Logger.ConsoleWriteLine(playersOnline + " players online " + onlineDateTime.ToDateTimeStr());
+                                }
+                            }
+                        }
+                        else if (XMLUtility.GetChild(playerNode, "PlayerData") != null)
                         {
                             string realmStr = PlayerData.DataParser.ParseRealm(playerNode);
                             WowRealm realm = StaticValues.ConvertRealm(realmStr);
