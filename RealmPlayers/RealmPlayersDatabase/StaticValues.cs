@@ -802,16 +802,46 @@ namespace VF_RealmPlayersDatabase
 
             return PlayerFaction.Unknown;
         }
+        public enum RankUpdateDayType
+        {
+            Wednesday_Morning,
+            Wednesday_Midday,
+            Sunday_Midnight,
+        }
+        public static RankUpdateDayType GetRankUpdadeDayType(WowRealm _Realm)
+        {
+            if (_Realm == WowRealm.Kronos || _Realm == WowRealm.KronosII || _Realm == WowRealm.KronosIII)
+            {
+                return RankUpdateDayType.Wednesday_Morning;
+            }
+            else if (_Realm == WowRealm.Nostalrius
+                || _Realm == WowRealm.NostalriusPVE
+                || _Realm == WowRealm.Elysium2
+                || _Realm == WowRealm.Zeth_Kur
+                || (int)_Realm >= (int)WowRealm.Northdale //Wednesday Midday is the new default for standings on new realms added later after Northdale
+                )
+            {
+                return RankUpdateDayType.Wednesday_Midday;
+            }
+            else //Sunday Midnight is the old default setting
+            {
+                return RankUpdateDayType.Sunday_Midnight;
+            }
+        }
         public static DateTime CalculateLastRankUpdadeDateUTC(WowRealm _Realm, DateTime? _NowUTC = null)
         {
-            if (_Realm == WowRealm.Nostalrius || _Realm == WowRealm.NostalriusPVE
-            || _Realm == WowRealm.Elysium2 || _Realm == WowRealm.Zeth_Kur)
+            var updateDayType = GetRankUpdadeDayType(_Realm);
+            if (updateDayType == RankUpdateDayType.Wednesday_Morning)
+            {
+                return CalculateLastRankUpdadeDateUTC_WednesdayMorning(_NowUTC);
+            }
+            else if(updateDayType == RankUpdateDayType.Wednesday_Midday)
             {
                 return CalculateLastRankUpdadeDateUTC_WednesdayMidday(_NowUTC);
             }
-            else if (_Realm == WowRealm.Kronos || _Realm == WowRealm.KronosII)
+            else if (updateDayType == RankUpdateDayType.Sunday_Midnight)
             {
-                return CalculateLastRankUpdadeDateUTC_WednesdayMorning(_NowUTC);
+                return CalculateLastRankUpdadeDateUTC_Sunday(_NowUTC);
             }
             else
             {

@@ -242,19 +242,27 @@ namespace RealmPlayersServer
 
                 m_PageHTML = new MvcHtmlString(CreateStandingsTable(realm, count, (player) => { return player.ReceivedStandingLastWeek(); }));
 
-                if (realm == WowRealm.Nostalrius || realm == WowRealm.NostalriusPVE)
-                {
-                    DateTime lowerValue = StaticValues.CalculateLastRankUpdadeDateUTC(realm);
-                    GeneratePageDetails("Standings", count * 2, "Last weeks standings for players. Only shows players who received a standing last week. This list resets when the realm calculates new standings for players every wednesday 13:59~ servertime.");
-                }
-                else if(wowVersion == VF_RealmPlayersDatabase.WowVersionEnum.TBC)
+                if(wowVersion == VF_RealmPlayersDatabase.WowVersionEnum.TBC)
                 {
                     GeneratePageDetails("Standings", count * 2, "TBC works with a different PVP system so there are no standings.");
                 }
                 else
                 {
-                    DateTime lowerValue = StaticValues.CalculateLastRankUpdadeDateUTC(realm);
-                    GeneratePageDetails("Standings", count * 2, "Last weeks standings for players. Only shows players who received a standing last week. This list resets when the realm calculates new standings for players every saturday 23:59~ servertime.");
+                    var rankUpdateDay = StaticValues.GetRankUpdadeDayType(realm);
+                    switch (rankUpdateDay)
+                    {
+                        case VF_RealmPlayersDatabase.StaticValues.RankUpdateDayType.Wednesday_Morning:
+                            GeneratePageDetails("Standings", count * 2, "Last weeks standings for players. Only shows players who received a standing last week. This list resets when the realm calculates new standings for players every wednesday morning.");
+                            break;
+                        case VF_RealmPlayersDatabase.StaticValues.RankUpdateDayType.Wednesday_Midday:
+                            GeneratePageDetails("Standings", count * 2, "Last weeks standings for players. Only shows players who received a standing last week. This list resets when the realm calculates new standings for players every wednesday.");
+                            break;
+                        case VF_RealmPlayersDatabase.StaticValues.RankUpdateDayType.Sunday_Midnight:
+                            GeneratePageDetails("Standings", count * 2, "Last weeks standings for players. Only shows players who received a standing last week. This list resets when the realm calculates new standings for players every sunday midnight.");
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
             else if (sectionStr == "twink_ranks")
