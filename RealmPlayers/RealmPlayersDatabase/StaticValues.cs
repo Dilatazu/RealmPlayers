@@ -885,5 +885,33 @@ namespace VF_RealmPlayersDatabase
             if ((rankDate > DateTime.UtcNow)) rankDate = rankDate.AddDays(-7);
             return rankDate;
         }
+
+        public static bool IsZoneMainCity(WorldZone zone)
+        {
+            return (zone == WorldZone.Stormwind_City || zone == WorldZone.Darnassus || zone == WorldZone.Ironforge
+                || zone == WorldZone.Orgrimmar || zone == WorldZone.Undercity || zone == WorldZone.Thunder_Bluff);
+        }
+        public static bool IsZoneRaid(WorldZone zone)
+        {
+            return (zone == WorldZone.Molten_Core || zone == WorldZone.Onyxia_s_Lair
+                || zone == WorldZone.Zul_Gurub || zone == WorldZone.Blackwing_Lair
+                || zone == WorldZone.Ruins_of_Ahn_Qiraj || zone == WorldZone.Temple_of_Ahn_Qiraj 
+                || zone == WorldZone.Naxxramas);
+        }
+        public static bool IsZoneDungeon(WorldZone zone)
+        {
+            return (zone == WorldZone.The_Deadmines || zone == WorldZone.The_Stockade || zone == WorldZone.Blackfathom_Deeps
+               || zone == WorldZone.Ragefire_Chasm || zone == WorldZone.Wailing_Caverns || zone == WorldZone.Shadowfang_Keep
+               || zone == WorldZone.Gnomeregan || zone == WorldZone.Razorfen_Kraul || zone == WorldZone.Razorfen_Downs
+               || zone == WorldZone.Scarlet_Monastery || zone == WorldZone.Uldaman || zone == WorldZone.Zul_Farrak
+               || zone == WorldZone.Maraudon || zone == WorldZone.The_Temple_of_Atal_Hakkar || zone == WorldZone.Blackrock_Depths
+               || zone == WorldZone.Blackrock_Spire || zone == WorldZone.Lower_Blackrock_Spire || zone == WorldZone.Upper_Blackrock_Spire
+               || zone == WorldZone.Dire_Maul || zone == WorldZone.Dire_Maul_East || zone == WorldZone.Dire_Maul_North || zone == WorldZone.Dire_Maul_West
+               || zone == WorldZone.Stratholme || zone == WorldZone.Scholomance);
+        }
+        public static bool IsZoneBattleground(WorldZone zone)
+        {
+            return (zone == WorldZone.Warsong_Gulch || zone == WorldZone.Arathi_Basin || zone == WorldZone.Alterac_Valley);
+        }
     }
 }

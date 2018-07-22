@@ -218,6 +218,7 @@
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="OnlineStats.aspx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\VF_Library\VF_Library\VF_ThreadSafeCache.cs">
@@ -464,6 +465,13 @@
     </Compile>
     <Compile Include="VF_WoWLauncher.aspx.designer.cs">
       <DependentUpon>VF_WoWLauncher.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="OnlineStats.aspx.cs">
+      <DependentUpon>OnlineStats.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="OnlineStats.aspx.designer.cs">
+      <DependentUpon>OnlineStats.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

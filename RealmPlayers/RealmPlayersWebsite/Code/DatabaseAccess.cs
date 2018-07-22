@@ -165,6 +165,17 @@ namespace RealmPlayersServer
             }
             return realm.Players;
         }
+        public static VF_RealmPlayersDatabase.PlayersOnlineDB GetRealmOnlinePlayers(System.Web.UI.Page _Page, WowRealm _Realm, NotLoadedDecision _Decision = NotLoadedDecision.SpinWait)
+        {
+            var realm = _FindRealmDB(_Page, _Realm, _Decision);
+            if (realm == null || (realm.IsPlayersOnlineLoadComplete() == false && _Decision != NotLoadedDecision.SpinWait))
+            {
+                if (_Decision == NotLoadedDecision.RedirectAndWait)
+                    PageUtility.RedirectErrorLoading(_Page, StaticValues.ConvertRealmParam(_Realm));
+                return null;
+            }
+            return realm.PlayersOnlineData;
+        }
         public static PlayerData.Player FindRealmPlayer(System.Web.UI.Page _Page, WowRealm _Realm, string _Player, NotLoadedDecision _Decision = NotLoadedDecision.SpinWait)
         {
             var realmPlayers = GetRealmPlayers(_Page, _Realm, _Decision);
