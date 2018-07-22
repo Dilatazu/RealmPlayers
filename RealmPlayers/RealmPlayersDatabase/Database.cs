@@ -201,7 +201,6 @@ namespace VF_RealmPlayersDatabase
                     {
                         if(PlayerData.DataParser.ParsePlayerName(playerNode) == "OnlineData")
                         {
-                            int playersOnline = 0;
                             foreach (System.Xml.XmlNode onlineDataNode in playerNode.ChildNodes)
                             {
                                 int loggedStrangeDataException = 0;
@@ -216,26 +215,49 @@ namespace VF_RealmPlayersDatabase
                                     realm = StaticValues.ConvertRealm(realmStr);
                                 }
 
-                                string dateTimeStart = dataParts[2];
-                                string dateTimeEnd = dataParts[3];
-                                string[] playersDatas = dataParts[4].Split(',');
-                                foreach(var playerData in playersDatas)
+                                string dateTimeStartStr = dataParts[2];
+                                string dateTimeEndStr = dataParts[3];
+                                string[] playersDatas = dataParts[4].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                                DateTime dateTimeStart;
+                                DateTime dateTimeEnd;
+                                if (System.DateTime.TryParse(dateTimeStartStr, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AssumeUniversal | System.Globalization.DateTimeStyles.AdjustToUniversal, out dateTimeStart) == true
+                                 && System.DateTime.TryParse(dateTimeEndStr, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AssumeUniversal | System.Globalization.DateTimeStyles.AdjustToUniversal, out dateTimeEnd) == true)
                                 {
-                                    var data = playerData.Split(':');
-                                    if(data.Length == 6)
+                                    PlayersOnlineDB playersOnlineDB = m_Realms[realm].PlayersOnlineData;
+
+                                    var onlineEntry = playersOnlineDB.GetOnlineEntry(dateTimeStart, dateTimeEnd);
+                                    if (onlineEntry == null && (dateTimeEnd - dateTimeStart).TotalMinutes < 5)
                                     {
-                                        ++playersOnline;
+                                        //Widen the online-span to approx 5 minutes since we are creating a new entry anyways...
+                                        double addMinutes = 5.0 - (dateTimeEnd - dateTimeStart).TotalMinutes;
+                                        double halfMins = addMinutes / 2;
+                                        dateTimeStart = dateTimeStart.AddMinutes(-halfMins);
+                                        dateTimeEnd = dateTimeEnd.AddMinutes(halfMins);
                                     }
-                                    else if(loggedStrangeDataException < 5)
+                                    onlineEntry = playersOnlineDB.CreateOnlineEntry(dateTimeStart, dateTimeEnd);
+
+                                    foreach (var playerData in playersDatas)
                                     {
-                                        Logger.ConsoleWriteLine("Strange data in OnlineData segment! \"" + data + "\"");
-                                        ++loggedStrangeDataException;
+                                        var data = playerData.Split(':');
+                                        if (data.Length == 6)
+                                        {
+                                            PlayersOnlineDB.OnlinePlayerEntry onlinePlayer = new PlayersOnlineDB.OnlinePlayerEntry();
+                                            onlinePlayer.Name = data[0];
+                                            onlinePlayer.Race = (PlayerRace)int.Parse(data[1]);
+                                            onlinePlayer.Class = (PlayerClass)int.Parse(data[2]);
+                                            onlinePlayer.Guild = data[3];
+                                            onlinePlayer.Level = int.Parse(data[4]);
+                                            onlinePlayer.Zone = (WorldZone)int.Parse(data[5]);
+                                            onlineEntry.AddOnlinePlayer(onlinePlayer);
+                                        }
+                                        else if (loggedStrangeDataException < 5)
+                                        {
+                                            Logger.ConsoleWriteLine("Strange data in OnlineData segment! \"" + playerData + "\"");
+                                            ++loggedStrangeDataException;
+                                        }
                                     }
-                                }
-                                DateTime onlineDateTime;
-                                if (System.DateTime.TryParse(dateTimeStart, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AssumeUniversal | System.Globalization.DateTimeStyles.AdjustToUniversal, out onlineDateTime) == true)
-                                {
-                                    Logger.ConsoleWriteLine(playersOnline + " players online " + onlineDateTime.ToDateTimeStr());
+                                    m_Realms[realm].Updated = true;
+                                    Logger.ConsoleWriteLine(onlineEntry.OnlinePlayers.Count + " players online " + dateTimeStart.ToDateTimeStr());
                                 }
                             }
                         }

@@ -119,6 +119,7 @@
     <Compile Include="SQL\SQLRaid.cs" />
     <Compile Include="SummaryDatabases\GuildSummary\GuildSummaryDatabase.cs" />
     <Compile Include="SummaryDatabases\GuildSummary\GuildSummary.cs" />
+    <Compile Include="SummaryDatabases\PlayersOnlineDB.cs" />
     <Compile Include="SummaryDatabases\PlayerSummary\PlayerSummaryDatabase.cs" />
     <Compile Include="ItemDropDatabase.cs" />
     <Compile Include="SummaryDatabases\ItemSummary\ItemSummaryDatabase.cs" />

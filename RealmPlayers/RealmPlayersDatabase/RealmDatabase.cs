@@ -18,8 +18,9 @@ namespace VF_RealmPlayersDatabase
             PlayersLoaded = 2,
             PlayersHistoryLoaded = 3,
             PlayersExtraDataLoaded = 4,
-            EverythingLoaded = 5,
-            Load_Failed = 6,
+            PlayersOnlineDBLoaded = 5,
+            EverythingLoaded = 50,
+            Load_Failed = 100,
         }
         public WowRealm Realm = WowRealm.Unknown;
         public WowVersionEnum WowVersion = WowVersionEnum.Unknown;
@@ -27,6 +28,7 @@ namespace VF_RealmPlayersDatabase
         RealmDatabaseHistory m_History = new RealmDatabaseHistory();
         //public Dictionary<string, PlayerData.AchievementData> m_PlayersAchievements = new Dictionary<string, PlayerData.AchievementData>();
         public Dictionary<string, PlayerData.ExtraData> m_PlayersExtraData = new Dictionary<string, PlayerData.ExtraData>();
+        public PlayersOnlineDB m_PlayersOnlineDB = new PlayersOnlineDB();
 
         public bool Updated = false;
         //private GeneratedData.RealmCacheDatabase m_CacheDatabase = null;
@@ -77,6 +79,14 @@ namespace VF_RealmPlayersDatabase
             {
                 WaitForLoad(LoadStatus.PlayersExtraDataLoaded);
                 return m_PlayersExtraData;
+            }
+        }
+        public PlayersOnlineDB PlayersOnlineData
+        {
+            get
+            {
+                WaitForLoad(LoadStatus.PlayersOnlineDBLoaded);
+                return m_PlayersOnlineDB;
             }
         }
 
@@ -420,6 +430,22 @@ namespace VF_RealmPlayersDatabase
                     }
                     Logger.ConsoleWriteLine("Loaded \"PlayersExtraData.dat\" for Database " + Realm.ToString(), ConsoleColor.White);
                 }
+                if (System.IO.File.Exists(_RealmPath + "\\PlayersOnlineData.dat") == true)
+                {
+                    PlayersOnlineDB loadedPlayersOnlineDB = null;
+                    VF.Utility.LoadSerialize<PlayersOnlineDB>(_RealmPath + "\\PlayersOnlineData.dat", out loadedPlayersOnlineDB);
+                    if (loadedPlayersOnlineDB == null)
+                    {
+                        loadedPlayersOnlineDB = new PlayersOnlineDB();
+                    }
+
+                    lock (m_LockObj)
+                    {
+                        m_PlayersOnlineDB = loadedPlayersOnlineDB;
+                        m_LoadStatus = LoadStatus.PlayersOnlineDBLoaded;
+                    }
+                    Logger.ConsoleWriteLine("Loaded \"PlayersOnlineData.dat\" for Database " + Realm.ToString(), ConsoleColor.White);
+                }
 
                 lock (m_LockObj)
                 {
@@ -461,6 +487,10 @@ namespace VF_RealmPlayersDatabase
         public bool IsPlayersExtraDataLoadComplete()
         {
             return m_LoadStatus >= LoadStatus.PlayersExtraDataLoaded;
+        }
+        public bool IsPlayersOnlineLoadComplete()
+        {
+            return m_LoadStatus >= LoadStatus.PlayersOnlineDBLoaded;
         }
         public bool IsLoadComplete()
         {
@@ -576,6 +606,12 @@ namespace VF_RealmPlayersDatabase
                 }
                 Utility.BackupFile(_RealmPath + "\\PlayersExtraData.dat");
                 _VFSaveDatabaseFile(_RealmPath + "\\PlayersExtraData.dat", PlayersExtraData);
+                if(PlayersOnlineData.OnlineEntries.Count > 0)
+                {
+                    if (PlayersOnlineData.Realm == WowRealm.Unknown) PlayersOnlineData.Realm = Realm;
+                    Utility.BackupFile(_RealmPath + "\\PlayersOnlineData.dat");
+                    _VFSaveDatabaseFile(_RealmPath + "\\PlayersOnlineData.dat", PlayersOnlineData);
+                }
                 Updated = false;
                 Logger.ConsoleWriteLine("Done with saving Database " + Realm.ToString() + ", it took " + (timer.ElapsedMilliseconds / 1000) + " seconds", ConsoleColor.Green);
             }
